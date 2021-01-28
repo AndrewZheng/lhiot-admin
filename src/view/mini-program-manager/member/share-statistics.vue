@@ -607,7 +607,6 @@
 
 <script type="text/ecmascript-6">
 import Tables from '_c/tables';
-import _ from 'lodash';
 import {
   shareProdStatistics,
   shareUserStatistics,
@@ -621,12 +620,9 @@ import {
 } from '@/api/mini-program';
 import uploadMixin from '@/mixins/uploadMixin';
 import tableMixin from '@/mixins/tableMixin.js';
-import { couponTypeConvert } from '@/libs/converStatus';
 import { couponTypeEnum } from '@/libs/enumerate';
 import {
-  fenToYuanDot2,
-  fenToYuanDot2Number,
-  yuanToFenNumber
+  fenToYuanDot2
 } from '@/libs/util';
 
 const couponTemplateDetail = {};
@@ -1320,34 +1316,6 @@ export default {
           this.clearSearchLoading = false;
         });
     },
-    getDateByParam(param) {
-      // param -1-昨天 0-今天 -7-最近7天 -30-最近30天 -365-汇总
-      const date = new Date();
-      switch (param) {
-        case 0:
-          date.setDate(date.getDate());
-          break;
-        case -1:
-          date.setDate(date.getDate() - 1);
-          break;
-        case -7:
-          date.setDate(date.getDate() - 7);
-          break;
-        case -30:
-          date.setDate(date.getDate() - 30);
-          break;
-        case -365:
-          date.setDate(date.getDate() - 365);
-          break;
-        default:
-          date.setDate(date.getDate());
-      }
-      const year = date.getFullYear();
-      const month = date.getMonth() + 1;
-      const day = date.getDate();
-      const dateStr = `${year}-${month}-${day}`;
-      return dateStr;
-    },
     // 佣金趋势数据
     commissionDataTotalTrend(value) {
       const date = new Date();
@@ -1617,129 +1585,57 @@ export default {
     },
     timeChange(value) {
       this.searchRowData.page = 1;
-      if (value === '今日') {
-        this.getTableData(value);
-        this.mark = false;
-      } else if (value === '昨日') {
-        this.mark = false;
-        this.getTableData(value);
-      } else if (value === '汇总') {
-        this.mark = false;
-        this.getTableData(value);
-      } else if (value === '最近7天') {
-        this.mark = false;
-        this.getTableData(value);
-      } else if (value === '最近30天') {
-        this.mark = false;
-        this.getTableData(value);
-      } else if (value === '自定义时间') {
+      if (value === '自定义时间') {
         this.mark = true;
         this.searchRowData.beginDate = null;
         this.searchRowData.endDate = null;
+      } else {
+        this.mark = false;
+        this.getTableData(value);
       }
     },
     timeChangeCommission(value) {
-      if (value === '今日') {
-        this.getTableDataCommission(value);
-        this.markCommission = false;
-        this.commissionStatus = false;
-      } else if (value === '昨日') {
-        this.markCommission = false;
-        this.commissionStatus = false;
-        this.getTableDataCommission(value);
-      } else if (value === '汇总') {
-        this.markCommission = false;
-        this.commissionStatus = false;
-        this.getTableDataCommission(value);
-      } else if (value === '最近7天') {
-        this.markCommission = false;
-        this.commissionStatus = false;
-        this.getTableDataCommission(value);
-      } else if (value === '最近30天') {
-        this.markCommission = false;
-        this.commissionStatus = false;
-        this.getTableDataCommission(value);
-      } else if (value === '自定义时间') {
+      if (value === '自定义时间') {
         this.markCommission = true;
         this.searchRowDataCommission.beginDate = null;
         this.searchRowDataCommission.endDate = null;
+      } else {
+        this.markCommission = false;
+        this.commissionStatus = false;
+        this.getTableDataCommission(value);
       }
     },
     timeChangeAccounts(value) {
-      if (value === '今日') {
-        this.getTableDataAccounts(value);
-        this.markAccounts = false;
-        this.accountsStatus = false;
-      } else if (value === '昨日') {
-        this.markAccounts = false;
-        this.accountsStatus = false;
-        this.getTableDataAccounts(value);
-      } else if (value === '汇总') {
-        this.markAccounts = false;
-        this.accountsStatus = false;
-        this.getTableDataAccounts(value);
-      } else if (value === '最近7天') {
-        this.markAccounts = false;
-        this.accountsStatus = false;
-        this.getTableDataAccounts(value);
-      } else if (value === '最近30天') {
-        this.markAccounts = false;
-        this.accountsStatus = false;
-        this.getTableDataAccounts(value);
-      } else if (value === '自定义时间') {
+      if (value === '自定义时间') {
         this.markAccounts = true;
         this.searchRowDataAccounts.beginDate = null;
         this.searchRowDataAccounts.endDate = null;
+      } else {
+        this.markAccounts = false;
+        this.accountsStatus = false;
+        this.getTableDataAccounts(value);
       }
     },
     timeChangeOlaceOrder(value) {
-      if (value === '今日') {
-        this.getTableDataOlaceOrder(value);
-        this.markOlaceOrder = false;
-        this.olaceOrderStatus = false;
-      } else if (value === '昨日') {
-        this.markOlaceOrder = false;
-        this.olaceOrderStatus = false;
-        this.getTableDataOlaceOrder(value);
-      } else if (value === '汇总') {
-        this.markOlaceOrder = false;
-        this.olaceOrderStatus = false;
-        this.getTableDataOlaceOrder(value);
-      } else if (value === '最近7天') {
-        this.markOlaceOrder = false;
-        this.olaceOrderStatus = false;
-        this.getTableDataOlaceOrder(value);
-      } else if (value === '最近30天') {
-        this.markOlaceOrder = false;
-        this.olaceOrderStatus = false;
-        this.getTableDataOlaceOrder(value);
-      } else if (value === '自定义时间') {
+      if (value === '自定义时间') {
         this.markOlaceOrder = true;
         this.searchRowDataOlaceOrder.beginDate = null;
         this.searchRowDataOlaceOrder.endDate = null;
+      } else {
+        this.markOlaceOrder = false;
+        this.olaceOrderStatus = false;
+        this.getTableDataOlaceOrder(value);
       }
     },
     timeChangeBrokerage(value) {
       this.searchRowDataBrokerage.page = 1;
-      if (value === '今日') {
-        this.getTableDataBrokerage(value);
-        this.markBrokerage = false;
-      } else if (value === '昨日') {
-        this.markBrokerage = false;
-        this.getTableDataBrokerage(value);
-      } else if (value === '汇总') {
-        this.markBrokerage = false;
-        this.getTableDataBrokerage(value);
-      } else if (value === '最近7天') {
-        this.markBrokerage = false;
-        this.getTableDataBrokerage(value);
-      } else if (value === '最近30天') {
-        this.markBrokerage = false;
-        this.getTableDataBrokerage(value);
-      } else if (value === '自定义时间') {
+      if (value === '自定义时间') {
         this.markBrokerage = true;
         this.searchRowDataBrokerage.createTimeBegin = null;
         this.searchRowDataBrokerage.createTimeEnd = null;
+      } else {
+        this.markBrokerage = false;
+        this.getTableDataBrokerage(value);
       }
     },
     timeChangeCommissionTrend(value) {
@@ -1861,12 +1757,8 @@ export default {
         .then((res) => {
           this.tableData = res.rows;
           this.total = res.total;
-          this.loading = false;
-          this.searchLoading = false;
-          this.clearSearchLoading = false;
         })
-        .catch((error) => {
-          console.log(error);
+        .finally(() => {
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;

@@ -170,18 +170,11 @@
 
 <script type="text/ecmascript-6">
 import Tables from '_c/tables';
-import _ from 'lodash';
 import {
   userSeckillStatistics,
   singleSeckillStatistics
 } from '@/api/mini-program';
-import uploadMixin from '@/mixins/uploadMixin';
 import tableMixin from '@/mixins/tableMixin.js';
-import {
-  fenToYuanDot2,
-  fenToYuanDot2Number,
-  yuanToFenNumber
-} from '@/libs/util';
 
 const couponTemplateDetail = {
   //   id: 0,
@@ -218,11 +211,12 @@ export default {
   components: {
     Tables
   },
-  mixins: [uploadMixin, tableMixin],
+  mixins: [tableMixin],
   data() {
     return {
-      topStatus: 'user',
+      tableData1: [],
       totalPage: 0,
+      topStatus: 'user',
       rankType: [
         {
           label: '购买总数量',
@@ -304,8 +298,7 @@ export default {
       ],
       searchRowData: _.cloneDeep(roleRowData),
       searchRowData1: _.cloneDeep(roleRowData1),
-      couponTemplateDetail: _.cloneDeep(couponTemplateDetail),
-      tableData1: []
+      couponTemplateDetail: _.cloneDeep(couponTemplateDetail)
     };
   },
   computed: {},
@@ -326,12 +319,8 @@ export default {
         .then(res => {
           this.tableData = res.rows;
           this.total = res.total;
-          this.loading = false;
-          this.searchLoading = false;
-          this.clearSearchLoading = false;
         })
-        .catch(error => {
-          console.log(error);
+        .finally(() => {
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
@@ -342,12 +331,8 @@ export default {
         .then(res => {
           this.tableData1 = res.rows;
           this.totalPage = res.total;
-          this.loading = false;
-          this.searchLoading = false;
-          this.clearSearchLoading = false;
         })
-        .catch(error => {
-          console.log(error);
+        .finally(() => {
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;

@@ -79,8 +79,6 @@
 
 <script type="text/ecmascript-6">
 import Tables from '_c/tables';
-import CountTo from '_c/count-to';
-import _ from 'lodash';
 import { seckillStatistics } from '@/api/mini-program';
 import tableMixin from '@/mixins/tableMixin.js';
 
@@ -101,14 +99,16 @@ const roleRowData = {
   page: 1,
   rows: 10
 };
+
 export default {
   components: {
-    Tables,
-    CountTo
+    Tables
   },
   mixins: [tableMixin],
   data() {
     return {
+      mark: false,
+      button: '昨日',
       columns: [
         {
           title: '日期',
@@ -149,10 +149,6 @@ export default {
         //   align: "center"
         // }
       ],
-      mark: false,
-      button: '昨日',
-      createLoading: false,
-      modalViewLoading: false,
       searchRowData: _.cloneDeep(roleRowData),
       dataStatisticsDetail: _.cloneDeep(dataStatisticsDetail)
     };
@@ -168,12 +164,7 @@ export default {
       this.getTableData();
     },
     getTableData(value) {
-      const date = new Date();
-      date.setDate(date.getDate() - 1);
-      var year = date.getFullYear();
-      var month = date.getMonth() + 1;
-      var day = date.getDate();
-      var yesterday = `${year}-${month}-${day}`;
+      const yesterday = this.getDateByParam(-1);
       if (this.button === '昨日') {
         this.searchRowData.beginDate = yesterday;
         this.searchRowData.endDate = yesterday;
@@ -181,12 +172,8 @@ export default {
       seckillStatistics(this.searchRowData)
         .then(res => {
           this.tableData = res;
-          this.loading = false;
-          this.searchLoading = false;
-          this.clearSearchLoading = false;
         })
-        .catch(error => {
-          console.log(error);
+        .finally(() => {
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;

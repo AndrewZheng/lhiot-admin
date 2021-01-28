@@ -155,18 +155,14 @@
 
 <script type="text/ecmascript-6">
 import Tables from '_c/tables';
-import _ from 'lodash';
 import {
   userDataStatistics,
-  dataStatistics,
   basicsDataStatistics
 } from '@/api/mini-program';
 import uploadMixin from '@/mixins/uploadMixin';
 import tableMixin from '@/mixins/tableMixin.js';
 import {
-  fenToYuanDot2,
-  fenToYuanDot2Number,
-  yuanToFenNumber
+  fenToYuanDot2
 } from '@/libs/util';
 
 const couponTemplateDetail = {
@@ -192,7 +188,6 @@ const roleRowData = {
   sort: 'desc'
 };
 
-// 第一个tables
 const roleRowData1 = {
   beginDate: null,
   endDate: null
@@ -231,7 +226,6 @@ export default {
           value: 'all_out_amount'
         }
       ],
-      // 袁木
       columns: [
         {
           title: '用户昵称',
@@ -342,7 +336,6 @@ export default {
     this.searchRowData1 = _.cloneDeep(roleRowData1);
     this.getTableData();
     this.getTableData1();
-    // this.handleSearch();
   },
   created() {},
   methods: {
@@ -351,77 +344,42 @@ export default {
       this.getTableData();
     },
     getTableData() {
+      this.loading = true;
       userDataStatistics(this.searchRowData)
         .then((res) => {
           this.tableData = res.rows;
           this.total = res.total;
-          this.loading = false;
-          this.searchLoading = false;
-          this.clearSearchLoading = false;
         })
-        .catch((error) => {
-          console.log(error);
+        .finally(() => {
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
         });
     },
     getTableData1(value) {
-      const date = new Date();
-      date.setDate(date.getDate());
-      var year = date.getFullYear();
-      var month = date.getMonth() + 1;
-      var day = date.getDate();
-      var today = `${year}-${month}-${day}`;
+      const today = this.getDateByParam(0);
       if (value === '昨日') {
-        const date = new Date();
-        date.setDate(date.getDate() - 1);
-        var year = date.getFullYear();
-        var month = date.getMonth() + 1;
-        var day = date.getDate();
-        var yesterday = `${year}-${month}-${day}`;
+        const yesterday = this.getDateByParam(-1);
         this.searchRowData1.beginDate = yesterday;
         this.searchRowData1.endDate = yesterday;
-      }
-      if (value === '今日') {
-        const date = new Date();
-        date.setDate(date.getDate());
-        var year = date.getFullYear();
-        var month = date.getMonth() + 1;
-        var day = date.getDate();
-        var today = `${year}-${month}-${day}`;
+      } else if (value === '今日') {
         this.searchRowData1.beginDate = today;
         this.searchRowData1.endDate = today;
-      }
-      if (value === '最近7天') {
-        const date = new Date();
-        date.setDate(date.getDate() - 7);
-        var year = date.getFullYear();
-        var month = date.getMonth() + 1;
-        var day = date.getDate();
-        var sevenDay = `${year}-${month}-${day}`;
+      } else if (value === '最近7天') {
+        const sevenDay = this.getDateByParam(-7);
         this.searchRowData1.beginDate = sevenDay;
         this.searchRowData1.endDate = today;
-      }
-      if (value === '最近30天') {
-        const date = new Date();
-        date.setDate(date.getDate() - 30);
-        var year = date.getFullYear();
-        var month = date.getMonth() + 1;
-        var day = date.getDate();
-        var toMonth = `${year}-${month}-${day}`;
+      } else if (value === '最近30天') {
+        const toMonth = this.getDateByParam(-30);
         this.searchRowData1.beginDate = toMonth;
         this.searchRowData1.endDate = today;
       }
+      this.loading = true;
       basicsDataStatistics(this.searchRowData1)
         .then((res) => {
           this.inviteData.push(res);
-          // this.total = res.total;
-          this.loading = false;
-          this.searchLoading = false;
-          this.clearSearchLoading = false;
         })
-        .catch((error) => {
+        .finally(() => {
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
@@ -463,11 +421,6 @@ export default {
       this.button = '自定义时间';
       this.searchRowData1.endDate = value;
     },
-    handleSearch() {
-      this.searchRowData.page = 1;
-      this.searchLoading = true;
-      this.getTableData();
-    },
     // 导出数据
     handleDownload() {
       // 导出不分页 按条件查出多少条导出多少条 限制每次最多5000条
@@ -480,7 +433,6 @@ export default {
         this.searchRowData.rows = 10;
         this.searchRowData.page = pageSize;
         // 表格数据导出字段翻译
-        const _this = this;
         tableData.forEach((item) => {
           // const obj = _this.storeList.find(x => item.storeId === x.storeId);
           item['nickName'] = item['nickName'] + '';

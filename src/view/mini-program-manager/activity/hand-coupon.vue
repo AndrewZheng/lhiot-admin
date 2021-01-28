@@ -3233,7 +3233,6 @@ export default {
       modalPhones: false,
       modalViewLoading: false,
       showValidDate: true,
-      modalAdd: false,
       modalProduct: false,
       deleteAffirm: false,
       currentTableRowSelected: null,

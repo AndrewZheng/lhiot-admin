@@ -174,7 +174,6 @@
 
 <script type="text/ecmascript-6">
 import Tables from '_c/tables';
-import _ from 'lodash';
 import {
   deleteSystemSettingCategory,
   getSystemSettingCategoryPages,
@@ -188,7 +187,6 @@ import tableMixin from '@/mixins/tableMixin.js';
 import {
   buildMenu,
   convertTreeCategory,
-  convertTree,
   setSmallGoodsStandard
 } from '@/libs/util';
 
@@ -212,6 +210,10 @@ export default {
   mixins: [uploadMixin, tableMixin],
   data() {
     return {
+      systemCategoryData: [],
+      defaultSystemCategoryData: [41],
+      systemCategoriesTreeList: [],
+      parentInfoList: [],
       ruleInline: {
         // parentId: [
         //   { required: true, message: '输入父级分类id' }
@@ -262,12 +264,6 @@ export default {
           options: ['view', 'edit', 'delete', 'settings']
         }
       ],
-      systemCategoryData: [],
-      defaultSystemCategoryData: [41],
-      systemCategoriesTreeList: [],
-      parentInfoList: [],
-      createLoading: false,
-      modalViewLoading: false,
       searchRowData: _.cloneDeep(roleRowData),
       systemCategoryDetail: _.cloneDeep(systemCategoryDetail)
     };
@@ -287,14 +283,80 @@ export default {
     resetFields() {
       this.$refs.modalEdit.resetFields();
     },
+    getTableData() {
+      getSystemSettingCategoryPages(this.searchRowData)
+        .then(res => {
+          this.tableData = res.rows;
+          this.total = res.total;
+        })
+        .finally(() => {
+          this.loading = false;
+          this.searchLoading = false;
+          this.clearSearchLoading = false;
+        });
+    },
+    getSystemSettingCategoryTree() {
+      getSystemSettingCategoryTree()
+        .then(res => {
+          if (res && res.array.length > 0) {
+            this.systemCategoriesTreeList = res.array;
+            const menuList = buildMenu(res.array);
+            const map = {
+              id: 'id',
+              title: 'title',
+              children: 'children'
+            };
+            this.systemCategoryData = convertTreeCategory(menuList, map, true);
+            this.createLoading = false;
+          }
+        })
+        .catch(() => {
+          this.createLoading = false;
+        });
+    },
+    getParentInfos() {
+      getParentInfos()
+        .then(res => {
+          this.parentInfoList = res;
+        })
+    },
+    addStore() {
+      this.resetFields();
+      this.tempModalType = this.modalType.create;
+      this.systemCategoryDetail = _.cloneDeep(systemCategoryDetail);
+      this.modalEdit = true;
+    },
+    handleView(params) {
+      this.resetFields();
+      this.tempModalType = this.modalType.view;
+      this.systemCategoryDetail = _.cloneDeep(params.row);
+      this.modalView = true;
+    },
+    handleEdit(params) {
+      this.resetFields();
+      this.tempModalType = this.modalType.edit;
+      this.systemCategoryDetail = _.cloneDeep(params.row);
+      this.modalEdit = true;
+    },
+    handleSetting(params) {
+      var rows = params.row;
+      setSmallGoodsStandard(rows);
+      this.turnToPage({
+        name: 'small-relation-system',
+        params: {
+          parentName: rows.parentName,
+          parentId: rows.parentId,
+          categoriesName: rows.categoriesName,
+          id: rows.id
+        }
+      });
+    },
     handleSubmit(name) {
       this.$refs[name].validate(valid => {
         if (valid) {
           if (this.isCreate) {
-            // 添加状态
             this.createStore();
           } else if (this.isEdit) {
-            // 编辑状态
             this.editStore();
           }
         } else {
@@ -329,29 +391,14 @@ export default {
           this.modalViewLoading = false;
         });
     },
-    addStore() {
-      this.resetFields();
-      if (this.tempModalType !== this.modalType.create) {
-        this.tempModalType = this.modalType.create;
-        this.systemCategoryDetail = _.cloneDeep(systemCategoryDetail);
-      }
-      this.modalEdit = true;
-    },
-    // 删除
-    handleDelete(params) {
-      this.tableDataSelected = [];
-      this.tableDataSelected.push(params.row);
-      this.deleteTable(params.row.id);
-    },
     deleteTable(ids) {
-      this.loading = true;
       deleteSystemSettingCategory({
         ids
       })
         .then(res => {
           const totalPage = Math.ceil(this.total / this.searchRowData.pageSize);
           if (
-            this.tableData.length == this.tableDataSelected.length &&
+            this.tableData.length === this.tableDataSelected.length &&
             this.searchRowData.page === totalPage &&
             this.searchRowData.page !== 1
           ) {
@@ -359,66 +406,7 @@ export default {
           }
           this.tableDataSelected = [];
           this.getTableData();
-        })
-        .catch(err => {
-          console.log(err);
-          this.loading = false;
         });
-    },
-    handleView(params) {
-      this.resetFields();
-      this.tempModalType = this.modalType.view;
-      this.systemCategoryDetail = _.cloneDeep(params.row);
-      this.modalView = true;
-    },
-    handleEdit(params) {
-      this.resetFields();
-      this.tempModalType = this.modalType.edit;
-      this.systemCategoryDetail = _.cloneDeep(params.row);
-      this.modalEdit = true;
-    },
-    getTableData() {
-      getSystemSettingCategoryPages(this.searchRowData)
-        .then(res => {
-          this.tableData = res.rows;
-          this.total = res.total;
-          this.loading = false;
-          this.searchLoading = false;
-          this.clearSearchLoading = false;
-        })
-        .catch(error => {
-          console.log(error);
-          this.loading = false;
-          this.searchLoading = false;
-          this.clearSearchLoading = false;
-        });
-    },
-    getSystemSettingCategoryTree() {
-      getSystemSettingCategoryTree()
-        .then(res => {
-          if (res && res.array.length > 0) {
-            this.systemCategoriesTreeList = res.array;
-            const menuList = buildMenu(res.array);
-            const map = {
-              id: 'id',
-              title: 'title',
-              children: 'children'
-            };
-            this.systemCategoryData = convertTreeCategory(menuList, map, true);
-            this.createLoading = false;
-          }
-        })
-        .catch(() => {
-          this.createLoading = false;
-        });
-    },
-    //
-    getParentInfos() {
-      getParentInfos()
-        .then(res => {
-          this.parentInfoList = res;
-        })
-        .catch(() => {});
     },
     // 设置编辑商品的图片列表
     setDefaultUploadList(res) {
@@ -449,19 +437,6 @@ export default {
       if (obj && obj.parentid !== 0) {
         this.findGroupId(obj.parentid);
       }
-    },
-    handleSetting(params) {
-      var rows = params.row;
-      setSmallGoodsStandard(rows);
-      this.turnToPage({
-        name: 'small-relation-system',
-        params: {
-          parentName: rows.parentName,
-          parentId: rows.parentId,
-          categoriesName: rows.categoriesName,
-          id: rows.id
-        }
-      });
     }
   }
 };

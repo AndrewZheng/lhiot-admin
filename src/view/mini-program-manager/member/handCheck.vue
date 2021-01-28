@@ -175,7 +175,6 @@
 
 <script type="text/ecmascript-6">
 import Tables from '_c/tables';
-import _ from 'lodash';
 import { getStaffManage, StaffAudit, staffUpdate } from '@/api/mini-program';
 import tableMixin from '@/mixins/tableMixin.js';
 import { getSmallGoodsStandard } from '@/libs/util';
@@ -209,8 +208,13 @@ export default {
   mixins: [tableMixin],
   data() {
     return {
+      tableDataManage: [],
+      totalManage: 0,
       mark: false,
+      showBack: false,
+      openStatus: false,
       button: '今日',
+      topStatus: 'check',
       columns: [
         {
           title: '员工姓名',
@@ -391,13 +395,6 @@ export default {
         { label: '已通过', value: 'PASSED' },
         { label: '已拒绝', value: 'REJECTED' }
       ],
-      topStatus: 'check',
-      createLoading: false,
-      modalViewLoading: false,
-      tableDataManage: [],
-      totalManage: 0,
-      showBack: false,
-      openStatus: false,
       searchRowData: _.cloneDeep(roleRowData),
       searchRowDataManage: _.cloneDeep(roleRowDataManage),
       activitiesDetail: _.cloneDeep(activitiesDetail)
@@ -426,19 +423,14 @@ export default {
         .then((res) => {
           this.tableData = res.rows;
           this.total = res.total;
-          this.loading = false;
-          this.searchLoading = false;
-          this.clearSearchLoading = false;
         })
-        .catch((error) => {
-          console.log(error);
+        .finally(() => {
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
         });
     },
     getTableDataManage(value) {
-      //
       if (this.$route.name === 'small-member-relation-handCheck') {
         const memberMsg = getSmallGoodsStandard();
         this.topStatus = memberMsg.topStatus;
@@ -446,62 +438,28 @@ export default {
         this.searchRowDataManage.applyTimeEnd = '';
         this.searchRowDataManage.staffPhone = memberMsg.phone;
       } else {
-        const date = new Date();
-        date.setDate(date.getDate());
-        var year = date.getFullYear();
-        var month = date.getMonth() + 1;
-        var day = date.getDate();
-        var today = `${year}-${month}-${day}`;
+        const today = this.getDateByParam(0);
         if (value === '昨日') {
-          const date = new Date();
-          date.setDate(date.getDate() - 1);
-          var year = date.getFullYear();
-          var month = date.getMonth() + 1;
-          var day = date.getDate();
-          var yesterday = `${year}-${month}-${day}`;
+          const yesterday = this.getDateByParam(-1);
           this.searchRowDataManage.applyTimeBegin = yesterday;
           this.searchRowDataManage.applyTimeEnd = yesterday;
-        }
-        if (value === '今日') {
-          const date = new Date();
-          date.setDate(date.getDate());
-          var year = date.getFullYear();
-          var month = date.getMonth() + 1;
-          var day = date.getDate();
-          var today = `${year}-${month}-${day}`;
+        } else if (value === '今日') {
           this.searchRowDataManage.applyTimeBegin = today;
           this.searchRowDataManage.applyTimeEnd = today;
-        }
-        if (value === '汇总') {
+        } else if (value === '汇总') {
           this.searchRowDataManage.applyTimeBegin = '';
           this.searchRowDataManage.applyTimeEnd = '';
-        }
-        if (value === '最近7天') {
-          const date = new Date();
-          date.setDate(date.getDate() - 7);
-          var year = date.getFullYear();
-          var month = date.getMonth() + 1;
-          var day = date.getDate();
-          var sevenDay = `${year}-${month}-${day}`;
+        } else if (value === '最近7天') {
+          const sevenDay = this.getDateByParam(-7);
           this.searchRowDataManage.applyTimeBegin = sevenDay;
           this.searchRowDataManage.applyTimeEnd = today;
-        }
-        if (value === '最近30天') {
-          const date = new Date();
-          date.setDate(date.getDate() - 30);
-          var year = date.getFullYear();
-          var month = date.getMonth() + 1;
-          var day = date.getDate();
-          var toMonth = `${year}-${month}-${day}`;
+        } else if (value === '最近30天') {
+          const toMonth = this.getDateByParam(-30);
           this.searchRowDataManage.applyTimeBegin = toMonth;
           this.searchRowDataManage.applyTimeEnd = today;
         }
-        const date1 = new Date();
-        date1.setDate(date.getDate() - 1);
-        var year1 = date.getFullYear();
-        var month1 = date.getMonth() + 1;
-        var day1 = date.getDate();
-        var yesterday1 = `${year1}-${month1}-${day1}`;
+        // 默认查询昨天的数据
+        const yesterday1 = this.getDateByParam(-1);
         if (this.button === '今日') {
           this.searchRowDataManage.applyTimeBegin = yesterday1;
           this.searchRowDataManage.applyTimeEnd = yesterday1;
@@ -514,12 +472,8 @@ export default {
           });
           this.tableDataManage = res.rows;
           this.totalManage = res.total;
-          this.loading = false;
-          this.searchLoading = false;
-          this.clearSearchLoading = false;
         })
-        .catch((error) => {
-          console.log(error);
+        .finally(() => {
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
@@ -572,25 +526,13 @@ export default {
     },
     timeChange(value) {
       this.openStatus = false;
-      if (value === '今日') {
-        this.getTableDataManage(value);
-        this.mark = false;
-      } else if (value === '汇总') {
-        this.mark = false;
-        this.getTableDataManage(value);
-      } else if (value === '昨日') {
-        this.mark = false;
-        this.getTableDataManage(value);
-      } else if (value === '最近7天') {
-        this.mark = false;
-        this.getTableDataManage(value);
-      } else if (value === '最近30天') {
-        this.mark = false;
-        this.getTableDataManage(value);
-      } else if (value === '自定义时间') {
+      if (value === '自定义时间') {
         this.mark = true;
         this.searchRowDataManage.applyTimeBegin = '';
         this.searchRowDataManage.applyTimeEnd = '';
+      } else {
+        this.mark = false;
+        this.getTableDataManage(value);
       }
     },
     modalHandleEdit(params) {
@@ -632,7 +574,6 @@ export default {
         this.searchRowDataManage.rows = 10;
         this.searchRowDataManage.page = pageSize;
         // 表格数据导出字段翻译
-        const _this = this;
         tableData.forEach((item) => {
           // item["deliveryComment"] = deliveryTypeConvert(
           //   item["deliveryComment"]

@@ -124,8 +124,6 @@
 
 <script type="text/ecmascript-6">
 import Tables from '_c/tables';
-import CountTo from '_c/count-to';
-import _ from 'lodash';
 import { getUsersInfo, setUserClass, setStaff } from '@/api/mini-program';
 import tableMixin from '@/mixins/tableMixin.js';
 import { setSmallGoodsStandard } from '@/libs/util';
@@ -136,7 +134,6 @@ const userDetail = {
   gender: '',
   consumeSumAmount: '',
   rechargeSumAmount: '',
-  isCommunity: '',
   isCommunity: '',
   userType: '',
   registrationAt: '',
@@ -157,8 +154,7 @@ const roleRowData = {
 
 export default {
   components: {
-    Tables,
-    CountTo
+    Tables
   },
   mixins: [tableMixin],
   data() {
@@ -283,8 +279,6 @@ export default {
         { label: '普通用户', value: 'CONSUMER' },
         { label: '员工特权', value: 'STAFF' }
       ],
-      createLoading: false,
-      modalViewLoading: false,
       searchRowData: _.cloneDeep(roleRowData),
       userDetail: _.cloneDeep(userDetail)
     };
@@ -300,17 +294,13 @@ export default {
       this.getTableData();
     },
     getTableData() {
-      const _this = this;
+      this.loading = true;
       getUsersInfo(this.searchRowData)
         .then((res) => {
           this.tableData = res.rows;
           this.total = res.total;
-          this.loading = false;
-          this.searchLoading = false;
-          this.clearSearchLoading = false;
         })
-        .catch((error) => {
-          console.log(error);
+        .finally(() => {
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
@@ -325,7 +315,7 @@ export default {
     onUpgrade(params) {
       this.userDetail = _.cloneDeep(params.row);
       this.userDetail.userClass =
-        params.row.userClass == 'EXTERIOR' || params.row.userClass == null
+        params.row.userClass === 'EXTERIOR' || params.row.userClass == null
           ? 'INTERIOR'
           : 'EXTERIOR';
       setUserClass(this.userDetail)
@@ -333,15 +323,13 @@ export default {
           this.$Message.info('操作成功');
           this.getTableData();
         })
-        .catch((error) => {});
     },
     onStaff(params) {
       const rows = params.row;
       const _this = this;
       rows.topStatus = 'manage';
       this.userDetail = _.cloneDeep(params.row);
-      this.userDetail.userType =
-        params.row.userType == 'CONSUMER' ? 'STAFF' : 'CONSUMER';
+      this.userDetail.userType = params.row.userType === 'CONSUMER' ? 'STAFF' : 'CONSUMER';
       setStaff(this.userDetail)
         .then((res) => {
           this.$Message.info('操作成功');
@@ -355,7 +343,6 @@ export default {
             }, 2000);
           }
         })
-        .catch((error) => {});
     }
   }
 };

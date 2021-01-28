@@ -4,7 +4,7 @@
       <Card>
         <h3>集字活动数据统计</h3>
         <tables
-          v-model="inviteData"
+          v-model="tableData"
           :columns="dataColumns"
           :loading="loading"
           :search-area-column="18"
@@ -21,7 +21,6 @@
 
 <script type="text/ecmascript-6">
 import Tables from '_c/tables';
-import _ from 'lodash';
 import { getCollectWordStatistics } from '@/api/mini-program';
 import uploadMixin from '@/mixins/uploadMixin';
 import tableMixin from '@/mixins/tableMixin.js';
@@ -35,7 +34,6 @@ export default {
   mixins: [uploadMixin, tableMixin],
   data() {
     return {
-      inviteData: [],
       dataColumns: [
         {
           title: '兑换获券人数',
@@ -67,15 +65,13 @@ export default {
   },
   created() {},
   methods: {
-    getTableData(value) {
+    getTableData() {
+      this.loading = true;
       getCollectWordStatistics()
         .then((res) => {
-          this.inviteData.push(res);
-          this.loading = false;
-          this.searchLoading = false;
-          this.clearSearchLoading = false;
+          this.tableData.push(res);
         })
-        .catch((error) => {
+        .finally(() => {
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;

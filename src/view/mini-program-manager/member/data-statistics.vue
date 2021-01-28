@@ -79,8 +79,6 @@
 
 <script type="text/ecmascript-6">
 import Tables from '_c/tables';
-import CountTo from '_c/count-to';
-import _ from 'lodash';
 import { dataStatistics } from '@/api/mini-program';
 import tableMixin from '@/mixins/tableMixin.js';
 
@@ -104,14 +102,16 @@ const roleRowData = {
   page: 1,
   rows: 10
 };
+
 export default {
   components: {
-    Tables,
-    CountTo
+    Tables
   },
   mixins: [tableMixin],
   data() {
     return {
+      mark: false,
+      button: '昨日',
       columns: [
         {
           title: '日期',
@@ -124,7 +124,6 @@ export default {
             } else {
               return <div>{'N/A'}</div>;
             }
-            return <div>{row.totalDate}</div>;
           }
         },
         {
@@ -179,10 +178,6 @@ export default {
           align: 'center'
         }
       ],
-      mark: false,
-      button: '昨日',
-      createLoading: false,
-      modalViewLoading: false,
       searchRowData: _.cloneDeep(roleRowData),
       dataStatisticsDetail: _.cloneDeep(dataStatisticsDetail)
     };
@@ -211,12 +206,8 @@ export default {
       dataStatistics(this.searchRowData)
         .then(res => {
           this.tableData = res;
-          this.loading = false;
-          this.searchLoading = false;
-          this.clearSearchLoading = false;
         })
-        .catch(error => {
-          console.log(error);
+        .finally(() => {
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
@@ -247,7 +238,6 @@ export default {
       this.searchRowData.dateGroup = !this.searchRowData.dateGroup;
     },
     handleClear() {
-      // 重置数据
       this.resetSearchRowData();
       this.page = 1;
       this.pageSize = 10;

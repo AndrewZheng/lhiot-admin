@@ -295,7 +295,6 @@
 
 <script type="text/ecmascript-6">
 import Tables from '_c/tables';
-import _ from 'lodash';
 import {
   getSendCouponPages,
   getComboBoxs,
@@ -306,11 +305,6 @@ import uploadMixin from '@/mixins/uploadMixin';
 import tableMixin from '@/mixins/tableMixin.js';
 import { couponTypeConvert } from '@/libs/converStatus';
 import { couponTypeEnum } from '@/libs/enumerate';
-import {
-  fenToYuanDot2,
-  fenToYuanDot2Number,
-  yuanToFenNumber
-} from '@/libs/util';
 
 const couponTemplateDetail = {};
 
@@ -344,22 +338,23 @@ export default {
   mixins: [uploadMixin, tableMixin],
   data() {
     return {
-      topStatus: 'issue',
+      storeList: [],
+      tableData1: [],
+      couponTypeList: [],
+      couponWayList: [],
       mark: false,
       mark1: false,
       num: 0,
       num1: 0,
-      couponTypeList: [],
-      couponWayList: [],
-      button: '今日',
-      button1: '今日',
-      couponTypeEnum,
       totalNum: 0,
       totalNum1: 0,
+      totalPage: 0,
+      topStatus: 'issue',
+      button: '今日',
+      button1: '今日',
       totalCouponAmount: '0.00',
       totalAmountPayable: '0.00',
-      totalPage: 0,
-      storeList: [],
+      couponTypeEnum,
       sourceType: [
         { label: '海鼎券', value: 'HD' },
         { label: '系统券', value: 'SMALL' }
@@ -558,8 +553,7 @@ export default {
       ],
       searchRowData: _.cloneDeep(roleRowData),
       searchRowData1: _.cloneDeep(roleRowData1),
-      couponTemplateDetail: _.cloneDeep(couponTemplateDetail),
-      tableData1: []
+      couponTemplateDetail: _.cloneDeep(couponTemplateDetail)
     };
   },
   computed: {},
@@ -582,142 +576,53 @@ export default {
       this.getTableData1();
     },
     getTableData(value) {
-      const date = new Date();
-      date.setDate(date.getDate());
-      var year = date.getFullYear();
-      var month = date.getMonth() + 1;
-      var day = date.getDate();
-      var today = `${year}-${month}-${day}`;
+      const today = this.getDateByParam(0);
       if (value === '昨日') {
-        const date = new Date();
-        date.setDate(date.getDate() - 1);
-        var year = date.getFullYear();
-        var month = date.getMonth() + 1;
-        var day = date.getDate();
-        var yesterday = `${year}-${month}-${day}`;
+        const yesterday = this.getDateByParam(-1);
         this.searchRowData.startDate = yesterday;
         this.searchRowData.endDate = yesterday;
-      }
-      if (this.button === '今日') {
-        const date = new Date();
-        date.setDate(date.getDate());
-        var year = date.getFullYear();
-        var month = date.getMonth() + 1;
-        var day = date.getDate();
-        var today = `${year}-${month}-${day}`;
+      } else if (value === '今日' || this.button === '今日') {
         this.searchRowData.startDate = today;
         this.searchRowData.endDate = today;
-      }
-      if (value === '今日') {
-        const date = new Date();
-        date.setDate(date.getDate());
-        var year = date.getFullYear();
-        var month = date.getMonth() + 1;
-        var day = date.getDate();
-        var today = `${year}-${month}-${day}`;
-        this.searchRowData.startDate = today;
-        this.searchRowData.endDate = today;
-      }
-      if (value === '最近7天') {
-        const date = new Date();
-        date.setDate(date.getDate() - 7);
-        var year = date.getFullYear();
-        var month = date.getMonth() + 1;
-        var day = date.getDate();
-        var sevenDay = `${year}-${month}-${day}`;
+      } else if (value === '最近7天') {
+        const sevenDay = this.getDateByParam(-7);
         this.searchRowData.startDate = sevenDay;
         this.searchRowData.endDate = today;
-      }
-      if (value === '最近30天') {
-        const date = new Date();
-        date.setDate(date.getDate() - 30);
-        var year = date.getFullYear();
-        var month = date.getMonth() + 1;
-        var day = date.getDate();
-        var toMonth = `${year}-${month}-${day}`;
+      } else if (value === '最近30天') {
+        const toMonth = this.getDateByParam(-30);
         this.searchRowData.startDate = toMonth;
         this.searchRowData.endDate = today;
       }
-      // this.searchRowData.startDate = this
-      //   .$moment(this.searchRowData.startDate)
-      //   .format("YYYY-MM-DD HH:mm:ss");
-      // this.searchRowData.endDate = this
-      //   .$moment(this.searchRowData.endDate)
-      //   .format("YYYY-MM-DD HH:mm:ss");
-
       getSendCouponPages(this.searchRowData)
         .then((res) => {
           this.totalNum = res.totalNum;
           this.tableData = res.pagingResultDto.rows;
           this.total = res.pagingResultDto.total;
-          this.loading = false;
-          this.searchLoading = false;
-          this.clearSearchLoading = false;
           if (this.num < 2) {
             this.handleSearch();
           }
         })
-        .catch((error) => {
-          console.log(error);
+        .finally(() => {
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
         });
     },
     getTableData1(value) {
-      const date = new Date();
-      date.setDate(date.getDate());
-      var year = date.getFullYear();
-      var month = date.getMonth() + 1;
-      var day = date.getDate();
-      var today = `${year}-${month}-${day}`;
+      const today = this.getDateByParam(0);
       if (value === '昨日') {
-        const date = new Date();
-        date.setDate(date.getDate() - 1);
-        var year = date.getFullYear();
-        var month = date.getMonth() + 1;
-        var day = date.getDate();
-        var yesterday = `${year}-${month}-${day}`;
+        const yesterday = this.getDateByParam(-1);
         this.searchRowData1.startDate = yesterday;
         this.searchRowData1.endDate = yesterday;
-      }
-      if (this.button1 === '今日') {
-        const date = new Date();
-        date.setDate(date.getDate());
-        var year = date.getFullYear();
-        var month = date.getMonth() + 1;
-        var day = date.getDate();
-        var today = `${year}-${month}-${day}`;
+      } else if (value === '今日' || this.button1 === '今日') {
         this.searchRowData1.startDate = today;
         this.searchRowData1.endDate = today;
-      }
-      if (value === '今日') {
-        const date = new Date();
-        date.setDate(date.getDate());
-        var year = date.getFullYear();
-        var month = date.getMonth() + 1;
-        var day = date.getDate();
-        var today = `${year}-${month}-${day}`;
-        this.searchRowData1.startDate = today;
-        this.searchRowData1.endDate = today;
-      }
-      if (value === '最近7天') {
-        const date = new Date();
-        date.setDate(date.getDate() - 7);
-        var year = date.getFullYear();
-        var month = date.getMonth() + 1;
-        var day = date.getDate();
-        var sevenDay = `${year}-${month}-${day}`;
+      } else if (value === '最近7天') {
+        const sevenDay = this.getDateByParam(-7);
         this.searchRowData1.startDate = sevenDay;
         this.searchRowData1.endDate = today;
-      }
-      if (value === '最近30天') {
-        const date = new Date();
-        date.setDate(date.getDate() - 30);
-        var year = date.getFullYear();
-        var month = date.getMonth() + 1;
-        var day = date.getDate();
-        var toMonth = `${year}-${month}-${day}`;
+      } else if (value === '最近30天') {
+        const toMonth = this.getDateByParam(-30);
         this.searchRowData1.startDate = toMonth;
         this.searchRowData1.endDate = today;
       }
@@ -728,12 +633,8 @@ export default {
           this.totalAmountPayable = res.totalAmountPayable;
           this.tableData1 = res.pagingResultDto.rows;
           this.totalPage = res.pagingResultDto.total;
-          this.loading = false;
-          this.searchLoading = false;
-          this.clearSearchLoading = false;
         })
-        .catch((error) => {
-          console.log(error);
+        .finally(() => {
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
@@ -745,7 +646,6 @@ export default {
           this.couponTypeList = res.couponTypeList;
           this.couponWayList = res.couponWayList;
         })
-        .catch((error) => {});
     },
     getStore() {
       getStorePages({ page: 1, rows: -1 })
@@ -756,9 +656,6 @@ export default {
             map.label = value.storeName;
             this.storeList.push(map);
           });
-        })
-        .catch((error) => {
-          console.log(error);
         });
     },
     handleSearch() {
@@ -886,7 +783,6 @@ export default {
           this.searchRowData.rows = 10;
           this.searchRowData.page = pageSize;
           // 表格数据导出字段翻译
-          const _this = this;
           tableData.forEach((item) => {
             item['couponType'] = couponTypeConvert(item['couponType']).label;
             if (item['source'] === 'SMALL') {
@@ -912,7 +808,6 @@ export default {
           this.searchRowData1.rows = 10;
           this.searchRowData1.page = pageSize;
           // 表格数据导出字段翻译
-          const _this = this;
           tableData1.forEach((item) => {
             item['couponType'] = couponTypeConvert(item['couponType']).label;
             if (item['source'] === 'SMALL') {

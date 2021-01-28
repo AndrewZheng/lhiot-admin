@@ -189,11 +189,8 @@ export default {
   mixins: [tableMixin, uploadMixin],
   data() {
     return {
-      rewardTypeEnum,
       ids: [],
-      modalEditLoading: false,
-      searchRowData: _.cloneDeep(searchRowData),
-      signRewardDetail: _.cloneDeep(signRewardDetail),
+      rewardTypeEnum,
       columns: [
         {
           type: 'selection',
@@ -250,7 +247,9 @@ export default {
         getIntegral: { required: true, message: '请填写任务积分' },
         giftPackType: { required: false, message: '请选择礼包类型' },
         rewardType: { required: true, message: '请选择奖励类型' }
-      }
+      },
+      searchRowData: _.cloneDeep(searchRowData),
+      signRewardDetail: _.cloneDeep(signRewardDetail)
     };
   },
   computed: {
@@ -289,13 +288,13 @@ export default {
       })
     },
     handleCreate() {
-      this.$refs.editForm.resetFields();
+      this.resetFields();
       this.tempModalType = this.modalType.create;
-      this.signRewardDetail = signRewardDetail;
+      this.signRewardDetail = _.cloneDeep(signRewardDetail);
       this.modalEdit = true;
     },
     handleEdit(params) {
-      this.$refs.editForm.resetFields();
+      this.resetFields();
       this.tempModalType = this.modalType.edit;
       this.signRewardDetail = _.cloneDeep(params.row);
       this.modalEdit = true;
@@ -341,7 +340,6 @@ export default {
       this.signRewardDetail.giftPackType = value === 'GIFTPACK' ? 'COUPON' : '';
     },
     deleteTable(ids) {
-      this.loading = true;
       deleteSignReward({
         ids
       })
@@ -356,9 +354,6 @@ export default {
           }
           this.tableDataSelected = [];
           this.getTableData();
-        })
-        .finally(() => {
-          this.loading = false;
         });
     }
   }

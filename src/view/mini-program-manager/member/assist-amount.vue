@@ -204,7 +204,6 @@
 
 <script type="text/ecmascript-6">
 import Tables from '_c/tables';
-import _ from 'lodash';
 import {
   userAssistStatistics,
   assistDataStatistics,
@@ -212,11 +211,6 @@ import {
 } from '@/api/mini-program';
 import uploadMixin from '@/mixins/uploadMixin';
 import tableMixin from '@/mixins/tableMixin.js';
-import {
-  fenToYuanDot2,
-  fenToYuanDot2Number,
-  yuanToFenNumber
-} from '@/libs/util';
 
 const couponTemplateDetail = {
   //   id: 0,
@@ -241,7 +235,6 @@ const roleRowData = {
   sort: 'desc'
 };
 
-// 第一个tables
 const roleRowData1 = {
   beginDate: null,
   endDate: null
@@ -519,7 +512,6 @@ export default {
     this.getTableData();
     this.getTableData1();
     this.getTableData2();
-    // this.handleSearch();
   },
   created() {},
   methods: {
@@ -532,82 +524,42 @@ export default {
         .then(res => {
           this.tableData = res.rows;
           this.total = res.total;
-          this.loading = false;
-          this.searchLoading = false;
-          this.clearSearchLoading = false;
         })
-        .catch(error => {
-          console.log(error);
+        .finally(() => {
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
         });
     },
     getTableData1(value) {
-      const date = new Date();
-      date.setDate(date.getDate());
-      var year = date.getFullYear();
-      var month = date.getMonth() + 1;
-      var day = date.getDate();
-      var today = `${year}-${month}-${day}`;
+      const today = this.getDateByParam(0);
       if (value === '昨日') {
-        const date = new Date();
-        date.setDate(date.getDate() - 1);
-        var year = date.getFullYear();
-        var month = date.getMonth() + 1;
-        var day = date.getDate();
-        var yesterday = `${year}-${month}-${day}`;
+        const yesterday = this.getDateByParam(-1);
         this.searchRowData1.beginDate = yesterday;
         this.searchRowData1.endDate = yesterday;
-      }
-      if (value === '今日') {
-        const date = new Date();
-        date.setDate(date.getDate());
-        var year = date.getFullYear();
-        var month = date.getMonth() + 1;
-        var day = date.getDate();
-        var today = `${year}-${month}-${day}`;
+      } else if (value === '今日') {
         this.searchRowData1.beginDate = today;
         this.searchRowData1.endDate = today;
-      }
-      if (value === '最近7天') {
-        const date = new Date();
-        date.setDate(date.getDate() - 7);
-        var year = date.getFullYear();
-        var month = date.getMonth() + 1;
-        var day = date.getDate();
-        var sevenDay = `${year}-${month}-${day}`;
+      } else if (value === '最近7天') {
+        const sevenDay = this.getDateByParam(-7);
         this.searchRowData1.beginDate = sevenDay;
         this.searchRowData1.endDate = today;
-      }
-      if (value === '最近30天') {
-        const date = new Date();
-        date.setDate(date.getDate() - 30);
-        var year = date.getFullYear();
-        var month = date.getMonth() + 1;
-        var day = date.getDate();
-        var toMonth = `${year}-${month}-${day}`;
+      } else if (value === '最近30天') {
+        const toMonth = this.getDateByParam(-30);
         this.searchRowData1.beginDate = toMonth;
         this.searchRowData1.endDate = today;
       }
-      const date1 = new Date();
-      date1.setDate(date.getDate() - 1);
-      var year1 = date.getFullYear();
-      var month1 = date.getMonth() + 1;
-      var day1 = date.getDate();
-      var yesterday1 = `${year1}-${month1}-${day1}`;
+      // 默认进来查询昨日的数据
+      const yesterday = this.getDateByParam(-1);
       if (this.button === '今日') {
-        this.searchRowData1.beginDate = yesterday1;
-        this.searchRowData1.endDate = yesterday1;
+        this.searchRowData1.beginDate = yesterday;
+        this.searchRowData1.endDate = yesterday;
       }
       assistDataStatistics(this.searchRowData1)
         .then(res => {
           this.inviteData.push(res);
-          this.loading = false;
-          this.searchLoading = false;
-          this.clearSearchLoading = false;
         })
-        .catch(error => {
+        .finally(() => {
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
@@ -618,12 +570,8 @@ export default {
         .then(res => {
           this.tableData2 = res.rows;
           this.totalPage = res.total;
-          this.loading = false;
-          this.searchLoading = false;
-          this.clearSearchLoading = false;
         })
-        .catch(error => {
-          console.log(error);
+        .finally(() => {
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
@@ -640,26 +588,14 @@ export default {
       this.getTableData2();
     },
     timeChange(value) {
-      if (value === '今日') {
-        this.getTableData1(value);
-        this.inviteData = [];
-        this.mark = false;
-      } else if (value === '昨日') {
-        this.mark = false;
-        this.inviteData = [];
-        this.getTableData1(value);
-      } else if (value === '最近7天') {
-        this.mark = false;
-        this.inviteData = [];
-        this.getTableData1(value);
-      } else if (value === '最近30天') {
-        this.mark = false;
-        this.inviteData = [];
-        this.getTableData1(value);
-      } else if (value === '自定义时间') {
+      if (value === '自定义时间') {
         this.mark = true;
         this.searchRowData1.beginDate = '';
         this.searchRowData1.endDate = '';
+      } else {
+        this.mark = false;
+        this.inviteData = [];
+        this.getTableData1(value);
       }
     },
     startTimeChange(value, date) {
@@ -669,11 +605,6 @@ export default {
     endTimeChange(value, date) {
       this.button = '自定义时间';
       this.searchRowData1.endDate = value;
-    },
-    handleSearch() {
-      this.searchRowData.page = 1;
-      // this.searchLoading = true;
-      this.getTableData();
     },
     // 导出数据
     handleDownload() {
@@ -687,11 +618,10 @@ export default {
         this.searchRowData2.rows = 10;
         this.searchRowData.page = pageSize;
         // 表格数据导出字段翻译
-        const _this = this;
         tableData2.forEach(item => {
-          if (item['type'] == 'COUPON') {
+          if (item['type'] === 'COUPON') {
             item['type'] = '优惠券';
-          } else if (item['type'] == 'PROD') {
+          } else if (item['type'] === 'PROD') {
             item['type'] = '商品';
           }
           item['couponConfigId'] = Number(item['couponConfigId']);
@@ -709,7 +639,6 @@ export default {
         return;
       }
       this.topStatus = index;
-      // console.log("数据", this.topStatus);
     },
     changePage2(page) {
       this.searchRowData2.page = page;

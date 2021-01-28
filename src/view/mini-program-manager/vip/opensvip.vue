@@ -97,6 +97,7 @@
         </Row>
       </div>
     </Card>
+
     <!-- 查看svip套餐详情 -->
     <Modal v-model="modalView" :width="800" draggable scrollable :mask-closable="false">
       <p slot="header">
@@ -226,6 +227,7 @@
         </Button>
       </div>
     </Modal>
+
     <!-- 添加svip开卡活动 -->
     <Modal
       v-model="modalAdd"
@@ -380,6 +382,7 @@
         </Button>
       </div>
     </Modal>
+
     <!-- 修改优惠券 -->
     <Modal v-model="modalEdit" :mask-closable="false" :width="1000" draggable>
       <p slot="header">
@@ -531,8 +534,6 @@
 <script type="text/ecmascript-6">
 import Tables from '_c/tables';
 import IViewUpload from '_c/iview-upload';
-import DragList from '_c/drag-list';
-import _ from 'lodash';
 import {
   getSvipPackagePages,
   deleteSvipPackage,
@@ -542,24 +543,19 @@ import {
 import uploadMixin from '@/mixins/uploadMixin';
 import tableMixin from '@/mixins/tableMixin.js';
 import {
-  //   1.7
   packageTypeConvert,
   packageStatusConvert
 } from '@/libs/converStatus';
 import {
-  //   1.7
   packageTypeEnum,
   packageStatusEnum
 } from '@/libs/enumerate';
 import {
-  compareData,
-  getSmallCouponActivity,
   fenToYuanDot2,
   fenToYuanDot2Number,
   yuanToFenNumber,
   replaceByTag,
   replaceByTab,
-  addRnb,
   addDay
 } from '@/libs/util';
 
@@ -575,10 +571,6 @@ const relationDetail = {
   packageDesc: '' // 套餐描述
 };
 
-const couponTemplateDetail = {
-  state: 'OFF' // 活动状态
-};
-
 const roleRowData = {
   page: 1,
   rows: 10
@@ -592,7 +584,6 @@ const dataColumns = [
   {
     type: 'selection',
     width: 60,
-    align: 'center',
     align: 'center'
   },
   {
@@ -755,6 +746,18 @@ export default {
   mixins: [tableMixin, uploadMixin],
   data() {
     return {
+      defaultListMain: [],
+      uploadListMain: [],
+      areaList: [],
+      addRelationList: [],
+      couponTemplateData: [],
+      templatePageOpts: [5, 10],
+      addTempDataLoading: false,
+      tempTableLoading: false,
+      couponTemplateTotal: 0,
+      packageTypeEnum,
+      packageStatusEnum,
+      dataColumns: dataColumns,
       distributionRuleInline: {
         state: [{ required: true, message: '请选择活动状态' }],
         packageType: [{ required: true, message: '请选择套餐类型' }],
@@ -809,25 +812,10 @@ export default {
           }
         ]
       },
-      defaultListMain: [],
-      uploadListMain: [],
-      areaList: [],
-      packageTypeEnum,
-      packageStatusEnum,
-      dataColumns: dataColumns,
-      templatePageOpts: [5, 10],
-      addTempDataLoading: false,
-      tempTableLoading: false,
-      createLoading: false,
-      modalViewLoading: false,
       searchRowData: _.cloneDeep(roleRowData),
       searchTemplateRowData: _.cloneDeep(templateRowData),
       relationDetail: _.cloneDeep(relationDetail),
-      addRelationDetail: _.cloneDeep(relationDetail),
-      addRelationList: [],
-      couponTemplateData: [],
-      couponTemplateTotal: 0,
-      modalAdd: false
+      addRelationDetail: _.cloneDeep(relationDetail)
     };
   },
   computed: {
@@ -884,17 +872,14 @@ export default {
       this.modalEdit = true;
     },
     getTableData() {
+      this.loading = true;
       getSvipPackagePages(this.searchRowData)
         .then(res => {
           this.tableData = res.rows;
           this.total = res.total;
-          this.loading = false;
-          this.searchLoading = false;
-          this.clearSearchLoading = false;
           this.year = res.rows;
         })
-        .catch(error => {
-          console.log(error);
+        .finally(() => {
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
@@ -977,7 +962,7 @@ export default {
     },
     handleTemplateAdd() {
       const _this = this;
-      if (_this.addRelationDetail.packageName == '') {
+      if (_this.addRelationDetail.packageName === '') {
         _this.$Message.error('请完善信息!');
         return false;
       }
@@ -1055,7 +1040,7 @@ export default {
         .then(res => {
           const totalPage = Math.ceil(this.total / this.searchRowData.pageSize);
           if (
-            this.tableData.length == this.tableDataSelected.length &&
+            this.tableData.length === this.tableDataSelected.length &&
             this.searchRowData.page === totalPage &&
             this.searchRowData.page !== 1
           ) {

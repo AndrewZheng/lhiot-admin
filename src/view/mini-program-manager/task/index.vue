@@ -258,6 +258,7 @@
         </Button>
       </div>
     </Modal>
+
     <Modal v-model="uploadVisible" title="图片预览">
       <img :src="imgUploadViewItem" style="width: 100%">
     </Modal>
@@ -271,8 +272,7 @@ import {
   getTaskPages,
   editTask,
   deleteTask,
-  createTask,
-  deletePicture
+  createTask
 } from '@/api/mini-program';
 import tableMixin from '@/mixins/tableMixin.js';
 import uploadMixin from '@/mixins/uploadMixin.js';
@@ -306,7 +306,6 @@ export default {
   mixins: [tableMixin, uploadMixin],
   data() {
     return {
-      taskTypeEnum,
       ids: [],
       defaultListMain: [],
       uploadListMain: [],
@@ -315,9 +314,7 @@ export default {
       oldPicture: [],
       newPicture: [],
       save: [],
-      modalEditLoading: false,
-      searchRowData: this._.cloneDeep(searchRowData),
-      taskDetail: this._.cloneDeep(taskDetail),
+      taskTypeEnum,
       columns: [
         {
           title: '编号',
@@ -398,7 +395,9 @@ export default {
         taskIntegral: { required: true, message: '请填写任务积分' },
         taskType: { required: true, message: '请选择任务类型' },
         taskName: { required: true, message: '请填写任务名称' }
-      }
+      },
+      searchRowData: _.cloneDeep(searchRowData),
+      taskDetail: _.cloneDeep(taskDetail)
     };
   },
   created() {
@@ -426,21 +425,18 @@ export default {
       this.searchRowData = _.cloneDeep(searchRowData);
     },
     handleCreate() {
-      this.$refs.editForm.resetFields();
+      this.resetFields();
       this.tempModalType = this.modalType.create;
-      this.taskDetail = taskDetail;
+      this.taskDetail = _.cloneDeep(taskDetail);
       this.modalEdit = true;
     },
     handleEdit(params) {
-      this.$refs.editForm.resetFields();
+      this.resetFields();
       this.tempModalType = this.modalType.edit;
-      this.taskDetail = this._.cloneDeep(params.row);
+      this.taskDetail = _.cloneDeep(params.row);
       this.setDefaultUploadList(params.row);
       if (this.taskDetail.taskRuleDesc) {
-        this.taskDetail.taskRuleDesc = this.taskDetail.taskRuleDesc.replace(
-          /&/g,
-          '\n'
-        );
+        this.taskDetail.taskRuleDesc = this.taskDetail.taskRuleDesc.replace(/&/g, '\n');
       }
       this.modalEdit = true;
     },
@@ -449,10 +445,7 @@ export default {
         if (valid) {
           // 任务规则换行用“&”拼接
           if (this.taskDetail.taskRuleDesc) {
-            this.taskDetail.taskRuleDesc = this.taskDetail.taskRuleDesc.replace(
-              /\n|\r/g,
-              '&'
-            );
+            this.taskDetail.taskRuleDesc = this.taskDetail.taskRuleDesc.replace(/\n|\r/g, '&');
           }
           if (this.isCreate) {
             this.createTableRow();
@@ -470,26 +463,23 @@ export default {
         .then((res) => {
           this.modalEdit = false;
           this.getTableData();
-          this.resetFields();
         })
         .finally(() => {
           this.modalEditLoading = false;
         });
     },
     createTableRow() {
+      this.modalEditLoading = true;
       createTask(this.taskDetail)
-        .then((res) => {})
-        .finally((res) => {
+        .then((res) => {
           this.modalEdit = false;
           this.getTableData();
-          this.resetFields();
         })
         .finally(() => {
           this.modalEditLoading = false;
         });
     },
     deleteTable(ids) {
-      this.loading = true;
       deleteTask({
         ids
       })
@@ -505,9 +495,6 @@ export default {
           this.tableDataSelected = [];
           this.getTableData();
         })
-        .finally(() => {
-          this.loading = false;
-        });
     },
     // 设置编辑商品的图片列表
     setDefaultUploadList(res) {
@@ -521,20 +508,10 @@ export default {
       }
     },
     handleEditClose() {
-      // if (this.newPicture.length > 0) {
-      //   const urls = { urls: this.newPicture };
-      //   this.deletePicture(urls);
-      // }
       this.oldPicture = [];
       this.newPicture = [];
       this.modalEdit = false;
     },
-    // deletePicture(urls) {
-    //   deletePicture({
-    //     urls
-    //   })
-    //     .then(res => {})
-    // },
     handleRemoveMain(file) {
       this.$refs.uploadMain.deleteFile(file);
       this.taskDetail.taskImage = null;

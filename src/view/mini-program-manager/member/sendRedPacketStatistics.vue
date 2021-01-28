@@ -110,15 +110,9 @@
 
 <script type="text/ecmascript-6">
 import Tables from '_c/tables';
-import _ from 'lodash';
 import { getWechatRewardPage } from '@/api/mini-program';
-import uploadMixin from '@/mixins/uploadMixin';
 import tableMixin from '@/mixins/tableMixin.js';
-import {
-  fenToYuanDot2,
-  fenToYuanDot2Number,
-  yuanToFenNumber
-} from '@/libs/util';
+import { fenToYuanDot2 } from '@/libs/util';
 
 const roleRowData = {
   createBeginDate: '',
@@ -135,16 +129,13 @@ export default {
   components: {
     Tables
   },
-  mixins: [uploadMixin, tableMixin],
+  mixins: [tableMixin],
   data() {
     return {
       mark: false,
-      modalViewLoading: false,
-      createLoading: false,
       totalAmount: 0,
       totalPage: 0,
       button: '昨日',
-      tableData: [],
       columns: [
         {
           title: '发起人昵称',
@@ -199,64 +190,29 @@ export default {
   computed: {},
   mounted() {
     this.searchRowData = _.cloneDeep(roleRowData);
-    this.gettableData();
+    this.getTableData();
   },
   created() {},
   methods: {
-    gettableData(value) {
-      const date = new Date();
-      date.setDate(date.getDate());
-      var year = date.getFullYear();
-      var month = date.getMonth() + 1;
-      var day = date.getDate();
-      var today = `${year}-${month}-${day}`;
+    getTableData(value) {
+      const today = this.getDateByParam(0);
       if (value === '昨日' || this.button === '昨日') {
-        const date = new Date();
-        date.setDate(date.getDate() - 1);
-        var year = date.getFullYear();
-        var month = date.getMonth() + 1;
-        var day = date.getDate();
-        var yesterday = `${year}-${month}-${day}`;
+        const yesterday = this.getDateByParam(-1);
         this.searchRowData.createBeginDate = yesterday;
         this.searchRowData.createEndDate = yesterday;
-      }
-      if (value === '今日') {
-        const date = new Date();
-        date.setDate(date.getDate());
-        var year = date.getFullYear();
-        var month = date.getMonth() + 1;
-        var day = date.getDate();
-        var today = `${year}-${month}-${day}`;
+      } else if (value === '今日') {
         this.searchRowData.createBeginDate = today;
         this.searchRowData.createEndDate = today;
-      }
-      if (value === '汇总') {
-        const date = new Date();
-        date.setDate(date.getDate() - 365);
-        var year = date.getFullYear();
-        var month = date.getMonth() + 1;
-        var day = date.getDate();
-        var before = `${year}-${month}-${day}`;
-        this.searchRowData.createBeginDate = before;
+      } else if (value === '汇总') {
+        const allDay = this.getDateByParam(-365);
+        this.searchRowData.createBeginDate = allDay;
         this.searchRowData.createEndDate = today;
-      }
-      if (value === '最近7天') {
-        const date = new Date();
-        date.setDate(date.getDate() - 7);
-        var year = date.getFullYear();
-        var month = date.getMonth() + 1;
-        var day = date.getDate();
-        var sevenDay = `${year}-${month}-${day}`;
+      } else if (value === '最近7天') {
+        const sevenDay = this.getDateByParam(-7);
         this.searchRowData.createBeginDate = sevenDay;
         this.searchRowData.createEndDate = today;
-      }
-      if (value === '最近30天') {
-        const date = new Date();
-        date.setDate(date.getDate() - 30);
-        var year = date.getFullYear();
-        var month = date.getMonth() + 1;
-        var day = date.getDate();
-        var toMonth = `${year}-${month}-${day}`;
+      } else if (value === '最近30天') {
+        const toMonth = this.getDateByParam(-30);
         this.searchRowData.createBeginDate = toMonth;
         this.searchRowData.createEndDate = today;
       }
@@ -271,37 +227,21 @@ export default {
           this.tableData = res.pagingResultDto.rows;
           this.totalPage = res.pagingResultDto.total;
           this.totalAmount = res.totalAmount;
-          this.loading = false;
-          this.searchLoading = false;
-          this.clearSearchLoading = false;
         })
-        .catch((error) => {
-          console.log(error);
+        .finally(() => {
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
         });
     },
     timeChange(value) {
-      if (value === '今日') {
-        this.gettableData(value);
-        this.mark = false;
-      } else if (value === '汇总') {
-        this.mark = false;
-        this.gettableData(value);
-      } else if (value === '昨日') {
-        this.mark = false;
-        this.gettableData(value);
-      } else if (value === '最近7天') {
-        this.mark = false;
-        this.gettableData(value);
-      } else if (value === '最近30天') {
-        this.mark = false;
-        this.gettableData(value);
-      } else if (value === '自定义时间') {
+      if (value === '自定义时间') {
         this.mark = true;
         this.searchRowData.createBeginDate = '';
         this.searchRowData.createEndDate = '';
+      } else {
+        this.mark = false;
+        this.getTableData(value);
       }
     },
     starttimeChange(value, date) {
@@ -314,25 +254,24 @@ export default {
     },
     handleSearchMaterial() {
       this.searchRowData.page = 1;
-      this.gettableData();
+      this.getTableData();
     },
     handleClearMaterial() {
       // 重置数据
       this.searchRowData = _.cloneDeep(roleRowData);
       this.button = '昨日';
-      this.gettableData('昨日');
+      this.getTableData('昨日');
     },
     changePageMaterial(page) {
       this.searchRowData.page = page;
-      this.gettableData();
+      this.getTableData();
     },
     changePageSize2(pageSize) {
       this.searchRowData.page = 1;
       this.searchRowData.rows = pageSize;
-      this.gettableData();
+      this.getTableData();
     },
-    handleDownload(name) {
-      const _this = this;
+    handleDownload() {
       this.searchRowData.rows = this.totalPage > 5000 ? 5000 : this.totalPage;
       const pageSize = this.searchRowData.page;
       this.searchRowData.page = 1;

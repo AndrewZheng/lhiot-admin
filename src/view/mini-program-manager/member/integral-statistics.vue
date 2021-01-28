@@ -85,19 +85,10 @@
 
 <script type="text/ecmascript-6">
 import Tables from '_c/tables';
-import _ from 'lodash';
 import {
-  userDataStatistics,
-  dataStatistics,
   integralStatistics
 } from '@/api/mini-program';
-import uploadMixin from '@/mixins/uploadMixin';
 import tableMixin from '@/mixins/tableMixin.js';
-import {
-  fenToYuanDot2,
-  fenToYuanDot2Number,
-  yuanToFenNumber
-} from '@/libs/util';
 
 const couponTemplateDetail = {
   //   id: 0,
@@ -124,7 +115,7 @@ export default {
   components: {
     Tables
   },
-  mixins: [uploadMixin, tableMixin],
+  mixins: [tableMixin],
   data() {
     return {
       mark: false,
@@ -224,49 +215,20 @@ export default {
   created() {},
   methods: {
     getTableData(value) {
-      const date = new Date();
-      date.setDate(date.getDate());
-      var year = date.getFullYear();
-      var month = date.getMonth() + 1;
-      var day = date.getDate();
-      var today = `${year}-${month}-${day}`;
+      const today = this.getDateByParam(0);
       if (value === '昨日') {
-        const date = new Date();
-        date.setDate(date.getDate() - 1);
-        var year = date.getFullYear();
-        var month = date.getMonth() + 1;
-        var day = date.getDate();
-        var yesterday = `${year}-${month}-${day}`;
+        const yesterday = this.getDateByParam(-1);
         this.searchRowData.beginDate = yesterday;
         this.searchRowData.endDate = yesterday;
-      }
-      if (value === '今日' || this.button === '今日') {
-        const date = new Date();
-        date.setDate(date.getDate());
-        var year = date.getFullYear();
-        var month = date.getMonth() + 1;
-        var day = date.getDate();
-        var today = `${year}-${month}-${day}`;
+      } else if (value === '今日' || this.button === '今日') {
         this.searchRowData.beginDate = today;
         this.searchRowData.endDate = today;
-      }
-      if (value === '最近7天') {
-        const date = new Date();
-        date.setDate(date.getDate() - 7);
-        var year = date.getFullYear();
-        var month = date.getMonth() + 1;
-        var day = date.getDate();
-        var sevenDay = `${year}-${month}-${day}`;
+      } else if (value === '最近7天') {
+        const sevenDay = this.getDateByParam(-7);
         this.searchRowData.beginDate = sevenDay;
         this.searchRowData.endDate = today;
-      }
-      if (value === '最近30天') {
-        const date = new Date();
-        date.setDate(date.getDate() - 30);
-        var year = date.getFullYear();
-        var month = date.getMonth() + 1;
-        var day = date.getDate();
-        var toMonth = `${year}-${month}-${day}`;
+      } else if (value === '最近30天') {
+        const toMonth = this.getDateByParam(-30);
         this.searchRowData.beginDate = toMonth;
         this.searchRowData.endDate = today;
       }
@@ -350,42 +312,23 @@ export default {
           data1.countUser = map3;
           this.tableData1.push(data1.countPoints);
           this.tableData1.push(data1.countUser);
-          this.createLoading = false;
-          this.loading = false;
-          this.searchLoading = false;
-          this.clearSearchLoading = false;
         })
-        .catch((error) => {
+        .finally(() => {
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
         });
     },
     timeChange(value) {
-      if (value === '今日') {
-        this.getTableData(value);
-        this.tableData = [];
-        this.tableData1 = [];
-        this.mark = false;
-      } else if (value === '昨日') {
-        this.mark = false;
-        this.tableData = [];
-        this.tableData1 = [];
-        this.getTableData(value);
-      } else if (value === '最近7天') {
-        this.mark = false;
-        this.tableData = [];
-        this.tableData1 = [];
-        this.getTableData(value);
-      } else if (value === '最近30天') {
-        this.mark = false;
-        this.tableData = [];
-        this.tableData1 = [];
-        this.getTableData(value);
-      } else if (value === '自定义时间') {
+      if (value === '自定义时间') {
         this.mark = true;
         this.searchRowData.beginDate = '';
         this.searchRowData.endDate = '';
+      } else {
+        this.mark = false;
+        this.tableData = [];
+        this.tableData1 = [];
+        this.getTableData(value);
       }
     },
     startTimeChange(value, date) {

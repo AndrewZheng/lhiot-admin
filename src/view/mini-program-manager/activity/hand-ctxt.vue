@@ -1373,7 +1373,6 @@ export default {
       templatePageOpts: [5, 10],
       couponTemplateTotal: 0,
       couponHdTemplateTotal: 0,
-      modalAdd: false,
       addTempDataLoading: false,
       tempTableLoading: false,
       createLoading: false,

@@ -215,17 +215,12 @@ import {
   createDeliveryFeeConfig,
   deleteDeliveryFeeConfig,
   editDeliveryFeeConfig,
-  getDeliveryFeeConfigRulePages,
-  createDeliveryFeeConfigRule,
-  deleteDeliveryFeeConfigRule,
-  editDeliveryFeeConfigRule
+  getDeliveryFeeConfigRulePages
 } from '@/api/mini-program';
 import tableMixin from '@/mixins/tableMixin.js';
-import { deliveryAtTypeConvert } from '@/libs/converStatus';
 import {
   deliveryAtTypeEnum,
-  updateWay,
-  deliveryAtType
+  updateWay
 } from '@/libs/enumerate';
 import {
   fenToYuanDot2Number,
@@ -294,16 +289,8 @@ export default {
   mixins: [tableMixin],
   data() {
     return {
-      ruleInline: {
-        minOrderAmount: [
-          { required: true, message: '请填写最小金额', type: 'number' }
-        ],
-        maxOrderAmount: [
-          { required: true, message: '请填写最大金额', type: 'number' }
-        ],
-        deliveryAtType: [{ required: true, message: '请选择时间段' }],
-        deliveryRules: [{ required: true, message: '请添加运费信息' }]
-      },
+      tempDetailList: [],
+      distanceList: ['0-3', '3-5'],
       deliveryAtTypeList: deliveryAtTypeEnum,
       minDeliveryAtTypeEnum: [
         {
@@ -319,7 +306,6 @@ export default {
           value: '8:00-18:00,18:00-22:00'
         }
       ],
-      distanceList: ['0-3', '3-5'],
       postageRuleTableColumns: [
         {
           title: '距离范围（Km）',
@@ -540,11 +526,19 @@ export default {
           options: ['delete']
         }
       ],
-      modalViewLoading: false,
-      tempDetailList: [],
+      ruleInline: {
+        minOrderAmount: [
+          { required: true, message: '请填写最小金额', type: 'number' }
+        ],
+        maxOrderAmount: [
+          { required: true, message: '请填写最大金额', type: 'number' }
+        ],
+        deliveryAtType: [{ required: true, message: '请选择时间段' }],
+        deliveryRules: [{ required: true, message: '请添加运费信息' }]
+      },
       searchRowData: this._.cloneDeep(roleRowData),
       searchRelationRowData: _.cloneDeep(relationRowData),
-      fruitMasterDetail: fruitMasterDetail,
+      fruitMasterDetail: _.cloneDeep(fruitMasterDetail),
       postageDetail: this._.cloneDeep(postageDetail)
     };
   },

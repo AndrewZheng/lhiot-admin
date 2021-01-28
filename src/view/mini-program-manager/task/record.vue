@@ -168,9 +168,6 @@ export default {
   mixins: [tableMixin, uploadMixin],
   data() {
     return {
-      taskTypeEnum,
-      rewardTypeEnum,
-      receiveStatusEnum,
       ids: [],
       defaultListMain: [],
       uploadListMain: [],
@@ -179,9 +176,9 @@ export default {
       oldPicture: [],
       newPicture: [],
       save: [],
-      modalEditLoading: false,
-      searchRowData: this._.cloneDeep(searchRowData),
-      taskRecordDetail: this._.cloneDeep(taskRecordDetail),
+      taskTypeEnum,
+      rewardTypeEnum,
+      receiveStatusEnum,
       columns: [
         {
           title: '编号',
@@ -272,7 +269,9 @@ export default {
           width: '120',
           key: 'createTime'
         }
-      ]
+      ],
+      searchRowData: _.cloneDeep(searchRowData),
+      taskRecordDetail: _.cloneDeep(taskRecordDetail)
     };
   },
   created() {
