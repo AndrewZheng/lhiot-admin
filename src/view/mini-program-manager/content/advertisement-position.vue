@@ -18,15 +18,15 @@
       >
         <div slot="searchCondition">
           <Input
-            :clearable="true"
             v-model="searchRowData.description"
+            :clearable="true"
             placeholder="广告位描述"
             class="search-input mr5"
             style="width: 150px"
           ></Input>
           <Input
-            :clearable="true"
             v-model="searchRowData.postionName"
+            :clearable="true"
             placeholder="广告位英文名"
             class="search-input mr5"
             style="width: 150px"
@@ -39,12 +39,11 @@
           >
             <Option
               v-for="item in timeLimitedEnum"
-              :value="item.value"
               :key="`search-col-${item.value}`"
+              :value="item.value"
               class="ml15 mt10"
               style="padding-left: 5px"
-              >{{ item.label }}</Option
-            >
+            >{{ item.label }}</Option>
           </Select>
           <Select
             v-model="searchRowData.applicationType"
@@ -54,10 +53,9 @@
           >
             <Option
               v-for="item in appTypesEnum"
-              :value="item.value"
               :key="`search-col-${item.value}`"
-              >{{ item.label }}</Option
-            >
+              :value="item.value"
+            >{{ item.label }}</Option>
           </Select>
           <Select
             v-model="searchRowData.positionType"
@@ -67,10 +65,9 @@
           >
             <Option
               v-for="item in advertisementPositionTypeEnum"
-              :value="item.value"
               :key="`search-col-${item.value}`"
-              >{{ item.label }}</Option
-            >
+              :value="item.value"
+            >{{ item.label }}</Option>
           </Select>
           <Button
             v-waves
@@ -227,12 +224,11 @@
             >
               <Option
                 v-for="(item, index) in timeLimitedEnum"
-                :value="item.value"
                 :key="index"
+                :value="item.value"
                 class="ptb2-5"
                 style="padding-left: 5px"
-                >{{ item.label }}</Option
-              >
+              >{{ item.label }}</Option>
             </Select>
           </FormItem>
           <FormItem label="应用类型:" prop="applicationType">
@@ -244,12 +240,11 @@
             >
               <Option
                 v-for="(item, index) in appTypesEnum"
-                :value="item.value"
                 :key="index"
+                :value="item.value"
                 class="ptb2-5"
                 style="padding-left: 5px"
-                >{{ item.label }}</Option
-              >
+              >{{ item.label }}</Option>
             </Select>
           </FormItem>
           <FormItem label="广告位类型:" prop="positionType">
@@ -261,12 +256,11 @@
             >
               <Option
                 v-for="(item, index) in advertisementPositionTypeEnum"
-                :value="item.value"
                 :key="index"
+                :value="item.value"
                 class="ptb2-5"
                 style="padding-left: 5px"
-                >{{ item.label }}</Option
-              >
+              >{{ item.label }}</Option>
             </Select>
           </FormItem>
         </Form>
@@ -277,119 +271,118 @@
           :loading="modalEditLoading"
           type="primary"
           @click="handleSubmit('modalEdit')"
-          >确定</Button
-        >
+        >确定</Button>
       </div>
     </Modal>
 
     <Modal v-model="uploadVisible" title="图片预览">
-      <img :src="imgUploadViewItem" style="width: 100%" />
+      <img :src="imgUploadViewItem" style="width: 100%">
     </Modal>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
-import Tables from "_c/tables";
-import IViewUpload from "_c/iview-upload";
-import _ from "lodash";
+import Tables from '_c/tables';
+import IViewUpload from '_c/iview-upload';
+import _ from 'lodash';
 import {
   getAdvertisementPosition,
   getAdvertisementPositionPages,
   createAdvertisementPosition,
   deleteAdvertisementPosition,
-  editAdvertisementPosition,
-} from "@/api/mini-program";
-import tableMixin from "@/mixins/tableMixin.js";
-import searchMixin from "@/mixins/searchMixin.js";
-import deleteMixin from "@/mixins/deleteMixin.js";
-import uploadMixin from "@/mixins/uploadMixin";
+  editAdvertisementPosition
+} from '@/api/mini-program';
+import tableMixin from '@/mixins/tableMixin.js';
+import searchMixin from '@/mixins/searchMixin.js';
+import deleteMixin from '@/mixins/deleteMixin.js';
+import uploadMixin from '@/mixins/uploadMixin';
 import {
   appTypesEnum,
   timeLimitedEnum,
-  advertisementPositionTypeEnum,
-} from "@/libs/enumerate";
+  advertisementPositionTypeEnum
+} from '@/libs/enumerate';
 import {
   appTypesConvert,
   timeLimitedConvert,
-  advertisementPositionTypeConvert,
-} from "@/libs/converStatus";
+  advertisementPositionTypeConvert
+} from '@/libs/converStatus';
 
 const advertisementPositionDetail = {
   relationId: 0,
   id: 0,
-  description: "",
-  postionName: "",
+  description: '',
+  postionName: '',
   timeLimited: null,
-  applicationType: "S_MALL",
-  positionType: null,
+  applicationType: 'S_MALL',
+  positionType: null
 };
 
 const roleRowData = {
-  description: "",
-  postionName: "",
+  description: '',
+  postionName: '',
   timeLimited: null,
   applicationType: null,
   positionType: null,
   page: 1,
-  rows: 10,
+  rows: 10
 };
 
 export default {
   components: {
     Tables,
-    IViewUpload,
+    IViewUpload
   },
   mixins: [tableMixin, searchMixin, deleteMixin, uploadMixin],
   data() {
     return {
       ruleInline: {
-        description: [{ required: true, message: "请输入广告位描述" }],
-        postionName: [{ required: true, message: "请输入广告位英文名" }],
-        timeLimited: [{ required: true, message: "请选择时间限制类型" }],
-        applicationType: [{ required: true, message: "请选择应用类型" }],
-        positionType: [{ required: true, message: "请选择广告位类型" }],
+        description: [{ required: true, message: '请输入广告位描述' }],
+        postionName: [{ required: true, message: '请输入广告位英文名' }],
+        timeLimited: [{ required: true, message: '请选择时间限制类型' }],
+        applicationType: [{ required: true, message: '请选择应用类型' }],
+        positionType: [{ required: true, message: '请选择广告位类型' }]
       },
       appTypesEnum,
       timeLimitedEnum,
       advertisementPositionTypeEnum,
       columns: [
         {
-          title: "ID",
-          align: "center",
-          key: "id",
-          minWidth: 60,
+          title: 'ID',
+          align: 'center',
+          key: 'id',
+          minWidth: 60
         },
         {
-          title: "广告位描述",
-          align: "center",
-          key: "description",
-          minWidth: 170,
+          title: '广告位描述',
+          align: 'center',
+          key: 'description',
+          minWidth: 170
         },
         {
-          title: "广告位英文名",
-          align: "center",
-          key: "postionName",
-          minWidth: 280,
+          title: '广告位英文名',
+          align: 'center',
+          key: 'postionName',
+          minWidth: 280
         },
         {
-          title: "时间限制",
-          align: "center",
-          key: "timeLimited",
+          title: '时间限制',
+          align: 'center',
+          key: 'timeLimited',
           minWidth: 100,
           render: (h, params, vm) => {
             const { row } = params;
-            if (row.timeLimited === "LIMITED") {
+            if (row.timeLimited === 'LIMITED') {
               return (
                 <div>
-                  <tag color="primary">
+                  <tag color='primary'>
                     {timeLimitedConvert(row.timeLimited).label}
                   </tag>
                 </div>
               );
-            } else if (row.timeLimited === "UNLIMITED") {
+            } else if (row.timeLimited === 'UNLIMITED') {
               return (
                 <div>
-                  <tag color="success">
+                  <tag color='success'>
                     {timeLimitedConvert(row.timeLimited).label}
                   </tag>
                 </div>
@@ -397,20 +390,20 @@ export default {
             } else {
               return <div>{row.timeLimited}</div>;
             }
-          },
+          }
         },
         {
-          title: "应用类型",
-          key: "applicationType",
+          title: '应用类型',
+          key: 'applicationType',
           sortable: true,
-          align: "center",
+          align: 'center',
           minWidth: 100,
           render: (h, params, vm) => {
             const { row } = params;
-            if (row.applicationType === "S_MALL") {
+            if (row.applicationType === 'S_MALL') {
               return (
                 <div>
-                  <tag color="green">
+                  <tag color='green'>
                     {appTypesConvert(row.applicationType).label}
                   </tag>
                 </div>
@@ -418,35 +411,35 @@ export default {
             } else {
               return <div>{row.applicationType}</div>;
             }
-          },
+          }
         },
         {
-          title: "广告位类型",
-          key: "positionType",
-          align: "center",
+          title: '广告位类型',
+          key: 'positionType',
+          align: 'center',
           minWidth: 120,
           render: (h, params, vm) => {
             const { row } = params;
-            if (row.positionType === "WORD") {
+            if (row.positionType === 'WORD') {
               return (
                 <div>
-                  <tag color="cyan">
+                  <tag color='cyan'>
                     {advertisementPositionTypeConvert(row.positionType).label}
                   </tag>
                 </div>
               );
-            } else if (row.positionType === "IMAGE") {
+            } else if (row.positionType === 'IMAGE') {
               return (
                 <div>
-                  <tag color="blue">
+                  <tag color='blue'>
                     {advertisementPositionTypeConvert(row.positionType).label}
                   </tag>
                 </div>
               );
-            } else if (row.positionType === "CAROUSEL") {
+            } else if (row.positionType === 'CAROUSEL') {
               return (
                 <div>
-                  <tag color="purple">
+                  <tag color='purple'>
                     {advertisementPositionTypeConvert(row.positionType).label}
                   </tag>
                 </div>
@@ -454,15 +447,15 @@ export default {
             } else {
               return <div>{row.positionType}</div>;
             }
-          },
+          }
         },
         {
-          title: "操作",
-          key: "handle",
-          align: "center",
+          title: '操作',
+          key: 'handle',
+          align: 'center',
           minWidth: 130,
-          options: ["view", "edit", "delete"],
-        },
+          options: ['view', 'edit', 'delete']
+        }
       ],
       searchRowData: _.cloneDeep(roleRowData),
       advertisementPositionDetail: _.cloneDeep(advertisementPositionDetail),
@@ -470,7 +463,7 @@ export default {
       modalViewLoading: false,
       modalEditLoading: false,
       defaultListMain: [],
-      uploadListMain: [],
+      uploadListMain: []
     };
   },
   created() {
@@ -514,7 +507,7 @@ export default {
     deleteTable(ids) {
       this.loading = true;
       deleteAdvertisementPosition({
-        ids,
+        ids
       })
         .then((res) => {
           const totalPage = Math.ceil(this.total / this.pageSize);
@@ -566,7 +559,7 @@ export default {
             this.editAdvertisementPosition();
           }
         } else {
-          this.$Message.error("请完善广告位信息!");
+          this.$Message.error('请完善广告位信息!');
         }
       });
     },
@@ -576,7 +569,7 @@ export default {
         .then((res) => {
           this.modalViewLoading = false;
           this.modalEdit = false;
-          this.$Message.success("创建成功!");
+          this.$Message.success('创建成功!');
           this.getTableData();
         })
         .catch(() => {
@@ -602,8 +595,8 @@ export default {
       this.uploadListMain = fileList;
       this.storeDetail.storeImage = null;
       this.storeDetail.storeImage = fileList[0].url;
-    },
-  },
+    }
+  }
 };
 </script>
 

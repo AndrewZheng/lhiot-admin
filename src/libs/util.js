@@ -192,7 +192,7 @@ export const filterLocalRoute = (routeList, routersLocal) => {
     const replyResult = [];
     array.forEach(route => {
       // let pathKey = (base ? base + '/' : '') + route.path;
-      // if (route.path == '/' || route.path == '/home') {
+      // if (route.path === '/' || route.path === '/home') {
       //   pathKey = route.path;
       // }
       routeList.forEach(accessRoute => {
@@ -221,14 +221,19 @@ export const filterLocalRoute = (routeList, routersLocal) => {
  * @returns {Array}
  */
 export const getBreadCrumbList = (route, homeRoute) => {
+  const homeItem = { ...homeRoute, icon: homeRoute.meta.icon }
   const routeMetched = route.matched;
+  if (routeMetched.some(item => item.name === homeRoute.name)) return [homeItem];
   let res = routeMetched.filter(item => {
-    return item.meta === undefined || !item.meta.hide;
+    return item.meta === undefined || !item.meta.hide || !item.meta.hideInBread;
   }).map(item => {
     const meta = {
       ...item.meta
     };
-    if (meta.title && typeof meta.title === 'function') meta.title = meta.title(route);
+    if (meta.title && typeof meta.title === 'function') {
+      meta.__titleIsFunction__ = true
+      meta.title = meta.title(route)
+    }
     const obj = {
       icon: (item.meta && item.meta.icon) || '',
       name: item.name,
@@ -239,9 +244,7 @@ export const getBreadCrumbList = (route, homeRoute) => {
   res = res.filter(item => {
     return !item.meta.hideInMenu;
   });
-  return [Object.assign(homeRoute, {
-    to: homeRoute.path
-  }), ...res];
+  return [{ ...homeItem, to: homeRoute.path }, ...res];
 };
 
 export const getRouteTitleHandled = route => {
@@ -935,7 +938,6 @@ export const getSystemHomeName = () => {
     const currentSystem = JSON.parse(PcLockr.get(enums.SYSTEM));
     name = currentSystem.code.split('_')[0] + '-home';
     name = name === 'manager-home' ? 'home' : name; // 如果是综合管理系统还是跳转公共首页
-    console.log('current system home: ', name);
   }
   return name;
 }

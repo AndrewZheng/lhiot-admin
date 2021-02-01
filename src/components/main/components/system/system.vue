@@ -4,7 +4,11 @@
       <span>{{ system.name }}</span>
       <Icon :size="18" type="md-arrow-dropdown"></Icon>
       <DropdownMenu slot="list">
-        <DropdownItem v-for="item in systemList" :key="item.id" :name="item | obj2Json">
+        <DropdownItem
+          v-for="item in systemList"
+          :key="item.id"
+          :name="item | obj2Json"
+        >
           {{ item.name }}
         </DropdownItem>
       </DropdownMenu>
@@ -52,21 +56,15 @@ export default {
     ...mapActions(['handleLogOut', 'getRouteListById']),
     switchSystem(item) {
       const obj = JSON.parse(item);
-      console.log('current at', obj.code);
-      // 更新system本地缓存的值
-      if (PcLockr.get(enums.SYSTEM) != null) {
-        PcLockr.delete(enums.SYSTEM);
-      }
+      // 更新本地系统缓存值
+      if (PcLockr.get(enums.SYSTEM) != null) { PcLockr.delete(enums.SYSTEM); }
       PcLockr.set(enums.SYSTEM, item);
       const name = getSystemHomeName();
       const tagNavList = this.tagNavList.length > 0 ? this.tagNavList : getTagNavListFromLocalstorage();
-      const tagNav = tagNavList.find(item => item.name === name);
-      if (tagNav) {
-        const newTagNavList = [];
-        newTagNavList.push(tagNav);
-        this.setTagNavList(newTagNavList);
-      }
-      // 更新systemName
+      const newTagNavList = tagNavList.filter((item) => item.name === name);
+      console.log(`newTagNavList:`, newTagNavList);
+      this.setTagNavList(newTagNavList);
+      // 更新当前系统对象
       this.setCurrentSystem(this.systemList);
       // 分发Action根据选择的系统id重新生成左边的菜单
       this.getRouteListById(obj.id).then(() => {

@@ -30,10 +30,12 @@
             >
               <Option
                 v-for="item in parentInfoList"
-                :value="item.id"
                 :key="`search-col-${item.value}`"
+                :value="item.id"
                 class="ptb2-5"
-              >{{ item.categoriesName }}</Option>
+              >
+                {{ item.categoriesName }}
+              </Option>
             </Select>
             <Input
               v-model="searchRowData.categoriesName"
@@ -62,7 +64,13 @@
           </Row>
         </div>
         <div slot="operations">
-          <Button v-waves :loading="createLoading" type="success" class="mr5" @click="addStore">
+          <Button
+            v-waves
+            :loading="createLoading"
+            type="success"
+            class="mr5"
+            @click="addStore"
+          >
             <Icon type="md-add" />添加
           </Button>
           <Poptip
@@ -78,7 +86,7 @@
           </Poptip>
         </div>
       </tables>
-      <div style="margin: 10px;overflow: hidden">
+      <div style="margin: 10px; overflow: hidden">
         <Row type="flex" justify="end">
           <Page
             :total="total"
@@ -100,81 +108,110 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="4">主键ID:</i-col>
-              <i-col span="20">{{ systemCategoryDetail.id }}</i-col>
+              <i-col span="4"> 主键ID: </i-col>
+              <i-col span="20">
+                {{ systemCategoryDetail.id }}
+              </i-col>
             </Row>
           </i-col>
         </Row>
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="4">分类code:</i-col>
-              <i-col span="20">{{ systemCategoryDetail.categoriesCode }}</i-col>
+              <i-col span="4"> 分类code: </i-col>
+              <i-col span="20">
+                {{ systemCategoryDetail.categoriesCode }}
+              </i-col>
             </Row>
           </i-col>
         </Row>
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="4">分类名称:</i-col>
-              <i-col span="20">{{ systemCategoryDetail.categoriesName }}</i-col>
+              <i-col span="4"> 分类名称: </i-col>
+              <i-col span="20">
+                {{ systemCategoryDetail.categoriesName }}
+              </i-col>
             </Row>
           </i-col>
         </Row>
       </div>
       <div slot="footer">
-        <Button type="primary" @click="handleClose">关闭</Button>
+        <Button type="primary" @click="handleClose"> 关闭 </Button>
       </div>
     </Modal>
 
     <Modal v-model="modalEdit" :mask-closable="false" :z-index="1000">
       <p slot="header">
-        <i-col>{{ tempModalType===modalType.edit?'修改系统参数分类':'创建系统参数分类' }}</i-col>
+        <i-col>{{
+          tempModalType === modalType.edit
+            ? "修改系统参数分类"
+            : "创建系统参数分类"
+        }}</i-col>
       </p>
       <div class="modal-content">
-        <Form ref="modalEdit" :model="systemCategoryDetail" :rules="ruleInline" :label-width="80">
+        <Form
+          ref="modalEdit"
+          :model="systemCategoryDetail"
+          :rules="ruleInline"
+          :label-width="80"
+        >
           <Row>
             <Col span="12">
-              <FormItem label="父级分类:" prop="parentId">
-                <Select v-model="systemCategoryDetail.parentId" clearable>
-                  <Option
-                    v-for="(item,index) in parentInfoList"
-                    :value="item.id"
-                    :key="index"
-                    class="ptb2-5"
-                    style="padding-left: 5px;width: 100%"
-                  >{{ item.categoriesName }}</Option>
-                </Select>
-              </FormItem>
+            <FormItem label="父级分类:" prop="parentId">
+              <Select v-model="systemCategoryDetail.parentId" clearable>
+                <Option
+                  v-for="(item, index) in parentInfoList"
+                  :key="index"
+                  :value="item.id"
+                  class="ptb2-5"
+                  style="padding-left: 5px; width: 100%"
+                >
+                  {{ item.categoriesName }}
+                </Option>
+              </Select>
+            </FormItem>
             </Col>
           </Row>
           <Row>
             <Col span="12">
-              <FormItem label="分类名称:" prop="categoriesName">
-                <Input v-model="systemCategoryDetail.categoriesName" placeholder="分类名称"></Input>
-              </FormItem>
+            <FormItem label="分类名称:" prop="categoriesName">
+              <Input
+                v-model="systemCategoryDetail.categoriesName"
+                placeholder="分类名称"
+              ></Input>
+            </FormItem>
             </Col>
           </Row>
           <Row>
             <Col span="12">
-              <FormItem label="分类code:" prop="categoriesCode">
-                <Input v-model="systemCategoryDetail.categoriesCode" placeholder="分类code"></Input>
-              </FormItem>
+            <FormItem label="分类code:" prop="categoriesCode">
+              <Input
+                v-model="systemCategoryDetail.categoriesCode"
+                placeholder="分类code"
+              ></Input>
+            </FormItem>
             </Col>
           </Row>
         </Form>
       </div>
       <div slot="footer">
-        <Button @click="handleEditClose">关闭</Button>
-        <Button :loading="modalViewLoading" type="primary" @click="handleSubmit('modalEdit')">确定</Button>
+        <Button @click="handleEditClose"> 关闭 </Button>
+        <Button
+          :loading="modalViewLoading"
+          type="primary"
+          @click="handleSubmit('modalEdit')"
+        >
+          确定
+        </Button>
       </div>
     </Modal>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
-import Tables from "_c/tables";
-import _ from "lodash";
+import Tables from '_c/tables';
+import _ from 'lodash';
 import {
   deleteSystemSettingCategory,
   getSystemSettingCategoryPages,
@@ -182,29 +219,29 @@ import {
   createSystemSettingCategory,
   getSystemSettingCategoryTree,
   getParentInfos
-} from "@/api/mini-program";
-import uploadMixin from "@/mixins/uploadMixin";
-import deleteMixin from "@/mixins/deleteMixin.js";
-import tableMixin from "@/mixins/tableMixin.js";
-import searchMixin from "@/mixins/searchMixin.js";
+} from '@/api/mini-program';
+import uploadMixin from '@/mixins/uploadMixin';
+import deleteMixin from '@/mixins/deleteMixin.js';
+import tableMixin from '@/mixins/tableMixin.js';
+import searchMixin from '@/mixins/searchMixin.js';
 import {
   buildMenu,
   convertTreeCategory,
   convertTree,
   setSmallGoodsStandard
-} from "@/libs/util";
+} from '@/libs/util';
 
 const systemCategoryDetail = {
   id: 0,
   parentId: 0,
-  categoriesName: ""
+  categoriesName: ''
 };
 
 const roleRowData = {
   page: 1,
   rows: 10,
   parentId: 2,
-  categoriesName: ""
+  categoriesName: ''
 };
 
 export default {
@@ -218,50 +255,50 @@ export default {
         // parentId: [
         //   { required: true, message: '输入父级分类id' }
         // ],
-        categoriesName: [{ required: true, message: "请输入分类名称" }],
-        categoriesCode: [{ required: false, message: "请输入分类名code" }]
+        categoriesName: [{ required: true, message: '请输入分类名称' }],
+        categoriesCode: [{ required: false, message: '请输入分类名code' }]
       },
       columns: [
         {
-          type: "selection",
+          type: 'selection',
           width: 60,
-          align: "center",
-          fixed: "left"
+          align: 'center',
+          fixed: 'left'
         },
         {
-          title: "ID",
-          align: "center",
-          key: "id"
+          title: 'ID',
+          align: 'center',
+          key: 'id'
         },
         {
-          title: "分类code",
-          align: "center",
-          key: "categoriesCode"
+          title: '分类code',
+          align: 'center',
+          key: 'categoriesCode'
         },
         {
-          title: "分类名称",
-          align: "center",
-          key: "categoriesName"
+          title: '分类名称',
+          align: 'center',
+          key: 'categoriesName'
         },
         {
-          title: "父级分类名称",
-          align: "center",
-          key: "parentId",
+          title: '父级分类名称',
+          align: 'center',
+          key: 'parentId',
           render: (h, params, vm) => {
             const { row } = params;
             if (row.parentId === 1) {
-              return <div>{"系统级参数"}</div>;
+              return <div>{'系统级参数'}</div>;
             } else if (row.parentId === 2) {
-              return <div>{"业务级参数"}</div>;
+              return <div>{'业务级参数'}</div>;
             }
-            return <div>{"N/A"}</div>;
+            return <div>{'N/A'}</div>;
           }
         },
         {
-          title: "操作",
-          align: "center",
-          key: "handle",
-          options: ["view", "edit", "delete", "settings"]
+          title: '操作',
+          align: 'center',
+          key: 'handle',
+          options: ['view', 'edit', 'delete', 'settings']
         }
       ],
       systemCategoryData: [],
@@ -290,7 +327,7 @@ export default {
       this.$refs.modalEdit.resetFields();
     },
     handleSubmit(name) {
-      this.$refs[name].validate(valid => {
+      this.$refs[name].validate((valid) => {
         if (valid) {
           if (this.tempModalType === this.modalType.create) {
             // 添加状态
@@ -300,17 +337,17 @@ export default {
             this.editStore();
           }
         } else {
-          this.$Message.error("请完善信息!");
+          this.$Message.error('请完善信息!');
         }
       });
     },
     createStore() {
       this.modalViewLoading = true;
       createSystemSettingCategory(this.systemCategoryDetail)
-        .then(res => {
+        .then((res) => {
           this.modalViewLoading = false;
           this.modalEdit = false;
-          this.$Message.success("创建成功!");
+          this.$Message.success('创建成功!');
           this.getTableData();
         })
         .catch(() => {
@@ -321,7 +358,7 @@ export default {
     editStore() {
       this.modalViewLoading = true;
       editSystemSettingCategory(this.systemCategoryDetail)
-        .then(res => {
+        .then((res) => {
           this.modalEdit = false;
           this.modalViewLoading = false;
           this.getTableData();
@@ -350,7 +387,7 @@ export default {
       deleteSystemSettingCategory({
         ids
       })
-        .then(res => {
+        .then((res) => {
           const totalPage = Math.ceil(this.total / this.searchRowData.pageSize);
           if (
             this.tableData.length == this.tableDataSelected.length &&
@@ -362,7 +399,7 @@ export default {
           this.tableDataSelected = [];
           this.getTableData();
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err);
           this.loading = false;
         });
@@ -380,16 +417,13 @@ export default {
       this.modalEdit = true;
     },
     getTableData() {
+      this.loading = true;
       getSystemSettingCategoryPages(this.searchRowData)
-        .then(res => {
+        .then((res) => {
           this.tableData = res.rows;
           this.total = res.total;
-          this.loading = false;
-          this.searchLoading = false;
-          this.clearSearchLoading = false;
         })
-        .catch(error => {
-          console.log(error);
+        .finally(() => {
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
@@ -397,17 +431,16 @@ export default {
     },
     getSystemSettingCategoryTree() {
       getSystemSettingCategoryTree()
-        .then(res => {
+        .then((res) => {
           if (res && res.array.length > 0) {
             this.systemCategoriesTreeList = res.array;
             const menuList = buildMenu(res.array);
             const map = {
-              id: "id",
-              title: "title",
-              children: "children"
+              id: 'id',
+              title: 'title',
+              children: 'children'
             };
             this.systemCategoryData = convertTreeCategory(menuList, map, true);
-            console.log("cate after convert", this.systemCategoryData);
             this.createLoading = false;
           }
         })
@@ -418,7 +451,7 @@ export default {
     //
     getParentInfos() {
       getParentInfos()
-        .then(res => {
+        .then((res) => {
           this.parentInfoList = res;
         })
         .catch(() => {});
@@ -426,7 +459,7 @@ export default {
     // 设置编辑商品的图片列表
     setDefaultUploadList(res) {
       if (res.description != null) {
-        const map = { status: "finished", url: "url" };
+        const map = { status: 'finished', url: 'url' };
         const mainImgArr = [];
         map.url = res.description;
         mainImgArr.push(map);
@@ -445,7 +478,7 @@ export default {
       this.defaultSystemCategoryData = selectedData;
     },
     findGroupId(id) {
-      const obj = this.systemCategoriesTreeList.find(item => {
+      const obj = this.systemCategoriesTreeList.find((item) => {
         return item.id === id;
       });
       this.defaultSystemCategoryData.push(id);
@@ -455,10 +488,9 @@ export default {
     },
     handleSetting(params) {
       var rows = params.row;
-      console.log("设置数据", rows);
       setSmallGoodsStandard(rows);
       this.turnToPage({
-        name: "small-relation-system",
+        name: 'small-relation-system',
         params: {
           parentName: rows.parentName,
           parentId: rows.parentId,

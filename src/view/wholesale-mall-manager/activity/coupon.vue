@@ -44,9 +44,7 @@
                 :key="item.value"
                 :value="item.value"
                 class="ptb2-5"
-              >
-                {{ item.label }}
-              </Option>
+              >{{ item.label }}</Option>
             </Select>
             <Select
               v-model="searchRowData.couponFrom"
@@ -60,9 +58,7 @@
                 :key="item.value"
                 :value="item.value"
                 class="ptb2-5"
-              >
-                {{ item.label }}
-              </Option>
+              >{{ item.label }}</Option>
             </Select>
             <Button
               :loading="searchLoading"
@@ -100,7 +96,7 @@
           </Poptip>-->
         </div>
       </tables>
-      <div style="margin: 10px;overflow: hidden">
+      <div style="margin: 10px; overflow: hidden">
         <Row type="flex" justify="end">
           <Page
             :total="total"
@@ -117,7 +113,13 @@
     </Card>
 
     <!-- 关联优惠券配置 -->
-    <Modal v-model="modalEdit" :width="1300" :z-index="1000" :mask-closable="false" title="关联优惠券配置">
+    <Modal
+      v-model="modalEdit"
+      :width="1300"
+      :z-index="1000"
+      :mask-closable="false"
+      title="关联优惠券配置"
+    >
       <div class="modal-content">
         <Card>
           <tables
@@ -155,9 +157,7 @@
                     :key="item.value"
                     :value="item.value"
                     class="ptb2-5"
-                  >
-                    {{ item.label }}
-                  </Option>
+                  >{{ item.label }}</Option>
                 </Select>
                 <Button
                   :loading="searchLoading"
@@ -179,7 +179,7 @@
               </Row>
             </div>
           </tables>
-          <div style="margin: 10px;overflow: hidden">
+          <div style="margin: 10px; overflow: hidden">
             <Row type="flex" justify="end">
               <Page
                 :total="configTotal"
@@ -193,18 +193,14 @@
           </div>
         </Card>
 
-        <Divider orientation="center">
-          填写发送对象手机号
-        </Divider>
+        <Divider orientation="center">填写发送对象手机号</Divider>
 
         <Row class="mt10">
-          <i-col span="2">
-            用户手机号:
-          </i-col>
+          <i-col span="2">用户手机号:</i-col>
           <i-col span="22">
             <Input
               v-model="sendPhones"
-              :autosize="{minRows: 3,maxRows: 8}"
+              :autosize="{ minRows: 3, maxRows: 8 }"
               type="textarea"
               placeholder="多个用户请使用','分割要发送的手机号"
             ></Input>
@@ -214,21 +210,19 @@
           </i-col>
         </Row>
         <Row v-show="sendFailPhones.length > 0" class="mt10">
-          <i-col span="2">
-            发送失败手机号：
-          </i-col>
-          <i-col span="22" class="brand-red">
-            {{ sendFailPhones.join(',') }}
-          </i-col>
+          <i-col span="2">发送失败手机号：</i-col>
+          <i-col span="22" class="brand-red">{{
+            sendFailPhones.join(",")
+          }}</i-col>
         </Row>
       </div>
       <div slot="footer">
-        <Button @click="handleEditClose">
-          关闭
-        </Button>
-        <Button :loading="modalViewLoading" type="primary" @click="handleSubmit">
-          确定
-        </Button>
+        <Button @click="handleEditClose">关闭</Button>
+        <Button
+          :loading="modalViewLoading"
+          type="primary"
+          @click="handleSubmit"
+        >确定</Button>
       </div>
     </Modal>
   </div>
@@ -332,7 +326,7 @@ const configColumns = [
     title: 'ID',
     align: 'center',
     key: 'id',
-    maxWidth: 80
+    minWidth: 70
   },
   {
     title: '优惠券名称',
@@ -418,14 +412,14 @@ const configColumns = [
     title: '失效时间',
     align: 'center',
     key: 'failureTime',
-    width: 220,
+    width: 230,
     render: (h, params, vm) => {
       const { row } = params;
       if (row.vaildDays) {
         return <div>{'N/A'}</div>;
       } else {
         if (!compareCouponData(row.failureTime)) {
-          return <div style='color:red'>{row.failureTime + '　已过期'}</div>;
+          return <div style='color:red'>{row.failureTime + '已过期'}</div>;
         } else {
           return <div>{row.failureTime}</div>;
         }
@@ -477,7 +471,7 @@ const couponColumns = [
     title: 'ID',
     align: 'center',
     key: 'id',
-    maxWidth: 80
+    minWidth: 80
   },
   {
     title: '店铺名称',
@@ -488,18 +482,20 @@ const couponColumns = [
   {
     title: '用户名称',
     align: 'center',
-    key: 'userName'
+    key: 'userName',
+    minWidth: 100
   },
   {
     title: '用户电话',
     align: 'center',
     key: 'phone',
-    minWidth: 40
+    minWidth: 120
   },
   {
     title: '用户状态',
     align: 'center',
     key: 'userStatus',
+    minWidth: 100,
     render: (h, params, vm) => {
       const { row } = params;
       if (row.userStatus === 'certified') {
@@ -532,12 +528,12 @@ const couponColumns = [
     title: '优惠券名称',
     align: 'center',
     key: 'couponName',
-    minWidth: 80
+    minWidth: 130
   },
   {
     title: '优惠金额',
     align: 'center',
-    minWidth: 60,
+    minWidth: 100,
     key: 'couponFee',
     render(h, params, vm) {
       const amount = fenToYuanDot2(params.row.couponFee);
@@ -545,22 +541,22 @@ const couponColumns = [
     }
   },
   {
-    title: '优惠券来源',
+    title: '券来源',
     align: 'center',
     key: 'couponFrom',
-    minWidth: 60,
+    minWidth: 110,
     render: (h, params, vm) => {
       const { row } = params;
       if (row.couponFrom === 'artificial') {
         return (
           <div>
-            <tag color='primary'>{couponFromConvert(row.couponFrom).label}</tag>
+            <tag color='primary'>{couponFromConvert(row.couponFrom)}</tag>
           </div>
         );
       } else {
         return (
           <div>
-            <tag color='pink'>{couponFromConvert(row.couponFrom).label}</tag>
+            <tag color='pink'>{couponFromConvert(row.couponFrom)}</tag>
           </div>
         );
       }
@@ -576,14 +572,13 @@ const couponColumns = [
     title: '使用状态',
     align: 'center',
     key: 'couponStatus',
+    minWidth: 100,
     render: (h, params, vm) => {
       const { row } = params;
       if (row.couponStatus === 'used') {
         return (
           <div>
-            <tag color='error'>
-              {couponUseStatusConvert(row.couponStatus)}
-            </tag>
+            <tag color='error'>{couponUseStatusConvert(row.couponStatus)}</tag>
           </div>
         );
       } else if (row.couponStatus === 'expired') {
@@ -676,7 +671,7 @@ export default {
         return;
       }
       this.couponConfigIds = selection
-        .map(item => item.id.toString())
+        .map((item) => item.id.toString())
         .join(',');
     },
     onConfigSelectionAll(selection) {
@@ -685,12 +680,12 @@ export default {
         return;
       }
       this.couponConfigIds = selection
-        .map(item => item.id.toString())
+        .map((item) => item.id.toString())
         .join(',');
     },
     getTableData() {
       getCouponPages(this.searchRowData)
-        .then(res => {
+        .then((res) => {
           this.tableData = res.rows;
           this.total = res.total;
         })
@@ -703,7 +698,7 @@ export default {
     getConfigTableData() {
       this.loadingConfig = true;
       getCouponConfigPages(this.searchConfigRowData)
-        .then(res => {
+        .then((res) => {
           this.configTableData = res.rows;
           this.configTotal = res.total;
         })
@@ -728,7 +723,7 @@ export default {
       sendCouponByPhones({
         id: this.couponConfigIds,
         phones: this.sendPhones
-      }).then(res => {
+      }).then((res) => {
         console.log('result', res);
         if (res && res.fail.length > 0) {
           this.$Message.info('部分用户未发放成功');
@@ -754,7 +749,7 @@ export default {
       deletCoupon({
         ids
       })
-        .then(res => {
+        .then((res) => {
           const totalPage = Math.ceil(this.total / this.searchRowData.pageSize);
           if (
             this.tableData.length == this.tableDataSelected.length &&
@@ -766,7 +761,7 @@ export default {
           this.tableDataSelected = [];
           this.getTableData();
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err);
           this.loading = false;
         });

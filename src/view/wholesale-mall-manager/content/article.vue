@@ -6,7 +6,7 @@
         v-model="tableData"
         :columns="columns"
         :loading="loading"
-        :search-area-column="18"
+        :search-area-column="24"
         :operate-area-column="6"
         editable
         searchable
@@ -25,12 +25,12 @@
             <Input
               v-model="searchRowData.articleTitle"
               placeholder="文章标题"
-              class="search-input mr5"
+              class="search-input"
               style="width: auto"
             ></Input>
             <Select
               v-model="searchRowData.articleType"
-              class="search-col mr5"
+              class="search-col"
               placeholder="文章类别"
               style="width: 90px"
               clearable
@@ -46,7 +46,7 @@
             </Select>
             <Select
               v-model="searchRowData.createType"
-              class="search-col mr5"
+              class="search-col"
               placeholder="创作类别"
               style="width: 90px"
               clearable
@@ -75,7 +75,7 @@
               format="yyyy-MM-dd HH:mm:ss"
               type="datetime"
               placeholder="注册时间止"
-              class="search-input mr5"
+              class="search-input"
               style="width: 150px"
               @on-change="endTimeChange"
             />
@@ -84,7 +84,7 @@
               v-model="searchRowData.beginPublishAt"
               format="yyyy-MM-dd HH:mm:ss"
               type="datetime"
-              class="search-input mr5"
+              class="search-input"
               style="width: 150px"
               placeholder="发布时间起"
               @on-change="startPublishChange"
@@ -95,10 +95,14 @@
               type="datetime"
               placeholder="发布时间止"
               style="width: 150px"
-              class="mr5"
               @on-change="endPublishChange"
             />
-            <Button v-waves class="search-btn mr5" type="primary" @click="handleSearch">
+            <Button
+              v-waves
+              class="search-btn"
+              type="primary"
+              @click="handleSearch"
+            >
               <Icon type="md-search" />&nbsp;搜索
             </Button>
             <Button
@@ -108,37 +112,37 @@
               type="info"
               @click="handleClear"
             >
-              <Icon type="md-refresh" />&nbsp;清除条件
+              <Icon type="md-refresh" />&nbsp;清除
             </Button>
             </Col>
           </Row>
-        </div>
-        <div slot="operations">
-          <Button v-waves type="success" class="mr5" @click="addArticle">
-            <Icon type="md-add" /> 添加
-          </Button>
-          <Poptip
-            confirm
-            placement="bottom"
-            article-title="您确认删除选中的内容吗?"
-            @on-ok="poptipOk"
-          >
-            <Button type="error" class="mr5">
-              <Icon type="md-trash" /> 批量删除
+          <Row style="margin-top: 10px; float: right">
+            <Button v-waves type="success" class="mr5" @click="addArticle">
+              <Icon type="md-add" /> 添加
             </Button>
-          </Poptip>
-          <!-- <BookTypeOption v-model="exportType" class="mr5" /> -->
-          <Button
-            :loading="downloadLoading"
-            class="search-btn mr5"
-            type="primary"
-            @click="handleDownload"
-          >
-            <Icon type="md-download" /> 导出
-          </Button>
+            <Poptip
+              confirm
+              placement="bottom"
+              article-title="您确认删除选中的内容吗?"
+              @on-ok="poptipOk"
+            >
+              <Button type="error" class="mr5">
+                <Icon type="md-trash" /> 批量删除
+              </Button>
+            </Poptip>
+            <!-- <BookTypeOption v-model="exportType" class="mr5" /> -->
+            <Button
+              :loading="downloadLoading"
+              class="search-btn mr5"
+              type="primary"
+              @click="handleDownload"
+            >
+              <Icon type="md-download" /> 导出
+            </Button>
+          </Row>
         </div>
       </tables>
-      <div style="margin: 10px;overflow: hidden">
+      <div style="margin: 10px; overflow: hidden">
         <Row type="flex" justify="end">
           <Page
             :total="total"
@@ -160,9 +164,7 @@
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="24">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="4">
-                文章标题:
-              </i-col>
+              <i-col span="4"> 文章标题: </i-col>
               <i-col span="20">
                 {{ articleDetail.articleTitle }}
               </i-col>
@@ -170,9 +172,7 @@
           </i-col>
           <i-col span="24">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="4">
-                文章副标题:
-              </i-col>
+              <i-col span="4"> 文章副标题: </i-col>
               <i-col span="20">
                 {{ articleDetail.articleSubhead }}
               </i-col>
@@ -182,9 +182,7 @@
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="24">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="4">
-                作者:
-              </i-col>
+              <i-col span="4"> 作者: </i-col>
               <i-col span="16">
                 {{ articleDetail.articleAuthor }}
               </i-col>
@@ -194,9 +192,7 @@
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="24">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="4">
-                创建时间:
-              </i-col>
+              <i-col span="4"> 创建时间: </i-col>
               <i-col span="16">
                 {{ articleDetail.createTime }}
               </i-col>
@@ -206,9 +202,7 @@
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="24">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="4">
-                发布时间:
-              </i-col>
+              <i-col span="4"> 发布时间: </i-col>
               <i-col span="16">
                 {{ articleDetail.publishTime }}
               </i-col>
@@ -218,9 +212,7 @@
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="24">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="4">
-                文章内容:
-              </i-col>
+              <i-col span="4"> 文章内容: </i-col>
               <i-col span="16" v-html="articleDetail.articleContent"></i-col>
             </Row>
           </i-col>
@@ -228,18 +220,14 @@
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="24">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="4">
-                资源链接:
-              </i-col>
+              <i-col span="4"> 资源链接: </i-col>
               <i-col span="16" v-html="articleDetail.resouceUrl"></i-col>
             </Row>
           </i-col>
         </Row>
       </div>
       <div slot="footer">
-        <Button type="primary" @click="handleClose">
-          关闭
-        </Button>
+        <Button type="primary" @click="handleClose"> 关闭 </Button>
       </div>
     </Modal>
   </div>
@@ -328,6 +316,7 @@ export default {
         {
           title: '文章标题',
           key: 'articleTitle',
+          align: 'center',
           minWidth: 200,
           fixed: 'left'
         },
@@ -335,18 +324,23 @@ export default {
           title: '文章类别',
           key: 'articleType',
           width: 120,
+          align: 'center',
           render: (h, params, vm) => {
             const { row } = params;
             if (row.articleType === 'perday') {
               return (
                 <div>
-                  <tag color='primary'>{ articleTypeConvert(row.articleType)}</tag>
+                  <tag color='primary'>
+                    {articleTypeConvert(row.articleType)}
+                  </tag>
                 </div>
               );
             } else if (row.articleType === 'industry') {
               return (
                 <div>
-                  <tag color='warning'>{ articleTypeConvert(row.articleType) }</tag>
+                  <tag color='warning'>
+                    {articleTypeConvert(row.articleType)}
+                  </tag>
                 </div>
               );
             } else {
@@ -358,18 +352,19 @@ export default {
           title: '创作类别',
           key: 'createType',
           width: 120,
+          align: 'center',
           render: (h, params, vm) => {
             const { row } = params;
             if (row.createType === 'original') {
               return (
                 <div>
-                  <tag color='pink'>{ createTypeConvert(row.createType)}</tag>
+                  <tag color='pink'>{createTypeConvert(row.createType)}</tag>
                 </div>
               );
             } else if (row.createType === 'reprint') {
               return (
                 <div>
-                  <tag color='yellow'>{ createTypeConvert(row.createType) }</tag>
+                  <tag color='yellow'>{createTypeConvert(row.createType)}</tag>
                 </div>
               );
             } else {
@@ -383,18 +378,15 @@ export default {
         //   width: 150
         // },
         {
-          title: '作者',
-          width: 150,
-          key: 'articleAuthor'
-        },
-        {
           title: '创建时间',
-          width: 160,
+          width: 180,
+          align: 'center',
           key: 'createTime'
         },
         {
           title: '发布时间',
-          width: 160,
+          align: 'center',
+          width: 180,
           key: 'publishTime',
           sortable: true
         },
@@ -402,6 +394,7 @@ export default {
           title: '发布状态',
           key: 'publishStatus',
           width: 100,
+          align: 'center',
           render: (h, params, vm) => {
             const { row } = params;
             if (row.publishStatus === 'published') {
@@ -425,11 +418,13 @@ export default {
           title: '排序',
           maxwidth: 40,
           sortable: true,
+          align: 'center',
           key: 'rankNum'
         },
         {
           title: '操作',
-          minWidth: 200,
+          minWidth: 180,
+          align: 'center',
           key: 'handle',
           options: ['onArticleStatus', 'view', 'edit', 'delete']
         }
@@ -471,7 +466,7 @@ export default {
       deleteArticle({
         ids
       })
-        .then(res => {
+        .then((res) => {
           const totalPage = Math.ceil(this.total / this.searchRowData.pageSize);
           if (
             this.tableData.length == this.tableDataSelected.length &&
@@ -504,7 +499,7 @@ export default {
     editTableRow() {
       this.modalViewLoading = true;
       this.loading = true;
-      editArticle(this.articleDetail).then(res => {
+      editArticle(this.articleDetail).then((res) => {
         this.$Message.success('修改成功!');
         this.modalViewLoading = false;
         this.loading = false;
@@ -524,22 +519,24 @@ export default {
     },
     getTableData() {
       this.loading = true;
-      getArticlesPages(this.searchRowData).then(res => {
-        this.tableData = res.rows;
-        this.total = res.total;
-      }).finally(() => {
-        this.loading = false;
-        this.clearSearchLoading = false;
-        this.searchLoading = false;
-      });
+      getArticlesPages(this.searchRowData)
+        .then((res) => {
+          this.tableData = res.rows;
+          this.total = res.total;
+        })
+        .finally(() => {
+          this.loading = false;
+          this.clearSearchLoading = false;
+          this.searchLoading = false;
+        });
     },
     handleDownload() {
       // 导出不分页
       this.searchRowData.rows = null;
-      getArticlesPages(this.searchRowData).then(res => {
+      getArticlesPages(this.searchRowData).then((res) => {
         const tableData = res.rows;
         // 表格数据导出字段翻译
-        tableData.forEach(item => {
+        tableData.forEach((item) => {
           item['publishStatus'] === 'published'
             ? (item['publishStatus'] = '发布')
             : (item['publishStatus'] = '未发布');

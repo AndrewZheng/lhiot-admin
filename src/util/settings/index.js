@@ -1,5 +1,7 @@
+import config from '@/config';
+
 const gbs = {
-  host: 'https://health.food-see.com',
+  host: 'https://wxsmall.food-see.com',
   lockr_prefix: 'LHIOTADMIN_PAAS_',
   cookie_prefix: 'LHIOTADMIN__PAAS_',
   secret_key: '^#rwd6Ffz$X5alRN',
@@ -9,17 +11,41 @@ const gbs = {
     iv_str: '0#86gzOcsv1bXyIx'
   }
 };
-const cbs = {};
-const taxPercent = 0.0336;
 
-if (process.env.NODE_ENV === 'production') {
-  gbs.domain = 'health.food-see.com';
-} else if (process.env.NODE_ENV === 'testing') {
-  gbs.domain = 'testhealth.food-see.com';
+if (process.env.ENV === 'production') {
+  switch (config.brandType) {
+    case 'min_app':
+      gbs.domain = '172.16.10.182';
+      break;
+    case 'qgg':
+      gbs.domain = '172.16.10.204';
+      break;
+    case 'lv_hang':
+      gbs.domain = '172.16.10.176';
+      break;
+    case 'lv_hang_farm':
+      gbs.domain = '172.16.10.176';
+      break;
+  }
+} else if (process.env.ENV === 'staging') {
+  switch (config.brandType) {
+    case 'min_app':
+      gbs.domain = '172.16.10.203';
+      break;
+    case 'qgg':
+      gbs.domain = '172.16.10.206';
+      break;
+    case 'lv_hang':
+      gbs.domain = '172.16.10.189';
+      break;
+    case 'lv_hang_farm':
+      gbs.domain = '172.16.10.189';
+      break;
+  }
   gbs.lockr_prefix += 'TEST_';
   gbs.cookie_prefix += 'TEST_';
 } else {
-  gbs.domain = 'testhealth.food-see.com';
+  gbs.domain = '172.16.10.196';
   gbs.lockr_prefix += 'DEV_';
   gbs.cookie_prefix += 'DEV_';
 }
@@ -52,7 +78,5 @@ const enums = {
 
 export {
   gbs,
-  cbs,
-  enums,
-  taxPercent
+  enums
 };

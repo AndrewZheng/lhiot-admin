@@ -8,16 +8,16 @@
         <Card>
           <h6>
             当前选中：
-            <span
-              class="brand-red font-sm"
-            >{{ parentCategory.plateName? parentCategory.plateName: '全部板块' }}</span>
+            <span class="brand-red font-sm">{{
+              parentCategory.plateName ? parentCategory.plateName : "全部板块"
+            }}</span>
           </h6>
           <tables
             ref="tables"
             v-model="tableData"
             :columns="columns"
             :loading="loading"
-            :search-area-column="16"
+            :search-area-column="12"
             :operate-area-column="6"
             editable
             searchable
@@ -56,7 +56,7 @@
                 </Button>
               </Row>
             </div>
-            <div slot="operations">
+            <div slot="operations" style="margin-left: -90px">
               <Button
                 v-waves
                 :loading="clearSearchLoading"
@@ -82,7 +82,7 @@
               </Poptip>
             </div>
           </tables>
-          <div style="margin: 10px;overflow: hidden">
+          <div style="margin: 10px; overflow: hidden">
             <Row type="flex" justify="end">
               <Page
                 :total="total"
@@ -103,22 +103,31 @@
     <!--编辑 -->
     <Modal v-model="modalEdit" :mask-closable="false">
       <p slot="header">
-        <span>{{ isCreate?'创建板块':'编辑板块' }}</span>
+        <span>{{ isCreate ? "创建板块" : "编辑板块" }}</span>
       </p>
       <div class="modal-content">
-        <Form ref="editForm" :model="currentCategory" :rules="ruleInline" :label-width="100">
+        <Form
+          ref="editForm"
+          :model="currentCategory"
+          :rules="ruleInline"
+          :label-width="100"
+        >
           <FormItem v-show="isCreate" label="父级ID:">
             <i-col>{{ parentCategory.id }}</i-col>
           </FormItem>
           <FormItem v-show="isCreate" label="父级名称:">
-            <i-col
-              style="color:red;font-weight:bold;"
-            >
-              {{ parentCategory.plateName?parentCategory.plateName:'全部板块' }}
-            </i-col>
+            <i-col style="color: red; font-weight: bold">{{
+              parentCategory.plateName ? parentCategory.plateName : "全部板块"
+            }}</i-col>
           </FormItem>
+          <p style="color: #ff3861; margin-left: 28px">
+            新建VIP板块下的子版块必须带前缀VIP
+          </p>
           <FormItem :label-width="100" label="板块名称:" prop="plateName">
-            <Input v-model="currentCategory.plateName" style="width:200px;"></Input>
+            <Input
+              v-model="currentCategory.plateName"
+              style="width: 200px"
+            ></Input>
           </FormItem>
           <FormItem :label-width="100" label="板块顺序:" prop="rank">
             <InputNumber v-model="currentCategory.rank"></InputNumber>
@@ -127,32 +136,51 @@
             <Select
               v-model="currentCategory.layout"
               placeholder="请选择布局方式"
-              style="padding-right: 5px; width:205px;"
+              style="padding-right: 5px; width: 205px"
             >
               <Option
-                v-for="(item,index) in layoutEnum"
+                v-for="(item, index) in layoutEnum"
                 :key="index"
                 :value="item.value"
                 class="ptb2-5"
-              >
-                {{ item.label }}
-              </Option>
+              >{{ item.label }}</Option>
             </Select>
           </FormItem>
-          <FormItem label="板块图片:建议尺寸;750x338(单位:px):" prop="plateImage">
-            <Input v-show="false" v-model="currentCategory.plateImage" style="width: auto"></Input>
-            <div v-for="item in uploadListMain" :key="item.url" class="demo-upload-list">
+          <FormItem
+            label="板块图片:建议尺寸;750x338(单位:px):"
+            prop="plateImage"
+          >
+            <Input
+              v-show="false"
+              v-model="currentCategory.plateImage"
+              style="width: auto"
+            ></Input>
+            <div
+              v-for="item in uploadListMain"
+              :key="item.url"
+              class="demo-upload-list"
+            >
               <template v-if="item.status === 'finished'">
                 <div>
                   <img :src="item.url">
                   <div class="demo-upload-list-cover">
-                    <Icon type="ios-eye-outline" @click.native="handleUploadView(item)"></Icon>
-                    <Icon type="ios-trash-outline" @click.native="handleRemoveMain(item)"></Icon>
+                    <Icon
+                      type="ios-eye-outline"
+                      @click.native="handleUploadView(item)"
+                    ></Icon>
+                    <Icon
+                      type="ios-trash-outline"
+                      @click.native="handleRemoveMain(item)"
+                    ></Icon>
                   </div>
                 </div>
               </template>
               <template v-else>
-                <Progress v-if="item.showProgress" :percent="item.percentage" hide-info></Progress>
+                <Progress
+                  v-if="item.showProgress"
+                  :percent="item.percentage"
+                  hide-info
+                ></Progress>
               </template>
             </div>
             <IViewUpload
@@ -163,7 +191,10 @@
               file-dir="product"
               @on-success="handleSuccessMain"
             >
-              <div slot="content" style="width:58px;height:58px;line-height:58px">
+              <div
+                slot="content"
+                style="width: 58px; height: 58px; line-height: 58px"
+              >
                 <Icon type="ios-camera" size="20"></Icon>
               </div>
             </IViewUpload>
@@ -171,13 +202,16 @@
         </Form>
       </div>
       <div slot="footer">
-        <Button @click="handleEditClose">
-          关闭
-        </Button>
-        <Button :loading="modalEditLoading" type="primary" @click="handleSubmit">
-          确定
-        </Button>
+        <Button @click="handleEditClose">关闭</Button>
+        <Button
+          :loading="modalEditLoading"
+          type="primary"
+          @click="handleSubmit"
+        >确定</Button>
       </div>
+    </Modal>
+    <Modal v-model="uploadVisible" title="图片预览">
+      <img :src="imgUploadViewItem" style="width: 100%">
     </Modal>
   </div>
 </template>
@@ -234,7 +268,7 @@ const dataColumns = [
     title: '板块ID',
     key: 'id',
     align: 'center',
-    maxWidth: 80
+    minWidth: 100
   },
   {
     title: '板块名称',
@@ -256,7 +290,7 @@ const dataColumns = [
     title: '板块图片',
     key: 'plateImage',
     align: 'center',
-    maxWidth: 790,
+    minWidth: 110,
     render: (h, params, vm) => {
       const { row } = params;
       const str = <img src={row.plateImage} height='60' width='100%' />;
@@ -334,7 +368,7 @@ export default {
   methods: {
     getTableData() {
       this.loading = true;
-      getProductSectionPages(this.searchRowData).then(res => {
+      getProductSectionPages(this.searchRowData).then((res) => {
         if (this.menuData.length > 0) {
           this.tableData = res.rows;
           this.total = res.total;
@@ -357,13 +391,7 @@ export default {
     handleSubmit() {
       this.currentCategory.parentId =
         this.parentCategory.id !== 0 ? this.parentCategory.id : 0;
-      // if (this.oldPicture.length > 0) {
-      //   const urls = {
-      //     urls: this.oldPicture
-      //   };
-      //   this.deletePicture(urls);
-      // }
-      this.$refs.editForm.validate(valid => {
+      this.$refs.editForm.validate((valid) => {
         if (valid) {
           this.modalEditLoading = true;
           this.modalViewLoading = true;
@@ -399,10 +427,10 @@ export default {
       this.modalEditLoading = true;
       this.modalViewLoading = true;
       createProductSection(this.currentCategory)
-        .then(res => {
+        .then((res) => {
           this.$Message.info('添加成功!');
         })
-        .finally(res => {
+        .finally((res) => {
           this.initMenuList();
           this.modalEditLoading = false;
           this.modalEdit = false;
@@ -412,10 +440,10 @@ export default {
       this.modalEditLoading = true;
       this.modalViewLoading = true;
       editProductSection(this.currentCategory)
-        .then(res => {
+        .then((res) => {
           this.$Message.info('修改成功!');
         })
-        .finally(res => {
+        .finally((res) => {
           this.initMenuList();
           this.modalEditLoading = false;
           this.modalEdit = false;
@@ -439,13 +467,14 @@ export default {
     handleBack() {
       this.parentCategory.id = 0;
       this.parentCategory.plateName = '全部版块';
-      this.handleClear();
+      this.searchRowData = _.cloneDeep(roleRowData);
+      this.initMenuList();
     },
     deleteTable(ids) {
       deleteProductSection({
         ids
       })
-        .then(res => {
+        .then((res) => {
           const totalPage = Math.ceil(this.total / this.pageSize);
           if (
             this.tableData.length === this.tableDataSelected.length &&
@@ -465,7 +494,7 @@ export default {
     },
     // 初始化商品菜单列表
     initMenuList() {
-      getProductSectionTree().then(res => {
+      getProductSectionTree().then((res) => {
         if (res && res.length > 0) {
           const menuList = buildMenu(res);
           const map = {

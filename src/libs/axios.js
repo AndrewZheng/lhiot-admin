@@ -35,12 +35,20 @@ class HttpRequest {
       responseType: this.responseType
     });
 
+    // 导出
+    const exportAxiosOps = _.merge({}, defaultOps, {
+      baseURL: this.baseUrl,
+      responseType: this.responseType
+    });
+
     // 后端微服务有需求再扩展
     switch (this.centerType) {
       case 'IMS_SERVICE':
         return imsServiceOps;
       case 'IMG_SERVICE':
         return imgServiceOps;
+      case 'EXPORT_SERVICE':
+        return exportAxiosOps;
       default:
         return defaultOps;
     }
@@ -131,54 +139,61 @@ class HttpRequest {
       this.destory(url);
 
       if (error && error.response) {
+        console.log('error object: ', error.response);
         let errorMsg = '请求失败或超时！请刷新重试';
-        if (error.response.status === 400) {
-          console.log('Error 400', error.response.data);
-          errorMsg = error.response.data;
-        } else if (error.response.status === 403) { // 由401改为403
-          errorMsg = '您无访问权限';
-        } else if (error.response.status === 401) { // 由402改完401
-          errorMsg = '页面已过期，请重新登录';
-          // 清除本地Token 然后重新登录
-          setToken('');
-          router.push({
-            name: 'login'
-          });
-        } else if (error.response.status === 402) {
-          errorMsg = '页面已过期，请重新登录';
-          // 清除本地Token 然后重新登录
-          setToken('');
-          router.push({
-            name: 'login'
-          });
-        } else if (error.response.status === 403) {
-          errorMsg = '拒绝访问';
-        } else if (error.response.status === 405) {
-          errorMsg = 'HTTP请求方式不一致';
-        } else if (error.response.status === 408) {
-          errorMsg = '请求超时';
-        } else if (error.response.status === 501) {
-          errorMsg = '服务未实现';
-        } else if (error.response.status === 502) {
-          errorMsg = '网关错误';
-        } else if (error.response.status === 503) {
-          errorMsg = '服务不可用';
-        } else if (error.response.status === 504) {
-          errorMsg = '网关超时';
-        } else if (error.response.status === 505) {
-          errorMsg = 'HTTP版本不受支持';
-        } else if (error.response.status === 500) {
-          // 上线后分发到500页
-          console.log('Error 500', error.response.data.message);
-          errorMsg = '服务器内部错误';
-        } else {
-          console.log('Other Error', error.message);
+        switch (error.response.status) {
+          case 400:
+            errorMsg = error.response.data.message;
+            break;
+          case 401:
+            errorMsg = '页面已过期，请重新登录';
+            setToken('');
+            router.push({
+              name: 'login'
+            });
+            break;
+          case 402:
+            errorMsg = '页面已过期，请重新登录';
+            setToken('');
+            router.push({
+              name: 'login'
+            });
+            break;
+          case 403:
+            errorMsg = '您无访问权限';
+            break;
+          case 405:
+            errorMsg = 'HTTP请求方式不一致';
+            break;
+          case 408:
+            errorMsg = '请求超时';
+            break;
+          case 500:
+            errorMsg = '服务器内部错误';
+            break;
+          case 501:
+            errorMsg = '服务未实现';
+            break;
+          case 502:
+            errorMsg = '网关错误';
+            break;
+          case 503:
+            errorMsg = '服务不可用';
+            break;
+          case 504:
+            errorMsg = '网关超时';
+            break;
+          case 505:
+            errorMsg = 'HTTP版本不受支持';
+            break;
+          default:
+            console.log('Other Error', error.message);
         }
-        console.error('error object: ', error.response);
         Vue.prototype.$Message.error(errorMsg);
         return Promise.reject(error);
       } else {
         Vue.prototype.$Message.error('请求失败或超时！请刷新重试');
+        return Promise.reject();
       }
     });
   }

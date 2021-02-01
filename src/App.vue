@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <router-view v-cloak v-if="isRouterAlive"/>
+    <router-view v-cloak v-if="isRouterAlive" />
   </div>
 </template>
 
@@ -18,7 +18,12 @@ export default {
     };
   },
   created() {},
-  mounted() {},
+  mounted() {
+    window.onbeforeunload = function(e) {
+      const storage = window.localStorage;
+      storage.clear();
+    };
+  },
   methods: {
     reload() {
       this.isRouterAlive = false;

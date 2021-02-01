@@ -4,11 +4,13 @@ import iView from 'view-design';
 import store from '@/store';
 import { constantRouterMap } from './routers';
 import { getToken, getNamesByRouters, getSystemHomeName, getSystemHomeNameNew } from '@/libs/util';
-
+const IS_PROD = ['production', 'staging'].includes(process.env.ENV);
+const BASE_URL = IS_PROD ? '/lhiot-admin/' : '/';
 Vue.use(Router);
 
 const createRouter = () => new Router({
   mode: 'history',
+  base: BASE_URL,
   routes: constantRouterMap,
   scrollBehavior: () => ({ y: 0 })
 });
@@ -48,10 +50,7 @@ router.beforeEach((to, from, next) => {
     if (to.name === LOGIN_PAGE_NAME) {
       // 已登录且要跳转的页面是登录页 每个子系统需要单独跳转到自身的首页
       const name = getSystemHomeName();
-      next({
-        name,
-        replace: true
-      });
+      next({ name, replace: true });
     } else {
       console.log('hasGetInfo: ', store.getters.hasGetInfo);
       if (!store.getters.hasGetInfo) {
@@ -65,7 +64,8 @@ router.beforeEach((to, from, next) => {
               replace: true
             })
           } else {
-            next({ ...to,
+            next({
+              ...to,
               replace: true
             });
           }
@@ -84,7 +84,10 @@ router.beforeEach((to, from, next) => {
             next();
           }
         } else {
-          next({ path: '/401', replace: true });
+          // next({ path: '/401', replace: true });
+          next({
+            name: LOGIN_PAGE_NAME
+          });
         }
       }
     }

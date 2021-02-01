@@ -24,7 +24,7 @@ module.exports = {
       .end()
 
     //修复 HMR(热更新)失效
-    config.resolve.symlinks(true); 
+    config.resolve.symlinks(true);
     config.resolve.alias
       .set('@', resolve('src'))
       .set('_c', resolve('src/components'))
@@ -43,7 +43,7 @@ module.exports = {
             .plugin('ScriptExtHtmlWebpackPlugin')
             .after('html')
             .use('script-ext-html-webpack-plugin', [{
-            // `runtime` must same as runtimeChunk name. default is `runtime`
+              // `runtime` must same as runtimeChunk name. default is `runtime`
               inline: /runtime\..*\.js$/
             }])
             .end()
@@ -83,7 +83,7 @@ module.exports = {
     port: 80, // 端口号
     // host: 'localhost', // 本地，打包选这个
     disableHostCheck: true,
-    host: '192.168.1.169', // 本地ip，方便其他人通过ip访问 
+    host: '192.168.1.229', // 本地ip，方便其他人通过ip访问 
     https: false, // https:{type:Boolean}
     open: true, // 配置自动启动浏览器
     proxy: {
@@ -93,7 +93,7 @@ module.exports = {
         logLevel: 'debug',
         changeOrigin: true,
         pathRewrite: {
-          '^/api' : ''
+          '^/api': ''
         }
       }
     }
@@ -102,7 +102,7 @@ module.exports = {
     requireModuleExtension: true,
     loaderOptions: {
       css: {
-        modules:{
+        modules: {
           localIdentName: 'app.[hash]'
         }
       },
@@ -111,6 +111,7 @@ module.exports = {
       }
     },
     extract: process.env.NODE_ENV === 'production',
-    sourceMap: false
+    sourceMap: false,
+    extract: false
   }
 };

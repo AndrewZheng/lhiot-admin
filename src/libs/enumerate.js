@@ -874,6 +874,10 @@ export const giftTypeEnum = [{
 // 折扣商品类型 DISCOUNT_PRODUCT(“折扣商品”), PULL_NEW_PRODUCT(“老拉新商品”)
 export const expandTypeEnum = [
   {
+    label: '普通商品',
+    value: 'ORDINARY_PRODUCT'
+  },
+  {
     label: '折扣商品',
     value: 'DISCOUNT_PRODUCT'
   },
@@ -886,6 +890,10 @@ export const expandTypeEnum = [
     value: 'SECKILL_PRODUCT'
   },
   {
+    label: '新品尝鲜商品',
+    value: 'NEW_TRY_PRODUCT'
+  },
+  {
     label: '分享赚商品',
     value: 'SHARE_PRODUCT'
   },
@@ -893,10 +901,6 @@ export const expandTypeEnum = [
     label: '助力商品',
     value: 'ASSIST_PRODUCT'
   },
-  {
-    label: '普通商品',
-    value: 'ORDINARY_PRODUCT'
-  }
 ];
 
 export const pfExpandTypeEnum = [
@@ -2544,6 +2548,14 @@ export const wholesalePayTypeEnum = [{
 {
   label: '鼎付通',
   value: 'haiding'
+},
+{
+  label: '组合支付(余额微信)',
+  value: 'balance_wechat'
+},
+{
+  label: '组合支付(余额海鼎)',
+  value: 'balance_haiding'
 }
 ]
 
@@ -2670,7 +2682,11 @@ export const couponFromEnum = [{
 {
   label: '限时抢购',
   value: 'flashsale'
-}
+},
+{
+  label: '活动送券',
+  value: 'activity'
+},
 ];
 
 export const layoutEnum = [{
@@ -2691,22 +2707,15 @@ export const layoutEnum = [{
 }
 ]
 
-export const advPositionEnum = [{
-  label: '首页弹窗',
-  value: 'poppup'
-},
-{
-  label: '顶部轮播图',
-  value: 'top'
-},
-{
-  label: '限时抢购',
-  value: 'flashsale'
-},
-{
-  label: '底部banner图',
-  value: 'bottom'
-}
+export const advPositionEnum = [
+  {
+    label: '顶部轮播图',
+    value: 'top'
+  },
+  {
+    label: '限时抢购',
+    value: 'flashsale'
+  }
 ]
 
 export const faqStatusEnum = [{
@@ -2765,14 +2774,14 @@ export const paymentFromEnum = [{
   label: '订单',
   value: 'order'
 },
-{
-  label: '发票',
-  value: 'invoice'
-},
-{
-  label: '账款',
-  value: 'debt'
-}
+  // {
+  //   label: '发票',
+  //   value: 'invoice'
+  // },
+  // {
+  //   label: '账款',
+  //   value: 'debt'
+  // }
 ];
 
 // MRQD-每日签到、WSGRZL-完善个人资料、XRXSSDXF-新人线上首单消费、XSSCCZ-线上首次充值、XSYDCZ-线上月度充值、XSYDXF-线上月度消费

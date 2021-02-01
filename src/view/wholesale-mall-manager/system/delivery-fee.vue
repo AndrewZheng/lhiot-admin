@@ -21,7 +21,7 @@
       >
         <div slot="searchCondition">
           <Row>
-            <i-col style="display: inline-block">¥</i-col>
+            <i-col style="display: inline-block"> ¥ </i-col>
             <InputNumber
               :min="0"
               :value="minOrderAmountComputed"
@@ -30,7 +30,7 @@
               style="width: 100px"
               @on-change="minOrderAmountChange"
             ></InputNumber>
-            <i-col style="display: inline-block" class>-­­­­­­¥</i-col>
+            <i-col style="display: inline-block" class> -­­­­­­¥ </i-col>
             <InputNumber
               :min="0"
               :value="maxOrderAmountComputed"
@@ -48,10 +48,12 @@
             >
               <Option
                 v-for="item in deliveryAtTypeList"
-                :value="item.value"
                 :key="`search-col-${item.value}`"
+                :value="item.value"
                 class="ptb2-5"
-              >{{ item.label }}</Option>
+              >
+                {{ item.label }}
+              </Option>
             </Select>
             <Button
               v-waves
@@ -90,7 +92,7 @@
           </Poptip>
         </div>
       </tables>
-      <div style="margin: 10px;overflow: hidden">
+      <div style="margin: 10px; overflow: hidden">
         <Row type="flex" justify="end">
           <Page
             :total="total"
@@ -112,7 +114,11 @@
         <Form ref="modalEdit" :model="postageDetail" :rules="ruleInline">
           <Row span="24">
             <Col span="6">
-            <FormItem :label-width="100" label="金额范围:¥" prop="minOrderAmount">
+            <FormItem
+              :label-width="100"
+              label="金额范围:¥"
+              prop="minOrderAmount"
+            >
               <InputNumber
                 :readonly="modalTypeComputed"
                 :min="0"
@@ -139,13 +145,20 @@
             </Col>
           </Row>
           <Row>
-            <FormItem :label-width="100" label="配送时间段:" prop="deliveryTime">
-              <RadioGroup v-model="postageDetail.deliveryTime" :disabled="modalTypeComputed">
+            <FormItem
+              :label-width="100"
+              label="配送时间段:"
+              prop="deliveryTime"
+            >
+              <RadioGroup
+                v-model="postageDetail.deliveryTime"
+                :disabled="modalTypeComputed"
+              >
                 <Radio
                   v-for="item in minDeliveryAtTypeEnum"
+                  :key="item.value"
                   :label="item.value"
                   :disabled="modalTypeComputed"
-                  :key="item.value"
                 >
                   <span>{{ item.label }}</span>
                 </Radio>
@@ -155,29 +168,45 @@
           <Row>
             <FormItem prop="deliveryRules">
               <tables
-                :columns="tableColumnComputed"
                 v-model="postageDetail.deliveryRules"
+                :columns="tableColumnComputed"
                 border
                 @on-delete="postageRuleTableHandleDelete"
               ></tables>
             </FormItem>
           </Row>
           <Row
-            v-if="tempModalType === modalType.create || tempModalType === modalType.edit"
+            v-if="
+              tempModalType === modalType.create ||
+                tempModalType === modalType.edit
+            "
             class="mt15"
           >
-            <Button v-waves type="success" class="mr5" @click="addPostageRuleTableColumns">
+            <Button
+              v-waves
+              type="success"
+              class="mr5"
+              @click="addPostageRuleTableColumns"
+            >
               <Icon type="md-add" />添加
             </Button>
           </Row>
         </Form>
       </div>
       <div
-        v-if="tempModalType === modalType.create || tempModalType === modalType.edit"
+        v-if="
+          tempModalType === modalType.create || tempModalType === modalType.edit
+        "
         slot="footer"
       >
-        <Button @click="handleEditClose">关闭</Button>
-        <Button :loading="modalViewLoading" type="primary" @click="handleSubmit('modalEdit')">确定</Button>
+        <Button @click="handleEditClose"> 关闭 </Button>
+        <Button
+          :loading="modalViewLoading"
+          type="primary"
+          @click="handleSubmit('modalEdit')"
+        >
+          确定
+        </Button>
       </div>
     </Modal>
   </div>
@@ -312,7 +341,7 @@ export default {
                     disabled: this.modalTypeComputed
                   },
                   on: {
-                    'on-change': e => {
+                    'on-change': (e) => {
                       console.log(vm);
                       if (e == '0-3') {
                         this.postageDetail.deliveryRules[
@@ -370,7 +399,7 @@ export default {
                   min: 0
                 },
                 on: {
-                  'on-change': e => {
+                  'on-change': (e) => {
                     if (!e) {
                       e = 0;
                     }
@@ -396,7 +425,7 @@ export default {
                   min: 0
                 },
                 on: {
-                  'on-change': e => {
+                  'on-change': (e) => {
                     if (!e) {
                       e = 0;
                     }
@@ -422,7 +451,7 @@ export default {
                   min: 0
                 },
                 on: {
-                  'on-change': e => {
+                  'on-change': (e) => {
                     if (!e) {
                       e = 0;
                     }
@@ -448,7 +477,7 @@ export default {
                   min: 0
                 },
                 on: {
-                  'on-change': e => {
+                  'on-change': (e) => {
                     if (!e) {
                       e = 0;
                     }
@@ -576,7 +605,7 @@ export default {
     onCopy(params) {
       console.log(params);
       if (params.row.deliveryRules.length !== 0) {
-        params.row.deliveryRules.forEach(item => {
+        params.row.deliveryRules.forEach((item) => {
           item.updateWay = updateWay.INSERT;
         });
       }
@@ -589,7 +618,7 @@ export default {
       deleteDeliveryFeeConfig({
         ids
       })
-        .then(res => {
+        .then((res) => {
           const totalPage = Math.ceil(this.total / this.searchRowData.pageSize);
           if (
             this.tableData.length == this.tableDataSelected.length &&
@@ -608,7 +637,7 @@ export default {
     handleSubmit(name) {
       console.log(this.postageDetail);
       // return;
-      this.$refs[name].validate(valid => {
+      this.$refs[name].validate((valid) => {
         if (valid) {
           if (this.isCreate) {
             // 添加状态
@@ -626,7 +655,7 @@ export default {
       this.modalViewLoading = true;
       this.loading = true;
       createDeliveryFeeConfig(this.postageDetail)
-        .then(res => {
+        .then((res) => {
           this.modalViewLoading = false;
           this.modalEdit = false;
           this.$Message.success('创建成功!');
@@ -641,12 +670,12 @@ export default {
       this.modalViewLoading = true;
       this.loading = true;
       editDeliveryFeeConfig(this.postageDetail)
-        .then(res => {
+        .then((res) => {
           this.modalEdit = false;
           this.modalViewLoading = false;
           this.getTableData();
         })
-        .catch(res => {
+        .catch((res) => {
           this.modalEdit = false;
           this.modalViewLoading = false;
         });
@@ -654,7 +683,7 @@ export default {
     addPostageRuleTableColumns() {
       if (this.postageDetail.deliveryRules.length > 0) {
         const array = [];
-        this.postageDetail.deliveryRules.forEach(item => {
+        this.postageDetail.deliveryRules.forEach((item) => {
           array.push(item.minDistance + '-' + item.maxDistance);
         });
         console.log(array);
@@ -697,7 +726,7 @@ export default {
           (item, index) => index !== params.row.initRowIndex
         );
       } else {
-        const index = this.tempDetailList.findIndex(item => {
+        const index = this.tempDetailList.findIndex((item) => {
           return item.id === params.row.id;
         });
         if (index > -1) {
@@ -736,7 +765,7 @@ export default {
       this.tempModalType = this.modalType.edit;
       this.postageDetail = this._.cloneDeep(params.row);
       if (this.postageDetail.deliveryRules.length !== 0) {
-        this.postageDetail.deliveryRules.forEach(item => {
+        this.postageDetail.deliveryRules.forEach((item) => {
           item.updateWay = 'UPDATE';
         });
       }
@@ -747,7 +776,7 @@ export default {
     },
     getTableData() {
       getDeliveryFeeConfigPages(this.searchRowData)
-        .then(res => {
+        .then((res) => {
           this.tableData = res.rows;
           this.total = res.total;
           this.loading = false;
@@ -767,10 +796,10 @@ export default {
     },
     getRelationTableData() {
       getDeliveryFeeConfigRulePages(this.searchRelationRowData)
-        .then(res => {
+        .then((res) => {
           // 设置行是否可编辑
           if (res.rows.length !== 0) {
-            res.rows.forEach(element => {
+            res.rows.forEach((element) => {
               element.isEdit = false;
             });
             // this.relationDetail = res.rows;
@@ -779,12 +808,8 @@ export default {
             this.postageDetail.deliveryRules = [];
           }
           // this.total = res.total;
-          this.loading = false;
-          this.searchLoading = false;
-          this.clearSearchLoading = false;
         })
-        .catch(error => {
-          console.log(error);
+        .finally(() => {
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;

@@ -6,6 +6,8 @@
         v-model="tableData"
         :columns="columns"
         :loading="loading"
+        :search-area-column="16"
+        :operate-area-column="6"
         editable
         searchable
         border
@@ -38,9 +40,7 @@
               :key="item.value"
               :value="item.value"
               class="pt5 pb5 pl15"
-            >
-              {{ item.label }}
-            </Option>
+            >{{ item.label }}</Option>
           </Select>
           <Select
             v-model="searchRowData.vaild"
@@ -54,11 +54,28 @@
               :key="item.value"
               :value="item.value"
               class="ptb2-5"
-            >
-              {{ item.label }}
-            </Option>
+            >{{ item.label }}</Option>
           </Select>
-          <Button v-waves class="search-btn mr5" type="primary" @click="handleSearch">
+          <Select
+            v-model="searchRowData.advertmentType"
+            class="search-col mr5"
+            placeholder="广告类型"
+            style="width: 90px"
+            clearable
+          >
+            <Option
+              v-for="item in advertmentList"
+              :key="item.value"
+              :value="item.value"
+              class="ptb2-5"
+            >{{ item.label }}</Option>
+          </Select>
+          <Button
+            v-waves
+            class="search-btn mr5"
+            type="primary"
+            @click="handleSearch"
+          >
             <Icon type="md-search" />&nbsp;搜索
           </Button>
           <Button
@@ -88,7 +105,7 @@
           </Poptip>
         </div>
       </tables>
-      <div style="margin: 10px;overflow: hidden">
+      <div style="margin: 10px; overflow: hidden">
         <Row type="flex" justify="end">
           <Page
             :total="total"
@@ -110,22 +127,16 @@
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">
-                广告位置:
-              </i-col>
-              <i-col span="16">
-                {{ advertisementDetail.advertmentPosition | advPositionFilter }}
-              </i-col>
+              <i-col span="8">广告位置:</i-col>
+              <i-col span="16">{{
+                advertisementDetail.advertmentPosition | advPositionFilter
+              }}</i-col>
             </Row>
           </i-col>
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">
-                广告名称:
-              </i-col>
-              <i-col span="16">
-                {{ advertisementDetail.title }}
-              </i-col>
+              <i-col span="8">广告名称:</i-col>
+              <i-col span="16">{{ advertisementDetail.title }}</i-col>
             </Row>
           </i-col>
         </Row>
@@ -140,24 +151,27 @@
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">
-                广告图:
+              <i-col span="8">广告图:</i-col>
+              <i-col
+                v-if="advertisementDetail.advertmentType === 'IMAGE'"
+                span="16"
+              >
+                <img
+                  :src="advertisementDetail.advertmentImage"
+                  style="width: 100%; height: auto"
+                >
               </i-col>
-              <i-col span="16">
-                <img :src="advertisementDetail.advertmentImage" style="width: 100%;height: auto">
-              </i-col>
+              <i-col v-else span="16">N/A</i-col>
             </Row>
           </i-col>
         </Row>
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">
-                广告状态:
-              </i-col>
-              <i-col span="16">
-                {{ advertisementDetail.vaild==="yes"?'有效':'无效' }}
-              </i-col>
+              <i-col span="8">广告状态:</i-col>
+              <i-col span="16">{{
+                advertisementDetail.vaild === "yes" ? "有效" : "无效"
+              }}</i-col>
             </Row>
           </i-col>
           <!-- <i-col span="12">
@@ -170,90 +184,103 @@
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">
-                链接类型:
-              </i-col>
-              <i-col span="16">
-                {{ advertisementDetail.linkType | advertisementLinkTypeFilter }}
-              </i-col>
+              <i-col span="8">链接类型:</i-col>
+              <i-col span="16">{{
+                advertisementDetail.linkType | advertisementLinkTypeFilter
+              }}</i-col>
             </Row>
           </i-col>
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">
-                链接目标:
-              </i-col>
-              <i-col span="16">
-                {{ advertisementDetail.linkUrl }}
-              </i-col>
+              <i-col span="8">链接目标:</i-col>
+              <i-col span="16">{{ advertisementDetail.linkUrl }}</i-col>
             </Row>
           </i-col>
         </Row>
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">
-                有效时间:
-              </i-col>
-              <i-col span="16">
-                {{ advertisementDetail.beginTime }}
-              </i-col>
+              <i-col span="8">有效时间:</i-col>
+              <i-col span="16">{{ advertisementDetail.beginTime }}</i-col>
             </Row>
           </i-col>
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">
-                失效时间:
-              </i-col>
-              <i-col span="16">
-                {{ advertisementDetail.endTime }}
-              </i-col>
+              <i-col span="8">失效时间:</i-col>
+              <i-col span="16">{{ advertisementDetail.endTime }}</i-col>
             </Row>
           </i-col>
         </Row>
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">
-                创建时间:
-              </i-col>
-              <i-col span="16">
-                {{ advertisementDetail.createAt }}
-              </i-col>
+              <i-col span="8">创建时间:</i-col>
+              <i-col span="16">{{ advertisementDetail.createAt }}</i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row
+          v-if="
+            advertisementDetail.advertmentType === 'VIDEO' &&
+              advertisementDetail.advertmentImage
+          "
+          :gutter="8"
+          type="flex"
+          align="middle"
+          class-name="mb10"
+        >
+          <i-col span="12">
+            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+              <i-col span="8">视频预览:</i-col>
+              <video
+                class="video_box"
+                :src="advertisementDetail.advertmentImage"
+                controls="controls"
+              ></video>
             </Row>
           </i-col>
         </Row>
       </div>
       <div slot="footer">
-        <Button type="primary" @click="handleClose">
-          关闭
-        </Button>
+        <Button type="primary" @click="handleClose">关闭</Button>
       </div>
     </Modal>
 
     <Modal v-model="modalEdit" :width="750" :mask-closable="false">
       <p slot="header">
-        <span>{{ tempModalType===modalType.edit?'修改广告':'创建广告' }}</span>
+        <span>{{
+          tempModalType === modalType.edit ? "修改广告" : "创建广告"
+        }}</span>
       </p>
       <div class="modal-content">
-        <Form ref="editForm" :model="advertisementDetail" :rules="ruleInline" :label-width="80">
+        <Form
+          ref="editForm"
+          :model="advertisementDetail"
+          :rules="ruleInline"
+          :label-width="90"
+        >
           <Row>
             <i-col span="12">
               <FormItem label="广告名:" prop="title">
-                <Input v-model="advertisementDetail.title" placeholder="广告名" style="width: 220px"></Input>
+                <Input
+                  v-model="advertisementDetail.title"
+                  placeholder="广告名"
+                  style="width: 220px"
+                ></Input>
               </FormItem>
             </i-col>
             <i-col span="12">
               <FormItem label="广告位置:" prop="advertmentPosition">
-                <Select v-model="advertisementDetail.advertmentPosition" style="width: 200px">
+                <Select
+                  v-model="advertisementDetail.advertmentPosition"
+                  style="width: 200px"
+                >
                   <Option
                     v-for="item in advPositionEnum"
                     :key="item.value"
                     :value="item.value"
                     class="pt5 pb5 pl15"
-                  >
-                    {{ item.label }}
-                  </Option>
+                  >{{ item.label }}</Option>
                 </Select>
               </FormItem>
             </i-col>
@@ -270,16 +297,17 @@
             </i-col>
             <i-col span="12">
               <FormItem label="广告状态:" prop="vaild">
-                <Select v-model="advertisementDetail.vaild" style="width: 200px">
+                <Select
+                  v-model="advertisementDetail.vaild"
+                  style="width: 200px"
+                >
                   <Option
-                    v-for="(item,index) in vaild"
+                    v-for="(item, index) in vaild"
                     :key="index"
                     :value="item.value"
                     class="ptb2-5"
                     style="padding-left: 5px"
-                  >
-                    {{ item.label }}
-                  </Option>
+                  >{{ item.label }}</Option>
                 </Select>
               </FormItem>
             </i-col>
@@ -358,25 +386,63 @@
           </Row>
           <Row>
             <i-col span="12">
-              <FormItem :label-width="80" label="广告图片:建议尺寸(790*338)" prop="advertmentImage">
+              <FormItem label="广告类型:" prop="advertmentType">
+                <Select
+                  v-model="advertisementDetail.advertmentType"
+                  style="width: 200px"
+                  disabled
+                >
+                  <Option
+                    v-for="(item, index) in advertmentList"
+                    :key="index"
+                    :value="item.value"
+                    class="ptb2-5"
+                    style="padding-left: 5px"
+                  >{{ item.label }}</Option>
+                </Select>
+              </FormItem>
+            </i-col>
+            <i-col
+              v-if="advertisementDetail.advertmentType == 'IMAGE'"
+              span="12"
+            >
+              <FormItem
+                :label-width="80"
+                label="广告图片:建议尺寸(790*338)"
+                prop="advertmentImage"
+              >
                 <div>
                   <Input
                     v-show="false"
                     v-model="advertisementDetail.advertmentImage"
                     style="width: auto"
                   ></Input>
-                  <div v-for="item in uploadListMain" :key="item.url" class="demo-upload-list">
+                  <div
+                    v-for="item in uploadListMain"
+                    :key="item.url"
+                    class="demo-upload-list"
+                  >
                     <template v-if="item.status === 'finished'">
                       <div>
                         <img :src="item.url">
                         <div class="demo-upload-list-cover">
-                          <Icon type="ios-eye-outline" @click.native="handleUploadView(item)"></Icon>
-                          <Icon type="ios-trash-outline" @click.native="handleRemoveMain(item)"></Icon>
+                          <Icon
+                            type="ios-eye-outline"
+                            @click.native="handleUploadView(item)"
+                          ></Icon>
+                          <Icon
+                            type="ios-trash-outline"
+                            @click.native="handleRemoveMain(item)"
+                          ></Icon>
                         </div>
                       </div>
                     </template>
                     <template v-else>
-                      <Progress v-if="item.showProgress" :percent="item.percentage" hide-info></Progress>
+                      <Progress
+                        v-if="item.showProgress"
+                        :percent="item.percentage"
+                        hide-info
+                      ></Progress>
                     </template>
                   </div>
                   <IViewUpload
@@ -387,23 +453,73 @@
                     file-dir="activity"
                     @on-success="handleSuccessMain"
                   >
-                    <div slot="content" style="width:58px;height:58px;line-height:58px">
+                    <div
+                      slot="content"
+                      style="width: 58px; height: 58px; line-height: 58px"
+                    >
                       <Icon type="ios-camera" size="20"></Icon>
                     </div>
                   </IViewUpload>
                 </div>
               </FormItem>
             </i-col>
+            <!-- 上传视频 -->
+            <i-col v-else span="12">
+              <FormItem
+                :label-width="80"
+                label="广告视频:(格式限.MP4&.AVI、大小200M)"
+                prop="advertmentImage"
+              >
+                <div>
+                  <Input
+                    v-show="false"
+                    v-model="advertisementDetail.advertmentImage"
+                    style="width: auto"
+                  ></Input>
+                  <VideoUpload
+                    ref="uploadMainVideo"
+                    :default-list="defaultListMainVideo"
+                    :image-size="204800"
+                    group-type="other_file"
+                    file-dir="publicity_video"
+                    @on-success="handleSuccessMainVideo"
+                  >
+                    <div
+                      slot="content"
+                      style="width: 58px; height: 58px; line-height: 58px"
+                    >
+                      <Icon type="md-videocam" size="20"></Icon>
+                    </div>
+                  </VideoUpload>
+                </div>
+              </FormItem>
+            </i-col>
+          </Row>
+          <Row
+            v-if="
+              advertisementDetail.advertmentType === 'VIDEO' &&
+                advertisementDetail.advertmentImage
+            "
+          >
+            <i-col span="22">
+              <FormItem label="视频预览:">
+                <video
+                  class="video_box"
+                  :src="advertisementDetail.advertmentImage"
+                  controls="controls"
+                ></video>
+              </FormItem>
+            </i-col>
           </Row>
         </Form>
       </div>
       <div slot="footer">
-        <Button @click="handleEditClose">
-          关闭
-        </Button>
-        <Button :loading="modalViewLoading" type="primary" @click="handleSubmit('editForm')">
-          确定
-        </Button>
+        <Button @click="handleEditClose">关闭</Button>
+        <Button
+          :loading="modalViewLoading"
+          type="primary"
+          @click="handleSubmit('editForm')"
+        >确定</Button>
       </div>
     </Modal>
 
@@ -411,7 +527,12 @@
       <img :src="imgUploadViewItem" style="width: 100%">
     </Modal>
 
-    <Modal v-model="relationTargetShow" :mask-closable="false" :width="1200" title="关联商品规格">
+    <Modal
+      v-model="relationTargetShow"
+      :mask-closable="false"
+      :width="1200"
+      title="关联商品规格"
+    >
       <div class="modal-content">
         Tips：点击要选择的行
         <tables
@@ -460,7 +581,7 @@
           </div>
         </tables>
 
-        <div style="margin: 10px;overflow: hidden">
+        <div style="margin: 10px; overflow: hidden">
           <Row type="flex" justify="end">
             <Page
               :total="relationTotal"
@@ -480,6 +601,7 @@
 <script type="text/ecmascript-6">
 import Tables from '_c/tables';
 import IViewUpload from '_c/iview-upload';
+import VideoUpload from '_c/video-upload';
 
 import {
   getAdvertisementPositionPages,
@@ -526,13 +648,15 @@ const advertisementDetail = {
   advertmentPosition: '', // poppup-首页弹窗 top-顶部轮播图 flashsale-限时抢购 bottom-底部banner图
   linkUrl: '',
   title: '',
-  vaild: ''
+  vaild: '',
+  advertmentType: 'IMAGE'
 };
 
 const roleRowData = {
   title: '',
   vaild: '',
   advertmentPosition: '',
+  advertmentType: '',
   page: 1,
   rows: 10
 };
@@ -548,7 +672,8 @@ const relationRowData = {
 export default {
   components: {
     Tables,
-    IViewUpload
+    IViewUpload,
+    VideoUpload
   },
   mixins: [deleteMixin, tableMixin, searchMixin, uploadMixin],
   data() {
@@ -560,6 +685,7 @@ export default {
       relationTargetShow: false,
       selectDisable: true,
       advertisementList: [],
+      defaultListMainVideo: [],
       oldPicture: [],
       newPicture: [],
       save: [],
@@ -567,8 +693,11 @@ export default {
         title: [{ required: true, message: '请输入广告名称' }],
         vaild: [{ required: true, message: '请选择广告状态' }],
         linkType: [{ required: true, message: '请选择链接类型' }],
+        beginTime: [{ required: true, message: '请选择开始时间' }],
+        endTime: [{ required: true, message: '请选择结束时间' }],
         advertisementRelation: [{ required: true, message: '请填写链接目标' }],
-        positionId: [{ required: true, message: '请选择广告位置' }],
+        advertmentPosition: [{ required: true, message: '请选择广告位置' }],
+        advertmentType: [{ required: true, message: '请选择广告类型' }],
         rankNo: [
           { required: true, message: '请输入序号' },
           {
@@ -611,6 +740,10 @@ export default {
         { value: linkType.INTERNALLINK, label: '内部链接' },
         { value: linkType.TABLINK, label: '底部导航' }
       ],
+      advertmentList: [
+        { label: '图片', value: 'IMAGE' },
+        { label: '视频', value: 'VIDEO' }
+      ],
       tempColumns: [],
       linkTypeEnum,
       tempModalTableData: [],
@@ -633,20 +766,8 @@ export default {
           align: 'center',
           key: 'id',
           sortable: true,
-          minWidth: 70
+          minWidth: 80
         },
-        // {
-        //   title: "链接类型",
-        //   align: "center",
-        //   minWidth: 100,
-        //   key: "linkType",
-        //   render: (h, params, vm) => {
-        //     const { row } = params;
-        //     return (
-        //       <div>{advertisementLinkTypeConvert(row.linkType).label}</div>
-        //     );
-        //   }
-        // },
         {
           title: '图片',
           align: 'center',
@@ -654,18 +775,24 @@ export default {
           key: 'advertmentImage',
           render: (h, params, vm) => {
             const { row } = params;
+            // if (row.advertmentType === "IMAGE") {
             const str = (
               <img src={row.advertmentImage} height='60' width='100' />
             );
             return <div>{str}</div>;
+            // } else {
+            //   return (
+            //     <div>
+            //       <img
+            //         src="http://resource.shuiguoshule.com.cn/product_image/2020-09-03/KKXxT02hdey9P4buqx3d.jpg"
+            //         height="60"
+            //         width="100"
+            //       />
+            //     </div>
+            //   );
+            // }
           }
         },
-        // {
-        //   title: "广告关联",
-        //   align: "center",
-        //   minWidth: 110,
-        //   key: "advertisementRelation"
-        // },
         {
           title: '广告名称',
           align: 'center',
@@ -675,28 +802,20 @@ export default {
         {
           title: '广告位置',
           align: 'center',
-          minWidth: 160,
+          minWidth: 120,
           key: 'advertmentPosition',
           render: (h, params, vm) => {
             const { row } = params;
             const str = 'M/A';
             switch (row.advertmentPosition) {
               case 'poppup':
-                return (
-                  <div>{advPositionConvert(row.advertmentPosition)}</div>
-                );
+                return <div>{advPositionConvert(row.advertmentPosition)}</div>;
               case 'top':
-                return (
-                  <div>{advPositionConvert(row.advertmentPosition)}</div>
-                );
+                return <div>{advPositionConvert(row.advertmentPosition)}</div>;
               case 'flashsale':
-                return (
-                  <div>{advPositionConvert(row.advertmentPosition)}</div>
-                );
+                return <div>{advPositionConvert(row.advertmentPosition)}</div>;
               case 'bottom':
-                return (
-                  <div>{advPositionConvert(row.advertmentPosition)}</div>
-                );
+                return <div>{advPositionConvert(row.advertmentPosition)}</div>;
               default:
                 return <div>{str}</div>;
             }
@@ -705,42 +824,38 @@ export default {
         {
           title: '创建时间',
           align: 'center',
-          minWidth: 170,
+          minWidth: 180,
           key: 'createAt'
         },
         {
           title: '开始时间',
           align: 'center',
-          minWidth: 170,
+          minWidth: 180,
           key: 'beginTime'
         },
         {
           title: '结束时间',
           align: 'center',
-          minWidth: 170,
+          minWidth: 180,
           key: 'endTime'
         },
         {
           title: '状态',
           align: 'center',
-          minWidth: 100,
+          minWidth: 90,
           key: 'vaild',
           render: (h, params, vm) => {
             const { row } = params;
             if (row.vaild === 'yes') {
               return (
                 <div>
-                  <tag color='success'>
-                    {activityStatusConvert(row.vaild)}
-                  </tag>
+                  <tag color='success'>{activityStatusConvert(row.vaild)}</tag>
                 </div>
               );
             } else if (row.vaild === 'no') {
               return (
                 <div>
-                  <tag color='error'>
-                    {activityStatusConvert(row.vaild)}
-                  </tag>
+                  <tag color='error'>{activityStatusConvert(row.vaild)}</tag>
                 </div>
               );
             }
@@ -797,7 +912,6 @@ export default {
   },
   methods: {
     advertiseTypeChange(value) {
-      console.log(value);
       if (value === 'TEXT') {
         if (this.$refs.uploadMain) {
           this.$refs.uploadMain.clearFileList();
@@ -827,7 +941,7 @@ export default {
       deleteAdvertisement({
         ids
       })
-        .then(res => {
+        .then((res) => {
           const totalPage = Math.ceil(this.total / this.searchRowData.pageSize);
           if (
             this.tableData.length === this.tableDataSelected.length &&
@@ -856,7 +970,7 @@ export default {
       //   };
       //   this.deletePicture(urls);
       // }
-      this.$refs[name].validate(valid => {
+      this.$refs[name].validate((valid) => {
         if (valid) {
           if (this.advertisementDetail.isPermanent === 'OFF') {
             if (this.advertisementDetail.beginTime === '') {
@@ -909,7 +1023,7 @@ export default {
       this.modalViewLoading = true;
       editAdvertisement({
         ...this.advertisementDetail
-      }).then(res => {
+      }).then((res) => {
         this.resetFields();
         this.modalEdit = false;
         this.modalViewLoading = false;
@@ -918,7 +1032,7 @@ export default {
     },
     createTableRow() {
       this.modalViewLoading = true;
-      createAdvertisement(this.advertisementDetail).then(res => {
+      createAdvertisement(this.advertisementDetail).then((res) => {
         this.modalViewLoading = false;
         this.modalEdit = false;
         this.$Message.success('创建成功!');
@@ -938,14 +1052,14 @@ export default {
     },
     getRelationTable() {
       this.searchModalTableLoading = true;
-      const tempObj = this.linkType.find(item => {
+      const tempObj = this.linkType.find((item) => {
         return item.value === this.advertisementDetail.linkType;
       });
       console.log(tempObj);
       if (tempObj) {
         this.tempColumns = tempObj.columns;
         console.log(this.tempColumns);
-        tempObj.api(this.searchRelationRowData).then(res => {
+        tempObj.api(this.searchRelationRowData).then((res) => {
           this.searchModalTableLoading = false;
           this.relationTargetShow = true;
           this.tempModalTableData = res.rows;
@@ -972,8 +1086,10 @@ export default {
       this.advertisementDetail.advertmentImage = null;
       this.advertisementDetail.advertmentImage = fileList[0].url;
       this.tempImage = fileList[0].url;
-      this.newPicture.push(fileList[0].url);
-      this.oldPicture = this.save;
+    },
+    handleSuccessMainVideo(response, file, fileList) {
+      this.advertisementDetail.advertmentImage = null;
+      this.advertisementDetail.advertmentImage = fileList[0].url;
     },
     addChildren() {
       if (this.tempModalType !== this.modalType.create) {
@@ -992,23 +1108,23 @@ export default {
       this.modalView = true;
     },
     handleEdit(params) {
-      this.save = [];
-      this.save.push(params.row.advertmentImage);
       this.$refs.editForm.resetFields();
       this.tempImage = null;
       this.tempModalType = this.modalType.edit;
       this.advertisementDetail = _.cloneDeep(params.row);
-      this.setDefaultUploadList(this.advertisementDetail);
+      this.setDefaultUploadList(params.row);
       this.modalEdit = true;
     },
     setDefaultUploadList(res) {
-      if (res.advertmentImage != null) {
-        const map = { status: 'finished', url: 'url' };
-        const mainImgArr = [];
-        map.url = res.advertmentImage;
-        mainImgArr.push(map);
-        this.$refs.uploadMain.setDefaultFileList(mainImgArr);
-        this.uploadListMain = mainImgArr;
+      if (res.advertmentType === 'IMAGE') {
+        if (res.advertmentImage != null) {
+          const map = { status: 'finished', url: 'url' };
+          const mainImgArr = [];
+          map.url = res.advertmentImage;
+          mainImgArr.push(map);
+          this.$refs.uploadMain.setDefaultFileList(mainImgArr);
+          this.uploadListMain = mainImgArr;
+        }
       }
     },
     advertiseLinkTypeChange(value) {
@@ -1017,7 +1133,7 @@ export default {
     },
     advertiseTimeChange() {},
     getTableData() {
-      getAdvertisementPages(this.searchRowData).then(res => {
+      getAdvertisementPages(this.searchRowData).then((res) => {
         this.tableData = res.rows;
         this.total = res.total;
         this.loading = false;
@@ -1070,4 +1186,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.video_box {
+  width: 300px;
+  height: 200px;
+}
 </style>

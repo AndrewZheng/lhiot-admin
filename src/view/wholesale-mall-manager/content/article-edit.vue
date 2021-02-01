@@ -6,49 +6,76 @@
           <Button
             class="search-btn mr5"
             type="warning"
-            @click="goBack">返回文章列表页</Button>
+            @click="goBack"
+          >返回文章列表页</Button>
           <Button
             :loading="modalViewLoading"
             type="primary"
-            @click="handleSubmit('editForm')">保存</Button>
+            @click="handleSubmit('editForm')"
+          >保存</Button>
         </i-col>
         <i-col span="24" class="mt10">
-          <Form ref="editForm" :model="articleDetail" :rules="ruleInline" :label-width="80">
+          <Form
+            ref="editForm"
+            :model="articleDetail"
+            :rules="ruleInline"
+            :label-width="100"
+          >
             <Row>
               <i-col span="12">
                 <FormItem label="文章标题:" prop="articleTitle">
-                  <Input v-model="articleDetail.articleTitle" placeholder style="width: 325px"></Input>
+                  <Input
+                    v-model="articleDetail.articleTitle"
+                    placeholder
+                    style="width: 325px"
+                  ></Input>
                 </FormItem>
               </i-col>
               <i-col span="12">
                 <FormItem label="文章副标题:" prop="articleSubhead">
-                  <Input v-model="articleDetail.articleSubhead" placeholder style="width: 325px"></Input>
+                  <Input
+                    v-model="articleDetail.articleSubhead"
+                    placeholder
+                    style="width: 325px"
+                  ></Input>
                 </FormItem>
               </i-col>
             </Row>
             <Row>
               <i-col span="12">
                 <FormItem label="文章作者:" prop="articleAuthor">
-                  <Input v-model="articleDetail.articleAuthor" placeholder style="width: 325px"></Input>
+                  <Input
+                    v-model="articleDetail.articleAuthor"
+                    placeholder
+                    style="width: 325px"
+                  ></Input>
                 </FormItem>
               </i-col>
               <i-col span="12">
-                <FormItem label="资源链接:" prop="resouceUrl" style="width:700px;">
+                <FormItem
+                  label="资源链接:"
+                  prop="resouceUrl"
+                  style="width: 700px"
+                >
                   <Input
                     v-model="articleDetail.resouceUrl"
-                    :autosize="{minRows: 3,maxRows: 8}"
+                    :autosize="{ minRows: 3, maxRows: 8 }"
                     type="textarea"
-                    placeholder="http://"></Input>
+                    placeholder="http://"
+                  ></Input>
                 </FormItem>
               </i-col>
             </Row>
             <Row>
               <FormItem label="文章类别:" prop="articleType">
-                <Select v-model="articleDetail.articleType" style="width: 100px">
+                <Select
+                  v-model="articleDetail.articleType"
+                  style="width: 100px"
+                >
                   <Option
-                    v-for="(item,index) in articleTypeEnum"
-                    :value="item.value"
+                    v-for="(item, index) in articleTypeEnum"
                     :key="index"
+                    :value="item.value"
                     class="ptb2-5"
                     style="padding-left: 5px"
                   >{{ item.label }}</Option>
@@ -57,9 +84,9 @@
               <FormItem label="创作类别:" prop="createType">
                 <Select v-model="articleDetail.createType" style="width: 100px">
                   <Option
-                    v-for="(item,index) in createTypeEnum"
-                    :value="item.value"
+                    v-for="(item, index) in createTypeEnum"
                     :key="index"
+                    :value="item.value"
                     class="ptb2-5"
                     style="padding-left: 5px"
                   >{{ item.label }}</Option>
@@ -71,9 +98,9 @@
                   style="width: 100px"
                 >
                   <Option
-                    v-for="(item,index) in useAble"
-                    :value="item.value"
+                    v-for="(item, index) in useAble"
                     :key="index"
+                    :value="item.value"
                     class="ptb2-5"
                     style="padding-left: 5px"
                   >{{ item.label }}</Option>
@@ -82,23 +109,37 @@
             </Row>
             <Row>
               <FormItem label="文章主图:" prop="articleUrl">
-                <Input v-show="false" v-model="articleDetail.articleUrl" style="width: auto"></Input>
+                <Input
+                  v-show="false"
+                  v-model="articleDetail.articleUrl"
+                  style="width: auto"
+                ></Input>
                 <div
-                  v-for="(item,key) in uploadListMain"
+                  v-for="(item, key) in uploadListMain"
                   :key="'modalEdit' + key"
                   class="demo-upload-list"
                 >
                   <template v-if="item.status === 'finished'">
                     <div>
-                      <img :src="item.url" >
+                      <img :src="item.url">
                       <div class="demo-upload-list-cover">
-                        <Icon type="ios-eye-outline" @click.native="handleUploadView(item)"></Icon>
-                        <Icon type="ios-trash-outline" @click.native="handleRemoveMain(item)"></Icon>
+                        <Icon
+                          type="ios-eye-outline"
+                          @click.native="handleUploadView(item)"
+                        ></Icon>
+                        <Icon
+                          type="ios-trash-outline"
+                          @click.native="handleRemoveMain(item)"
+                        ></Icon>
                       </div>
                     </div>
                   </template>
                   <template v-else>
-                    <Progress v-if="item.showProgress" :percent="item.percentage" hide-info></Progress>
+                    <Progress
+                      v-if="item.showProgress"
+                      :percent="item.percentage"
+                      hide-info
+                    ></Progress>
                   </template>
                 </div>
                 <IViewUpload
@@ -107,7 +148,10 @@
                   :image-size="imageSize"
                   @on-success="handleSuccessMain"
                 >
-                  <div slot="content" style="width:58px;height:58px;line-height:58px">
+                  <div
+                    slot="content"
+                    style="width: 58px; height: 58px; line-height: 58px"
+                  >
                     <Icon type="ios-camera" size="20"></Icon>
                   </div>
                 </IViewUpload>
@@ -130,7 +174,7 @@
     </Card>
 
     <Modal v-model="uploadVisible" title="View Image">
-      <img :src="imgUploadViewItem" style="width: 100%" >
+      <img :src="imgUploadViewItem" style="width: 100%">
     </Modal>
   </div>
 </template>
@@ -223,7 +267,7 @@ export default {
       const id = this.$route.query.id;
       if (id !== undefined && id !== '' && id !== null) {
         this.loading = true;
-        getArticle({ id }).then(res => {
+        getArticle({ id }).then((res) => {
           this.articleDetail = res;
           this.$refs.editor.content = this.articleDetail.articleContent;
           this.setDefaultUploadList(this.articleDetail);
@@ -248,7 +292,7 @@ export default {
     },
     handleSubmit(name) {
       this.articleDetail.articleContent = this.$refs.editor.content;
-      this.$refs[name].validate(valid => {
+      this.$refs[name].validate((valid) => {
         if (valid) {
           if (this.articleDetail.id === 0 || this.articleDetail.id === null) {
             // 添加状态
@@ -264,7 +308,7 @@ export default {
     },
     createTableRow() {
       this.modalViewLoading = true;
-      createArticle(this.articleDetail).then(res => {
+      createArticle(this.articleDetail).then((res) => {
         this.modalViewLoading = false;
         this.$Message.success('创建成功!');
         this.$refs.editor.content = null;
@@ -273,7 +317,7 @@ export default {
     },
     editTableRow() {
       this.modalViewLoading = true;
-      editArticle(this.articleDetail).then(res => {
+      editArticle(this.articleDetail).then((res) => {
         this.$Message.success('修改成功!');
         this.modalViewLoading = false;
         this.$refs.editor.content = null;

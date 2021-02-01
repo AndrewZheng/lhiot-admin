@@ -14,12 +14,8 @@ module.exports = {
   'extends': [
     'plugin:vue/recommended',
     'eslint:recommended'
-    // 'plugin:vue/essential',
-    // '@vue/standard'
   ],
   rules: {
-    'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'off',
-    'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
     'arrow-parens': 0,
     'vue/no-parsing-error': [2, { "x-invalid-end-tag": false }],
     'vue/max-attributes-per-line': [2, {
@@ -29,12 +25,10 @@ module.exports = {
         'allowFirstLine': false
       }
     }],
+    "vue/singleline-html-element-content-newline": "off",
+    "vue/multiline-html-element-content-newline":"off",
     'vue/name-property-casing': ['error', 'PascalCase'],
-    'accessor-pairs': 2,
-    'arrow-spacing': [2, {
-      'before': true,
-      'after': true
-    }],
+    "vue/no-v-html": "off",
     'vue/html-self-closing': ['error', {
       'html': {
         'void': 'never',
@@ -43,6 +37,11 @@ module.exports = {
       },
       'svg': 'always',
       'math': 'always'
+    }],
+    'accessor-pairs': 2,
+    'arrow-spacing': [2, {
+      'before': true,
+      'after': true
     }],
     'block-spacing': [2, 'always'],
     'brace-style': [2, '1tbs', {
@@ -61,7 +60,7 @@ module.exports = {
     'curly': [2, 'multi-line'],
     'dot-location': [2, 'property'],
     'eol-last': 2,
-    'eqeqeq': [1, 'allow-null'],
+    'eqeqeq': ["error", "always", {"null": "ignore"}],
     'generator-star-spacing': [2, {
       'before': true,
       'after': true
@@ -84,6 +83,8 @@ module.exports = {
       'capIsNew': false
     }],
     'new-parens': 2,
+    'no-console': 'off',
+    'no-debugger': process.env.NODE_ENV === 'production' ? 2 : 0,
     'no-array-constructor': 2,
     'no-caller': 2,
     'no-class-assign': 2,

@@ -8,9 +8,11 @@
         <Card>
           <h6>
             当前选中：
-            <span
-              class="brand-red font-sm"
-            >{{ parentCategory.categoryName?parentCategory.categoryName:'全部分类' }}</span>
+            <span class="brand-red font-sm">{{
+              parentCategory.categoryName
+                ? parentCategory.categoryName
+                : "全部分类"
+            }}</span>
           </h6>
           <tables
             ref="tables"
@@ -86,7 +88,12 @@
               >
                 <Icon type="ios-arrow-back" />&nbsp;返回全部分类
               </Button>
-              <Button v-waves type="success" class="mr5" @click="createTableRow">
+              <Button
+                v-waves
+                type="success"
+                class="mr5"
+                @click="createTableRow"
+              >
                 <Icon type="md-add" />添加
               </Button>
               <Poptip
@@ -102,7 +109,7 @@
               </Poptip>
             </div>
           </tables>
-          <div style="margin: 10px;overflow: hidden">
+          <div style="margin: 10px; overflow: hidden">
             <Row type="flex" justify="end">
               <Page
                 :total="total"
@@ -126,9 +133,7 @@
         <Row class-name="mb20">
           <i-col span="12">
             <Row>
-              <i-col span="6">
-                主键ID:
-              </i-col>
+              <i-col span="6"> 主键ID: </i-col>
               <i-col span="18">
                 {{ faqDetail.id }}
               </i-col>
@@ -136,9 +141,7 @@
           </i-col>
           <i-col span="12">
             <Row>
-              <i-col span="6">
-                序号:
-              </i-col>
+              <i-col span="6"> 序号: </i-col>
               <i-col span="18">
                 {{ faqDetail.rankNum }}
               </i-col>
@@ -148,9 +151,7 @@
         <Row class-name="mb20">
           <i-col span="12">
             <Row>
-              <i-col span="6">
-                标题:
-              </i-col>
+              <i-col span="6"> 标题: </i-col>
               <i-col span="18">
                 {{ faqDetail.title }}
               </i-col>
@@ -158,9 +159,7 @@
           </i-col>
           <i-col span="12">
             <Row>
-              <i-col span="6">
-                链接地址:
-              </i-col>
+              <i-col span="6"> 链接地址: </i-col>
               <i-col span="18">
                 {{ faqDetail.linkUrl }}
               </i-col>
@@ -170,9 +169,7 @@
         <Row class-name="mb20">
           <i-col span="12">
             <Row>
-              <i-col span="6">
-                创建人:
-              </i-col>
+              <i-col span="6"> 创建人: </i-col>
               <i-col span="18">
                 {{ faqDetail.createPerson }}
               </i-col>
@@ -180,9 +177,7 @@
           </i-col>
           <i-col span="12">
             <Row>
-              <i-col span="6">
-                创建时间:
-              </i-col>
+              <i-col span="6"> 创建时间: </i-col>
               <i-col span="18">
                 {{ faqDetail.createTime }}
               </i-col>
@@ -192,35 +187,38 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="4">
-                内容:
-              </i-col>
+              <i-col span="4"> 内容: </i-col>
               <i-col span="20" v-html="faqDetail.content"></i-col>
             </Row>
           </i-col>
         </Row>
       </div>
       <div slot="footer">
-        <Button type="primary" @click="handleClose">
-          关闭
-        </Button>
+        <Button type="primary" @click="handleClose"> 关闭 </Button>
       </div>
     </Modal>
 
     <!--编辑菜单 -->
     <Modal v-model="modalEdit" :mask-closable="false">
       <p slot="header">
-        <span>{{ tempModalType===modalType.edit?'修改FAQ':'创建FAQ' }}</span>
+        <span>{{
+          tempModalType === modalType.edit ? "修改FAQ" : "创建FAQ"
+        }}</span>
       </p>
       <div class="modal-content">
-        <Form ref="modalEdit" :label-width="100" :model="faqDetail" :rules="ruleInline">
+        <Form
+          ref="modalEdit"
+          :label-width="100"
+          :model="faqDetail"
+          :rules="ruleInline"
+        >
           <FormItem label="标题:" prop="title">
             <Input v-model="faqDetail.title" placeholder="标题"></Input>
           </FormItem>
           <FormItem label="内容:" prop="content">
             <Input
               v-model="faqDetail.content"
-              :autosize="{minRows: 4,maxRows: 10}"
+              :autosize="{ minRows: 4, maxRows: 10 }"
               placeholder="内容"
               type="textarea"
             ></Input>
@@ -230,16 +228,18 @@
               v-model="faqDetail.rankNum"
               :min="0"
               placeholder="序号"
-              style="padding-right: 5px;width: 95px"
+              style="padding-right: 5px; width: 95px"
             ></InputNumber>
           </FormItem>
         </Form>
       </div>
       <div slot="footer">
-        <Button @click="handleEditClose">
-          关闭
-        </Button>
-        <Button :loading="modalEditLoading" type="primary" @click="asyncEditOK('modalEdit')">
+        <Button @click="handleEditClose"> 关闭 </Button>
+        <Button
+          :loading="modalEditLoading"
+          type="primary"
+          @click="asyncEditOK('modalEdit')"
+        >
           确定
         </Button>
       </div>
@@ -346,7 +346,7 @@ export default {
           render: (h, params) => {
             const { row } = params;
             const obj = this.faqCategoryTreeList.find(
-              item => row.faqCategoryId === item.id
+              (item) => row.faqCategoryId === item.id
             );
             if (obj) {
               return h('span', obj.faqCategoryName);
@@ -399,13 +399,13 @@ export default {
             if (row.faqStatus === 'unpublished') {
               return (
                 <div>
-                  <tag color='success'>{faqStatusConvert(row.faqStatus) }</tag>
+                  <tag color='success'>{faqStatusConvert(row.faqStatus)}</tag>
                 </div>
               );
             } else if (row.faqStatus === 'published') {
               return (
                 <div>
-                  <tag color='error'>{faqStatusConvert(row.faqStatus) }</tag>
+                  <tag color='error'>{faqStatusConvert(row.faqStatus)}</tag>
                 </div>
               );
             }
@@ -482,7 +482,7 @@ export default {
       this.faqDetail = _.cloneDeep(faqDetail);
     },
     asyncEditOK(name) {
-      this.$refs[name].validate(valid => {
+      this.$refs[name].validate((valid) => {
         if (valid) {
           this.modalEditLoading = true;
           this.modalViewLoading = true;
@@ -493,8 +493,8 @@ export default {
           }
           if (this.isCreate) {
             createFaq(this.faqDetail)
-              .then(res => {})
-              .finally(res => {
+              .then((res) => {})
+              .finally((res) => {
                 this.initMenuList();
                 this.modalEditLoading = false;
                 this.modalEdit = false;
@@ -502,8 +502,8 @@ export default {
               });
           } else if (this.isEdit) {
             editFaq(this.faqDetail)
-              .then(res => {})
-              .finally(res => {
+              .then((res) => {})
+              .finally((res) => {
                 this.initMenuList();
                 this.modalEditLoading = false;
                 this.modalEdit = false;
@@ -521,7 +521,7 @@ export default {
       deleteFaq({
         ids
       })
-        .then(res => {
+        .then((res) => {
           const totalPage = Math.ceil(this.total / this.pageSize);
           if (
             this.tableData.length === this.tableDataSelected.length &&
@@ -546,7 +546,7 @@ export default {
     },
     getTableData() {
       this.loading = true;
-      getFaqPages(this.searchRowData).then(res => {
+      getFaqPages(this.searchRowData).then((res) => {
         if (this.menuData.length > 0) {
           // 现在对象是 PagerResultObject res.rows获取数据，如果是Pages res.array获取数据
           this.tableData = res.rows;
@@ -558,7 +558,7 @@ export default {
     },
     // 初始化商品菜单列表
     initMenuList() {
-      getFaqCategoriesTree().then(res => {
+      getFaqCategoriesTree().then((res) => {
         this.faqCategoryTreeList = [];
         if (res && res.length > 0) {
           this.faqCategoryTreeList = res;
@@ -593,7 +593,7 @@ export default {
       this.getTableData();
     },
     expandChildren(array) {
-      array.forEach(item => {
+      array.forEach((item) => {
         if (typeof item.expand === 'undefined') {
           // this.$set(item, 'expend', true);
           this.$set(item, 'expend', false);
@@ -607,7 +607,7 @@ export default {
       });
     },
     findGroupId(id) {
-      const obj = this.faqCategoryTreeList.find(item => {
+      const obj = this.faqCategoryTreeList.find((item) => {
         return item.id === id;
       });
       this.defaultGoodsCategoryData.push(id);
@@ -617,7 +617,7 @@ export default {
     },
     findGroupName(id) {
       if (this.faqCategoryTreeList.length > 0) {
-        const obj = this.faqCategoryTreeList.find(item => item.id === id);
+        const obj = this.faqCategoryTreeList.find((item) => item.id === id);
         if (obj) {
           return obj.faqCategoryName;
         }

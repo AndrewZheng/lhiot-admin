@@ -6,7 +6,7 @@
         v-model="tableData"
         :columns="columns"
         :loading="loading"
-        :search-area-column="22"
+        :search-area-column="24"
         :operate-area-column="5"
         editable
         searchable
@@ -27,22 +27,22 @@
           <Input
             v-model="searchRowData.phone"
             placeholder="用户电话"
-            class="search-input mr5"
+            class="search-input"
             style="width: 100px"
             clearable
           ></Input>
           <Input
             v-model="searchRowData.userName"
             placeholder="用户姓名"
-            class="search-input mr5"
+            class="search-input"
             style="width: 100px"
             clearable
           ></Input>
           <Select
             v-model="searchRowData.userType"
-            class="search-col mr5"
+            class="search-col"
             placeholder="用户类型"
-            style="width:100px"
+            style="width: 90px"
             clearable
           >
             <Option
@@ -56,9 +56,9 @@
           </Select>
           <Select
             v-model="searchRowData.userStatus"
-            class="search-col mr5"
+            class="search-col"
             placeholder="用户状态"
-            style="width:100px"
+            style="width: 90px"
             clearable
           >
             <Option
@@ -70,11 +70,27 @@
               {{ item.label }}
             </Option>
           </Select>
+          <!-- <Select
+            v-model="searchRowData.userGrade"
+            class="search-col"
+            placeholder="用户等级"
+            style="width: 90px"
+            clearable
+          >
+            <Option
+              v-for="item in userGrade"
+              :key="item.value"
+              :value="item.value"
+              class="ptb2-5"
+            >
+              {{ item.label }}
+            </Option>
+          </Select> -->
           <Select
             v-model="searchRowData.isVip"
-            class="search-col mr5"
+            class="search-col"
             placeholder="是否VIP"
-            style="width:80px"
+            style="width: 90px"
             clearable
           >
             <Option
@@ -85,26 +101,12 @@
             >
               {{ item.label }}
             </Option>
-          </Select>
-          <Select
-            v-model="searchRowData.isVip"
-            class="search-col mr5"
-            placeholder="是否VIP"
-            style="width:80px"
-            clearable
-          >
-            <Option
-              v-for="item in isVipStatus"
-              :value="item.value"
-              :key="item.value"
-              class="ptb2-5"
-            >{{ item.label }}</Option>
           </Select>
           <Select
             v-model="searchRowData.salesUserStatus"
-            class="search-col mr5"
+            class="search-col"
             placeholder="业务员状态"
-            style="width:100px"
+            style="width: 110px"
             clearable
           >
             <Option
@@ -116,6 +118,22 @@
               {{ item.label }}
             </Option>
           </Select>
+          <!-- <Select
+            v-model="searchRowData.shopType"
+            class="search-col"
+            placeholder="门店类型"
+            style="width: 90px"
+            clearable
+          >
+            <Option
+              v-for="item in shopType"
+              :key="item.value"
+              :value="item.value"
+              class="ptb2-5"
+            >
+              {{ item.label }}
+            </Option>
+          </Select> -->
           <Cascader
             change-on-select
             :data="data"
@@ -125,27 +143,27 @@
           ></Cascader>
           <DatePicker
             v-model="searchRowData.regBeginTime"
-            format="yyyy-MM-dd HH:mm:ss"
-            type="datetime"
+            format="yyyy-MM-dd"
+            type="date"
             placeholder="开始时间起"
             class="search-input"
-            style="width: 150px"
+            style="width: 120px"
             @on-change="beginTimeChange"
           />
           <i>-</i>
           <DatePicker
             v-model="searchRowData.regEndTime"
-            format="yyyy-MM-dd HH:mm:ss"
-            type="datetime"
+            format="yyyy-MM-dd"
+            type="date"
             placeholder="开始时间止"
-            class="search-input mr5"
-            style="width: 150px"
+            class="search-input"
+            style="width: 120px"
             @on-change="endTimeChange"
           />
           <Button
             v-waves
             :search-loading="searchLoading"
-            class="search-btn mr5"
+            class="search-btn"
             type="primary"
             @click="handleSearch"
           >
@@ -160,10 +178,9 @@
           >
             <Icon type="md-refresh" />&nbsp;清除
           </Button>
-        </div>
-        <div slot="operations">
           <Button
             v-waves
+            v-has="'export_user_info'"
             :loading="exportExcelLoading"
             type="primary"
             class="mr5"
@@ -173,7 +190,7 @@
           </Button>
         </div>
       </tables>
-      <div style="margin: 10px;overflow: hidden">
+      <div style="margin: 10px; overflow: hidden">
         <Row type="flex" justify="end">
           <Page
             :total="total"
@@ -238,9 +255,13 @@
           <Row>
             <i-col span="12">
               <FormItem label="用户状态:" prop="userStatus">
-                <Select v-model="userDetail.userStatus" style="width: 200px" disabled>
+                <Select
+                  v-model="userDetail.userStatus"
+                  style="width: 200px"
+                  disabled
+                >
                   <Option
-                    v-for="(item,index) in userStatusEnum"
+                    v-for="(item, index) in userStatusEnum"
                     :key="index"
                     :value="item.value"
                     class="ptb2-5"
@@ -257,12 +278,48 @@
               </FormItem>
             </i-col>
           </Row>
-          <Row v-show="userDetail.userType==='sale'">
+          <Row v-show="userDetail.userType === 'sale'">
             <i-col span="12">
               <FormItem label="业务员状态:" prop="salesUserStatus">
-                <Select v-model="userDetail.salesUserStatus" style="width: 200px" disabled>
+                <Select
+                  v-model="userDetail.salesUserStatus"
+                  style="width: 200px"
+                  disabled
+                >
                   <Option
-                    v-for="(item,index) in userStatusEnum"
+                    v-for="(item, index) in userStatusEnum"
+                    :key="index"
+                    :value="item.value"
+                    class="ptb2-5"
+                    style="padding-left: 5px"
+                  >
+                    {{ item.label }}
+                  </Option>
+                </Select>
+              </FormItem>
+            </i-col>
+          </Row>
+          <Row>
+            <i-col span="12">
+              <FormItem label="门店类型:" prop="shopType">
+                <Select v-model="userDetail.shopType" style="width: 200px">
+                  <Option
+                    v-for="(item, index) in shopType"
+                    :key="index"
+                    :value="item.value"
+                    class="ptb2-5"
+                    style="padding-left: 5px"
+                  >
+                    {{ item.label }}
+                  </Option>
+                </Select>
+              </FormItem>
+            </i-col>
+            <i-col span="12">
+              <FormItem label="用户等级:" prop="userGrade">
+                <Select v-model="userDetail.userGrade" style="width: 200px">
+                  <Option
+                    v-for="(item, index) in userGrade"
                     :key="index"
                     :value="item.value"
                     class="ptb2-5"
@@ -279,7 +336,7 @@
               <FormItem label="区域:" prop="city">
                 <Input
                   v-model="userDetail.city"
-                  :autosize="{minRows: 2,maxRows: 6}"
+                  :autosize="{ minRows: 2, maxRows: 6 }"
                   type="textarea"
                   style="width: 400px"
                 ></Input>
@@ -292,7 +349,7 @@
               <FormItem label="详细地址:" prop="addressDetail">
                 <Input
                   v-model="userDetail.addressDetail"
-                  :autosize="{minRows: 2,maxRows: 6}"
+                  :autosize="{ minRows: 2, maxRows: 6 }"
                   type="textarea"
                   style="width: 400px"
                 ></Input>
@@ -302,10 +359,12 @@
         </Form>
       </div>
       <div slot="footer">
-        <Button @click="handleEditClose">
-          关闭
-        </Button>
-        <Button :loading="modalViewLoading" type="primary" @click="handleSubmit">
+        <Button @click="handleEditClose"> 关闭 </Button>
+        <Button
+          :loading="modalViewLoading"
+          type="primary"
+          @click="handleSubmit"
+        >
           确定
         </Button>
       </div>
@@ -344,7 +403,7 @@
               v-model="searchUserRowData.salesUserStatus"
               class="search-col mr5"
               placeholder="业务员状态"
-              style="width:100px"
+              style="width: 120px"
               clearable
             >
               <Option
@@ -376,7 +435,7 @@
             </Button>
           </div>
         </tables>
-        <div style="margin: 10px;overflow: hidden">
+        <div style="margin: 10px; overflow: hidden">
           <Row type="flex" justify="end">
             <Page
               :total="usersTotal"
@@ -390,10 +449,12 @@
         </div>
       </Card>
       <div slot="footer">
-        <Button @click="modalUser=false">
-          关闭
-        </Button>
-        <Button :loading="modalViewLoading" type="primary" @click="handleAssgin">
+        <Button @click="modalUser = false"> 关闭 </Button>
+        <Button
+          :loading="modalViewLoading"
+          type="primary"
+          @click="handleAssgin"
+        >
           确定
         </Button>
       </div>
@@ -413,7 +474,9 @@ import {
   createUser,
   getAllSalesman,
   storeAssign,
-  unlockSalesman
+  unlockSalesman,
+  getShopType,
+  getUserGrade
 } from '@/api/wholesale';
 import tableMixin from '@/mixins/tableMixin.js';
 import searchMixin from '@/mixins/searchMixin.js';
@@ -451,7 +514,9 @@ const userDetail = {
   unionId: '',
   userName: '',
   userStatus: '',
-  userType: ''
+  userType: '',
+  userGrade: '',
+  shopType: ''
 };
 
 const roleRowData = {
@@ -465,18 +530,13 @@ const roleRowData = {
   salesUserStatus: '',
   page: 1,
   rows: 20,
+  shopType: '',
+  userGrade: '',
   sidx: 'registerTime',
   sort: 'desc'
 };
 
 const columns = [
-  {
-    type: 'selection',
-    key: '',
-    width: 60,
-    fixed: 'left',
-    align: 'center'
-  },
   {
     title: '编号',
     align: 'center',
@@ -494,13 +554,19 @@ const columns = [
     title: '门店代码',
     align: 'center',
     key: 'shopCode',
-    width: 100
+    width: 120
   },
   {
     title: '门店名称',
     align: 'center',
     key: 'shopName',
-    width: 140
+    width: 150
+  },
+  {
+    title: '门店类型',
+    align: 'center',
+    key: 'shopTypeName',
+    width: 120
   },
   {
     title: '店长姓名',
@@ -512,19 +578,19 @@ const columns = [
     title: '手机号码',
     align: 'center',
     key: 'phone',
-    width: 120
+    width: 130
   },
   {
     title: '注册时间',
     align: 'center',
     key: 'registerTime',
-    width: 160
+    width: 180
   },
   {
     title: '用户余额',
     align: 'center',
     key: 'balance',
-    width: 100,
+    width: 130,
     render(h, params, vm) {
       const amount = fenToYuanDot2(params.row.balance);
       return <div>{amount}</div>;
@@ -534,7 +600,7 @@ const columns = [
     title: '是否VIP',
     align: 'center',
     key: 'isVip',
-    width: 120,
+    width: 110,
     render: (h, params, vm) => {
       const { row } = params;
       if (row.isVip === 'yes') {
@@ -556,7 +622,7 @@ const columns = [
     title: '用户类型',
     align: 'center',
     key: 'userType',
-    width: 120,
+    width: 110,
     render: (h, params, vm) => {
       const { row } = params;
       if (row.userType === 'consumer') {
@@ -575,10 +641,16 @@ const columns = [
     }
   },
   {
+    title: '用户等级',
+    align: 'center',
+    key: 'userGradeName',
+    width: 100
+  },
+  {
     title: '用户状态',
     align: 'center',
     key: 'userStatus',
-    width: 120,
+    width: 100,
     render: (h, params, vm) => {
       const { row } = params;
       if (row.userStatus === 'certified') {
@@ -617,25 +689,19 @@ const columns = [
       if (row.salesUserStatus === 'certified') {
         return (
           <div>
-            <tag color='success'>
-              {userStatusConvert(row.salesUserStatus)}
-            </tag>
+            <tag color='success'>{userStatusConvert(row.salesUserStatus)}</tag>
           </div>
         );
       } else if (row.salesUserStatus === 'locking') {
         return (
           <div>
-            <tag color='error'>
-              {userStatusConvert(row.salesUserStatus)}
-            </tag>
+            <tag color='error'>{userStatusConvert(row.salesUserStatus)}</tag>
           </div>
         );
       } else if (row.salesUserStatus === 'unaudited') {
         return (
           <div>
-            <tag color='warning'>
-              {userStatusConvert(row.salesUserStatus)}
-            </tag>
+            <tag color='warning'>{userStatusConvert(row.salesUserStatus)}</tag>
           </div>
         );
       }
@@ -750,25 +816,19 @@ const userColumns = [
       if (row.salesUserStatus === 'certified') {
         return (
           <div>
-            <tag color='success'>
-              {userStatusConvert(row.salesUserStatus)}
-            </tag>
+            <tag color='success'>{userStatusConvert(row.salesUserStatus)}</tag>
           </div>
         );
       } else if (row.salesUserStatus === 'locking') {
         return (
           <div>
-            <tag color='error'>
-              {userStatusConvert(row.salesUserStatus)}
-            </tag>
+            <tag color='error'>{userStatusConvert(row.salesUserStatus)}</tag>
           </div>
         );
       } else if (row.salesUserStatus === 'unaudited') {
         return (
           <div>
-            <tag color='warning'>
-              {userStatusConvert(row.salesUserStatus)}
-            </tag>
+            <tag color='warning'>{userStatusConvert(row.salesUserStatus)}</tag>
           </div>
         );
       }
@@ -791,6 +851,8 @@ export default {
     return {
       ids: [],
       userData: [],
+      shopType: [],
+      userGrade: [],
       salesManList: [],
       selectedUserIds: [],
       data: [],
@@ -831,6 +893,8 @@ export default {
   created() {
     this.data = city;
     this.getTableData();
+    // this.getShopType();
+    // this.getUserGrade();
     this.loginName = sessionStorage.getItem('loginName');
   },
   methods: {
@@ -838,7 +902,7 @@ export default {
       this.searchUserRowData = _.cloneDeep(userRowData);
     },
     getTableData() {
-      getUserPages(this.searchRowData).then(res => {
+      getUserPages(this.searchRowData).then((res) => {
         for (let i = 0; i < res.rows.length; i++) {
           res.rows[i].loginName = this.loginName;
         }
@@ -865,7 +929,6 @@ export default {
         return;
       }
       this.userDetail.isVip = params.row.isVip === 'yes' ? 'no' : 'yes';
-      this.$Message.info('操作成功');
       this.editTableRow();
     },
     hanldeAudit({ params, checkStatus }) {
@@ -876,7 +939,7 @@ export default {
       auditUser({
         id: params.row.id,
         checkStatus
-      }).then(res => {
+      }).then((res) => {
         this.$Message.info('审核成功');
         this.getTableData();
       });
@@ -891,13 +954,13 @@ export default {
       changeUser({
         id: params.row.id,
         userType
-      }).then(res => {
+      }).then((res) => {
         this.$Message.info('转换会员类型成功');
         this.getTableData();
       });
     },
     handleSubmit() {
-      this.$refs.editForm.validate(valid => {
+      this.$refs.editForm.validate((valid) => {
         if (valid) {
           if (this.isCreate) {
             this.createTableRow();
@@ -911,17 +974,45 @@ export default {
     },
     editTableRow() {
       this.modalViewLoading = true;
-      editUser(this.userDetail).then(res => {
+      editUser(this.userDetail).then((res) => {
         this.modalViewLoading = false;
         this.modalEdit = false;
+        this.$Message.success('操作成功!');
         this.getTableData();
         this.resetFields();
       });
     },
+    // 获取信息 getShopType getUserGrade
+    getShopType() {
+      getShopType()
+        .then((res) => {
+          const indexValue = JSON.parse(res.indexValue);
+          for (let i = 0; i < indexValue.length; i++) {
+            const map = { label: 'label', value: 'value' };
+            map.value = indexValue[i].shopType;
+            map.label = indexValue[i].shopTypeName;
+            this.shopType.push(map);
+          }
+        })
+        .finally((res) => {});
+    },
+    getUserGrade() {
+      getUserGrade()
+        .then((res) => {
+          const indexValue = JSON.parse(res.indexValue);
+          for (let i = 0; i < indexValue.length; i++) {
+            const map = { label: 'label', value: 'value' };
+            map.value = indexValue[i].userGrade;
+            map.label = indexValue[i].userGradeName;
+            this.userGrade.push(map);
+          }
+        })
+        .finally((res) => {});
+    },
     createTableRow() {
       createUser(this.userDetail)
-        .then(res => {})
-        .finally(res => {
+        .then((res) => {})
+        .finally((res) => {
           this.modalEditLoading = false;
           this.modalEdit = false;
           this.getTableData();
@@ -948,7 +1039,7 @@ export default {
       deleteUser({
         ids
       })
-        .then(res => {
+        .then((res) => {
           const totalPage = Math.ceil(this.total / this.pageSize);
           if (
             this.tableData.length === this.tableDataSelected.length &&
@@ -972,13 +1063,13 @@ export default {
       const pageSize = this.searchRowData.page;
       this.searchRowData.page = 1;
       getUserPages(this.searchRowData)
-        .then(res => {
+        .then((res) => {
           const tableData = res.rows;
           // 恢复正常页数
           this.searchRowData.rows = 20;
           this.searchRowData.page = pageSize;
           // 表格数据导出字段翻译
-          tableData.forEach(item => {
+          tableData.forEach((item) => {
             item['userType'] =
               item['userType'] === 'sale' ? '业务员' : '普通用户';
             item['userStatus'] = userStatusConvert(item['userStatus']);
@@ -1001,7 +1092,7 @@ export default {
     // v1.2.0
     getUserTableData() {
       getUserPages(this.searchUserRowData)
-        .then(res => {
+        .then((res) => {
           this.userData = res.rows;
           this.usersTotal = res.total;
         })
@@ -1038,14 +1129,14 @@ export default {
       storeAssign({
         userIds,
         assginSalesUserId: this.assginSalesUserId
-      }).then(res => {
+      }).then((res) => {
         this.$Message.info('门店转让成功');
         this.getTableData();
         this.modalUser = false;
       });
     },
     getAllSalesman() {
-      getAllSalesman().then(res => {
+      getAllSalesman().then((res) => {
         this.salesManList = res;
       });
     },
@@ -1081,14 +1172,14 @@ export default {
       this.handleSearch1();
     },
     onSelectionChange(selection) {
-      this.selectedUserIds = selection.map(item => item.id.toString());
+      this.selectedUserIds = selection.map((item) => item.id.toString());
     },
     handleUnlock(params) {
       const data = params.row;
       data.userStatus =
         params.row.userStatus === 'certified' ? 'locking' : 'certified';
-      unlockSalesman(data).then(res => {
-        this.$Message.info('操作成功');
+      unlockSalesman(data).then((res) => {
+        this.$Message.success('操作成功');
         this.getTableData();
       });
     },

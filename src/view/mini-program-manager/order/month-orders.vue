@@ -55,11 +55,16 @@
             </Button>
           </Row>
           <div class="ml15 mt10">
-            <i style="color:red">*</i> 默认展示上月退款数据
+            <i style="color: red">*</i> 默认展示上月退款数据
           </div>
         </div>
-        <div slot="operations" style="margin-left:-50px">
-          <Button v-waves class="search-btn ml5 mr5" type="primary" @click="goBack">
+        <div slot="operations" style="margin-left: -50px">
+          <Button
+            v-waves
+            class="search-btn ml5 mr5"
+            type="primary"
+            @click="goBack"
+          >
             <Icon type="ios-arrow-back" />&nbsp;返回
           </Button>
           <Button
@@ -72,7 +77,7 @@
           </Button>
         </div>
       </tables>
-      <div style="margin: 10px;overflow: hidden">
+      <div style="margin: 10px; overflow: hidden">
         <Row type="flex" justify="end">
           <Page
             :total="total"
@@ -234,9 +239,7 @@ export default {
             if (row.isAllRefund === 'NO' && row.status === 'ALREADY_RETURN') {
               return (
                 <div>
-                  <tag color='cyan'>
-                    {isAllRefundConvert(row.isAllRefund)}
-                  </tag>
+                  <tag color='cyan'>{isAllRefundConvert(row.isAllRefund)}</tag>
                 </div>
               );
             } else if (row.status === 'ALREADY_RETURN') {
@@ -488,7 +491,7 @@ export default {
     getTableData() {
       this.loading = true;
       monthOrderPages(this.searchRowData)
-        .then(res => {
+        .then((res) => {
           this.tableData = res.rows;
           this.total = res.total;
           this.loading = false;
@@ -506,15 +509,15 @@ export default {
       this.searchRowData.rows = this.total > 5000 ? 5000 : this.total;
       const pageSize = this.searchRowData.page;
       this.searchRowData.page = 1;
-      monthOrderPages(this.searchRowData).then(res => {
+      monthOrderPages(this.searchRowData).then((res) => {
         const tableData = res.rows;
         // 恢复正常页数
         this.searchRowData.rows = 10;
         this.searchRowData.page = pageSize;
         // 表格数据导出字段翻译
         const _this = this;
-        tableData.forEach(item => {
-          const obj = _this.storeList.find(x => item.storeId === x.storeId);
+        tableData.forEach((item) => {
+          const obj = _this.storeList.find((x) => item.storeId === x.storeId);
           item['code'] = item['code'] + '';
           item['apply'] = appTypeConvert(item['apply']).label;
           item['storeId'] =
@@ -535,13 +538,10 @@ export default {
           item['isAllRefund'] = isAllRefundConvert(item['isAllRefund']);
           item['applyType'] = appTypeConvert(item['applyType']).label;
           item['hdStatus'] = miniHdStatusConvert(item['hdStatus']).label;
-          item['receivingWay'] = receivingWayConvert(
-            item['receivingWay']
-          );
+          item['receivingWay'] = receivingWayConvert(item['receivingWay']);
           item['createAt'] = gitTime(item['createAt']);
           item['refundAt'] = gitTime(item['refundAt']);
           item['status'] = miniOrderStatusConvert(item['status']).label;
-          // console.log("时间",item["refundAt"])
         });
         const date = this.$moment(new Date()).format('YYYYMMDDHHmmss');
         this.$refs.tables.handleDownload({

@@ -41,7 +41,7 @@
               type="primary"
               @click="handleSearch"
             >
-              <Icon type="md-search" />&nbsp;搜索
+              <Icon type="md-search" /> 搜索
             </Button>
             <Button
               v-waves
@@ -50,7 +50,7 @@
               type="info"
               @click="handleClear"
             >
-              <Icon type="md-refresh" />&nbsp;清除
+              <Icon type="md-refresh" /> 清除
             </Button>
           </Row>
         </div>
@@ -62,7 +62,7 @@
             class="mr5"
             @click="addActivities"
           >
-            <Icon type="md-add" />添加
+            <Icon type="md-add" /> 添加
           </Button>
           <Poptip
             confirm
@@ -72,12 +72,12 @@
             @on-ok="poptipOk"
           >
             <Button type="error" class="mr5">
-              <Icon type="md-trash" />批量删除
+              <Icon type="md-trash" /> 批量删除
             </Button>
           </Poptip>
         </div>
       </tables>
-      <div style="margin: 10px;overflow: hidden">
+      <div style="margin: 10px; overflow: hidden">
         <Row type="flex" justify="end">
           <Page
             :total="total"
@@ -99,36 +99,9 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6">活动ID:</i-col>
-              <i-col span="18">{{ activitiesDetail.id }}</i-col>
-            </Row>
-          </i-col>
-        </Row>
-        <Row class-name="mb20">
-          <i-col span="24">
-            <Row>
-              <i-col span="6">活动编码:</i-col>
-              <i-col span="18">{{ activitiesDetail.activityCode }}</i-col>
-            </Row>
-          </i-col>
-        </Row>
-        <Row class-name="mb20">
-          <i-col span="24">
-            <Row>
-              <i-col span="6">活动名称:</i-col>
-              <i-col span="18">{{ activitiesDetail.activityName }}</i-col>
-            </Row>
-          </i-col>
-        </Row>
-        <Row class-name="mb20">
-          <i-col span="24">
-            <Row>
-              <i-col span="6">活动状态:</i-col>
-              <i-col span="18" v-if="activitiesDetail.onOff === 'ON'">
-                <tag color="success">{{ "开启" | imageStatusFilter }}</tag>
-              </i-col>
-              <i-col span="18" v-else-if="activitiesDetail.onOff === 'OFF'">
-                <tag color="error">{{ "关闭" | imageStatusFilter }}</tag>
+              <i-col span="6"> 活动ID: </i-col>
+              <i-col span="18">
+                {{ activitiesDetail.id }}
               </i-col>
             </Row>
           </i-col>
@@ -136,97 +109,150 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6">活动链接:</i-col>
-              <i-col span="18">{{ activitiesDetail.activityUrl }}</i-col>
+              <i-col span="6"> 活动编码: </i-col>
+              <i-col span="18">
+                {{ activitiesDetail.activityCode }}
+              </i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row class-name="mb20">
+          <i-col span="24">
+            <Row>
+              <i-col span="6"> 活动名称: </i-col>
+              <i-col span="18">
+                {{ activitiesDetail.activityName }}
+              </i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row class-name="mb20">
+          <i-col span="24">
+            <Row>
+              <i-col span="6"> 活动状态: </i-col>
+              <i-col v-if="activitiesDetail.onOff === 'ON'" span="18">
+                <tag color="success">
+                  {{ "开启" | imageStatusFilter }}
+                </tag>
+              </i-col>
+              <i-col v-else-if="activitiesDetail.onOff === 'OFF'" span="18">
+                <tag color="error">
+                  {{ "关闭" | imageStatusFilter }}
+                </tag>
+              </i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row class-name="mb20">
+          <i-col span="24">
+            <Row>
+              <i-col span="6"> 活动链接: </i-col>
+              <i-col span="18">
+                {{ activitiesDetail.activityUrl }}
+              </i-col>
             </Row>
           </i-col>
         </Row>
       </div>
       <div slot="footer">
-        <Button type="primary" @click="handleClose">关闭</Button>
+        <Button type="primary" @click="handleClose"> 关闭 </Button>
       </div>
     </Modal>
 
     <Modal v-model="modalEdit" :mask-closable="false" :z-index="1000">
       <p slot="header">
-        <i-col>{{ tempModalType===modalType.edit?'修改活动':'创建活动' }}</i-col>
+        <i-col>{{
+          tempModalType === modalType.edit ? "修改活动" : "创建活动"
+        }}</i-col>
       </p>
       <div class="modal-content">
-        <Form ref="modalEdit" :model="activitiesDetail" :rules="ruleInline" :label-width="100">
+        <Form
+          ref="modalEdit"
+          :model="activitiesDetail"
+          :rules="ruleInline"
+          :label-width="100"
+        >
           <Row>
-            <Col span="18">
+            <i-col span="18">
               <FormItem label="活动编码:" prop="activityCode">
                 <Input v-model="activitiesDetail.activityCode"></Input>
               </FormItem>
-            </Col>
+            </i-col>
           </Row>
           <Row>
-            <Col span="18">
+            <i-col span="18">
               <FormItem label="活动名称:" prop="activityName">
                 <Input v-model="activitiesDetail.activityName"></Input>
               </FormItem>
-            </Col>
+            </i-col>
           </Row>
           <Row>
-            <Col span="18">
+            <i-col span="18">
               <FormItem label="活动状态:" prop="onOff">
                 <Select v-model="activitiesDetail.onOff" clearable>
                   <Option
-                    v-for="(item,index) in imageStatusEnum"
-                    :value="item.value"
+                    v-for="(item, index) in imageStatusEnum"
                     :key="index"
+                    :value="item.value"
                     class="ptb2-5"
-                    style="padding-left: 5px;width: 100%"
-                  >{{ item.label }}</Option>
+                    style="padding-left: 5px; width: 100%"
+                  >
+                    {{ item.label }}
+                  </Option>
                 </Select>
               </FormItem>
-            </Col>
+            </i-col>
           </Row>
           <Row>
-            <Col span="18">
+            <i-col span="18">
               <FormItem label="活动详情链接:" prop="activityUrl">
                 <Input v-model="activitiesDetail.activityUrl"></Input>
               </FormItem>
-            </Col>
+            </i-col>
           </Row>
         </Form>
       </div>
       <div slot="footer">
-        <Button @click="handleEditClose">关闭</Button>
-        <Button :loading="modalViewLoading" type="primary" @click="handleSubmit('modalEdit')">确定</Button>
+        <Button @click="handleEditClose"> 关闭 </Button>
+        <Button
+          :loading="modalEditLoading"
+          type="primary"
+          @click="handleSubmit('modalEdit')"
+        >
+          确定
+        </Button>
       </div>
     </Modal>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
-import Tables from "_c/tables";
-import _ from "lodash";
+import Tables from '_c/tables';
 import {
   deleteActivities,
   getActivitiesPages,
   editActivities,
   createActivities
-} from "@/api/mini-program";
-import deleteMixin from "@/mixins/deleteMixin.js";
-import tableMixin from "@/mixins/tableMixin.js";
-import searchMixin from "@/mixins/searchMixin.js";
-import { imageStatusConvert } from "@/libs/converStatus";
-import { imageStatusEnum } from "@/libs/enumerate";
+} from '@/api/mini-program';
+import deleteMixin from '@/mixins/deleteMixin.js';
+import tableMixin from '@/mixins/tableMixin.js';
+import searchMixin from '@/mixins/searchMixin.js';
+import { imageStatusConvert } from '@/libs/converStatus';
+import { imageStatusEnum } from '@/libs/enumerate';
 
 const activitiesDetail = {
   id: 0,
-  activityCode: "",
-  activityName: "",
-  onOff: "",
-  activityUrl: ""
+  activityCode: '',
+  activityName: '',
+  onOff: '',
+  activityUrl: ''
 };
 
 const roleRowData = {
   activityCode: null,
   activityName: null,
   page: 1,
-  rows: 10,
+  rows: 10
 };
 
 export default {
@@ -236,81 +262,84 @@ export default {
   mixins: [deleteMixin, tableMixin, searchMixin],
   data() {
     return {
-      ruleInline: {
-        activityCode: [{ required: true, message: "请输入活动编码" }],
-        activityName: [{ required: true, message: "请输入活动名称" }],
-        onOff: [{ required: true, message: "请选择活动状态" }]
-      },
+      createLoading: false,
+      modalEditLoading: false,
       defaultListMain: [],
       uploadListMain: [],
       areaList: [],
       imageStatusEnum,
       columns: [
         {
-          type: "selection",
+          type: 'selection',
           width: 60,
-          align: "center"
+          align: 'center'
         },
         {
-          title: "活动ID",
-          align: "center",
-          key: "id"
+          title: '活动ID',
+          align: 'center',
+          key: 'id',
+          width: 100
         },
         {
-          title: "活动编码",
-          align: "center",
-          key: "activityCode"
+          title: '活动编码',
+          align: 'center',
+          key: 'activityCode'
         },
         {
-          title: "活动名称",
-          align: "center",
-          key: "activityName"
+          title: '活动名称',
+          align: 'center',
+          key: 'activityName'
         },
         {
-          title: "活动状态",
-          align: "center",
-          key: "onOff",
+          title: '活动状态',
+          align: 'center',
+          width: 120,
+          key: 'onOff',
           render: (h, params, vm) => {
             const { row } = params;
-            if (row.onOff === "ON") {
+            if (row.onOff === 'ON') {
               return (
                 <div>
-                  <tag color="success">
+                  <tag color='success'>
                     {imageStatusConvert(row.onOff).label}
                   </tag>
                 </div>
               );
-            } else if (row.onOff === "OFF") {
+            } else if (row.onOff === 'OFF') {
               return (
                 <div>
-                  <tag color="error">{imageStatusConvert(row.onOff).label}</tag>
+                  <tag color='error'>{imageStatusConvert(row.onOff).label}</tag>
                 </div>
               );
             }
             return (
               <div>
-                <tag color="primary">{row.onOff}</tag>
+                <tag color='primary'>{row.onOff}</tag>
               </div>
             );
           }
         },
         {
-          title: "活动详情链接",
-          align: "center",
-          key: "activityUrl"
+          title: '活动详情链接',
+          align: 'center',
+          key: 'activityUrl',
+          width: 130
         },
         {
-          title: "操作",
-          align: "center",
-          minWidth: 80,
-          key: "handle",
-          options: ["onSale", "view", "edit", "delete"]
+          title: '操作',
+          align: 'center',
+          width: 200,
+          key: 'handle',
+          options: ['onSale', 'view', 'edit', 'delete']
         }
       ],
-      createLoading: false,
-      modalViewLoading: false,
       searchRowData: _.cloneDeep(roleRowData),
-      activitiesDetail: _.cloneDeep(activitiesDetail)
+      activitiesDetail: _.cloneDeep(activitiesDetail),
+      ruleInline: {
+        activityCode: [{ required: true, message: '请输入活动编码' }],
+        activityName: [{ required: true, message: '请输入活动名称' }],
+        onOff: [{ required: true, message: '请选择活动状态' }]
+      }
     };
   },
   mounted() {
@@ -330,7 +359,7 @@ export default {
       this.activitiesDetail.storeImage = null;
     },
     handleSubmit(name) {
-      this.$refs[name].validate(valid => {
+      this.$refs[name].validate((valid) => {
         if (valid) {
           if (this.tempModalType === this.modalType.create) {
             // 添加状态
@@ -340,34 +369,32 @@ export default {
             this.editActivities();
           }
         } else {
-          this.$Message.error("请完善信息!");
+          this.$Message.error('请完善信息!');
         }
       });
     },
     createActivities() {
-      this.modalViewLoading = true;
+      this.modalEditLoading = true;
       createActivities(this.activitiesDetail)
-        .then(res => {
-          this.modalViewLoading = false;
+        .then((res) => {
+          this.modalEditLoading = false;
           this.modalEdit = false;
-          this.$Message.success("创建成功!");
+          this.$Message.success('创建成功!');
           this.getTableData();
         })
         .catch(() => {
-          this.modalViewLoading = false;
+          this.modalEditLoading = false;
         });
     },
     editActivities() {
-      this.modalViewLoading = true;
+      this.modalEditLoading = true;
       editActivities(this.activitiesDetail)
-        .then(res => {
+        .then((res) => {
           this.modalEdit = false;
-          this.modalViewLoading = false;
           this.getTableData();
         })
-        .catch(() => {
-          this.modalEdit = false;
-          this.modalViewLoading = false;
+        .finally(() => {
+          this.modalEditLoading = false;
         });
     },
     addActivities() {
@@ -390,10 +417,10 @@ export default {
       deleteActivities({
         ids
       })
-        .then(res => {
+        .then((res) => {
           const totalPage = Math.ceil(this.total / this.searchRowData.pageSize);
           if (
-            this.tableData.length == this.tableDataSelected.length &&
+            this.tableData.length === this.tableDataSelected.length &&
             this.searchRowData.page === totalPage &&
             this.searchRowData.page !== 1
           ) {
@@ -402,7 +429,7 @@ export default {
           this.tableDataSelected = [];
           this.getTableData();
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err);
           this.loading = false;
         });
@@ -420,29 +447,25 @@ export default {
       this.modalEdit = true;
     },
     getTableData() {
+      this.loading = true;
       getActivitiesPages(this.searchRowData)
-        .then(res => {
+        .then((res) => {
           this.tableData = res.rows;
           this.total = res.total;
-          this.loading = false;
-          this.searchLoading = false;
-          this.clearSearchLoading = false;
         })
-        .catch(error => {
-          console.log(error);
+        .finally(() => {
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
         });
     },
     onOff(params) {
-      this.activitiesDetail = this._.cloneDeep(params.row);
-      if (params.row.onOff === "ON") {
-        this.activitiesDetail.onOff = "OFF";
+      this.activitiesDetail = _.cloneDeep(params.row);
+      if (params.row.onOff === 'ON') {
+        this.activitiesDetail.onOff = 'OFF';
       } else {
-        this.activitiesDetail.onOff = "ON";
+        this.activitiesDetail.onOff = 'ON';
       }
-      this.loading = true;
       this.editActivities();
     }
   }

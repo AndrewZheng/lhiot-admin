@@ -1,15 +1,19 @@
 <template>
   <div>
-    <Button size="large" type="text" @click="backHome">返回首页</Button>
-    <Button size="large" type="text">返回上一页({{ second }}s)</Button>
+    <Button size="large" type="text" @click="backHome">
+      返回首页
+    </Button>
+    <Button size="large" type="text">
+      返回上一页({{ second }}s)
+    </Button>
   </div>
 </template>
 
 <script>
-import "./error.less";
-import { getSystemHomeName } from "@/libs/util";
+import './error.less';
+import { getSystemHomeName } from '@/libs/util';
 export default {
-  name: "BackBtnGroup",
+  name: 'BackBtnGroup',
   data() {
     return {
       second: 5,

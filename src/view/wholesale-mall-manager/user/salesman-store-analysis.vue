@@ -65,7 +65,12 @@
           >
             <Icon type="ios-arrow-back" />&nbsp;返回
           </Button>
-          <Button v-waves type="primary" class="mr5" @click="handleExchangeBatch">
+          <Button
+            v-waves
+            type="primary"
+            class="mr5"
+            @click="handleExchangeBatch"
+          >
             <Icon type="md-repeat" />&nbsp;批量转让
           </Button>
           <!-- <Button
@@ -79,7 +84,7 @@
           </Button>-->
         </div>
       </tables>
-      <div style="margin: 10px;overflow: hidden">
+      <div style="margin: 10px; overflow: hidden">
         <Row type="flex" justify="end">
           <Page
             :total="total"
@@ -128,7 +133,7 @@
               v-model="searchUserRowData.salesUserStatus"
               class="search-col mr5"
               placeholder="业务员状态"
-              style="width:100px"
+              style="width: 120px"
               clearable
             >
               <Option
@@ -160,7 +165,7 @@
             </Button>
           </div>
         </tables>
-        <div style="margin: 10px;overflow: hidden">
+        <div style="margin: 10px; overflow: hidden">
           <Row type="flex" justify="end">
             <Page
               :total="usersTotal"
@@ -174,10 +179,12 @@
         </div>
       </Card>
       <div slot="footer">
-        <Button @click="modalUser=false">
-          关闭
-        </Button>
-        <Button :loading="modalViewLoading" type="primary" @click="handleAssgin">
+        <Button @click="modalUser = false"> 关闭 </Button>
+        <Button
+          :loading="modalViewLoading"
+          type="primary"
+          @click="handleAssgin"
+        >
           确定
         </Button>
       </div>
@@ -304,25 +311,19 @@ const userColumns = [
       if (row.salesUserStatus === 'certified') {
         return (
           <div>
-            <tag color='success'>
-              {userStatusConvert(row.salesUserStatus)}
-            </tag>
+            <tag color='success'>{userStatusConvert(row.salesUserStatus)}</tag>
           </div>
         );
       } else if (row.salesUserStatus === 'locking') {
         return (
           <div>
-            <tag color='error'>
-              {userStatusConvert(row.salesUserStatus)}
-            </tag>
+            <tag color='error'>{userStatusConvert(row.salesUserStatus)}</tag>
           </div>
         );
       } else if (row.salesUserStatus === 'unaudited') {
         return (
           <div>
-            <tag color='warning'>
-              {userStatusConvert(row.salesUserStatus)}
-            </tag>
+            <tag color='warning'>{userStatusConvert(row.salesUserStatus)}</tag>
           </div>
         );
       }
@@ -368,7 +369,6 @@ export default {
       columns: [
         {
           type: 'selection',
-          key: '',
           width: 60,
           align: 'center'
         },
@@ -388,7 +388,7 @@ export default {
           title: '店长手机',
           align: 'center',
           key: 'phone',
-          minWidth: 80
+          minWidth: 90
         },
         {
           title: '区域',
@@ -406,7 +406,7 @@ export default {
           title: '累计业绩/频次',
           align: 'center',
           key: 'performanceTotalStr',
-          minWidth: 80
+          minWidth: 100
           // render(h, params, vm) {
           //   const amount = fenToYuanDot2(
           //     params.row.performanceTotalStr
@@ -429,40 +429,32 @@ export default {
         {
           title: '用户状态',
           align: 'center',
-          minWidth: 30,
+          minWidth: 60,
           key: 'userStatus',
           render: (h, params, vm) => {
             const { row } = params;
             if (row.userStatus === 'certified') {
               return (
                 <div>
-                  <tag color='success'>
-                    {userStatusConvert(row.userStatus)}
-                  </tag>
+                  <tag color='success'>{userStatusConvert(row.userStatus)}</tag>
                 </div>
               );
             } else if (row.userStatus === 'locking') {
               return (
                 <div>
-                  <tag color='error'>
-                    {userStatusConvert(row.userStatus)}
-                  </tag>
+                  <tag color='error'>{userStatusConvert(row.userStatus)}</tag>
                 </div>
               );
             } else if (row.userStatus === 'unaudited') {
               return (
                 <div>
-                  <tag color='warning'>
-                    {userStatusConvert(row.userStatus)}
-                  </tag>
+                  <tag color='warning'>{userStatusConvert(row.userStatus)}</tag>
                 </div>
               );
             }
             return (
               <div>
-                <tag color='primary'>
-                  {userStatusConvert(row.userStatus)}
-                </tag>
+                <tag color='primary'>{userStatusConvert(row.userStatus)}</tag>
               </div>
             );
           }
@@ -470,7 +462,7 @@ export default {
         {
           title: '操作',
           align: 'center',
-          minWidth: 100,
+          minWidth: 60,
           key: 'handle',
           options: ['exchange']
         }
@@ -500,7 +492,7 @@ export default {
   methods: {
     getUserTableData() {
       getUserPages(this.searchUserRowData)
-        .then(res => {
+        .then((res) => {
           this.userData = res.rows;
           this.usersTotal = res.total;
         })
@@ -514,7 +506,7 @@ export default {
       this.searchRowData.salesUserId = this.$route.query.id
         ? this.$route.query.id
         : 0;
-      getPerformanceShopPages(this.searchRowData).then(res => {
+      getPerformanceShopPages(this.searchRowData).then((res) => {
         this.tableData = res.rows;
         this.total = res.total;
         this.loading = false;
@@ -523,7 +515,7 @@ export default {
       });
     },
     getAllSalesman() {
-      getAllSalesman().then(res => {
+      getAllSalesman().then((res) => {
         this.salesManList = res;
       });
     },
@@ -580,17 +572,17 @@ export default {
       storeAssign({
         userIds,
         assginSalesUserId: this.assginSalesUserId
-      }).then(res => {
+      }).then((res) => {
         this.$Message.info('门店转让成功');
         this.getTableData();
         this.modalUser = false;
       });
     },
     onSelectionAll(selection) {
-      this.selectedUserIds = selection.map(item => item.id.toString());
+      this.selectedUserIds = selection.map((item) => item.id.toString());
     },
     onSelectionChange(selection) {
-      this.selectedUserIds = selection.map(item => item.id.toString());
+      this.selectedUserIds = selection.map((item) => item.id.toString());
     },
     onSelectionAllUser(selection) {
       if (selection.length > 1) {
@@ -630,13 +622,13 @@ export default {
       const pageSize = this.searchRowData.page;
       this.searchRowData.page = 1;
       getPerformanceShopPages(this.searchRowData)
-        .then(res => {
+        .then((res) => {
           const tableData = res.rows;
           // 恢复正常页数
           this.searchRowData.rows = 20;
           this.searchRowData.page = pageSize;
           // 表格数据导出字段翻译
-          tableData.forEach(item => {
+          tableData.forEach((item) => {
             item['userType'] =
               item['userType'] === 'sale' ? '业务员' : '普通用户';
             item['userStatus'] = userStatusConvert(item['userStatus']);

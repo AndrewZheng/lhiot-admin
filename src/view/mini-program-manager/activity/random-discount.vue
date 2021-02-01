@@ -50,16 +50,18 @@
             <Select
               v-model="searchRowData.onOff"
               placeholder="活动状态"
-              style="padding-right: 5px;width: 100px"
+              style="padding-right: 5px; width: 100px"
               clearable
             >
               <Option
-                v-for="(item,index) in imageStatusEnum"
-                :value="item.value"
+                v-for="(item, index) in imageStatusEnum"
                 :key="index"
+                :value="item.value"
                 class="ptb2-5"
-                style="padding-left: 5px;width: 100px"
-              >{{ item.label }}</Option>
+                style="padding-left: 5px; width: 100px"
+              >
+                {{ item.label }}
+              </Option>
             </Select>
             <Button
               :loading="searchLoading"
@@ -103,7 +105,7 @@
           </Poptip>
         </div>
       </tables>
-      <div style="margin: 10px;overflow: hidden">
+      <div style="margin: 10px; overflow: hidden">
         <Row type="flex" justify="end">
           <Page
             :total="total"
@@ -125,207 +127,249 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6">活动名称:</i-col>
-              <i-col span="18">{{ randomDiscountDetail.activityName }}</i-col>
-            </Row>
-          </i-col>
-        </Row>
-        <Row class-name="mb20">
-          <i-col span="24">
-            <Row>
-              <i-col span="6">活动状态:</i-col>
-              <i-col span="16" v-if="randomDiscountDetail.onOff === 'ON'">
-                <tag color="success">{{ "有效" }}</tag>
+              <i-col span="6"> 活动名称: </i-col>
+              <i-col span="18">
+                {{ randomDiscountDetail.activityName }}
               </i-col>
-              <i-col span="16" v-else-if="randomDiscountDetail.onOff === 'OFF'">
-                <tag color="error">{{ "无效" }}</tag>
+            </Row>
+          </i-col>
+        </Row>
+        <Row class-name="mb20">
+          <i-col span="24">
+            <Row>
+              <i-col span="6"> 活动状态: </i-col>
+              <i-col v-if="randomDiscountDetail.onOff === 'ON'" span="16">
+                <tag color="success">
+                  {{ "有效" }}
+                </tag>
               </i-col>
-              <i-col span="16" v-else-if="randomDiscountDetail.onOff === null">{{ "N/A" }}</i-col>
+              <i-col v-else-if="randomDiscountDetail.onOff === 'OFF'" span="16">
+                <tag color="error">
+                  {{ "无效" }}
+                </tag>
+              </i-col>
+              <i-col v-else-if="randomDiscountDetail.onOff === null" span="16">
+                {{ "N/A" }}
+              </i-col>
             </Row>
           </i-col>
         </Row>
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6">开始时间:</i-col>
-              <i-col span="18">{{ randomDiscountDetail.startTime }}</i-col>
+              <i-col span="6"> 开始时间: </i-col>
+              <i-col span="18">
+                {{ randomDiscountDetail.startTime }}
+              </i-col>
             </Row>
           </i-col>
         </Row>
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6">结束时间:</i-col>
-              <i-col span="18">{{ randomDiscountDetail.endTime }}</i-col>
+              <i-col span="6"> 结束时间: </i-col>
+              <i-col span="18">
+                {{ randomDiscountDetail.endTime }}
+              </i-col>
             </Row>
           </i-col>
         </Row>
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6">最低立减金额:</i-col>
-              <i-col span="18">{{ randomDiscountDetail.minFee | fenToYuanDot2Filters }}</i-col>
+              <i-col span="6"> 最低立减金额: </i-col>
+              <i-col span="18">
+                {{ randomDiscountDetail.minFee | fenToYuanDot2Filters }}
+              </i-col>
             </Row>
           </i-col>
         </Row>
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6">最高立减金额:</i-col>
-              <i-col span="18">{{ randomDiscountDetail.maxFee | fenToYuanDot2Filters }}</i-col>
+              <i-col span="6"> 最高立减金额: </i-col>
+              <i-col span="18">
+                {{ randomDiscountDetail.maxFee | fenToYuanDot2Filters }}
+              </i-col>
             </Row>
           </i-col>
         </Row>
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6">创建人:</i-col>
-              <i-col span="18">{{ randomDiscountDetail.createUser }}</i-col>
+              <i-col span="6"> 创建人: </i-col>
+              <i-col span="18">
+                {{ randomDiscountDetail.createUser }}
+              </i-col>
             </Row>
           </i-col>
         </Row>
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6">创建时间:</i-col>
-              <i-col span="18">{{ randomDiscountDetail.createTime }}</i-col>
+              <i-col span="6"> 创建时间: </i-col>
+              <i-col span="18">
+                {{ randomDiscountDetail.createTime }}
+              </i-col>
             </Row>
           </i-col>
         </Row>
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6">更新时间:</i-col>
-              <i-col span="18">{{ randomDiscountDetail.updateTime }}</i-col>
+              <i-col span="6"> 更新时间: </i-col>
+              <i-col span="18">
+                {{ randomDiscountDetail.updateTime }}
+              </i-col>
             </Row>
           </i-col>
         </Row>
       </div>
       <div slot="footer">
-        <Button type="primary" @click="handleClose">关闭</Button>
+        <Button type="primary" @click="handleClose"> 关闭 </Button>
       </div>
     </Modal>
 
     <Modal v-model="modalEdit" :z-index="1000" :mask-closable="false">
       <p slot="header">
-        <i-col>{{ tempModalType===modalType.edit?'修改随机立减活动':'创建随机立减活动' }}</i-col>
+        <i-col>{{
+          tempModalType === modalType.edit
+            ? "修改随机立减活动"
+            : "创建随机立减活动"
+        }}</i-col>
       </p>
       <div class="modal-content">
-        <Form ref="modalEdit" :model="randomDiscountDetail" :rules="ruleInline" :label-width="100">
+        <Form
+          ref="modalEdit"
+          :model="randomDiscountDetail"
+          :rules="ruleInline"
+          :label-width="100"
+        >
           <Row>
             <Col span="18">
-              <FormItem label="活动名称:" prop="activityName">
-                <Input v-model="randomDiscountDetail.activityName" placeholder="活动名称"></Input>
-              </FormItem>
+            <FormItem label="活动名称:" prop="activityName">
+              <Input
+                v-model="randomDiscountDetail.activityName"
+                placeholder="活动名称"
+              ></Input>
+            </FormItem>
             </Col>
           </Row>
           <Row>
             <Col span="18">
-              <FormItem label="活动状态:" prop="onOff">
-                <Select v-model="randomDiscountDetail.onOff" clearable>
-                  <Option
-                    v-for="(item,index) in imageStatusEnum"
-                    :value="item.value"
-                    :key="index"
-                    class="ptb2-5"
-                    style="padding-left: 5px;width: 100%"
-                  >{{ item.label }}</Option>
-                </Select>
-              </FormItem>
+            <FormItem label="活动状态:" prop="onOff">
+              <Select v-model="randomDiscountDetail.onOff" clearable>
+                <Option
+                  v-for="(item, index) in imageStatusEnum"
+                  :key="index"
+                  :value="item.value"
+                  class="ptb2-5"
+                  style="padding-left: 5px; width: 100%"
+                >
+                  {{ item.label }}
+                </Option>
+              </Select>
+            </FormItem>
             </Col>
           </Row>
           <Row>
             <Col span="18">
-              <FormItem label="开启时间:" prop="startTime">
-                <DatePicker
-                  v-model="randomDiscountDetail.startTime"
-                  format="yyyy-MM-dd HH:mm:ss"
-                  type="datetime"
-                  placeholder="有效期起"
-                  class="search-input"
-                  style="width: 170px"
-                  @on-change="startTimeChange"
-                />
-              </FormItem>
+            <FormItem label="开启时间:" prop="startTime">
+              <DatePicker
+                v-model="randomDiscountDetail.startTime"
+                format="yyyy-MM-dd HH:mm:ss"
+                type="datetime"
+                placeholder="有效期起"
+                class="search-input"
+                style="width: 170px"
+                @on-change="startTimeChange"
+              />
+            </FormItem>
             </Col>
           </Row>
           <Row>
             <Col span="18">
-              <FormItem label="结束时间:" prop="endTime">
-                <DatePicker
-                  v-model="randomDiscountDetail.endTime"
-                  format="yyyy-MM-dd HH:mm:ss"
-                  type="datetime"
-                  placeholder="有效期止"
-                  class="search-input"
-                  style="width: 170px"
-                  @on-change="endTimeChange"
-                />
-              </FormItem>
+            <FormItem label="结束时间:" prop="endTime">
+              <DatePicker
+                v-model="randomDiscountDetail.endTime"
+                format="yyyy-MM-dd HH:mm:ss"
+                type="datetime"
+                placeholder="有效期止"
+                class="search-input"
+                style="width: 170px"
+                @on-change="endTimeChange"
+              />
+            </FormItem>
             </Col>
           </Row>
           <Row>
             <Col span="18">
-              <FormItem label="最低立减金额:" prop="minFee">
-                <InputNumber
-                  :min="0"
-                  :value="minFeeComputed"
-                  placeholder="最低立减金额"
-                  style="width: 170px"
-                  @on-change="minFeeInputNumberOnChange"
-                ></InputNumber>
-              </FormItem>
+            <FormItem label="最低立减金额:" prop="minFee">
+              <InputNumber
+                :min="0"
+                :value="minFeeComputed"
+                placeholder="最低立减金额"
+                style="width: 170px"
+                @on-change="minFeeInputNumberOnChange"
+              ></InputNumber>
+            </FormItem>
             </Col>
           </Row>
           <Row>
             <Col span="18">
-              <FormItem label="最高立减金额:" prop="maxFee">
-                <InputNumber
-                  :min="0"
-                  :value="maxFeeComputed"
-                  placeholder="最高立减金额"
-                  style="width: 170px"
-                  @on-change="maxFeeInputNumberOnChange"
-                ></InputNumber>
-              </FormItem>
+            <FormItem label="最高立减金额:" prop="maxFee">
+              <InputNumber
+                :min="0"
+                :value="maxFeeComputed"
+                placeholder="最高立减金额"
+                style="width: 170px"
+                @on-change="maxFeeInputNumberOnChange"
+              ></InputNumber>
+            </FormItem>
             </Col>
           </Row>
         </Form>
       </div>
       <div slot="footer">
-        <Button @click="handleEditClose">关闭</Button>
-        <Button :loading="modalViewLoading" type="primary" @click="handleSubmit('modalEdit')">确定</Button>
+        <Button @click="handleEditClose"> 关闭 </Button>
+        <Button
+          :loading="modalViewLoading"
+          type="primary"
+          @click="handleSubmit('modalEdit')"
+        >
+          确定
+        </Button>
       </div>
     </Modal>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
-import Tables from "_c/tables";
-import IViewUpload from "_c/iview-upload";
-import _ from "lodash";
+import Tables from '_c/tables';
+import IViewUpload from '_c/iview-upload';
+import _ from 'lodash';
 import {
   deleteRandomDiscount,
   getRandomDiscountPages,
   editRandomDiscount,
   createRandomDiscount
-} from "@/api/mini-program";
-import uploadMixin from "@/mixins/uploadMixin";
-import deleteMixin from "@/mixins/deleteMixin.js";
-import tableMixin from "@/mixins/tableMixin.js";
-import searchMixin from "@/mixins/searchMixin.js";
-import { couponStatusConvert, imageStatusConvert } from "@/libs/converStatus";
-import { couponStatusEnum, imageStatusEnum } from "@/libs/enumerate";
+} from '@/api/mini-program';
+import uploadMixin from '@/mixins/uploadMixin';
+import deleteMixin from '@/mixins/deleteMixin.js';
+import tableMixin from '@/mixins/tableMixin.js';
+import searchMixin from '@/mixins/searchMixin.js';
+import { couponStatusConvert, imageStatusConvert } from '@/libs/converStatus';
+import { couponStatusEnum, imageStatusEnum } from '@/libs/enumerate';
 import {
   fenToYuanDot2,
   fenToYuanDot2Number,
   yuanToFenNumber,
   compareData
-} from "@/libs/util";
+} from '@/libs/util';
 
 const randomDiscountDetail = {
   id: 0,
-  activityName: "",
+  activityName: '',
   startTime: null,
   endTime: null,
   onOff: null,
@@ -333,7 +377,7 @@ const randomDiscountDetail = {
   maxFee: 0,
   createTime: null,
   updateTime: null,
-  createUser: ""
+  createUser: ''
 };
 
 const roleRowData = {
@@ -354,24 +398,24 @@ export default {
   data() {
     return {
       ruleInline: {
-        activityName: [{ required: true, message: "请输入活动名称" }],
+        activityName: [{ required: true, message: '请输入活动名称' }],
         minFee: [
-          { required: true, message: "请输入最低立减金额" },
+          { required: true, message: '请输入最低立减金额' },
           {
-            message: "必须为大于0的数字",
+            message: '必须为大于0的数字',
             pattern: /^(?!(0[0-9]{0,}$))[0-9]{1,}[.]{0,}[0-9]{0,}$/
           }
         ],
         maxFee: [
-          { required: true, message: "请输入最高立减金额" },
+          { required: true, message: '请输入最高立减金额' },
           {
-            message: "必须为大于0的数字",
+            message: '必须为大于0的数字',
             pattern: /^(?!(0[0-9]{0,}$))[0-9]{1,}[.]{0,}[0-9]{0,}$/
           }
         ],
-        onOff: [{ required: true, message: "请选择活动状态" }],
-        startTime: [{ required: true, message: "请选择开始时间" }],
-        endTime: [{ required: true, message: "请选择结束时间" }]
+        onOff: [{ required: true, message: '请选择活动状态' }],
+        startTime: [{ required: true, message: '请选择开始时间' }],
+        endTime: [{ required: true, message: '请选择结束时间' }]
       },
       defaultListMain: [],
       uploadListMain: [],
@@ -380,39 +424,39 @@ export default {
       imageStatusEnum,
       columns: [
         {
-          type: "selection",
-          align: "center",
+          type: 'selection',
+          align: 'center',
           width: 60,
-          align: "center"
+          align: 'center'
         },
         {
-          title: "主键ID",
-          align: "center",
-          key: "id"
+          title: '主键ID',
+          align: 'center',
+          key: 'id'
         },
         {
-          title: "活动名称",
-          align: "center",
-          key: "activityName"
+          title: '活动名称',
+          align: 'center',
+          key: 'activityName'
         },
         {
-          title: "活动状态",
-          key: "onOff",
-          align: "center",
+          title: '活动状态',
+          key: 'onOff',
+          align: 'center',
           render: (h, params, vm) => {
             const { row } = params;
-            if (row.onOff === "ON") {
+            if (row.onOff === 'ON') {
               return (
                 <div>
-                  <tag color="success">
+                  <tag color='success'>
                     {imageStatusConvert(row.onOff).label}
                   </tag>
                 </div>
               );
-            } else if (row.onOff === "OFF") {
+            } else if (row.onOff === 'OFF') {
               return (
                 <div>
-                  <tag color="error">{imageStatusConvert(row.onOff).label}</tag>
+                  <tag color='error'>{imageStatusConvert(row.onOff).label}</tag>
                 </div>
               );
             }
@@ -420,50 +464,50 @@ export default {
           }
         },
         {
-          title: "活动开启时间",
-          align: "center",
-          key: "startTime",
+          title: '活动开启时间',
+          align: 'center',
+          key: 'startTime',
           width: 160
         },
         {
-          title: "活动结束时间",
-          align: "center",
-          key: "endTime",
+          title: '活动结束时间',
+          align: 'center',
+          key: 'endTime',
           width: 160
         },
         {
-          title: "最低立减金额",
-          align: "center",
-          key: "minFee"
+          title: '最低立减金额',
+          align: 'center',
+          key: 'minFee'
         },
         {
-          title: "最高立减金额",
-          align: "center",
-          key: "maxFee"
+          title: '最高立减金额',
+          align: 'center',
+          key: 'maxFee'
         },
         {
-          title: "创建人",
-          align: "center",
-          key: "createUser"
+          title: '创建人',
+          align: 'center',
+          key: 'createUser'
         },
         {
-          title: "创建时间",
-          align: "center",
-          key: "createTime",
+          title: '创建时间',
+          align: 'center',
+          key: 'createTime',
           width: 160
         },
         {
-          title: "更新时间",
-          align: "center",
-          key: "updateTime",
+          title: '更新时间',
+          align: 'center',
+          key: 'updateTime',
           width: 160
         },
         {
-          title: "操作",
-          align: "center",
+          title: '操作',
+          align: 'center',
           minWidth: 80,
-          key: "handle",
-          options: ["onSale", "view", "edit", "delete"]
+          key: 'handle',
+          options: ['onSale', 'view', 'edit', 'delete']
         }
       ],
       createLoading: false,
@@ -497,7 +541,7 @@ export default {
       this.randomDiscountDetail.shareImageUrl = null;
     },
     handleSubmit(name) {
-      this.$refs[name].validate(valid => {
+      this.$refs[name].validate((valid) => {
         if (valid) {
           if (
             compareData(
@@ -505,12 +549,12 @@ export default {
               this.randomDiscountDetail.endTime
             )
           ) {
-            this.$Message.error("结束时间必须大于开始时间!");
+            this.$Message.error('结束时间必须大于开始时间!');
             return;
           } else if (
             this.randomDiscountDetail.minFee > this.randomDiscountDetail.maxFee
           ) {
-            this.$Message.error("最低立减金额不能大于最高立减金额");
+            this.$Message.error('最低立减金额不能大于最高立减金额');
             return;
           }
           if (this.tempModalType === this.modalType.create) {
@@ -521,17 +565,17 @@ export default {
             this.editRandomDiscount();
           }
         } else {
-          this.$Message.error("请完善信息!");
+          this.$Message.error('请完善信息!');
         }
       });
     },
     createRandomDiscount() {
       this.modalViewLoading = true;
       createRandomDiscount(this.randomDiscountDetail)
-        .then(res => {
+        .then((res) => {
           this.modalViewLoading = false;
           this.modalEdit = false;
-          this.$Message.success("创建成功!");
+          this.$Message.success('创建成功!');
           this.getTableData();
         })
         .catch(() => {
@@ -542,7 +586,7 @@ export default {
     editRandomDiscount() {
       this.modalViewLoading = true;
       editRandomDiscount(this.randomDiscountDetail)
-        .then(res => {
+        .then((res) => {
           this.modalEdit = false;
           this.modalViewLoading = false;
           this.getTableData();
@@ -571,7 +615,7 @@ export default {
       deleteRandomDiscount({
         ids
       })
-        .then(res => {
+        .then((res) => {
           const totalPage = Math.ceil(this.total / this.searchRowData.pageSize);
           if (
             this.tableData.length == this.tableDataSelected.length &&
@@ -583,7 +627,7 @@ export default {
           this.tableDataSelected = [];
           this.getTableData();
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err);
           this.loading = false;
         });
@@ -602,16 +646,13 @@ export default {
       this.modalEdit = true;
     },
     getTableData() {
+      this.loading = true;
       getRandomDiscountPages(this.searchRowData)
-        .then(res => {
+        .then((res) => {
           this.tableData = res.rows;
           this.total = res.total;
-          this.loading = false;
-          this.searchLoading = false;
-          this.clearSearchLoading = false;
         })
-        .catch(error => {
-          console.log(error);
+        .finally(() => {
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
@@ -619,10 +660,10 @@ export default {
     },
     onOff(params) {
       this.randomDiscountDetail = this._.cloneDeep(params.row);
-      if (params.row.onOff === "ON") {
-        this.randomDiscountDetail.onOff = "OFF";
+      if (params.row.onOff === 'ON') {
+        this.randomDiscountDetail.onOff = 'OFF';
       } else {
-        this.randomDiscountDetail.onOff = "ON";
+        this.randomDiscountDetail.onOff = 'ON';
       }
       this.loading = true;
       this.editRandomDiscount();
@@ -646,7 +687,7 @@ export default {
     // 设置编辑商品的图片列表
     setDefaultUploadList(res) {
       if (res.shareImageUrl != null) {
-        const map = { status: "finished", url: "url" };
+        const map = { status: 'finished', url: 'url' };
         const mainImgArr = [];
         map.url = res.shareImageUrl;
         mainImgArr.push(map);

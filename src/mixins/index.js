@@ -116,7 +116,7 @@ const mixin = {
       return '';
     }
   },
-  mounted() {}
+  mounted() { }
 };
 
 export default mixin;

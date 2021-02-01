@@ -46,7 +46,12 @@
               {{ item.value }}
             </Option>
           </Select>
-          <Button v-waves class="search-btn mr5" type="primary" @click="handleSearch">
+          <Button
+            v-waves
+            class="search-btn mr5"
+            type="primary"
+            @click="handleSearch"
+          >
             <Icon type="md-search" />&nbsp;搜索
           </Button>
           <Button v-waves class="search-btn" type="info" @click="handleClear">
@@ -62,7 +67,7 @@
           </Button>
         </div>
       </tables>
-      <div style="margin: 10px;overflow: hidden">
+      <div style="margin: 10px; overflow: hidden">
         <Row type="flex" justify="end">
           <Page
             :total="total"
@@ -87,10 +92,15 @@
       @on-ok="handleAddOrEditOk('formValidate')"
     >
       <p slot="header">
-        <span>{{ rowData.id==''?'创建用户':'编辑用户' }}</span>
+        <span>{{ rowData.id == "" ? "创建用户" : "编辑用户" }}</span>
       </p>
       <div class="modal-content">
-        <Form ref="formValidate" :model="rowData" :rules="ruleValidate" :label-width="80">
+        <Form
+          ref="formValidate"
+          :model="rowData"
+          :rules="ruleValidate"
+          :label-width="80"
+        >
           <FormItem label="姓名" prop="name">
             <Input v-model="rowData.name" placeholder="请输入姓名"></Input>
           </FormItem>
@@ -101,25 +111,47 @@
             <Input v-model="rowData.password" type="password"></Input>
           </FormItem>
           <FormItem label="确认密码" prop="passwdCheck">
-            <Input v-model="rowData.passwdCheck" type="password" placeholder="请确认密码"></Input>
+            <Input
+              v-model="rowData.passwdCheck"
+              type="password"
+              placeholder="请确认密码"
+            ></Input>
           </FormItem>
           <FormItem label="电话" prop="tel">
             <Input v-model="rowData.tel" placeholder="请输入电话号码"></Input>
           </FormItem>
           <FormItem label="用户头像" prop="avatarUrl">
-            <Input v-show="false" v-model="rowData.avatarUrl" style="width: auto"></Input>
-            <div v-for="item in uploadListMain" :key="item.url" class="demo-upload-list">
+            <Input
+              v-show="false"
+              v-model="rowData.avatarUrl"
+              style="width: auto"
+            ></Input>
+            <div
+              v-for="item in uploadListMain"
+              :key="item.url"
+              class="demo-upload-list"
+            >
               <template v-if="item.status === 'finished'">
                 <div>
                   <img :src="item.url">
                   <div class="demo-upload-list-cover">
-                    <Icon type="ios-eye-outline" @click.native="handleUploadView(item)"></Icon>
-                    <Icon type="ios-trash-outline" @click.native="handleRemoveMain(item)"></Icon>
+                    <Icon
+                      type="ios-eye-outline"
+                      @click.native="handleUploadView(item)"
+                    ></Icon>
+                    <!-- <Icon
+                      type="ios-trash-outline"
+                      @click.native="handleRemoveMain(item)"
+                    ></Icon> -->
                   </div>
                 </div>
               </template>
               <template v-else>
-                <Progress v-if="item.showProgress" :percent="item.percentage" hide-info></Progress>
+                <Progress
+                  v-if="item.showProgress"
+                  :percent="item.percentage"
+                  hide-info
+                ></Progress>
               </template>
             </div>
             <IViewUpload
@@ -130,15 +162,20 @@
               file-dir="system"
               @on-success="handleSuccessMain"
             >
-              <div slot="content">
-                <Button type="primary">
-                  上传图片
-                </Button>
+              <div
+                slot="content"
+                style="width: 58px; height: 58px; line-height: 58px"
+              >
+                <Icon type="ios-camera" size="20"></Icon>
               </div>
             </IViewUpload>
           </FormItem>
           <FormItem label="用户状态" prop="status">
-            <Select v-model="rowData.status" class="search-col" placeholder="请选择用户状态">
+            <Select
+              v-model="rowData.status"
+              class="search-col"
+              placeholder="请选择用户状态"
+            >
               <Option
                 v-for="item in userStatusList"
                 :key="`search-col-${item.key}`"
@@ -151,7 +188,7 @@
           <FormItem label="备注" prop="remark">
             <Input
               v-model="rowData.remark"
-              :autosize="{minRows: 2,maxRows: 5}"
+              :autosize="{ minRows: 2, maxRows: 5 }"
               type="textarea"
               placeholder="请输入备注"
             ></Input>
@@ -166,36 +203,69 @@
         <Tabs v-model="step" size="small">
           <!-- :value="tabOperation.tabSelected" -->
           <TabPane label="创建用户" name="userAdd">
-            <Form ref="formValidate" :model="rowData" :rules="ruleValidate" :label-width="80">
+            <Form
+              ref="formValidate"
+              :model="rowData"
+              :rules="ruleValidate"
+              :label-width="80"
+            >
               <FormItem label="姓名" prop="name">
                 <Input v-model="rowData.name" placeholder="请输入姓名"></Input>
               </FormItem>
               <FormItem label="账号" prop="account">
-                <Input v-model="rowData.account" placeholder="请输入账号"></Input>
+                <Input
+                  v-model="rowData.account"
+                  placeholder="请输入账号"
+                ></Input>
               </FormItem>
               <FormItem label="密码" prop="password">
-                <Input v-model="rowData.password" type="password" placeholder="请输入密码"></Input>
+                <Input
+                  v-model="rowData.password"
+                  type="password"
+                  placeholder="请输入密码"
+                ></Input>
               </FormItem>
               <FormItem label="确认密码" prop="passwdCheck">
                 <Input v-model="rowData.passwdCheck" type="password"></Input>
               </FormItem>
               <FormItem label="电话" prop="tel">
-                <Input v-model="rowData.tel" placeholder="请输入电话号码"></Input>
+                <Input
+                  v-model="rowData.tel"
+                  placeholder="请输入电话号码"
+                ></Input>
               </FormItem>
               <FormItem label="用户头像" prop="avatarUrl">
-                <Input v-show="false" v-model="rowData.avatarUrl" style="width: auto"></Input>
-                <div v-for="item in uploadListMain" :key="item.url" class="demo-upload-list">
+                <Input
+                  v-show="false"
+                  v-model="rowData.avatarUrl"
+                  style="width: auto"
+                ></Input>
+                <div
+                  v-for="item in uploadListMain"
+                  :key="item.url"
+                  class="demo-upload-list"
+                >
                   <template v-if="item.status === 'finished'">
                     <div>
                       <img :src="item.url">
                       <div class="demo-upload-list-cover">
-                        <Icon type="ios-eye-outline" @click.native="handleUploadView(item)"></Icon>
-                        <Icon type="ios-trash-outline" @click.native="handleRemoveMain(item)"></Icon>
+                        <Icon
+                          type="ios-eye-outline"
+                          @click.native="handleUploadView(item)"
+                        ></Icon>
+                        <Icon
+                          type="ios-trash-outline"
+                          @click.native="handleRemoveMain(item)"
+                        ></Icon>
                       </div>
                     </div>
                   </template>
                   <template v-else>
-                    <Progress v-if="item.showProgress" :percent="item.percentage" hide-info></Progress>
+                    <Progress
+                      v-if="item.showProgress"
+                      :percent="item.percentage"
+                      hide-info
+                    ></Progress>
                   </template>
                 </div>
                 <IViewUpload
@@ -206,15 +276,20 @@
                   file-dir="system"
                   @on-success="handleSuccessMain"
                 >
-                  <div slot="content">
-                    <Button type="primary">
-                      上传图片
-                    </Button>
+                  <div
+                    slot="content"
+                    style="width: 58px; height: 58px; line-height: 58px"
+                  >
+                    <Icon type="ios-camera" size="20"></Icon>
                   </div>
                 </IViewUpload>
               </FormItem>
               <FormItem label="用户状态" prop="status">
-                <Select v-model="rowData.status" class="search-col" placeholder="请选择用户状态">
+                <Select
+                  v-model="rowData.status"
+                  class="search-col"
+                  placeholder="请选择用户状态"
+                >
                   <Option
                     v-for="item in userStatusList"
                     :key="`search-col-${item.key}`"
@@ -227,7 +302,7 @@
               <FormItem label="备注" prop="remark">
                 <Input
                   v-model="rowData.remark"
-                  :autosize="{minRows: 2,maxRows: 5}"
+                  :autosize="{ minRows: 2, maxRows: 5 }"
                   type="textarea"
                   placeholder="请输入备注"
                 ></Input>
@@ -245,20 +320,16 @@
           </TabPane>
         </Tabs>
       </div>
-      <div v-if="step=='userAdd' && !isCreated" slot="footer">
+      <div v-if="step == 'userAdd' && !isCreated" slot="footer">
         <Button type="primary" @click="handleAddOrEditOk('formValidate')">
           下一步
         </Button>
       </div>
-      <div v-else-if="step=='roleAdd'" slot="footer">
-        <Button type="primary" @click="handleRoleOk">
-          保存
-        </Button>
+      <div v-else-if="step == 'roleAdd'" slot="footer">
+        <Button type="primary" @click="handleRoleOk"> 保存 </Button>
       </div>
       <div v-else slot="footer">
-        <Button type="primary" @click="handleCloseAdd">
-          关闭
-        </Button>
+        <Button type="primary" @click="handleCloseAdd"> 关闭 </Button>
       </div>
     </Modal>
 
@@ -281,6 +352,9 @@
           @on-change="handleChange"
         ></Transfer>
       </div>
+    </Modal>
+    <Modal v-model="uploadVisible" title="图片预览">
+      <img :src="imgUploadViewItem" style="width: 100%">
     </Modal>
 
     <!-- 头像上传组件 -->
@@ -468,7 +542,9 @@ export default {
         avatarUrl: [
           { required: true, message: '头像不能为空', trigger: 'blur' }
         ],
-        status: [{ required: true, message: '请选择角色状态', trigger: 'blur' }]
+        status: [
+          { required: true, message: '请选择角色状态', trigger: 'blur' }
+        ]
       },
       // 头像上传
       imagecropperShow: false,
@@ -509,6 +585,23 @@ export default {
         );
       }
     },
+    handleRemoveMain(file) {
+      this.$refs.uploadMain.deleteFile(file);
+      this.rowData.avatarUrl = '';
+    },
+    // 设置编辑商品的图片列表
+    setDefaultUploadList(res) {
+      if (res.avatarUrl != null) {
+        const map = { status: 'finished', url: 'url' };
+        const mainImgArr = [];
+        map.url = res.avatarUrl;
+        mainImgArr.push(map);
+        this.$refs.uploadMain.setDefaultFileList(mainImgArr);
+        this.uploadListMain = mainImgArr;
+      } else {
+        this.uploadListMain = [];
+      }
+    },
     handleView(params) {
       this.$Modal.info({
         title: '用户详情',
@@ -526,9 +619,7 @@ export default {
           ) +
           `<br>
           创建时间: ${this.tableData[params.row.initRowIndex].createAt}<br>
-          最后登录时间: ${
-  this.tableData[params.row.initRowIndex].lastLoginAt
-}<br>
+          最后登录时间: ${this.tableData[params.row.initRowIndex].lastLoginAt}<br>
           备注: ${this.tableData[params.row.initRowIndex].remark}<br>`
         // 关联角色：<tag type="border">角色1</tag><tag type="border">角色2</tag><tag type="border">角色3</tag>
       });
@@ -543,7 +634,7 @@ export default {
           method: 'delete',
           data: this.rowData
         })
-        .then(res => {
+        .then((res) => {
           this.$Message.info('删除成功');
           // 刷新表格数据
           this.getTableData();
@@ -557,7 +648,7 @@ export default {
             url: '/admin/batch/' + this.ids,
             method: 'delete'
           })
-          .then(res => {
+          .then((res) => {
             this.$Message.info('删除成功');
             // 刷新表格数据
             this.getTableData();
@@ -567,7 +658,7 @@ export default {
       }
     },
     onSelectionChange(selection) {
-      this.ids = selection.map(item => item.id.toString());
+      this.ids = selection.map((item) => item.id.toString());
       console.log('选择变化,当前页选择ids:' + this.ids);
     },
     handleEdit(params) {
@@ -577,13 +668,14 @@ export default {
       this.rowData = _.merge({}, this.rowData, row);
       this.rowData.passwdCheck = row.password;
       this.defaultListMain = [];
+      this.setDefaultUploadList(row);
       // this.image = this.rowData.avatarUrl;
       this.modalEdit = true;
     },
     handleAddOrEditOk(name) {
       // this.rowData.avatarUrl = this.image;
       this.loadingBtn = false;
-      this.$refs[name].validate(valid => {
+      this.$refs[name].validate((valid) => {
         if (valid) {
           if (this.rowData.id === undefined) {
             // 发送axios请求
@@ -593,7 +685,7 @@ export default {
                 method: 'post',
                 data: this.rowData
               })
-              .then(res => {
+              .then((res) => {
                 this.modalEdit = false;
                 this.$Message.info('保存成功');
                 this.step = 'roleAdd';
@@ -610,7 +702,7 @@ export default {
                 method: 'put',
                 data: this.rowData
               })
-              .then(res => {
+              .then((res) => {
                 this.loadingBtn = false;
                 this.modalEdit = false;
                 this.$Message.info('更新成功');
@@ -640,6 +732,7 @@ export default {
       this.rowData = _.merge({}, this.rowData);
       this.rowData = {};
       this.defaultListMain = [];
+      this.uploadListMain = [];
       this.step = 'userAdd';
       this.isDisable = true;
       this.isCreated = false;
@@ -650,7 +743,7 @@ export default {
       const { row } = params;
       this.rowData = row;
       this.targetKeys = [];
-      getRelationRoles(this.rowData.id).then(res => {
+      getRelationRoles(this.rowData.id).then((res) => {
         if (res && res.length > 0) {
           // console.log('relationRoleIds: ', this.getRelationRoleIds(res));
           this.targetKeys = this.getRelationRoleIds(res);
@@ -666,7 +759,7 @@ export default {
           data: this.searchRowData,
           method: 'post'
         })
-        .then(res => {
+        .then((res) => {
           // this.tableData = res.data;
           this.tableData = res.array;
           this.total = res.total;
@@ -686,7 +779,7 @@ export default {
           url: '/admin/update/relation/' + this.rowData.id + '/' + roleIds,
           method: 'put'
         })
-        .then(res => {
+        .then((res) => {
           this.loadingBtn = false;
           if (this.modalRole === true) {
             this.modalRole = false;
@@ -733,7 +826,7 @@ export default {
       getUserData({
         page: this.page,
         rows: this.pageSize
-      }).then(res => {
+      }).then((res) => {
         // this.tableData = res.data;
         this.tableData = res.array;
         this.total = res.total;
@@ -743,7 +836,7 @@ export default {
     // 模拟双栏穿梭选择框数据
     getRoleData() {
       const role = [];
-      getRoleList().then(res => {
+      getRoleList().then((res) => {
         if (res && res.array.length > 0) {
           for (let i = 0; i < res.array.length; i++) {
             role.push({
@@ -767,7 +860,7 @@ export default {
           description: res[i].roleDesc
         });
       }
-      return relationRoles.map(item => item.key);
+      return relationRoles.map((item) => item.key);
     },
     render1(item) {
       return item.label;

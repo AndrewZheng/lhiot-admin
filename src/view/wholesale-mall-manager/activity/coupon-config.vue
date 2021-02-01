@@ -94,7 +94,13 @@
           </Row>
         </div>
         <div slot="operations">
-          <Button v-waves :loading="createLoading" type="success" class="mr5" @click="handleCreate">
+          <Button
+            v-waves
+            :loading="createLoading"
+            type="success"
+            class="mr5"
+            @click="handleCreate"
+          >
             <Icon type="md-add" />添加
           </Button>
           <!-- <Poptip
@@ -110,7 +116,7 @@
           </Poptip>-->
         </div>
       </tables>
-      <div style="margin: 10px;overflow: hidden">
+      <div style="margin: 10px; overflow: hidden">
         <Row type="flex" justify="end">
           <Page
             :total="total"
@@ -126,51 +132,64 @@
       </div>
     </Card>
 
-    <Modal v-model="modalEdit" :mask-closable="false" :z-index="1000" :width="750">
+    <Modal
+      v-model="modalEdit"
+      :mask-closable="false"
+      :z-index="1000"
+      :width="750"
+    >
       <p slot="header">
-        <i-col>{{ tempModalType===modalType.edit?'修改优惠券配置':'创建优惠券配置' }}</i-col>
+        <i-col>
+          {{
+            tempModalType === modalType.edit
+              ? "修改优惠券配置"
+              : "创建优惠券配置"
+          }}
+        </i-col>
       </p>
       <div class="modal-content">
-        <Form ref="editForm" :model="couponConfig" :rules="ruleInline" :label-width="100">
+        <Form
+          ref="editForm"
+          :model="couponConfig"
+          :rules="ruleInline"
+          :label-width="100"
+        >
           <Row>
             <i-col span="12">
               <FormItem label="优惠券名称:" prop="couponName">
-                <Input v-model="couponConfig.couponName" placeholder="请关联优惠券模板" readonly>
-                <Button slot="append" icon="ios-search" @click="handleRelation"></Button>
+                <Input
+                  v-model="couponConfig.couponName"
+                  placeholder="请关联优惠券模板"
+                  readonly
+                >
+                <Button
+                  slot="append"
+                  icon="ios-search"
+                  @click="handleRelation"
+                ></Button>
                 </Input>
               </FormItem>
             </i-col>
             <i-col span="12">
-              <FormItem
-                label="模板类型:"
-                style="width:200px;"
-              >
+              <FormItem label="模板类型:" style="width: 200px">
                 {{ couponConfig.plateType | plateTypeFilter }}
               </FormItem>
             </i-col>
           </Row>
           <Row>
             <i-col span="12">
-              <FormItem
-                label="满减金额:"
-                prop="fullFee"
-              >
+              <FormItem label="满减金额:" prop="fullFee">
                 {{ couponConfig.fullFee | fenToYuanDot2Filters }}
               </FormItem>
             </i-col>
             <i-col span="12">
-              <FormItem
-                label="优惠金额:"
-                prop="couponFee"
-              >
+              <FormItem label="优惠金额:" prop="couponFee">
                 {{ couponConfig.couponFee | fenToYuanDot2Filters }}
               </FormItem>
             </i-col>
           </Row>
-          <Divider orientation="center">
-            配置信息
-          </Divider>
-          <Row v-show="couponConfig.vaildDays===0">
+          <Divider orientation="center"> 配置信息 </Divider>
+          <Row v-show="couponConfig.vaildDays === 0">
             <i-col span="12">
               <FormItem label="生效时间:" prop="effectiveTime">
                 <DatePicker
@@ -198,22 +217,29 @@
           </Row>
           <Row>
             <i-col
-              v-show="couponConfig.effectiveTime==='' && couponConfig.failureTime===''"
+              v-show="
+                couponConfig.effectiveTime === '' &&
+                  couponConfig.failureTime === ''
+              "
               span="12"
             >
               <FormItem label="有效天数:" prop="vaildDays">
-                <InputNumber v-model="couponConfig.vaildDays" placeholder="有效天数"></InputNumber>
+                <InputNumber
+                  v-model="couponConfig.vaildDays"
+                  placeholder="有效天数"
+                  style="width: 160px"
+                ></InputNumber>
               </FormItem>
             </i-col>
             <i-col span="12">
-              <FormItem label="发放类型:" prop="couponType" style="width:200px;">
-                <Select v-model="couponConfig.couponType">
+              <FormItem label="发放类型:" prop="couponType">
+                <Select v-model="couponConfig.couponType" style="width: 160px">
                   <Option
-                    v-for="(item,index) in couponFromEnum"
+                    v-for="(item, index) in couponFromEnum"
                     :key="index"
                     :value="item.value"
                     class="ptb2-5"
-                    style="padding-left: 5px;width: 100%"
+                    style="padding-left: 5px; width: 100%"
                   >
                     {{ item.label }}
                   </Option>
@@ -226,7 +252,7 @@
               <FormItem label="优惠券描述:" prop="couponDes">
                 <Input
                   v-model="couponConfig.couponDes"
-                  :autosize="{minRows: 2,maxRows: 6}"
+                  :autosize="{ minRows: 2, maxRows: 6 }"
                   type="textarea"
                   placeholder="请输入优惠券描述..."
                 ></Input>
@@ -236,10 +262,12 @@
         </Form>
       </div>
       <div slot="footer">
-        <Button @click="handleEditClose">
-          关闭
-        </Button>
-        <Button :loading="modalViewLoading" type="primary" @click="handleSubmit">
+        <Button @click="handleEditClose"> 关闭 </Button>
+        <Button
+          :loading="modalViewLoading"
+          type="primary"
+          @click="handleSubmit"
+        >
           确定
         </Button>
       </div>
@@ -323,7 +351,7 @@
             </Row>
           </div>
         </tables>
-        <div style="margin: 10px;overflow: hidden">
+        <div style="margin: 10px; overflow: hidden">
           <Row type="flex" justify="end">
             <Page
               :total="total"
@@ -570,7 +598,7 @@ export default {
           title: 'ID',
           align: 'center',
           key: 'id',
-          maxWidth: 80
+          minWidth: 60
         },
         {
           title: '优惠券名称',
@@ -581,7 +609,7 @@ export default {
         {
           title: '满减金额',
           align: 'center',
-          minWidth: 60,
+          minWidth: 100,
           key: 'fullFee',
           render(h, params, vm) {
             const amount = fenToYuanDot2(params.row.fullFee);
@@ -591,7 +619,7 @@ export default {
         {
           title: '优惠金额',
           align: 'center',
-          minWidth: 60,
+          minWidth: 100,
           key: 'couponFee',
           render(h, params, vm) {
             const amount = fenToYuanDot2(params.row.couponFee);
@@ -602,39 +630,31 @@ export default {
           title: '发放类型',
           align: 'center',
           key: 'couponType',
-          minWidth: 60,
+          minWidth: 110,
           render: (h, params, vm) => {
             const { row } = params;
             if (row.couponType === 'artificial') {
               return (
                 <div>
-                  <tag color='primary'>
-                    {couponFromConvert(row.couponType)}
-                  </tag>
+                  <tag color='primary'>{couponFromConvert(row.couponType)}</tag>
                 </div>
               );
             } else if (row.couponType === 'recharge') {
               return (
                 <div>
-                  <tag color='pink'>
-                    {couponFromConvert(row.couponType)}
-                  </tag>
+                  <tag color='pink'>{couponFromConvert(row.couponType)}</tag>
                 </div>
               );
             } else if (row.couponType === 'registration') {
               return (
                 <div>
-                  <tag color='orange'>
-                    {couponFromConvert(row.couponType)}
-                  </tag>
+                  <tag color='orange'>{couponFromConvert(row.couponType)}</tag>
                 </div>
               );
             } else if (row.couponType === 'flashsale') {
               return (
                 <div>
-                  <tag color='cyan'>
-                    {couponFromConvert(row.couponType)}
-                  </tag>
+                  <tag color='cyan'>{couponFromConvert(row.couponType)}</tag>
                 </div>
               );
             } else {
@@ -664,7 +684,7 @@ export default {
           title: '失效时间',
           align: 'center',
           key: 'failureTime',
-          width: 220,
+          width: 230,
           render: (h, params, vm) => {
             const { row } = params;
             if (row.vaildDays) {
@@ -672,7 +692,7 @@ export default {
             } else {
               if (!compareCouponData(row.failureTime)) {
                 return (
-                  <div style='color:red'>{row.failureTime + '　已过期'}</div>
+                  <div style='color:red'>{row.failureTime + '已过期'}</div>
                 );
               } else {
                 return <div>{row.failureTime}</div>;
@@ -684,11 +704,12 @@ export default {
           title: '有效天数',
           align: 'center',
           key: 'vaildDays',
-          maxWidth: 100
+          minWidth: 100
         },
         {
-          title: '优惠券状态',
+          title: '券状态',
           align: 'center',
+          minWidth: 90,
           key: 'couponConfigvaild',
           render: (h, params, vm) => {
             const { row } = params;
@@ -715,7 +736,7 @@ export default {
         {
           title: '操作',
           align: 'center',
-          minWidth: 80,
+          minWidth: 100,
           key: 'handle',
           options: ['onSale', 'edit']
         }
@@ -754,15 +775,11 @@ export default {
     },
     getTableData() {
       getCouponConfigPages(this.searchRowData)
-        .then(res => {
+        .then((res) => {
           this.tableData = res.rows;
           this.total = res.total;
-          this.loading = false;
-          this.searchLoading = false;
-          this.clearSearchLoading = false;
         })
-        .catch(error => {
-          console.log(error);
+        .finally(() => {
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
@@ -770,11 +787,11 @@ export default {
     },
     getTemplatesTableData() {
       getCouponTemplatePages(this.searchTemplateRowData)
-        .then(res => {
+        .then((res) => {
           this.couponTemplateData = res.rows;
           this.templateTotal = res.total;
         })
-        .finally(error => {
+        .finally(() => {
           this.searchLoading = false;
           this.clearSearchLoading = false;
         });
@@ -823,7 +840,7 @@ export default {
       this.modalTemplate = false;
     },
     handleSubmit() {
-      this.$refs.editForm.validate(valid => {
+      this.$refs.editForm.validate((valid) => {
         if (valid) {
           if (this.isCreate) {
             this.createCouponConfig();
@@ -838,7 +855,7 @@ export default {
     createCouponConfig() {
       this.modalViewLoading = true;
       createCouponConfig(this.couponConfig)
-        .then(res => {
+        .then((res) => {
           this.$Message.success('创建成功!');
           this.getTableData();
         })
@@ -850,7 +867,7 @@ export default {
     editCouponConfig() {
       this.modalViewLoading = true;
       editCouponConfig(this.couponConfig)
-        .then(res => {
+        .then((res) => {
           this.getTableData();
         })
         .finally(() => {
@@ -878,7 +895,7 @@ export default {
       deleteCouponConfig({
         ids
       })
-        .then(res => {
+        .then((res) => {
           const totalPage = Math.ceil(this.total / this.searchRowData.pageSize);
           if (
             this.tableData.length == this.tableDataSelected.length &&
@@ -890,7 +907,7 @@ export default {
           this.tableDataSelected = [];
           this.getTableData();
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err);
           this.loading = false;
         });

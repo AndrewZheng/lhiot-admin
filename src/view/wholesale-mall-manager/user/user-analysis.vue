@@ -6,7 +6,7 @@
         v-model="tableData"
         :columns="columns"
         :loading="loading"
-        :search-area-column="16"
+        :search-area-column="24"
         :operate-area-column="6"
         editable
         searchable
@@ -50,7 +50,7 @@
             v-model="searchRowData.userStatus"
             class="search-col mr5"
             placeholder="用户状态"
-            style="width:100px"
+            style="width: 100px"
             clearable
           >
             <Option
@@ -58,9 +58,7 @@
               :key="item.value"
               :value="item.value"
               class="ptb2-5"
-            >
-              {{ item.label }}
-            </Option>
+            >{{ item.label }}</Option>
           </Select>
           <!-- <Select
             v-model="searchRowData.salesUserId"
@@ -113,10 +111,9 @@
           >
             <Icon type="md-refresh" />&nbsp;清除
           </Button>
-        </div>
-        <div slot="operations">
           <Button
             v-waves
+            v-has="'export_user_analysis'"
             :loading="exportExcelLoading"
             type="primary"
             class="mr5"
@@ -126,11 +123,12 @@
           </Button>
         </div>
       </tables>
-      <div style="margin: 10px;overflow: hidden">
+      <div style="margin: 10px; overflow: hidden">
         <Row type="flex" justify="end">
           <Page
             :total="total"
             :current="page"
+            :page-size="20"
             :page-size-opts="templatePageOpts"
             show-sizer
             show-total
@@ -202,12 +200,6 @@ const roleRowData = {
 
 const userColumns = [
   {
-    type: 'selection',
-    key: '',
-    width: 60,
-    align: 'center'
-  },
-  {
     title: '编号',
     align: 'center',
     key: 'id',
@@ -220,10 +212,21 @@ const userColumns = [
     minWidth: 100
   },
   {
+    title: '门店地址',
+    align: 'center',
+    key: 'addressDetail',
+    minWidth: 100,
+    tooltip: true,
+    render: (h, params, vm) => {
+      const { row } = params;
+      return <div>{row.city + row.addressDetail}</div>;
+    }
+  },
+  {
     title: '店长姓名',
     align: 'center',
     key: 'userName',
-    minWidth: 60
+    minWidth: 70
   },
   {
     title: '手机号码',
@@ -235,7 +238,7 @@ const userColumns = [
     title: '注册时间',
     align: 'center',
     key: 'registerTime',
-    minWidth: 100
+    minWidth: 70
   },
   // {
   //   title: "用户类型",
@@ -287,7 +290,7 @@ const userColumns = [
     title: '累计消费/频次',
     align: 'center',
     key: 'accumulative',
-    minWidth: 80,
+    minWidth: 100,
     render: (h, params, vm) => {
       const { row } = params;
       return <div>{row.accumulative ? row.accumulative : 'N/A'}</div>;
@@ -297,7 +300,7 @@ const userColumns = [
     title: '最近消费时间',
     align: 'center',
     key: 'lastCreateTime',
-    minWidth: 100,
+    minWidth: 130,
     render: (h, params, vm) => {
       const { row } = params;
       return <div>{row.lastCreateTime ? row.lastCreateTime : 'N/A'}</div>;
@@ -380,7 +383,7 @@ export default {
   mounted() {},
   methods: {
     getTableData() {
-      getUserAnalysisPages(this.searchRowData).then(res => {
+      getUserAnalysisPages(this.searchRowData).then((res) => {
         this.tableData = res.rows;
         this.total = res.total;
         this.loading = false;
@@ -389,7 +392,7 @@ export default {
       });
     },
     getAllSalesman() {
-      getAllSalesman().then(res => {
+      getAllSalesman().then((res) => {
         this.salesManList = res;
       });
     },
@@ -403,7 +406,7 @@ export default {
       this.$refs.editForm.resetFields();
     },
     handleSubmit() {
-      this.$refs.editForm.validate(valid => {
+      this.$refs.editForm.validate((valid) => {
         if (valid) {
           if (this.isCreate) {
             this.createTableRow();
@@ -417,7 +420,7 @@ export default {
     },
     editTableRow() {
       this.modalViewLoading = true;
-      editUser(this.userAnalysis).then(res => {
+      editUser(this.userAnalysis).then((res) => {
         this.modalViewLoading = false;
         this.modalEdit = false;
         this.getTableData();
@@ -426,8 +429,8 @@ export default {
     },
     createTableRow() {
       createUser(this.userAnalysis)
-        .then(res => {})
-        .finally(res => {
+        .then((res) => {})
+        .finally((res) => {
           this.modalEditLoading = false;
           this.modalEdit = false;
           this.getTableData();
@@ -454,7 +457,7 @@ export default {
       deleteUser({
         ids
       })
-        .then(res => {
+        .then((res) => {
           const totalPage = Math.ceil(this.total / this.pageSize);
           if (
             this.tableData.length === this.tableDataSelected.length &&
@@ -477,19 +480,21 @@ export default {
       const pageSize = this.searchRowData.page;
       this.searchRowData.page = 1;
       getUserAnalysisPages(this.searchRowData)
-        .then(res => {
+        .then((res) => {
           const tableData = res.rows;
           // 恢复正常页数
           this.searchRowData.rows = 20;
           this.searchRowData.page = pageSize;
           // 表格数据导出字段翻译
-          tableData.forEach(item => {
+          tableData.forEach((item) => {
             item['userType'] =
               item['userType'] === 'sale' ? '业务员' : '普通用户';
             item['userStatus'] = userStatusConvert(item['userStatus']);
             item['salesUserStatus'] = userStatusConvert(
               item['salesUserStatus']
             );
+            item['addressDetail'] = item['city'] + item['addressDetail'];
+            //  row.city + row.addressDetail
           });
           const date = this.$moment(new Date()).format('YYYYMMDDHHmmss');
           this.$refs.tables.handleDownload({

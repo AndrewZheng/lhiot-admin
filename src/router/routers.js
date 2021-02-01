@@ -9,6 +9,7 @@ import fruitMasterRouters from './module/fruitmaster';
  * iview-admin中meta除了原生参数外可配置的参数:
  * meta: {
  *  hideInMenu: (false) 设为true后在左侧菜单不会显示该页面选项
+ *  hideInBreadCrumb: (false) 设为true后在左侧菜单不会显示该页面选项
  *  notCache: (false) 设为true后页面不会缓存
  *  access: (null) 可访问该页面的权限数组，当前路由设置的权限会影响子路由
  *  icon: (-) 该页面在左侧菜单、面包屑和标签导航处显示的图标，如果是自定义图标，需要在图标名称前加下划线'_'
@@ -42,7 +43,7 @@ export const constantRouterMap = [
       name: 'home',
       meta: {
         hideInMenu: true,
-        title: '首页',
+        title: '综合首页',
         notCache: true
       },
       component: () => import('@/view/basic-manager/single-page/home')
@@ -180,6 +181,15 @@ export const constantRouterMap = [
     component: Main,
     children: [
       {
+        path: 'small-member-relation-handCheck',
+        name: 'small-member-relation-handCheck',
+        meta: {
+          icon: 'md-checkmark-circle',
+          title: '员工管理'
+        },
+        component: () => import('@/view/mini-program-manager/member/handCheck.vue')
+      },
+      {
         path: 'small-goods-relation-standard',
         name: 'small-goods-relation-standard',
         meta: {
@@ -206,42 +216,7 @@ export const constantRouterMap = [
           title: '系统参数管理'
         },
         component: () => import('@/view/mini-program-manager/system/system.vue')
-      },
-      {
-        path: 'small-activity-relation-coupon',
-        name: 'small-activity-relation-coupon',
-        meta: {
-          icon: 'md-menu',
-          title: '活动关联优惠券模板'
-        },
-        component: () => import('@/view/mini-program-manager/activity/coupon-relation.vue')
-      },
-      {
-        path: 'small-vip-activities-associated',
-        name: 'small-vip-activities-associated',
-        meta: {
-          icon: 'md-menu',
-          title: '活动关联优惠券模板'
-        },
-        component: () => import('@/view/mini-program-manager/vip/activities-associated.vue')
-      }, {
-        path: 'small-order-coupon-details',
-        name: 'small-order-coupon-details',
-        meta: {
-          icon: 'md-menu',
-          title: '用券数据'
-        },
-        component: () => import('@/view/mini-program-manager/order/coupon-details.vue')
-      }, {
-        path: 'small-order-month-orders',
-        name: 'small-order-month-orders',
-        meta: {
-          icon: 'md-menu',
-          title: '跨月退款订单'
-        },
-        component: () => import('@/view/mini-program-manager/order/month-orders.vue')
       }
-
     ],
   },
   {

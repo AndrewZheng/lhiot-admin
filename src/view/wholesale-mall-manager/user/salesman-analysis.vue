@@ -6,7 +6,7 @@
         v-model="tableData"
         :columns="columns"
         :loading="loading"
-        :search-area-column="16"
+        :search-area-column="18"
         :operate-area-column="6"
         editable
         searchable
@@ -51,20 +51,19 @@
           >
             <Icon type="md-refresh" />&nbsp;清除
           </Button>
-        </div>
-        <div slot="operations">
-          <!-- <Button
+          <Button
             v-waves
+            v-has="'export_salesman_analysis'"
             :loading="exportExcelLoading"
             type="primary"
             class="mr5"
             @click="handleDownload"
           >
             <Icon type="md-download" />导出
-          </Button>-->
+          </Button>
         </div>
       </tables>
-      <div style="margin: 10px;overflow: hidden">
+      <div style="margin: 10px; overflow: hidden">
         <Row type="flex" justify="end">
           <Page
             :total="total"
@@ -144,13 +143,13 @@ export default {
           title: '业务员姓名',
           align: 'center',
           key: 'salesmanName',
-          minWidth: 60
+          minWidth: 70
         },
         {
           title: '手机号码',
           align: 'center',
           key: 'salesmanPhone',
-          minWidth: 80
+          minWidth: 90
         },
         {
           title: '上月业绩',
@@ -183,25 +182,25 @@ export default {
           }
         },
         {
-          title: '上月招募人数',
+          title: '上月招募数',
           align: 'center',
           key: 'perMonthNewShopNum',
           minWidth: 80
         },
         {
-          title: '本月招募人数',
+          title: '本月招募数',
           align: 'center',
           key: 'thisMonthNewShopNum',
           minWidth: 80
         },
         {
-          title: '累计招募人数',
+          title: '累计招募数',
           align: 'center',
           key: 'newShopNumTotal',
           minWidth: 80
         },
         {
-          title: '业务员状态',
+          title: '状态',
           align: 'center',
           key: 'salesUserStatus',
           minWidth: 60,
@@ -267,7 +266,7 @@ export default {
   methods: {
     getTableData() {
       getPerformancePages(this.searchRowData)
-        .then(res => {
+        .then((res) => {
           this.tableData = res.rows;
           this.total = res.total;
         })
@@ -278,7 +277,7 @@ export default {
         });
     },
     getAllSalesman() {
-      getAllSalesman().then(res => {
+      getAllSalesman().then((res) => {
         this.salesManList = res;
       });
     },
@@ -324,13 +323,13 @@ export default {
       const pageSize = this.searchRowData.page;
       this.searchRowData.page = 1;
       getPerformancePages(this.searchRowData)
-        .then(res => {
+        .then((res) => {
           const tableData = res.rows;
           // 恢复正常页数
           this.searchRowData.rows = 20;
           this.searchRowData.page = pageSize;
           // 表格数据导出字段翻译
-          tableData.forEach(item => {
+          tableData.forEach((item) => {
             item['userType'] =
               item['userType'] === 'sale' ? '业务员' : '普通用户';
             item['userStatus'] = userStatusConvert(item['userStatus']);
