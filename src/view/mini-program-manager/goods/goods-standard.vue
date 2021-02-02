@@ -48,7 +48,6 @@
               clearable
             ></Input>
             <Select
-              v-show="!showBack"
               v-model="searchRowData.shelvesStatus"
               class="search-col"
               placeholder="状态"
@@ -65,7 +64,6 @@
               </Option>
             </Select>
             <Select
-              v-show="!showBack"
               v-model="searchRowData.productType"
               class="ml5"
               placeholder="商品类型"
@@ -132,7 +130,6 @@
               @on-change="searchMaxPriceChange"
             ></InputNumber>
             <Button
-              v-show="!showBack"
               :search-loading="searchLoading"
               class="search-btn mr5"
               type="primary"
@@ -141,7 +138,6 @@
               <Icon type="md-search" />&nbsp;搜索
             </Button>
             <Button
-              v-show="!showBack"
               v-waves
               :loading="clearSearchLoading"
               class="search-btn"
@@ -151,19 +147,10 @@
               <Icon type="md-refresh" />&nbsp;清除
             </Button>
             <Button
-              v-show="showBack"
-              v-waves
-              class="search-btn ml5 mr5"
-              type="primary"
-              @click="goBack"
-            >
-              <Icon type="ios-arrow-back" />&nbsp;返回
-            </Button>
-            <Button
               v-waves
               class="search-btn ml5 mr5"
               type="success"
-              @click="handleCreateView"
+              @click="handleCreate"
             >
               <Icon type="md-add" />&nbsp;添加
             </Button>
@@ -179,11 +166,21 @@
             </Button>
             </Poptip>-->
             <Button
-              class="search-btn mr2"
+              v-waves
+              class="search-btn mr5"
               type="warning"
               @click="handleDownload"
             >
               <Icon type="md-download" />导出
+            </Button>
+            <Button
+              v-show="showBack"
+              v-waves
+              class="search-btn mr5"
+              type="primary"
+              @click="goBack"
+            >
+              <Icon type="ios-arrow-back" />&nbsp;返回
             </Button>
           </Row>
           <div class="ml15 mt10">
@@ -588,7 +585,6 @@
                   <FormItem label="商品ID:" prop="productId">
                     <Input
                       v-model="productStandardDetail.productId"
-                      readonly="readonly"
                     >
                     <Button
                       slot="append"
@@ -2146,6 +2142,7 @@ export default {
     IViewUpload,
     DragList
   },
+  inject: ['reload'],
   mixins: [uploadMixin, tableMixin, relationStoreMixin],
   data() {
     return {
@@ -2726,9 +2723,17 @@ export default {
       return fenToYuanDot2Number(this.proStandardExpand.discountPrice);
     }
   },
+  watch: {
+    '$route': function(to, from) {
+      if (to.path === '/small-goods-standard') {
+        this.reload();
+      }
+    }
+  },
   created() {
     this.isEnvironment = config.isEnvironment;
-    this.showBack = this.$route.name === 'small-goods-relation-standard';
+    this.showBack = this.$route.path === '/small-goods-relation-standard';
+    this.resetSearchRowData();
     this.getTableData();
   },
   mounted() {
@@ -3021,9 +3026,9 @@ export default {
     onCurrentChange(currentRow, oldCurrentRow) {
       this.currentTableRowSelected = currentRow;
     },
-    handleCreateView() {
-      this.clickFlag = true;
+    handleCreate() {
       this.step = 'firstStep';
+      this.clickFlag = true;
       this.firstSuccess = true;
       // this.resetFields();
       this.showStoreList = false;
@@ -3282,23 +3287,23 @@ export default {
       this.getTableData();
     },
     getTableData() {
+      this.loading = true;
       // 获取商品页面传过来的商品信息
-      if (this.$route.name === 'small-goods-relation-standard') {
+      if (this.showBack) {
         const goodsStandard = getSmallGoodsStandard();
-        if (goodsStandard != null && goodsStandard !== '') {
+        // console.log(`goodsStandard from cookie:`, goodsStandard);
+        if (goodsStandard) {
           // 给商品规格的商品和搜索条件赋值
           this.searchRowData.productId = goodsStandard.id;
-          this.productStandardDetail = this._.cloneDeep(goodsStandard);
+          this.productStandardDetail = _.cloneDeep(goodsStandard);
           this.productStandardDetail.productId = goodsStandard.id;
           this.productStandardDetail.baseUnit = goodsStandard.unitName;
-          this.productStandardDetail.baseProductName =
-            goodsStandard.productName;
+          this.productStandardDetail.baseProductName = goodsStandard.productName;
           this.productStandardDetail.baseImage = goodsStandard.image;
           this.productStandardDetail.image = goodsStandard.image;
-          this.productStandardDetail.baseProductDescription =
-            goodsStandard.description;
-          this.productStandardDetail.productDescription =
-            goodsStandard.description;
+          this.productStandardDetail.baseProductDescription = goodsStandard.description;
+          this.productStandardDetail.productDescription = goodsStandard.description;
+          this.productStandardDetail.barcode = goodsStandard.baseBarcode;
           // this.unitsList = goodsStandard.unitsList;
         }
       } else {
@@ -3511,6 +3516,10 @@ export default {
     },
     resetSearchRowData() {
       this.searchRowData = _.cloneDeep(roleRowData);
+      if (this.showBack) {
+        const goodsStandard = getSmallGoodsStandard();
+        this.searchRowData.productId = goodsStandard.id;
+      }
     },
     findUnit(unitId) {
       if (this.unitsList != null) {

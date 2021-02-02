@@ -71,6 +71,7 @@ const mixin = {
       this.searchRowData.expandType = null;
       this.searchRowData.productType = null;
       this.button = '今日';
+      this.$refs.tables.clearCurrentRow();
       this.resetSearchRowData();
       this.page = 1;
       this.pageSize = 10;

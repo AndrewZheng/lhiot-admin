@@ -7,7 +7,8 @@ const miniMallRouter = [
     component: Main,
     meta: {
       hideInBread: true,
-      title: '商城小程序'
+      title: '商城小程序',
+      icon: 'md-home'
     },
     children: [{
       path: '/wechat-home',
@@ -65,7 +66,7 @@ const miniMallRouter = [
       component: () => import('@/view/mini-program-manager/goods/goods-standard.vue')
     },
     {
-      path: 'small-goods-relation-standard',
+      path: '/small-goods-relation-standard',
       name: 'small-goods-relation-standard',
       meta: {
         hideInMenu: true,
@@ -74,7 +75,6 @@ const miniMallRouter = [
       },
       component: () => import('@/view/mini-program-manager/goods/goods-standard.vue')
     },
-
     {
       path: '/small-goods-section',
       name: 'small-goods-section',

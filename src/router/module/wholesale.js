@@ -65,7 +65,7 @@ const wholesaleRouter = [
       component: () => import('@/view/wholesale-mall-manager/goods/goods-standard.vue')
     },
     {
-      path: 'wholesale-goods-relation-standard',
+      path: '/wholesale-goods-relation-standard',
       name: 'wholesale-goods-relation-standard',
       meta: {
         hideInMenu: true,
