@@ -228,9 +228,9 @@
       <p slot="header">
         <i-col>
           {{
-            tempModalType == modalType.edit
+            isEdit
               ? "修改新品尝鲜活动"
-              : tempModalType == modalType.create
+              : isCreate
                 ? "创建新品尝鲜活动"
                 : "添加新品尝鲜活动和商品关联"
           }}
@@ -239,7 +239,7 @@
       <div class="modal-content">
         <Row
           v-if="
-            tempModalType == modalType.edit || tempModalType == modalType.create
+            isEdit || isCreate
           "
         >
           <Form
@@ -506,7 +506,7 @@
         </Button>
         <Button
           v-if="
-            tempModalType == modalType.edit || tempModalType == modalType.create
+            isEdit || isCreate
           "
           :loading="modalViewLoading"
           type="primary"
@@ -1155,7 +1155,6 @@ export default {
   },
   computed: {},
   mounted() {
-    this.searchRowData = _.cloneDeep(roleRowData);
     this.getTableData();
   },
   created() {},

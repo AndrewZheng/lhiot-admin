@@ -2382,7 +2382,6 @@ export default {
     }
   },
   mounted() {
-    this.searchRowData = _.cloneDeep(roleRowData);
     this.getStore();
     this.getTableData();
   },

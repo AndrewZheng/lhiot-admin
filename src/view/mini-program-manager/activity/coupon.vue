@@ -318,9 +318,9 @@
       <p slot="header">
         <i-col>
           {{
-            tempModalType == modalType.edit
+            isEdit
               ? "修改优惠券活动"
-              : tempModalType == modalType.create
+              : isCreate
                 ? "创建优惠券活动"
                 : "优惠券活动和模板关联"
           }}
@@ -335,8 +335,8 @@
         >
           <Row
             v-if="
-              tempModalType == modalType.edit ||
-                tempModalType == modalType.create
+              isEdit ||
+                isCreate
             "
           >
             <Row>
@@ -1303,7 +1303,6 @@ export default {
     }
   },
   mounted() {
-    this.searchRowData = _.cloneDeep(roleRowData);
     this.getTableData();
     this.getSystemParameters();
   },

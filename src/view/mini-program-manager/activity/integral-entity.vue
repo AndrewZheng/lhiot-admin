@@ -1049,7 +1049,6 @@ export default {
     });
   },
   mounted() {
-    this.searchRowData = _.cloneDeep(roleRowData); // 刷新清除上次搜索结果
     this.getTableData();
   },
   methods: {

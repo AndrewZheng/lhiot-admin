@@ -3717,10 +3717,11 @@ export default {
         });
     },
     getProductTableData() {
-      getProductStandardsPages(this.searchProductRowData).then((res) => {
-        this.productData = res.rows;
-        this.productTotal = res.total;
-      });
+      getProductStandardsPages(this.searchProductRowData)
+        .then((res) => {
+          this.productData = res.rows;
+          this.productTotal = res.total;
+        });
     },
     addCouponTemplate() {
       this.showStoreList = false;

@@ -103,7 +103,7 @@
                 活动ID:
               </i-col>
               <i-col span="18">
-                {{ activitiesDetail.id }}
+                {{ activityDetail.id }}
               </i-col>
             </Row>
           </i-col>
@@ -115,7 +115,7 @@
                 活动编码:
               </i-col>
               <i-col span="18">
-                {{ activitiesDetail.activityCode }}
+                {{ activityDetail.activityCode }}
               </i-col>
             </Row>
           </i-col>
@@ -127,7 +127,7 @@
                 活动名称:
               </i-col>
               <i-col span="18">
-                {{ activitiesDetail.activityName }}
+                {{ activityDetail.activityName }}
               </i-col>
             </Row>
           </i-col>
@@ -138,12 +138,12 @@
               <i-col span="6">
                 活动状态:
               </i-col>
-              <i-col v-if="activitiesDetail.onOff === 'ON'" span="18">
+              <i-col v-if="activityDetail.onOff === 'ON'" span="18">
                 <tag color="success">
                   {{ "开启" | imageStatusFilter }}
                 </tag>
               </i-col>
-              <i-col v-else-if="activitiesDetail.onOff === 'OFF'" span="18">
+              <i-col v-else-if="activityDetail.onOff === 'OFF'" span="18">
                 <tag color="error">
                   {{ "关闭" | imageStatusFilter }}
                 </tag>
@@ -158,7 +158,7 @@
                 活动链接:
               </i-col>
               <i-col span="18">
-                {{ activitiesDetail.activityUrl }}
+                {{ activityDetail.activityUrl }}
               </i-col>
             </Row>
           </i-col>
@@ -176,25 +176,25 @@
         <i-col>{{ tempModalType===modalType.edit?'修改活动':'创建活动' }}</i-col>
       </p>
       <div class="modal-content">
-        <Form ref="editForm" :model="activitiesDetail" :rules="ruleInline" :label-width="100">
+        <Form ref="editForm" :model="activityDetail" :rules="ruleInline" :label-width="100">
           <Row>
             <Col span="18">
             <FormItem label="活动编码:" prop="activityCode">
-              <Input v-model="activitiesDetail.activityCode"></Input>
+              <Input v-model="activityDetail.activityCode"></Input>
             </FormItem>
             </Col>
           </Row>
           <Row>
             <Col span="18">
             <FormItem label="活动名称:" prop="activityName">
-              <Input v-model="activitiesDetail.activityName"></Input>
+              <Input v-model="activityDetail.activityName"></Input>
             </FormItem>
             </Col>
           </Row>
           <Row>
             <Col span="18">
             <FormItem label="活动状态:" prop="onOff">
-              <Select v-model="activitiesDetail.onOff" clearable>
+              <Select v-model="activityDetail.onOff" clearable>
                 <Option
                   v-for="(item,index) in imageStatusEnum"
                   :key="index"
@@ -211,7 +211,7 @@
           <Row>
             <Col span="18">
             <FormItem label="活动详情链接:" prop="activityUrl">
-              <Input v-model="activitiesDetail.activityUrl"></Input>
+              <Input v-model="activityDetail.activityUrl"></Input>
             </FormItem>
             </Col>
           </Row>
@@ -241,7 +241,7 @@ import tableMixin from '@/mixins/tableMixin.js';
 import { imageStatusConvert } from '@/libs/converStatus';
 import { imageStatusEnum } from '@/libs/enumerate';
 
-const activitiesDetail = {
+const activityDetail = {
   id: 0,
   activityCode: '',
   activityName: '',
@@ -249,7 +249,7 @@ const activitiesDetail = {
   activityUrl: ''
 };
 
-const roleRowData = {
+const rowData = {
   activityCode: null,
   activityName: null,
   page: 1,
@@ -337,27 +337,26 @@ export default {
         activityName: [{ required: true, message: '请输入活动名称' }],
         onOff: [{ required: true, message: '请选择活动状态' }]
       },
-      searchRowData: _.cloneDeep(roleRowData),
-      activitiesDetail: _.cloneDeep(activitiesDetail)
+      searchRowData: _.cloneDeep(rowData),
+      activityDetail: _.cloneDeep(activityDetail)
     };
   },
   mounted() {
-    this.searchRowData = _.cloneDeep(roleRowData);
     this.getTableData();
   },
   created() {},
   methods: {
     resetSearchRowData() {
-      this.searchRowData = _.cloneDeep(roleRowData);
+      this.searchRowData = _.cloneDeep(rowData);
       this.getTableData();
     },
     resetFields() {
       this.$refs.editForm.resetFields();
-      // this.$refs.uploadMain.clearFileList();
       this.uploadListMain = [];
-      this.activitiesDetail.storeImage = null;
+      this.activityDetail.storeImage = null;
     },
     getTableData() {
+      this.loading = true;
       getActivitiesPages(this.searchRowData)
         .then(res => {
           this.tableData = res.rows;
@@ -370,20 +369,20 @@ export default {
         });
     },
     handleSwitch(params) {
-      this.activitiesDetail = this._.cloneDeep(params.row);
-      this.activitiesDetail.onOff = params.row.onOff === 'ON' ? 'OFF' : 'ON';
+      this.activityDetail = this._.cloneDeep(params.row);
+      this.activityDetail.onOff = params.row.onOff === 'ON' ? 'OFF' : 'ON';
       this.editActivities();
     },
     handleView(params) {
       this.resetFields();
       this.tempModalType = this.modalType.view;
-      this.activitiesDetail = _.cloneDeep(params.row);
+      this.activityDetail = _.cloneDeep(params.row);
       this.modalView = true;
     },
     handleEdit(params) {
       this.resetFields();
       this.tempModalType = this.modalType.edit;
-      this.activitiesDetail = _.cloneDeep(params.row);
+      this.activityDetail = _.cloneDeep(params.row);
       this.modalEdit = true;
     },
     handleSubmit() {
@@ -401,7 +400,7 @@ export default {
     },
     createActivities() {
       this.modalEditLoading = true;
-      createActivities(this.activitiesDetail)
+      createActivities(this.activityDetail)
         .then(res => {
           this.modalEdit = false;
           this.$Message.success('创建成功!');
@@ -413,7 +412,7 @@ export default {
     },
     editActivities() {
       this.modalEditLoading = true;
-      editActivities(this.activitiesDetail)
+      editActivities(this.activityDetail)
         .then(res => {
           this.modalEdit = false;
           this.$Message.success('操作成功!');
@@ -426,7 +425,7 @@ export default {
     addActivities() {
       this.resetFields();
       this.tempModalType = this.modalType.create;
-      this.activitiesDetail = _.cloneDeep(activitiesDetail);
+      this.activityDetail = _.cloneDeep(activityDetail);
       this.modalEdit = true;
     },
     deleteTable(ids) {

@@ -274,7 +274,7 @@
         <i-col>{{ tempModalType==modalType.edit?'修改分享红包活动':(tempModalType==modalType.create?'创建分享红包活动': '分享红包配置') }}</i-col>
       </p>
       <div class="modal-content">
-        <Row v-if="tempModalType == modalType.edit || tempModalType == modalType.create">
+        <Row v-if="isEdit || isCreate">
           <Form ref="modalEdit" :model="shareRewardDetail" :rules="ruleInline" :label-width="100">
             <Row>
               <Col span="18">
@@ -774,7 +774,6 @@ export default {
     }
   },
   mounted() {
-    this.searchRowData = _.cloneDeep(roleRowData);
     this.getTableData();
   },
   created() {},

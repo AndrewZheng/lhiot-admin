@@ -193,7 +193,7 @@
         <i-col>{{ tempModalType==modalType.edit?'修改限时抢购活动':(tempModalType==modalType.create?'创建限时抢购活动': '限时抢购活动和商品关联') }}</i-col>
       </p>
       <div class="modal-content">
-        <Row v-if="tempModalType == modalType.edit || tempModalType == modalType.create">
+        <Row v-if="isEdit || isCreate">
           <Form ref="editForm" :model="flashsaleDetail" :rules="ruleInline" :label-width="80">
             <Row>
               <i-col span="18">
@@ -402,7 +402,7 @@
           关闭
         </Button>
         <Button
-          v-if="tempModalType == modalType.edit || tempModalType == modalType.create"
+          v-if="isEdit || isCreate"
           :loading="modalViewLoading"
           type="primary"
           @click="handleSubmit('editForm')"
@@ -971,12 +971,6 @@ export default {
       this.flashsaleDetail = _.cloneDeep(flashsaleDetail);
       this.modalEdit = true;
     },
-    // 删除
-    // handleDelete(params) {
-    //   this.tableDataSelected = [];
-    //   this.tableDataSelected.push(params.row);
-    //   this.deleteTable(params.row.id);
-    // },
     deleteTable(ids) {
       deleteFlashsale({
         ids
@@ -1006,16 +1000,13 @@ export default {
       this.modalEdit = true;
     },
     getTableData() {
+      this.loading = true;
       getFlashsalePages(this.searchRowData)
         .then(res => {
           this.tableData = res.rows;
           this.total = res.total;
-          this.loading = false;
-          this.searchLoading = false;
-          this.clearSearchLoading = false;
         })
-        .catch(error => {
-          console.log(error);
+        .finally(() => {
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;

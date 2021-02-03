@@ -223,20 +223,12 @@
     <Modal v-model="modalEdit" :width="1200" :mask-closable="false">
       <p slot="header">
         <i-col>
-          {{
-            tempModalType == modalType.edit
-              ? "修改助力抢爆品活动"
-              : tempModalType == modalType.create
-                ? "创建助力抢爆品活动"
-                : "添加助力抢爆品活动和商品/券关联"
-          }}
+          {{ isEdit ? "修改助力抢爆品活动" : isCreate? "创建助力抢爆品活动": "添加助力抢爆品活动和商品/券关联" }}
         </i-col>
       </p>
       <div class="modal-content">
         <Row
-          v-if="
-            tempModalType == modalType.edit || tempModalType == modalType.create
-          "
+          v-if=" isEdit || isCreate"
         >
           <Form
             ref="editForm"
@@ -623,7 +615,7 @@
         </Button>
         <Button
           v-if="
-            tempModalType == modalType.edit || tempModalType == modalType.create
+            isEdit || isCreate
           "
           :loading="modalViewLoading"
           type="primary"
@@ -1251,7 +1243,7 @@ const productDetail = {
   dbId: null
 };
 
-const roleRowData = {
+const rowData = {
   beginTime: null,
   endTime: null,
   title: '',
@@ -1883,7 +1875,7 @@ export default {
       ],
       productColumns: _.cloneDeep(productColumns),
       couponColumns: _.cloneDeep(couponColumns),
-      searchRowData: _.cloneDeep(roleRowData),
+      searchRowData: _.cloneDeep(rowData),
       searchRelationRowData: _.cloneDeep(relationRowData),
       searchProductRowData: _.cloneDeep(productRowData),
       searchCouponRowData: _.cloneDeep(couponRowData),
@@ -1894,13 +1886,12 @@ export default {
   },
   computed: {},
   mounted() {
-    this.searchRowData = _.cloneDeep(roleRowData);
     this.getTableData();
   },
   created() {},
   methods: {
     resetSearchRowData() {
-      this.searchRowData = _.cloneDeep(roleRowData);
+      this.searchRowData = _.cloneDeep(rowData);
       this.getTableData();
     },
     resetSearchProductRowData() {
@@ -1917,6 +1908,7 @@ export default {
       this.addRelationDetail.shareImage = null;
     },
     getTableData() {
+      this.loading = true;
       getAssistPages(this.searchRowData)
         .then((res) => {
           this.tableData = res.rows;
@@ -2012,7 +2004,6 @@ export default {
       editAssist(this.flashsaleDetail)
         .then((res) => {
           this.modalEdit = false;
-          this.modalViewLoading = false;
           this.$Message.success('修改成功!');
           this.getTableData();
         })
@@ -2131,22 +2122,26 @@ export default {
         });
     },
     getProductTableData() {
-      this.loading = true;
-      getProductStandardsPages(this.searchProductRowData).then((res) => {
-        this.products = res.rows;
-        this.productTotal = res.total;
-        this.loading = false;
-        this.searchLoading = false;
-      });
+      this.tempTableLoading = true;
+      getProductStandardsPages(this.searchProductRowData)
+        .then((res) => {
+          this.products = res.rows;
+          this.productTotal = res.total;
+        }).finally(() => {
+          this.tempTableLoading = false;
+          this.searchLoading = false;
+        });
     },
     getCouponTableData() {
-      this.loading = true;
-      getCouponPagess(this.searchCouponRowData).then((res) => {
-        this.coupons = res.rows;
-        this.couponsTotal = res.total;
-        this.loading = false;
-        this.searchLoading = false;
-      });
+      this.tempTableLoading = true;
+      getCouponPagess(this.searchCouponRowData)
+        .then((res) => {
+          this.coupons = res.rows;
+          this.couponsTotal = res.total;
+        }).finally(() => {
+          this.tempTableLoading = false;
+          this.searchLoading = false;
+        });
     },
     changeProductPage(page) {
       this.searchProductRowData.page = page;
@@ -2312,9 +2307,8 @@ export default {
           this.modalRelevanceEdit = false;
           this.$Message.success('修改成功!');
           this.getRelationTableData();
-          (this.addRelationDetail = _.cloneDeep(relationDetail)),
-          (this.uploadListMain = []);
-          // this.uploadListMain = [];
+          this.addRelationDetail = _.cloneDeep(relationDetail);
+          this.uploadListMain = [];
         })
         .finally((res) => {
           this.tempTableLoading = false;
@@ -2323,11 +2317,7 @@ export default {
     // 上下架
     switchStatus(params) {
       // this.relationProducts.status = this._.cloneDeep(params.row.status);
-      if (params.row.status === 'ON') {
-        params.row.status = 'OFF';
-      } else {
-        params.row.status = 'ON';
-      }
+      params.row.status = params.row.status === 'ON' ? 'OFF' : 'ON';
       this.loading = true;
       editAssistProductRelation(params.row)
         .then((res) => {

@@ -538,9 +538,8 @@ export default {
     }
   },
   mounted() {
-    this.searchRowData = _.cloneDeep(roleRowData);
     this.getTableData();
-    this.getSystemSettingCategoryTree();
+    this.getSysSettingTree();
   },
   created() {},
   methods: {
@@ -661,7 +660,7 @@ export default {
           this.clearSearchLoading = false;
         });
     },
-    getSystemSettingCategoryTree() {
+    getSysSettingTree() {
       getSystemSettingCategoryTree()
         .then(res => {
           if (res && res.array.length > 0) {

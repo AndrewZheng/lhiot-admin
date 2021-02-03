@@ -2975,10 +2975,8 @@ export default {
       }
     };
   },
-  created() {
-    this.getTableData();
-  },
   mounted() {
+    this.getTableData();
     this.getStore();
   },
   methods: {
