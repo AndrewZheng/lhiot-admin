@@ -6,8 +6,8 @@
         v-model="tableData"
         :columns="columns"
         :loading="loading"
-        :search-area-column="24"
-        :operate-area-column="5"
+        :search-area-column="15"
+        :operate-area-column="9"
         editable
         searchable
         border
@@ -194,7 +194,7 @@
             <Button
               v-waves
               :loading="searchLoading"
-              class="search-btn"
+              class="search-btn mt10"
               type="primary"
               @click="handleSearch"
             >
@@ -204,7 +204,7 @@
               v-show="this.$route.name != 'small-skip-order'"
               v-waves
               :loading="clearSearchLoading"
-              class="search-btn"
+              class="search-btn mt10"
               type="info"
               @click="handleClear"
             >
@@ -213,13 +213,15 @@
             <Button
               v-show="this.$route.name == 'small-skip-order'"
               v-waves
-              class="search-btn"
+              class="search-btn mt10"
               type="warning"
               @click="goBack"
             >
               <Icon type="md-home" />&nbsp;返回首页
             </Button>
           </Row>
+        </div>
+        <div slot="operations">
           <Row
             v-show="this.$route.name != 'small-skip-order'"
             style="float: right; margin-top: 10px"
