@@ -83,20 +83,17 @@
 
     <!-- 创建/修改模态框 -->
     <Modal
-      ref="formValidate"
       v-model="modalEdit"
       :loading="loadingBtn"
       :mask-closable="false"
-      :model="rowData"
-      :rules="ruleValidate"
-      @on-ok="handleAddOrEditOk('formValidate')"
+      @on-ok="handleAddOrEditOk('editForm')"
     >
       <p slot="header">
         <span>{{ rowData.id == "" ? "创建用户" : "编辑用户" }}</span>
       </p>
       <div class="modal-content">
         <Form
-          ref="formValidate"
+          ref="editForm"
           :model="rowData"
           :rules="ruleValidate"
           :label-width="80"
@@ -528,9 +525,9 @@ export default {
       // 表单验证
       ruleValidate: {
         name: [{ required: true, message: '姓名不能为空', trigger: 'blur' },
-          { len: 15, message: '姓名长度不能超过15个字符', trigger: 'blur' }],
+          { max: 15, message: '姓名长度不能超过15个字符', trigger: 'blur' }],
         account: [{ required: true, message: '账号不能为空', trigger: 'blur' },
-          { len: 16, message: '账号长度不能超过16个字符', trigger: 'blur' }],
+          { max: 16, message: '账号长度不能超过16个字符', trigger: 'blur' }],
         password: [
           { required: true, message: '密码不能为空', trigger: 'blur' }
         ],
@@ -670,10 +667,9 @@ export default {
       console.log('选择变化,当前页选择ids:' + this.ids);
     },
     handleEdit(params) {
-      // console.log(params);
       const { row } = params;
       this.image = '';
-      this.rowData = _.merge({}, this.rowData, row);
+      this.rowData = _.cloneDeep(row);
       this.rowData.passwdCheck = row.password;
       this.defaultListMain = [];
       this.setDefaultUploadList(row);
