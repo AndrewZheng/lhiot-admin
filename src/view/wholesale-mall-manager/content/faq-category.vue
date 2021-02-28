@@ -89,7 +89,7 @@
         <span>编辑商品分类</span>
       </p>
       <div class="modal-content">
-        <Form ref="editFrom" :label-width="100" :model="faqCategory" :rules="ruleInline">
+        <Form ref="editForm" :label-width="100" :model="faqCategory" :rules="ruleInline">
           <FormItem label="父级ID:">
             <i-col>{{ parentCategory.id }}</i-col>
           </FormItem>
@@ -103,7 +103,7 @@
       </div>
       <div slot="footer">
         <Button @click="handleEditClose">关闭</Button>
-        <Button :loading="modalEditLoading" type="primary" @click="handleSumbit('editFrom')">确定</Button>
+        <Button :loading="modalEditLoading" type="primary" @click="handleSumbit('editForm')">确定</Button>
       </div>
     </Modal>
   </div>
@@ -297,7 +297,7 @@ export default {
     },
     // 编辑分类
     handleEdit(params) {
-      this.$refs.editFrom.resetFields();
+      this.$refs.editForm.resetFields();
       this.tempModalType = this.modalType.edit;
       this.faqCategory = _.cloneDeep(params.row);
       this.modalEdit = true;

@@ -392,7 +392,7 @@
       </p>
       <div class="modal-content">
         <Form
-          ref="editFrom"
+          ref="editForm"
           :model="evaluateDetail"
           :rules="ruleInline"
           :label-width="100"
@@ -842,7 +842,7 @@ export default {
         });
     },
     handleView(params) {
-      this.resetFields();
+      // this.resetFields();
       this.tempModalType = this.modalType.view;
       this.evaluateList = [];
       this.evaluateDetail = _.cloneDeep(params.row);
