@@ -538,9 +538,9 @@
                 </FormItem>
               </i-col>
               <i-col v-show="showStoreList" span="12">
-                <FormItem :label-width="85" label="所属城市:" prop="cityCode">
+                <FormItem :label-width="85" label="所属城市:">
                   <Select
-                    v-model="addRelationDetail.cityCode"
+                    v-model="cityCode"
                     style="width: 220px"
                     @on-change="handleCitySwitch"
                   >
@@ -558,6 +558,21 @@
               </i-col>
             </Row>
             <Row v-show="showStoreList">
+              <i-col v-if="storeData.length>0" span="24">
+                <FormItem>
+                  <div class="bottom-line">
+                    <div style="margin-left: -54px; margin-right: 18px">
+                      地级市全部门店
+                    </div>
+                    <Checkbox
+                      :value="checkAllStore"
+                      @click.prevent.native="handleCheckAll(-1)"
+                    >
+                      全选/反选
+                    </Checkbox>
+                  </div>
+                </FormItem>
+              </i-col>
               <i-col v-if="storeData.length > 0" span="24">
                 <FormItem>
                   <div class="bottom-line">
@@ -1033,9 +1048,9 @@
               </FormItem>
             </i-col>
             <i-col v-show="showStoreList" span="12">
-              <FormItem :label-width="85" label="所属城市:" prop="cityCode">
+              <FormItem :label-width="85" label="所属城市:">
                 <Select
-                  v-model="addRelationDetail.cityCode"
+                  v-model="cityCode"
                   style="width: 220px"
                   @on-change="handleCitySwitch"
                 >
@@ -1053,6 +1068,21 @@
             </i-col>
           </Row>
           <Row v-show="showStoreList">
+            <i-col v-if="storeData.length>0" span="24">
+              <FormItem>
+                <div class="bottom-line">
+                  <div style="margin-left: -54px; margin-right: 18px">
+                    地级市全部门店
+                  </div>
+                  <Checkbox
+                    :value="checkAllStore"
+                    @click.prevent.native="handleCheckAll(-1)"
+                  >
+                    全选/反选
+                  </Checkbox>
+                </div>
+              </FormItem>
+            </i-col>
             <i-col v-if="storeData.length > 0" span="24">
               <FormItem>
                 <div class="bottom-line">
@@ -1396,8 +1426,7 @@ const relationDetail = {
   stores: null,
   relationStoreType: 'ALL',
   beginDay: 0,
-  endDay: 0,
-  cityCode: '0731' // 仅用于城市展示
+  endDay: 0
 };
 
 const roleRowData = {
@@ -2042,7 +2071,7 @@ export default {
         const storeObj = this.allStoreList.find(
           (item) => item.storeId === firstStoreId
         );
-        this.addRelationDetail.cityCode = storeObj.cityCode;
+        this.cityCode = storeObj.cityCode;
         this.getStore(true);
       } else {
         this.showStoreList = false;

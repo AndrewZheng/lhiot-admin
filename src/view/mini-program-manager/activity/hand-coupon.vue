@@ -439,8 +439,11 @@
               <i-col span="4">
                 关联门店:
               </i-col>
-              <i-col span="16">
-                {{ showStoreName }}
+              <i-col v-if="relationStoreList.length > 0" span="18">
+                <Tag v-for="(item,index) in relationStoreList" :key="index" color="gold">{{ item }}</Tag>
+              </i-col>
+              <i-col v-else span="18">
+                全部门店
               </i-col>
             </Row>
           </i-col>
@@ -877,10 +880,9 @@
                 <FormItem
                   :label-width="85"
                   label="所属城市:"
-                  prop="cityCode"
                 >
                   <Select
-                    v-model="addRelationDetail.cityCode"
+                    v-model="cityCode"
                     style="width: 220px"
                     @on-change="handleCitySwitch"
                   >
@@ -898,6 +900,21 @@
               </i-col>
             </Row>
             <Row v-show="showStoreList">
+              <i-col v-if="storeData.length>0" span="24">
+                <FormItem>
+                  <div class="bottom-line">
+                    <div style="margin-left: -54px; margin-right: 18px">
+                      地级市全部门店
+                    </div>
+                    <Checkbox
+                      :value="checkAllStore"
+                      @click.prevent.native="handleCheckAll(-1)"
+                    >
+                      全选/反选
+                    </Checkbox>
+                  </div>
+                </FormItem>
+              </i-col>
               <i-col v-if="storeData.length>0" span="24">
                 <FormItem>
                   <div
@@ -1457,10 +1474,9 @@
               <FormItem
                 :label-width="85"
                 label="所属城市:"
-                prop="cityCode"
               >
                 <Select
-                  v-model="addRelationDetail.cityCode"
+                  v-model="cityCode"
                   style="width: 220px"
                   @on-change="handleCitySwitch"
                 >
@@ -1478,6 +1494,21 @@
             </i-col>
           </Row>
           <Row v-show="showStoreList">
+            <i-col v-if="storeData.length>0" span="24">
+              <FormItem>
+                <div class="bottom-line">
+                  <div style="margin-left: -54px; margin-right: 18px">
+                    地级市全部门店
+                  </div>
+                  <Checkbox
+                    :value="checkAllStore"
+                    @click.prevent.native="handleCheckAll(-1)"
+                  >
+                    全选/反选
+                  </Checkbox>
+                </div>
+              </FormItem>
+            </i-col>
             <i-col v-if="storeData.length>0" span="24">
               <FormItem>
                 <div
@@ -2476,8 +2507,7 @@ const relationDetail = {
   stores: null,
   relationStoreType: 'ALL',
   couponStatus: 'VALID',
-  couponBusinessType: '',
-  cityCode: '0731'
+  couponBusinessType: ''
 };
 
 const productRowData = {
@@ -3203,6 +3233,7 @@ export default {
   mixins: [tableMixin, uploadMixin, relationStoreMixin],
   data() {
     return {
+      relationStoreList: [],
       standardIdList: [],
       defaultListMain: [],
       uploadListMain: [],
@@ -3420,7 +3451,7 @@ export default {
         const firstStoreId = this.storeIds[0];
         // 编辑时从返回的第一个storeId单独查询下cityCode来反选城市
         const storeObj = this.allStoreList.find(item => item.storeId === firstStoreId);
-        this.addRelationDetail.cityCode = storeObj.cityCode;
+        this.cityCode = storeObj.cityCode;
         this.getStore(true);
       } else {
         this.showStoreList = false;
@@ -3744,21 +3775,21 @@ export default {
       this.tempModalType = this.modalType.view;
       this.addRelationDetail = _.cloneDeep(params.row);
       this.replaceTextByTab();
-      this.showStoreName = this.relationStore();
+      this.relationStoreList = this.relationStore();
       this.modalView = true;
     },
     relationStore() {
+      const list = [];
       if (!this.addRelationDetail.stores) {
-        return '全部门店';
+        return list;
       }
       const ids = this.addRelationDetail.stores.substring(1, this.addRelationDetail.stores.length - 1).split('][');
-      let str = '';
       ids.forEach((id) => {
         const item = this.allStoreList.find(item => item.storeId == id);
         if (!item) { return; }
-        str += item.storeName + ',';
+        list.push(item.storeName);
       });
-      return str.substring(0, str.length - 1);
+      return list;
     },
     handleAddClose() {
       this.modalAdd = false;

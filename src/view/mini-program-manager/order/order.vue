@@ -1064,6 +1064,20 @@ export default {
           }
         },
         {
+          title: '退货数量',
+          key: 'refundQty',
+          align: 'center',
+          render(h, params) {
+            const orderStates = this.orderState;
+            const { row } = params;
+            if (row.refundStatus === 'REFUND' || orderStates === 'ALREADY_RETURN' || orderStates === 'RETURNING') {
+              return <div>{row.refundQty}</div>
+            } else {
+              return <div>0</div>
+            }
+          }
+        },
+        {
           title: '是否退款',
           align: 'center',
           width: 100,

@@ -481,8 +481,11 @@
               <i-col span="3">
                 关联门店:
               </i-col>
-              <i-col span="16">
-                {{ showStoreName }}
+              <i-col v-if="relationStoreList.length > 0" span="16">
+                <Tag v-for="(item,index) in relationStoreList" :key="index" color="gold">{{ item }}</Tag>
+              </i-col>
+              <i-col v-else span="16">
+                全部门店
               </i-col>
             </Row>
           </i-col>
@@ -718,10 +721,7 @@
                   </FormItem>
                 </i-col>
                 <i-col
-                  v-if="
-                    this.showValidDate ||
-                      teambuyDetail.validDateType == 'FIXED_DATE'
-                  "
+                  v-if="showValidDate || teambuyDetail.validDateType == 'FIXED_DATE'"
                   span="12"
                 >
                   <FormItem label="提货截止时间:" prop="deliveryEndTime">
@@ -1068,10 +1068,9 @@
                   <FormItem
                     :label-width="85"
                     label="所属城市:"
-                    prop="cityCode"
                   >
                     <Select
-                      v-model="teambuyDetail.cityCode"
+                      v-model="cityCode"
                       style="width: 220px"
                       @on-change="handleCitySwitch"
                     >
@@ -1089,6 +1088,21 @@
                 </i-col>
               </Row>
               <Row v-show="showStoreList">
+                <i-col v-if="storeData.length>0" span="24">
+                  <FormItem>
+                    <div class="bottom-line">
+                      <div style="margin-left: -54px; margin-right: 18px">
+                        地级市全部门店
+                      </div>
+                      <Checkbox
+                        :value="checkAllStore"
+                        @click.prevent.native="handleCheckAll(-1)"
+                      >
+                        全选/反选
+                      </Checkbox>
+                    </div>
+                  </FormItem>
+                </i-col>
                 <i-col v-if="storeData.length>0" span="24">
                   <FormItem>
                     <div
@@ -1739,8 +1753,7 @@ const teambuyDetail = {
   minute: null,
   second: null,
   relationStoreType: 'ALL',
-  validDateType: 'FIXED_DATE',
-  cityCode: '0731'
+  validDateType: 'FIXED_DATE'
 };
 
 const roleRowData = {
@@ -1821,6 +1834,7 @@ export default {
   data() {
     return {
       flagShipList: [],
+      relationStoreList: [],
       oldPicture: [],
       newPicture: [],
       save: [],
@@ -2390,7 +2404,7 @@ export default {
   },
   methods: {
     getStore(isCheck) {
-      getAreaStorePages(this.teambuyDetail.cityCode)
+      getAreaStorePages(this.cityCode)
         .then((res) => {
           this.storeList = res.array;
           this.storeData = res.array[0] && res.array[0].storeList || [];
@@ -2583,8 +2597,9 @@ export default {
       }
       editTeamBuy(this.teambuyDetail)
         .then((res) => {
-          this.getTableData();
           this.modalEdit = false;
+          this.$Message.success('修改成功!');
+          this.getTableData();
         })
         .finally(() => {
           this.modalViewLoading = false;
@@ -2683,21 +2698,21 @@ export default {
       this.resetFields();
       this.tempModalType = this.modalType.view;
       this.teambuyDetail = _.cloneDeep(params.row);
-      this.showStoreName = this.relationStore();
+      this.relationStoreList = this.relationStore();
       this.modalView = true;
     },
     relationStore() {
+      const list = [];
       if (!this.teambuyDetail.storeIds) {
-        return '全部门店';
+        return list;
       }
       const ids = this.teambuyDetail.storeIds.substring(1, this.teambuyDetail.storeIds.length - 1).split('][');
-      let str = '';
       ids.forEach((id) => {
         const item = this.allStoreList.find(item => item.storeId == id);
         if (!item) { return; }
-        str += item.storeName + ',';
+        list.push(item.storeName);
       });
-      return str.substring(0, str.length - 1);
+      return list;
     },
     handleEdit(params) {
       this.step = 'firstStep';
@@ -2745,7 +2760,7 @@ export default {
         const firstStoreId = this.storeIds[0];
         // 编辑时从返回的第一个storeId单独查询下cityCode来反选城市
         const storeObj = this.allStoreList.find(item => item.storeId === firstStoreId);
-        this.teambuyDetail.cityCode = storeObj.cityCode;
+        this.cityCode = storeObj.cityCode;
         this.getStore(true);
       } else {
         this.showStoreList = false;
@@ -2886,7 +2901,7 @@ export default {
       } else if (options.value === 'PART') {
         this.teambuyDetail.relationStoreType = 'PART';
         // 新增时默认反选长沙市
-        if (this.isCreate) { this.teambuyDetail.cityCode = '0731'; }
+        if (this.isCreate) { this.cityCode = '0731'; }
         this.storeCheckRest();
         this.getStore();
         this.showStoreList = true;
@@ -2923,6 +2938,38 @@ export default {
     },
     handleCheckAll(value) {
       const _this = this;
+      // 全选反选当前地级市所有门店
+      if (value === -1) {
+        const allIds = [];
+        const beforeIds = [];
+        this.checkAllStore = !this.checkAllStore;
+        if (this.checkAllStore) {
+          if (this.storeIds != null) {
+            for (const val of this.storeIds) {
+              allIds.push(val);
+            }
+          }
+          this.storeListData.forEach((item) => {
+            item.forEach(x => {
+              allIds.push(x.storeId);
+            })
+          });
+          this.storeIds = allIds;
+          this.teambuyDetail.storeIds = '[' + allIds.join('][') + ']';
+        } else {
+          this.storeListData.forEach((item) => {
+            item.forEach(x => {
+              beforeIds.push(x.storeId);
+            })
+          });
+          const newArray = _this.storeIds.filter(function(item) {
+            return beforeIds.indexOf(item) == -1;
+          });
+          this.storeIds = newArray;
+          this.teambuyDetail.storeIds = '[' + newArray.join('][') + ']';
+        }
+      }
+
       if (value === 0) {
         const allIds = [];
         const beforeIds = [];

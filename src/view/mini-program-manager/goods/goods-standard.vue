@@ -552,8 +552,11 @@
               <i-col span="3">
                 关联门店:
               </i-col>
-              <i-col span="18">
-                {{ showStoreName }}
+              <i-col v-if="relationStoreList.length > 0" span="18">
+                <Tag v-for="(item,index) in relationStoreList" :key="index" color="gold">{{ item }}</Tag>
+              </i-col>
+              <i-col v-else span="18">
+                全部门店
               </i-col>
             </Row>
           </i-col>
@@ -1253,10 +1256,9 @@
                   <FormItem
                     :label-width="85"
                     label="所属城市:"
-                    prop="cityCode"
                   >
                     <Select
-                      v-model="productStandardDetail.cityCode"
+                      v-model="cityCode"
                       style="width: 220px"
                       @on-change="handleCitySwitch"
                     >
@@ -1274,6 +1276,21 @@
                 </i-col>
               </Row>
               <Row v-show="showStoreList">
+                <i-col v-if="storeData.length>0" span="24">
+                  <FormItem>
+                    <div class="bottom-line">
+                      <div style="margin-left: -54px; margin-right: 18px">
+                        地级市全部门店
+                      </div>
+                      <Checkbox
+                        :value="checkAllStore"
+                        @click.prevent.native="handleCheckAll(-1)"
+                      >
+                        全选/反选
+                      </Checkbox>
+                    </div>
+                  </FormItem>
+                </i-col>
                 <i-col v-if="storeData.length>0" span="24">
                   <FormItem>
                     <div
@@ -2071,8 +2088,7 @@ const productStandardDetail = {
   dbId: null,
   svipPrice: null,
   shareImage: null,
-  isCanCoupon: 'YES',
-  cityCode: '0731'
+  isCanCoupon: 'YES'
 };
 
 const roleRowData = {
@@ -2161,6 +2177,7 @@ export default {
       shareUploadListMultiple: [],
       uploadListMultiple: [],
       uploadListMultiple_: [],
+      relationStoreList: [],
       productTotal: 0,
       firstSuccess: true,
       showBack: false,
@@ -2753,7 +2770,7 @@ export default {
       });
     },
     getStore(isCheck) {
-      getAreaStorePages(this.productStandardDetail.cityCode)
+      getAreaStorePages(this.cityCode)
         .then((res) => {
           this.storeList = res.array;
           this.storeData = res.array[0] && res.array[0].storeList || [];
@@ -2905,21 +2922,21 @@ export default {
           ','
         );
       }
-      this.showStoreName = this.relationStore();
+      this.relationStoreList = this.relationStore();
       this.modalView = true;
     },
     relationStore() {
+      const list = [];
       if (!this.productStandardDetail.storeIds) {
-        return '全部门店';
+        return list;
       }
       const ids = this.productStandardDetail.storeIds.substring(1, this.productStandardDetail.storeIds.length - 1).split('][');
-      let str = '';
       ids.forEach((id) => {
         const item = this.allStoreList.find(item => item.storeId == id);
         if (!item) { return; }
-        str += item.storeName + ',';
+        list.push(item.storeName);
       });
-      return str.substring(0, str.length - 1);
+      return list;
     },
     handleEdit(params) {
       this.step = 'firstStep';
@@ -2961,7 +2978,7 @@ export default {
         const firstStoreId = this.storeIds[0];
         // 编辑时从返回的第一个storeId单独查询下cityCode来反选城市
         const storeObj = this.allStoreList.find(item => item.storeId === firstStoreId);
-        this.productStandardDetail.cityCode = storeObj.cityCode;
+        this.cityCode = storeObj.cityCode;
         this.getStore(true);
       } else {
         this.showStoreList = false;
@@ -3619,35 +3636,52 @@ export default {
         this.showStoreList = false;
       } else if (options.value === 'PART') {
         this.productStandardDetail.relationStoreType = 'PART';
-        // 新增时默认反选长沙市
-        if (this.isCreate) { this.productStandardDetail.cityCode = '0731'; }
+        // 默认反选长沙市
+        this.cityCode = '0731';
         this.storeCheckRest();
         this.getStore();
         this.showStoreList = true;
       }
     },
     storeCheckRest() {
-      this.indeterminate = false;
-      this.checkAll = false;
-      this.indeterminate1 = false;
-      this.checkAll1 = false;
-      this.indeterminate2 = false;
-      this.checkAll2 = false;
-      this.indeterminate3 = false;
-      this.checkAll3 = false;
-      this.indeterminate4 = false;
-      this.checkAll4 = false;
-      this.indeterminate5 = false;
-      this.checkAll5 = false;
-      this.indeterminate6 = false;
-      this.checkAll6 = false;
-      this.indeterminate7 = false;
-      this.checkAll7 = false;
+      this.checkBoxRest();
       this.storeIds = [];
       this.productStandardDetail.storeIds = '';
     },
     handleCheckAll(value) {
       const _this = this;
+      // 全选反选当前地级市所有门店
+      if (value === -1) {
+        const allIds = [];
+        const beforeIds = [];
+        this.checkAllStore = !this.checkAllStore;
+        if (this.checkAllStore) {
+          if (this.storeIds != null) {
+            for (const val of this.storeIds) {
+              allIds.push(val);
+            }
+          }
+          this.storeListData.forEach((item) => {
+            item.forEach(x => {
+              allIds.push(x.storeId);
+            })
+          });
+          this.storeIds = allIds;
+          this.productStandardDetail.storeIds = '[' + allIds.join('][') + ']';
+        } else {
+          this.storeListData.forEach((item) => {
+            item.forEach(x => {
+              beforeIds.push(x.storeId);
+            })
+          });
+          const newArray = _this.storeIds.filter(function(item) {
+            return beforeIds.indexOf(item) == -1;
+          });
+          this.storeIds = newArray;
+          this.productStandardDetail.storeIds = '[' + newArray.join('][') + ']';
+        }
+      }
+
       if (value === 0) {
         const allIds = [];
         const beforeIds = [];
@@ -3679,6 +3713,7 @@ export default {
           this.productStandardDetail.storeIds = '[' + newArray.join('][') + ']';
         }
       }
+
       if (value === 1) {
         const allIds1 = [];
         const beforeIds = [];
@@ -3711,6 +3746,7 @@ export default {
           this.productStandardDetail.storeIds = '[' + newArray.join('][') + ']';
         }
       }
+
       if (value === 2) {
         const allIds2 = [];
         const beforeIds = [];
@@ -3743,6 +3779,7 @@ export default {
           this.productStandardDetail.storeIds = '[' + newArray.join('][') + ']';
         }
       }
+
       if (value === 3) {
         const allIds3 = [];
         const beforeIds = [];
@@ -3775,6 +3812,7 @@ export default {
           this.productStandardDetail.storeIds = '[' + newArray.join('][') + ']';
         }
       }
+
       if (value === 4) {
         const allIds4 = [];
         const beforeIds = [];
@@ -3807,6 +3845,7 @@ export default {
           this.productStandardDetail.storeIds = '[' + newArray.join('][') + ']';
         }
       }
+
       if (value === 5) {
         const allIds5 = [];
         const beforeIds = [];
@@ -3839,6 +3878,7 @@ export default {
           this.productStandardDetail.storeIds = '[' + newArray.join('][') + ']';
         }
       }
+
       if (value === 6) {
         const allIds6 = [];
         const beforeIds = [];
@@ -3915,7 +3955,7 @@ export default {
         this.checkAll1 = false;
         this.productStandardDetail.storeIds = '[' + data.join('][') + ']';
       }
-      if (sameArray1.length == 0) {
+      if (sameArray1.length === 0) {
         this.indeterminate1 = false;
         this.checkAll1 = false;
       }
@@ -3939,7 +3979,7 @@ export default {
         this.checkAll2 = false;
         this.productStandardDetail.storeIds = '[' + data.join('][') + ']';
       }
-      if (sameArray2.length == 0) {
+      if (sameArray2.length === 0) {
         this.indeterminate2 = false;
         this.checkAll2 = false;
       }
