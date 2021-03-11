@@ -1420,7 +1420,7 @@ const btns = {
           confirm: true,
           transfer: true,
           title: '确认要把该门店改为营业吗?',
-          placement: params.index === 0 || params.index === 1 ? 'bottom' : 'top',
+          placement: params.index === 0 || params.index === 1 ? 'bottom' : 'top'
         },
         style: {
           marginRight: '5px'
@@ -1452,7 +1452,7 @@ const btns = {
           confirm: true,
           transfer: true,
           title: '确认要把该门店改为未营业吗?',
-          placement: params.index === 0 || params.index === 1 ? 'bottom' : 'top',
+          placement: params.index === 0 || params.index === 1 ? 'bottom' : 'top'
         },
         style: {
           marginRight: '5px'
@@ -1482,79 +1482,138 @@ const btns = {
   },
   // 确认收货
   onReceive: (h, params, vm) => {
-    return h('Poptip', {
-      props: {
-        confirm: true,
-        transfer: true,
-        title: '确认要收货?'
+    const {
+      row
+    } = params;
+    if (row.orderType != 'BUY_COUPON_ALL_ORDER') {
+      return h('Poptip', {
+        props: {
+          confirm: true,
+          transfer: true,
+          title: '确认要收货?'
         // placement: params.index === 0 || params.index === 1 ? 'bottom' : 'top',
-      },
-      style: {
-        marginRight: '5px'
-      },
-      on: {
-        'on-ok': () => {
-          vm.$emit('on-receive', params);
-        }
-      }
-    }, [
-      h('Tooltip', {
-        props: { placement: 'top', transfer: true, content: '确认收货' }
-      }, [
-        h('Button', {
-          props: {
-            type: 'success',
-            size: 'small'
+        },
+        style: {
+          marginRight: '5px'
+        },
+        on: {
+          'on-ok': () => {
+            vm.$emit('on-receive', params);
           }
+        }
+      }, [
+        h('Tooltip', {
+          props: { placement: 'top', transfer: true, content: '确认收货' }
         }, [
-          h('Icon', {
+          h('Button', {
             props: {
-              type: 'md-checkbox',
-              size: 16,
-              color: '#fff'
+              type: 'success',
+              size: 'small'
             }
-          })
+          }, [
+            h('Icon', {
+              props: {
+                type: 'md-checkbox',
+                size: 16,
+                color: '#fff'
+              }
+            })
+          ])
         ])
-      ])
-    ]);
+      ]);
+    } else {
+      return ''
+    }
   },
   // 发送美团
   onMeituan: (h, params, vm) => {
-    return h('Poptip', {
-      props: {
-        confirm: true,
-        transfer: true,
-        title: '是否发送美团?'
+    const {
+      row
+    } = params;
+    if (row.orderType != 'BUY_COUPON_ALL_ORDER') {
+      return h('Poptip', {
+        props: {
+          confirm: true,
+          transfer: true,
+          title: '是否发送美团?'
         // placement: params.index === 0 || params.index === 1 ? 'bottom' : 'top',
-      },
-      style: {
-        marginRight: '5px'
-      },
-      on: {
-        'on-ok': () => {
-          vm.$emit('on-meituan', params);
-        }
-      }
-    }, [
-      h('Tooltip', {
-        props: { placement: 'top', transfer: true, content: '发送美团' }
-      }, [
-        h('Button', {
-          props: {
-            type: 'success',
-            size: 'small'
+        },
+        style: {
+          marginRight: '5px'
+        },
+        on: {
+          'on-ok': () => {
+            vm.$emit('on-meituan', params);
           }
+        }
+      }, [
+        h('Tooltip', {
+          props: { placement: 'top', transfer: true, content: '发送美团' }
         }, [
-          h('Icon', {
+          h('Button', {
             props: {
-              type: 'ios-paper-plane',
-              size: 16,
-              color: '#fff'
+              type: 'success',
+              size: 'small'
             }
-          })
+          }, [
+            h('Icon', {
+              props: {
+                type: 'ios-paper-plane',
+                size: 16,
+                color: '#fff'
+              }
+            })
+          ])
         ])
-      ])
-    ]);
+      ]);
+    } else {
+      return ''
+    }
+  },
+  // 购券重发
+  onCoupon: (h, params, vm) => {
+    const {
+      row
+    } = params;
+    if (row.orderType === 'BUY_COUPON_ALL_ORDER' && row.orderStatus === 'WAIT_SEND_OUT') {
+      return h('Poptip', {
+        props: {
+          confirm: true,
+          transfer: true,
+          title: '是否购券重发?'
+          // placement: params.index === 0 || params.index === 1 ? 'bottom' : 'top',
+        },
+        style: {
+          marginRight: '5px'
+        },
+        on: {
+          'on-ok': () => {
+            vm.$emit('on-coupon', params);
+          }
+        }
+      }, [
+        h('Tooltip', {
+          props: { placement: 'top', transfer: true, content: '购券重发' }
+        }, [
+          h('Button', {
+            props: {
+              type: 'success',
+              size: 'small'
+            }
+          }, [
+            h('Icon', {
+              props: {
+                type: 'md-sync',
+                size: 16,
+                color: '#fff'
+              }
+            })
+          ])
+        ])
+      ]);
+    } else {
+      return ''
+    }
   },
   analytics: (h, params, vm) => {
     return h('Tooltip', {
@@ -2138,9 +2197,9 @@ const btns = {
         ])
       ]);
     } else {
-      return "N/A"
+      return 'N/A'
     }
-  },
+  }
 };
 
 export default btns;

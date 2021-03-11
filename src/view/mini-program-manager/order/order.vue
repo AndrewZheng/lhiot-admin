@@ -1693,6 +1693,18 @@ export default {
         this.$Message.error('只有送到家的订单才能操作发送美团');
       }
     },
+    // 购券重发
+    // handCoupon(params) {
+    //   const orderId = params.row.id;
+    //   retryCoupon(orderId)
+    //     .then((res) => {
+    //       this.$Message.success('操作成功');
+    //       this.getTableData();
+    //     })
+    //     .finally(() => {
+    //       this.loading = false;
+    //     });
+    // },
     // 门店调货
     handleSubmit() {
       if (!this.currentTableRowSelected) {
