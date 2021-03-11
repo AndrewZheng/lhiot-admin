@@ -1707,24 +1707,15 @@ export default {
     },
     // 购券重发
     handCoupon(params) {
-      if (
-        params.row.orderStatus === 'RECEIVED'
-      ) {
-        const orderId = params.row.id;
-        retryCoupon(orderId)
-          .then((res) => {
-            this.loading = false;
-            this.$Message.success('操作成功');
-            this.getTableData();
-          })
-          .catch(() => {
-            this.loading = false;
-          });
-      } else {
-        this.$Message.error(
-          '只有已收货订单才能操作购券重发'
-        );
-      }
+      const orderId = params.row.id;
+      retryCoupon(orderId)
+        .then((res) => {
+          this.$Message.success('操作成功');
+          this.getTableData();
+        })
+        .finally(() => {
+          this.loading = false;
+        });
     },
     // 门店调货
     handleSubmit() {
