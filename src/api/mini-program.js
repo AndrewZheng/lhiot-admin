@@ -51,6 +51,21 @@ export const productStanardRanking = (data) => {
   });
 };
 
+// 门店商品销售统计
+export const getStoreSaleTotalPages = (data) => {
+  return $http.request({
+    url: '/minapp/index/statistics/store-sale-total',
+    data,
+    method: 'post',
+    headers: {
+      'page': data.page,
+      'rows': data.rows,
+      'sidx': data.sidx,
+      'sort': data.sort
+    }
+  });
+};
+
 // 删除图片
 export const deletePicture = ({
   urls
@@ -205,9 +220,10 @@ export const getStorePages = (data) => {
 };
 
 // 根据位置查询门店所有列表分区域
-export const getAreaStorePages = () => {
+export const getAreaStorePages = (cityCode) => {
+  const code = cityCode || '0744';// 默认长沙市
   return $http.request({
-    url: '/minapp/stores/area',
+    url: `/minapp/stores/area?cityCode=${code}`,
     method: 'get'
   });
 };
@@ -233,9 +249,10 @@ export const getStoreDetail = ({
 };
 
 // 查询所有门店区域
-export const getStoreAreas = () => {
+export const getStoreAreas = (cityCode) => {
+  const code = cityCode || '0744';// 默认长沙市
   return $http.request({
-    url: '/minapp/stores/store-areas',
+    url: `/minapp/stores/store-areas?cityCode=${code}`,
     method: 'get'
   });
 };
@@ -255,6 +272,63 @@ export const createStore = (data) => {
     url: '/minapp/stores/',
     data,
     method: 'post'
+  });
+};
+
+/* -------------------------
+ * 门店城市管理
+ * -------------------------
+ */
+// 分页查询所有门店城市
+export const getStoreCityPages = (data) => {
+  return $http.request({
+    url: '/minapp/city-store/pages',
+    data,
+    method: 'post',
+    headers: {
+      'page': data.page,
+      'rows': data.rows,
+      'sidx': data.sidx,
+      'sort': data.sort
+    }
+  });
+};
+
+// 根据id更新门店城市
+export const editStoreCity = (data) => {
+  return $http.request({
+    url: '/minapp/city-store/update/' + data.id,
+    data,
+    method: 'put'
+  });
+};
+
+// 添加门店城市
+export const createStoreCity = (data) => {
+  return $http.request({
+    url: '/minapp/city-store/create',
+    data,
+    method: 'post'
+  });
+};
+
+// 根据id查询门店城市
+export const getStoreCity = ({
+  id
+}) => {
+  return $http.request({
+    url: '/minapp/city-store/' + id,
+    method: 'get'
+  });
+};
+
+// 根据id删除门店城市
+export const deleteStoreCity = ({
+  ids
+}) => {
+  return $http.request({
+    url: '/minapp/city-store/' + ids,
+    method: 'delete'
   });
 };
 
@@ -1088,7 +1162,7 @@ export const shareProdStatistics = (data) => {
 // 分享赚用户数据统计 /minapp/share/user/share-total
 export const shareUserStatistics = (data) => {
   return Vue.prototype.$http.request({
-    url: `/minapp/share/user/share-total?nickName=${data.nickName}&deptName=${data.deptName}&phone=${data.phone}`,
+    url: `/minapp/share/user/share-total?nickName=${data.nickName}&deptName=${data.deptName}&phone=${data.phone}&beginDate=${data.beginDate}&endDate=${data.endDate}`,
     method: 'get',
     headers: {
       'page': data.page,
@@ -1101,7 +1175,7 @@ export const shareUserStatistics = (data) => {
 // 分享赚佣金明细数据统计/minapp/award-amount/detail-total
 export const shareawardAmountDetailTotal = (data) => {
   return Vue.prototype.$http.request({
-    url: `/minapp/award-amount/detail-total`,
+    url: `/minapp/award-amount/detail-total?queryDateType=${data.queryDateType}`,
     method: 'post',
     data,
     headers: {
@@ -3077,7 +3151,9 @@ export const getStaffManage = (data) => {
     method: 'post',
     headers: {
       'page': data.page,
-      'rows': data.rows
+      'rows': data.rows,
+      'sidx': data.sidx,
+      'sort': data.sort
     }
   });
 };
@@ -3172,5 +3248,19 @@ export const getStoreMaterielDel = ({
   return $http.request({
     url: '/minapp/store-materiel/' + ids,
     method: 'get'
+  });
+};
+//  外卖红包列表 /minapp/wechat-reward/pages
+export const getWechatRewardPage = (data) => {
+  return $http.request({
+    url: '/minapp/wechat-reward/pages',
+    data,
+    method: 'post',
+    headers: {
+      'page': data.page,
+      'rows': data.rows,
+      'sidx': data.sidx,
+      'sort': data.sort
+    }
   });
 };

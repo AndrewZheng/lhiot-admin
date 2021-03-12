@@ -33,11 +33,12 @@
     "lockr": "^0.8.4",
     "lodash": "^4.17.13",
     "moment": "^2.22.2",
-    "node-sass": "^4.13.0",
+    "node-sass": "^4.14.0",
     "qs": "^6.9.0",
     "simplemde": "^1.11.2",
     "sortablejs": "^1.7.0",
     "tinymce": "^4.8.3",
+    "v-charts": "^1.19.0",
     "view-design": "4.2.0",
     "vue": "^2.5.10",
     "vue-i18n": "^7.8.0",
@@ -79,31 +80,16 @@
     "last 2 versions",
     "not ie <= 8"
   ],
-  "engines": {
-    "node": ">=8.9",
-    "npm": ">= 3.0.0"
-  },
-  "keywords": [
-    "vue",
-    "admin",
-    "dashboard",
-    "iview-ui",
-    "boilerplate",
-    "admin-template",
-    "management-system"
-  ],
   "gitHooks": {
     "pre-commit": "lint-staged"
   },
   "license": "MIT",
   "lint-staged": {
-    "src/**/*.{js,vue}": [
+    "*.js": [
+      "git add"
+    ],
+    "*.vue": [
       "git add"
     ]
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
   }
 }

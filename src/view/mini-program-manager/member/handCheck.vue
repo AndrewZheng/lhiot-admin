@@ -3,14 +3,16 @@
     <div class="tabChange">
       <b
         data-index="check"
-        :class="topStatus == 'check' ? 'hot' : ''"
         @click="assistDataChange"
-      >员工审核</b>
+        :class="topStatus == 'check' ? 'hot' : ''"
+        >员工审核</b
+      >
       <b
         data-index="manage"
-        :class="topStatus == 'manage' ? 'hot' : ''"
         @click="assistDataChange"
-      >员工管理</b>
+        :class="topStatus == 'manage' ? 'hot' : ''"
+        >员工管理</b
+      >
     </div>
     <Card v-show="topStatus === 'check'">
       <tables
@@ -42,9 +44,8 @@
                 :value="item.value"
                 class="ptb2-5"
                 style="padding-left: 5px; width: 100px"
+                >{{ item.label }}</Option
               >
-                {{ item.label }}
-              </Option>
             </Select>
           </Row>
         </div>
@@ -80,7 +81,7 @@
         @on-select-all="onSelectionAll"
         @on-selection-change="onSelectionChange"
       >
-        <div v-show="!showBack" slot="searchCondition">
+        <div slot="searchCondition" v-show="!showBack">
           <Row>
             <Input
               v-model="searchRowDataManage.staffName"
@@ -97,13 +98,14 @@
               clearable
             ></Input>
             <RadioGroup v-model="button" type="button" @on-change="timeChange">
+              <Radio label="汇总"></Radio>
               <Radio label="今日"></Radio>
               <Radio label="昨日"></Radio>
               <Radio label="最近7天"></Radio>
               <Radio label="最近30天"></Radio>
               <Radio label="自定义时间"></Radio>
             </RadioGroup>
-            <div v-show="mark" class="mark">
+            <div class="mark" v-show="mark">
               <DatePicker
                 :value="searchRowDataManage.applyTimeBegin"
                 format="yyyy-MM-dd"
@@ -147,7 +149,7 @@
             </Button>
           </Row>
         </div>
-        <div v-show="showBack" slot="operations">
+        <div slot="operations" v-show="showBack">
           <Button
             v-waves
             class="search-btn ml5 mr5"
@@ -175,20 +177,22 @@
 </template>
 
 <script type="text/ecmascript-6">
-import Tables from '_c/tables';
-import _ from 'lodash';
-import { getStaffManage, StaffAudit, staffUpdate } from '@/api/mini-program';
-import deleteMixin from '@/mixins/deleteMixin.js';
-import tableMixin from '@/mixins/tableMixin.js';
-import searchMixin from '@/mixins/searchMixin.js';
-import { getSmallGoodsStandard } from '@/libs/util';
+import Tables from "_c/tables";
+import _ from "lodash";
+import { getStaffManage, StaffAudit, staffUpdate } from "@/api/mini-program";
+import deleteMixin from "@/mixins/deleteMixin.js";
+import tableMixin from "@/mixins/tableMixin.js";
+import searchMixin from "@/mixins/searchMixin.js";
+import { getSmallGoodsStandard } from "@/libs/util";
 
 const activitiesDetail = {};
 
 const roleRowData = {
-  auditStatus: 'UNAUDITED',
+  auditStatus: "UNAUDITED",
   page: 1,
-  rows: 10
+  rows: 10,
+  sidx: "applyTime",
+  sort: "desc",
 };
 
 const roleRowDataManage = {
@@ -196,201 +200,203 @@ const roleRowDataManage = {
   staffPhone: null,
   applyTimeBegin: null,
   applyTimeEnd: null,
-  auditStatus: 'PASSED',
+  auditStatus: "PASSED",
   page: 1,
-  rows: 10
+  rows: 10,
+  sidx: "applyTime",
+  sort: "desc",
 };
 
 export default {
   components: {
-    Tables
+    Tables,
   },
   mixins: [deleteMixin, tableMixin, searchMixin],
   data() {
     return {
       mark: false,
-      button: '今日',
+      button: "今日",
       columns: [
         {
-          title: '员工姓名',
-          align: 'center',
-          key: 'staffName'
+          title: "员工姓名",
+          align: "center",
+          key: "staffName",
         },
         {
-          title: '所在部门',
-          align: 'center',
-          key: 'deptName'
+          title: "所在部门",
+          align: "center",
+          key: "deptName",
         },
         {
-          title: '岗位名称',
-          align: 'center',
-          key: 'positionName'
+          title: "岗位名称",
+          align: "center",
+          key: "positionName",
         },
         {
-          title: '联系方式',
-          align: 'center',
+          title: "联系方式",
+          align: "center",
           width: 140,
-          key: 'staffPhone'
+          key: "staffPhone",
         },
         {
-          title: '昵称',
-          align: 'center',
-          key: 'nickName'
+          title: "昵称",
+          align: "center",
+          key: "nickName",
         },
         {
-          title: '操作',
-          align: 'center',
+          title: "操作",
+          align: "center",
           width: 140,
-          key: 'handle',
-          options: ['staffAudit']
-        }
+          key: "handle",
+          options: ["staffAudit"],
+        },
       ],
       columnsManage: [
         {
-          title: '昵称',
-          align: 'center',
-          key: 'nickName'
+          title: "昵称",
+          align: "center",
+          key: "nickName",
         },
         {
-          title: '联系方式',
-          align: 'center',
+          title: "联系方式",
+          align: "center",
           width: 140,
-          key: 'staffPhone'
+          key: "staffPhone",
         },
         {
-          title: '申请时间',
-          align: 'center',
+          title: "申请时间",
+          align: "center",
           width: 180,
-          key: 'applyTime'
+          key: "applyTime",
         },
         {
-          title: '员工姓名',
-          align: 'center',
-          key: 'staffName',
+          title: "员工姓名",
+          align: "center",
+          key: "staffName",
           render(h, params, vm) {
             const { row } = params;
             if (row.isEdit) {
               return h(
-                'Div',
+                "Div",
                 {
                   style: {
-                    display: 'flex',
-                    flexDirection: 'column'
-                  }
+                    display: "flex",
+                    flexDirection: "column",
+                  },
                 },
                 [
-                  h('Input', {
+                  h("Input", {
                     style: {
-                      marginLeft: '4px',
-                      width: '100%'
+                      marginLeft: "4px",
+                      width: "100%",
                     },
                     props: {
-                      type: 'text',
-                      value: row.staffName // 使用key的键值
+                      type: "text",
+                      value: row.staffName, // 使用key的键值
                     },
                     on: {
                       input: (event) => {
                         row.staffName = event;
-                      }
-                    }
-                  })
+                      },
+                    },
+                  }),
                 ]
               );
             } else {
-              return h('div', row.staffName);
+              return h("div", row.staffName);
             }
-          }
+          },
         },
         {
-          title: '所在部门',
-          align: 'center',
-          key: 'deptName',
+          title: "所在部门",
+          align: "center",
+          key: "deptName",
           render(h, params, vm) {
             const { row } = params;
             if (row.isEdit) {
               return h(
-                'Div',
+                "Div",
                 {
                   style: {
-                    display: 'flex',
-                    flexDirection: 'column'
-                  }
+                    display: "flex",
+                    flexDirection: "column",
+                  },
                 },
                 [
-                  h('Input', {
+                  h("Input", {
                     style: {
-                      marginLeft: '4px',
-                      width: '100%'
+                      marginLeft: "4px",
+                      width: "100%",
                     },
                     props: {
-                      type: 'text',
-                      value: row.deptName // 使用key的键值
+                      type: "text",
+                      value: row.deptName, // 使用key的键值
                     },
                     on: {
                       input: (event) => {
                         row.deptName = event;
-                      }
-                    }
-                  })
+                      },
+                    },
+                  }),
                 ]
               );
             } else {
-              return h('div', row.deptName);
+              return h("div", row.deptName);
             }
-          }
+          },
         },
         {
-          title: '岗位名称',
-          align: 'center',
-          key: 'positionName',
+          title: "岗位名称",
+          align: "center",
+          key: "positionName",
           render(h, params, vm) {
             const { row } = params;
             if (row.isEdit) {
               return h(
-                'Div',
+                "Div",
                 {
                   style: {
-                    display: 'flex',
-                    flexDirection: 'column'
-                  }
+                    display: "flex",
+                    flexDirection: "column",
+                  },
                 },
                 [
-                  h('Input', {
+                  h("Input", {
                     style: {
-                      marginLeft: '4px',
-                      width: '100%'
+                      marginLeft: "4px",
+                      width: "100%",
                     },
                     props: {
-                      type: 'text',
-                      value: row.positionName // 使用key的键值
+                      type: "text",
+                      value: row.positionName, // 使用key的键值
                     },
                     on: {
                       input: (event) => {
                         row.positionName = event;
-                      }
-                    }
-                  })
+                      },
+                    },
+                  }),
                 ]
               );
             } else {
-              return h('div', row.positionName);
+              return h("div", row.positionName);
             }
-          }
+          },
         },
         {
-          title: '操作',
-          align: 'center',
+          title: "操作",
+          align: "center",
           width: 140,
-          key: 'handle',
-          options: ['amendEdit', 'abolish']
-        }
+          key: "handle",
+          options: ["amendEdit", "abolish"],
+        },
       ],
       checkStatus: [
-        { label: '待审核', value: 'UNAUDITED' },
-        { label: '已通过', value: 'PASSED' },
-        { label: '已拒绝', value: 'REJECTED' }
+        { label: "待审核", value: "UNAUDITED" },
+        { label: "已通过", value: "PASSED" },
+        { label: "已拒绝", value: "REJECTED" },
       ],
-      topStatus: 'check',
+      topStatus: "check",
       createLoading: false,
       modalViewLoading: false,
       tableDataManage: [],
@@ -399,7 +405,7 @@ export default {
       openStatus: false,
       searchRowData: _.cloneDeep(roleRowData),
       searchRowDataManage: _.cloneDeep(roleRowDataManage),
-      activitiesDetail: _.cloneDeep(activitiesDetail)
+      activitiesDetail: _.cloneDeep(activitiesDetail),
     };
   },
   mounted() {
@@ -408,7 +414,7 @@ export default {
     this.getTableDataManage();
   },
   created() {
-    this.showBack = this.$route.name === 'small-member-relation-handCheck';
+    this.showBack = this.$route.name === "small-member-relation-handCheck";
   },
   methods: {
     resetSearchRowData() {
@@ -421,35 +427,38 @@ export default {
       this.$refs.modalEdit.resetFields();
     },
     getTableData() {
-      this.loading = true;
       getStaffManage(this.searchRowData)
         .then((res) => {
           this.tableData = res.rows;
           this.total = res.total;
+          this.loading = false;
+          this.searchLoading = false;
+          this.clearSearchLoading = false;
         })
-        .finally(() => {
+        .catch((error) => {
+          console.log(error);
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
         });
     },
     getTableDataManage(value) {
-      // 获取商品页面传过来的商品信息
-      if (this.$route.name === 'small-member-relation-handCheck') {
+      //
+      if (this.$route.name === "small-member-relation-handCheck") {
         const memberMsg = getSmallGoodsStandard();
         this.topStatus = memberMsg.topStatus;
-        this.searchRowDataManage.applyTimeBegin = '';
-        this.searchRowDataManage.applyTimeEnd = '';
+        this.searchRowDataManage.applyTimeBegin = "";
+        this.searchRowDataManage.applyTimeEnd = "";
         this.searchRowDataManage.staffPhone = memberMsg.phone;
       } else {
-        const date = new Date();
+        let date = new Date();
         date.setDate(date.getDate());
         var year = date.getFullYear();
         var month = date.getMonth() + 1;
         var day = date.getDate();
         var today = `${year}-${month}-${day}`;
-        if (value === '昨日') {
-          const date = new Date();
+        if (value === "昨日") {
+          let date = new Date();
           date.setDate(date.getDate() - 1);
           var year = date.getFullYear();
           var month = date.getMonth() + 1;
@@ -458,8 +467,8 @@ export default {
           this.searchRowDataManage.applyTimeBegin = yesterday;
           this.searchRowDataManage.applyTimeEnd = yesterday;
         }
-        if (value === '今日') {
-          const date = new Date();
+        if (value === "今日") {
+          let date = new Date();
           date.setDate(date.getDate());
           var year = date.getFullYear();
           var month = date.getMonth() + 1;
@@ -468,8 +477,12 @@ export default {
           this.searchRowDataManage.applyTimeBegin = today;
           this.searchRowDataManage.applyTimeEnd = today;
         }
-        if (value === '最近7天') {
-          const date = new Date();
+        if (value === "汇总") {
+          this.searchRowDataManage.applyTimeBegin = "";
+          this.searchRowDataManage.applyTimeEnd = "";
+        }
+        if (value === "最近7天") {
+          let date = new Date();
           date.setDate(date.getDate() - 7);
           var year = date.getFullYear();
           var month = date.getMonth() + 1;
@@ -478,8 +491,8 @@ export default {
           this.searchRowDataManage.applyTimeBegin = sevenDay;
           this.searchRowDataManage.applyTimeEnd = today;
         }
-        if (value === '最近30天') {
-          const date = new Date();
+        if (value === "最近30天") {
+          let date = new Date();
           date.setDate(date.getDate() - 30);
           var year = date.getFullYear();
           var month = date.getMonth() + 1;
@@ -488,18 +501,17 @@ export default {
           this.searchRowDataManage.applyTimeBegin = toMonth;
           this.searchRowDataManage.applyTimeEnd = today;
         }
-        const date1 = new Date();
+        let date1 = new Date();
         date1.setDate(date.getDate() - 1);
         var year1 = date.getFullYear();
         var month1 = date.getMonth() + 1;
         var day1 = date.getDate();
         var yesterday1 = `${year1}-${month1}-${day1}`;
-        if (this.button === '今日') {
+        if (this.button === "今日") {
           this.searchRowDataManage.applyTimeBegin = yesterday1;
           this.searchRowDataManage.applyTimeEnd = yesterday1;
         }
       }
-      this.loading = true;
       getStaffManage(this.searchRowDataManage)
         .then((res) => {
           res.rows.forEach((element) => {
@@ -507,8 +519,12 @@ export default {
           });
           this.tableDataManage = res.rows;
           this.totalManage = res.total;
+          this.loading = false;
+          this.searchLoading = false;
+          this.clearSearchLoading = false;
         })
-        .finally(() => {
+        .catch((error) => {
+          console.log(error);
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
@@ -522,14 +538,14 @@ export default {
     hanldeAudit({ params, checkStatus }) {
       StaffAudit({
         id: params.row.id,
-        checkStatus
+        checkStatus,
       }).then((res) => {
-        this.$Message.info('审核成功');
+        this.$Message.info("审核成功");
         this.getTableData();
       });
     },
     assistDataChange(e) {
-      const index = e.currentTarget.dataset.index;
+      let index = e.currentTarget.dataset.index;
       if (this.topStatus === index) {
         return;
       }
@@ -556,35 +572,38 @@ export default {
       this.page = 1;
       this.pageSize = 10;
       this.clearSearchLoading = true;
-      this.button = '今日';
-      this.getTableDataManage('今日');
+      this.button = "今日";
+      this.getTableDataManage("今日");
     },
     timeChange(value) {
       this.openStatus = false;
-      if (value === '今日') {
+      if (value === "今日") {
         this.getTableDataManage(value);
         this.mark = false;
-      } else if (value === '昨日') {
+      } else if (value === "汇总") {
         this.mark = false;
         this.getTableDataManage(value);
-      } else if (value === '最近7天') {
+      } else if (value === "昨日") {
         this.mark = false;
         this.getTableDataManage(value);
-      } else if (value === '最近30天') {
+      } else if (value === "最近7天") {
         this.mark = false;
         this.getTableDataManage(value);
-      } else if (value === '自定义时间') {
+      } else if (value === "最近30天") {
+        this.mark = false;
+        this.getTableDataManage(value);
+      } else if (value === "自定义时间") {
         this.mark = true;
-        this.searchRowDataManage.applyTimeBegin = '';
-        this.searchRowDataManage.applyTimeEnd = '';
+        this.searchRowDataManage.applyTimeBegin = "";
+        this.searchRowDataManage.applyTimeEnd = "";
       }
     },
     modalHandleEdit(params) {
       if (!this.openStatus) {
         this.openStatus = true;
-        this.$set(params.row, 'isEdit', true);
+        this.$set(params.row, "isEdit", true);
       } else {
-        this.$Message.info('已有打开正在编辑中的窗口!');
+        this.$Message.info("已有打开正在编辑中的窗口!");
       }
     },
     modalHandleSave(params) {
@@ -592,13 +611,13 @@ export default {
       this.openStatus = false;
       staffUpdate(row)
         .then((res) => {
-          this.$Message.success('操作成功!');
+          this.$Message.success("操作成功!");
           this.getTableDataManage();
         })
         .finally((res) => {});
     },
     modalHandleAbolish(params) {
-      this.$set(params.row, 'isEdit', false);
+      this.$set(params.row, "isEdit", false);
       this.openStatus = false;
     },
     goBack() {
@@ -625,14 +644,14 @@ export default {
           // ).label;
           // item["commentScore"] = item["commentScore"] + "星";
         });
-        const date = this.$moment(new Date()).format('YYYYMMDDHHmmss');
+        const date = this.$moment(new Date()).format("YYYYMMDDHHmmss");
         this.$refs.tables.handleDownload({
           filename: `内部员工数据统计-${date}`,
-          data: tableData
+          data: tableData,
         });
       });
-    }
-  }
+    },
+  },
 };
 </script>
 

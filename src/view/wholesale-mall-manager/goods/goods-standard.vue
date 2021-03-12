@@ -139,14 +139,14 @@
             >
               <Icon type="md-add" />&nbsp;添加
             </Button>
-            <!-- <Button
-            :loading="downloadLoading"
-            class="search-btn"
-            type="warning"
-            @click="handleDownload"
-          >
-            <Icon type="md-download" />导出
-          </Button> -->
+            <Button
+              :loading="downloadLoading"
+              class="search-btn"
+              type="warning"
+              @click="handleDownload"
+            >
+              <Icon type="md-download" />导出
+            </Button>
             <!-- <Poptip
             confirm
             placement="bottom"
@@ -463,7 +463,7 @@
             </i-col>
 
             <!-- 主图轮播 -->
-            <!-- <i-col span="12">
+            <i-col span="12">
               <FormItem
                 label="上架商品轮播图:建议尺寸;710x710(单位:px)"
                 prop="rotationImage"
@@ -481,7 +481,7 @@
                 >
                   <template v-if="item.status === 'finished'">
                     <div>
-                      <img :src="item.url" />
+                      <img :src="item.url">
                       <div class="demo-upload-list-cover">
                         <Icon
                           type="ios-eye-outline"
@@ -506,7 +506,7 @@
                   ref="uploadMultiple_"
                   :default-list="defaultListMultiple_"
                   :image-size="imageSize"
-                  :max-num="10"
+                  :max-num="5"
                   group-type="base_image"
                   file-dir="product"
                   multiple
@@ -520,7 +520,7 @@
                   </div>
                 </IViewUpload>
               </FormItem>
-            </i-col> -->
+            </i-col>
             <!-- 详情图 ==== -->
             <i-col span="12">
               <FormItem
@@ -562,11 +562,10 @@
                   </template>
                 </div>
                 <IViewUpload
-                  v-show="fileListLength < 15"
                   ref="uploadMultiple"
                   :default-list="defaultListMultiple"
                   :image-size="imageSize"
-                  :max-num="10"
+                  :max-num="15"
                   group-type="base_image"
                   file-dir="product"
                   multiple
@@ -1579,7 +1578,6 @@ export default {
       productTotal: 0,
       downloadLoading: false,
       regionTotal: 0,
-      fileListLength: 0,
       unitsList: [],
       productDetailsList: [],
       masterProductDetailsList: [],
@@ -1716,7 +1714,7 @@ export default {
         isVip: [{ required: true, message: '请选择商品的类型' }],
         standardGoodsName: [{ required: true, message: '请输入上架商品名称' }],
         goodsImage: [{ required: true, message: '请上传上架商品主图' }],
-        // rotationImage: [{ required: true, message: "请上传上架商品轮播图" }],
+        rotationImage: [{ required: false, message: '请上传上架商品轮播图' }],
         goodsImages: [{ required: true, message: '请上传上架商品详情图' }],
         unitCode: [{ required: true, message: '请选择商品单位' }],
         vaild: [{ required: true, message: '请选择商品状态' }],
@@ -2367,7 +2365,6 @@ export default {
     },
     // 上架规格描述图
     handleSuccessMultiple(response, file, fileList) {
-      this.fileListLength = fileList.length;
       this.uploadListMultiple = fileList;
       this.productDetailsList = [];
       fileList.forEach((value) => {

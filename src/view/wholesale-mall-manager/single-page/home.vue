@@ -5,14 +5,9 @@
         v-for="(infor, i) in inforCardData"
         :key="`infor-${i}`"
         span="4"
-        style="height: 120px"
+        style="height: 120px;"
       >
-        <infor-card
-          :color="infor.color"
-          :icon="infor.icon"
-          :icon-size="36"
-          shadow
-        >
+        <infor-card :color="infor.color" :icon="infor.icon" :icon-size="36" shadow>
           <count-to :end="infor.count" count-class="count-style" />
           <p>{{ infor.title }}</p>
         </infor-card>
@@ -60,7 +55,7 @@
           </RadioGroup>
           <DatePicker
             v-model="searchRowData.startTime"
-            :disabled="searchRowData.queryDays != '-1'"
+            :disabled="searchRowData.queryDays!='-1'"
             format="yyyy-MM-dd HH:mm:ss"
             type="datetime"
             placeholder="大于等于"
@@ -71,7 +66,7 @@
           <i>-</i>
           <DatePicker
             v-model="searchRowData.endTime"
-            :disabled="searchRowData.queryDays != '-1'"
+            :disabled="searchRowData.queryDays!='-1'"
             format="yyyy-MM-dd HH:mm:ss"
             type="datetime"
             placeholder="小于等于"
@@ -88,7 +83,7 @@
           ></Input>
           <Button
             v-waves
-            :search-loading="searchLoading"
+            :searchLoading="searchLoading"
             class="search-btn mr5"
             type="primary"
             @click="handleSearch"
@@ -117,7 +112,7 @@
           </Button>-->
         </div>
       </tables>
-      <div style="margin: 10px; overflow: hidden">
+      <div style="margin: 10px;overflow: hidden">
         <Row type="flex" justify="end">
           <Page
             :total="total"
@@ -130,9 +125,12 @@
         </Row>
       </div>
     </Card>
-    <Row style="margin-top: 20px">
+    <Row style="margin-top: 20px;">
       <Card shadow>
-        <img :src="banner" style="height: 300px; width: 100%">
+        <img
+          :src="banner"
+          style="height: 300px;width:100%;"
+        >
       </Card>
     </Row>
   </div>
@@ -282,14 +280,11 @@ export default {
   computed: {
     banner() {
       // 默认万翼果联品牌
-      let str =
-        'http://resource.shuiguoshule.com.cn/product_image/2020-04-06/sPCU3eaHKq4OY7aYajNm.jpg';
+      let str = 'http://resource.shuiguoshule.com.cn/product_image/2020-04-06/sPCU3eaHKq4OY7aYajNm.jpg';
       if (this.brandType === 'qgg') {
-        str =
-          'http://resource.shuiguoshule.com.cn/v2/qgg/activity_image/activity/2020-04-24/e7qhDWpvwOrSGRCJqDHT.jpg';
+        str = 'http://resource.shuiguoshule.com.cn/v2/qgg/activity_image/activity/2020-04-24/e7qhDWpvwOrSGRCJqDHT.jpg';
       } else if (this.brandType === 'lv_hang') {
-        str =
-          'http://resource.shuiguoshule.com.cn/v2/lv_hang/activity_image/activity/2020-04-24/EenfAkUuSzvbxu0Jmz1G.jpg';
+        str = 'http://resource.shuiguoshule.com.cn/v2/lv_hang/activity_image/activity/2020-04-24/EenfAkUuSzvbxu0Jmz1G.jpg';
       }
       return str;
     }
@@ -302,7 +297,7 @@ export default {
     getTableData() {
       this.orderTableData = [];
       getAnalysisDatas(this.searchRowData)
-        .then((res) => {
+        .then(res => {
           const {
             avgOrderPrice,
             sumDeliveryFee,
@@ -323,7 +318,7 @@ export default {
           //   this.orderData.totalCount = totalCount;
           //   this.orderTableData.push(this.orderData);
         })
-        .finally((res) => {
+        .finally(res => {
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
@@ -348,7 +343,7 @@ export default {
       this.exportExcelLoading = true;
       this.searchRowData.rows = this.total > 5000 ? 5000 : this.total;
       getAnalysisDatas(this.searchRowData)
-        .then((res) => {
+        .then(res => {
           const tableData = res.rows;
           // 恢复正常页数
           this.searchRowData.rows = 10;
@@ -367,12 +362,12 @@ export default {
       this.searchRowData.sidx = type.key;
       this.searchRowData.sort = type.order;
       getAnalysisDatas(this.searchRowData)
-        .then((res) => {
+        .then(res => {
           const { orderGoodDataPage } = res;
           this.tableData = orderGoodDataPage.rows;
           this.total = orderGoodDataPage.total;
         })
-        .finally((res) => {
+        .finally(res => {
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;

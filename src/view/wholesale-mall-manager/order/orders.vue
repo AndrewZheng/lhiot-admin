@@ -2,7 +2,10 @@
   <div class="m-role">
     <Card>
       <Row v-show="isSalesmanAnalysis">
-        <i-col span="24" class="brand-red font-sm">
+        <i-col
+          span="24"
+          class="brand-red font-sm"
+        >
           {{ salesmanName }}--旗下门店订单信息明细
         </i-col>
       </Row>
@@ -13,7 +16,7 @@
         :loading="loading"
         :search-area-column="24"
         :operate-area-column="7"
-        :need-permission="false"
+        :need-permission="true"
         editable
         searchable
         border
@@ -231,7 +234,9 @@
         <Row>
           <i-col span="12">
             <Row class-name="mb10">
-              <i-col span="6"> 订单编号: </i-col>
+              <i-col span="6">
+                订单编号:
+              </i-col>
               <i-col span="18">
                 {{ orderDetail.orderCode }}
               </i-col>
@@ -239,9 +244,13 @@
           </i-col>
           <i-col span="12">
             <Row class-name="mb10">
-              <i-col span="6"> 订单状态: </i-col>
+              <i-col span="6">
+                订单状态:
+              </i-col>
               <i-col span="18">
-                {{ orderDetail.orderStatus | wholesaleOrderStatusFilter }}
+                {{
+                  orderDetail.orderStatus | wholesaleOrderStatusFilter
+                }}
               </i-col>
             </Row>
           </i-col>
@@ -249,7 +258,9 @@
         <Row>
           <i-col span="12">
             <Row class-name="mb10">
-              <i-col span="6"> 海鼎编号: </i-col>
+              <i-col span="6">
+                海鼎编号:
+              </i-col>
               <i-col span="18">
                 {{ orderDetail.hdCode }}
               </i-col>
@@ -257,9 +268,13 @@
           </i-col>
           <i-col span="12">
             <Row class-name="mb10">
-              <i-col span="6"> 海鼎状态: </i-col>
+              <i-col span="6">
+                海鼎状态:
+              </i-col>
               <i-col span="18">
-                {{ orderDetail.hdStatus | wholesaleHdStatusFilter }}
+                {{
+                  orderDetail.hdStatus | wholesaleHdStatusFilter
+                }}
               </i-col>
             </Row>
           </i-col>
@@ -267,7 +282,9 @@
         <Row>
           <i-col span="12">
             <Row class-name="mb10">
-              <i-col span="6"> 下单时间: </i-col>
+              <i-col span="6">
+                下单时间:
+              </i-col>
               <i-col span="18">
                 {{ orderDetail.createTime }}
               </i-col>
@@ -275,21 +292,31 @@
           </i-col>
         </Row>
 
-        <Divider orientation="center"> 支付信息 </Divider>
+        <Divider orientation="center">
+          支付信息
+        </Divider>
         <Row>
           <i-col span="12">
             <Row class-name="mb10">
-              <i-col span="6"> 支付类型: </i-col>
+              <i-col span="6">
+                支付类型:
+              </i-col>
               <i-col span="18">
-                {{ orderDetail.settlementType | wholeslaePayTypeFilter }}
+                {{
+                  orderDetail.settlementType | wholeslaePayTypeFilter
+                }}
               </i-col>
             </Row>
           </i-col>
           <i-col span="12">
             <Row class-name="mb10">
-              <i-col span="6"> 支付状态: </i-col>
+              <i-col span="6">
+                支付状态:
+              </i-col>
               <i-col span="18">
-                {{ orderDetail.payStatus | payStatusFilter }}
+                {{
+                  orderDetail.payStatus | payStatusFilter
+                }}
               </i-col>
             </Row>
           </i-col>
@@ -297,15 +324,21 @@
         <Row>
           <i-col span="12">
             <Row class-name="mb10">
-              <i-col span="6"> 余额支付: </i-col>
+              <i-col span="6">
+                余额支付:
+              </i-col>
               <i-col span="18">
-                {{ orderDetail.currencyFee | fenToYuanDot2Filters }}
+                {{
+                  orderDetail.currencyFee | fenToYuanDot2Filters
+                }}
               </i-col>
             </Row>
           </i-col>
           <i-col span="12">
             <Row class-name="mb10">
-              <i-col span="6"> 微信支付: </i-col>
+              <i-col span="6">
+                微信支付:
+              </i-col>
               <i-col span="18">
                 {{
                   (orderDetail.payableFee +
@@ -320,17 +353,25 @@
         <Row>
           <i-col span="12">
             <Row class-name="mb10">
-              <i-col span="6"> 订单金额: </i-col>
+              <i-col span="6">
+                订单金额:
+              </i-col>
               <i-col span="18">
-                {{ orderDetail.totalFee | fenToYuanDot2Filters }}
+                {{
+                  orderDetail.totalFee | fenToYuanDot2Filters
+                }}
               </i-col>
             </Row>
           </i-col>
           <i-col span="12">
             <Row class-name="mb10">
-              <i-col span="6"> 优惠金额: </i-col>
+              <i-col span="6">
+                优惠金额:
+              </i-col>
               <i-col span="18">
-                {{ orderDetail.discountFee | fenToYuanDot2Filters }}
+                {{
+                  orderDetail.discountFee | fenToYuanDot2Filters
+                }}
               </i-col>
             </Row>
           </i-col>
@@ -338,15 +379,21 @@
         <Row>
           <i-col span="12">
             <Row class-name="mb10">
-              <i-col span="6"> 配送费: </i-col>
+              <i-col span="6">
+                配送费:
+              </i-col>
               <i-col span="18">
-                {{ orderDetail.deliveryFee | fenToYuanDot2Filters }}
+                {{
+                  orderDetail.deliveryFee | fenToYuanDot2Filters
+                }}
               </i-col>
             </Row>
           </i-col>
           <i-col span="12">
             <Row class-name="mb10">
-              <i-col span="6"> 应付金额: </i-col>
+              <i-col span="6">
+                应付金额:
+              </i-col>
               <i-col span="18">
                 {{
                   (orderDetail.payableFee + orderDetail.deliveryFee)
@@ -359,19 +406,27 @@
         <Row>
           <i-col span="12">
             <Row class-name="mb10">
-              <i-col span="6"> 支付时间: </i-col>
+              <i-col span="6">
+                支付时间:
+              </i-col>
               <i-col span="18">
-                {{ orderDetail.paymentTime ? orderDetail.paymentTime : "N/A" }}
+                {{
+                  orderDetail.paymentTime ? orderDetail.paymentTime : "N/A"
+                }}
               </i-col>
             </Row>
           </i-col>
         </Row>
 
-        <Divider orientation="center"> 用户信息 </Divider>
+        <Divider orientation="center">
+          用户信息
+        </Divider>
         <Row>
           <i-col span="12">
             <Row class-name="mb10">
-              <i-col span="6"> 门店名称: </i-col>
+              <i-col span="6">
+                门店名称:
+              </i-col>
               <i-col span="18">
                 {{ orderDetail.shopName }}
               </i-col>
@@ -379,7 +434,9 @@
           </i-col>
           <i-col span="12">
             <Row class-name="mb10">
-              <i-col span="6"> 店长名称: </i-col>
+              <i-col span="6">
+                店长名称:
+              </i-col>
               <i-col span="18">
                 {{ orderDetail.userName }}
               </i-col>
@@ -389,7 +446,9 @@
         <Row>
           <i-col span="12">
             <Row class-name="mb10">
-              <i-col span="6"> 店长手机: </i-col>
+              <i-col span="6">
+                店长手机:
+              </i-col>
               <i-col span="18">
                 {{ orderDetail.phone }}
               </i-col>
@@ -397,7 +456,9 @@
           </i-col>
           <i-col span="12">
             <Row class-name="mb10">
-              <i-col span="6"> 所属业务员: </i-col>
+              <i-col span="6">
+                所属业务员:
+              </i-col>
               <i-col span="18">
                 {{ orderDetail.saleUserName }}
               </i-col>
@@ -407,40 +468,53 @@
         <Row>
           <i-col span="12">
             <Row class-name="mb10">
-              <i-col span="6"> 用户备注: </i-col>
+              <i-col span="6">
+                用户备注:
+              </i-col>
               <i-col span="18">
-                {{ orderDetail.remarks ? orderDetail.remarks : "N/A" }}
+                {{
+                  orderDetail.remarks ? orderDetail.remarks : "N/A"
+                }}
               </i-col>
             </Row>
           </i-col>
         </Row>
-        <Divider orientation="center"> 配送信息 </Divider>
+        <Divider orientation="center">
+          配送信息
+        </Divider>
         <Row>
           <i-col span="12">
             <Row class-name="mb10">
-              <i-col span="6"> 用户备注: </i-col>
+              <i-col span="6">
+                用户备注:
+              </i-col>
               <i-col span="18">
-                {{ orderDetail.remarks ? orderDetail.remarks : "N/A" }}
+                {{
+                  orderDetail.remarks ? orderDetail.remarks : "N/A"
+                }}
               </i-col>
             </Row>
           </i-col>
         </Row>
-        <Divider orientation="center"> 配送信息 </Divider>
+        <Divider orientation="center">
+          配送信息
+        </Divider>
         <Row>
           <i-col span="12">
             <Row class-name="mb10">
-              <i-col span="6"> 收货人: </i-col>
+              <i-col span="6">
+                收货人:
+              </i-col>
               <i-col span="18">
                 {{ deliveryInfo.contactsName }}
               </i-col>
             </Row>
           </i-col>
-        </Row>
-        <Divider orientation="center"> 配送信息 </Divider>
-        <Row>
           <i-col span="12">
             <Row class-name="mb10">
-              <i-col span="6"> 联系方式: </i-col>
+              <i-col span="6">
+                联系方式:
+              </i-col>
               <i-col span="18">
                 {{ deliveryInfo.phone }}
               </i-col>
@@ -450,7 +524,9 @@
         <Row>
           <i-col span="12">
             <Row class-name="mb10">
-              <i-col span="6"> 收货地址: </i-col>
+              <i-col span="6">
+                收货地址:
+              </i-col>
               <i-col span="18">
                 {{ address }}
               </i-col>
@@ -458,7 +534,9 @@
           </i-col>
           <i-col span="12">
             <Row class-name="mb10">
-              <i-col span="6"> 收货时间: </i-col>
+              <i-col span="6">
+                收货时间:
+              </i-col>
               <i-col span="18">
                 {{ orderDetail.receiveTime }}
               </i-col>
@@ -466,7 +544,9 @@
           </i-col>
         </Row>
 
-        <Divider orientation="center"> 商品信息 </Divider>
+        <Divider orientation="center">
+          商品信息
+        </Divider>
         <Row>
           <tables
             v-model="orderDetail.orderGoodsList"
@@ -476,7 +556,9 @@
         </Row>
       </div>
       <div slot="footer">
-        <Button type="primary" @click="handleClose"> 关闭 </Button>
+        <Button type="primary" @click="handleClose">
+          关闭
+        </Button>
       </div>
     </Modal>
     <!-- 在线打印-->
@@ -496,7 +578,9 @@
                 src="http://resource.shuiguoshule.com.cn/product_image/2020-03-31/OVFftIF74gHs2Qa01dF2.png"
                 style="width: 120px; height: 39px; float: left"
               >
-              <p style="margin-right: 120px; color: #666666">万翼果联销售单</p>
+              <p style="margin-right: 120px; color: #666666">
+                万翼果联销售单
+              </p>
             </th>
           </tr>
         </thead>
@@ -505,7 +589,9 @@
         <tbody id="tabTotal"></tbody>
         <tr style="height: 80px">
           <td colspan="10">
-            <p style="margin-top: -40px">发货备注:</p>
+            <p style="margin-top: -40px">
+              发货备注:
+            </p>
           </td>
         </tr>
         <tfoot>
@@ -927,14 +1013,13 @@ const orderColumns = [
       }
     }
   },
-  //  "afterSale"
   {
     title: '操作',
     width: 160,
     align: 'center',
     fixed: 'right',
     key: 'handle',
-    options: ['view', 'sendHd']
+    options: ['view', 'sendHd', 'afterSale']
   }
 ];
 

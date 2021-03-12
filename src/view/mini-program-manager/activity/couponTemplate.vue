@@ -124,7 +124,9 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6"> 优惠券模板ID: </i-col>
+              <i-col span="6">
+                优惠券模板ID:
+              </i-col>
               <i-col span="18">
                 {{ couponTemplateDetail.id }}
               </i-col>
@@ -134,7 +136,9 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6"> 优惠券名称: </i-col>
+              <i-col span="6">
+                优惠券名称:
+              </i-col>
               <i-col span="18">
                 {{ couponTemplateDetail.couponName }}
               </i-col>
@@ -144,7 +148,9 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6"> 优惠券类型: </i-col>
+              <i-col span="6">
+                优惠券类型:
+              </i-col>
               <i-col
                 v-if="couponTemplateDetail.couponType === 'FULL_CUT_COUPON'"
                 span="16"
@@ -191,7 +197,9 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6"> 优惠金额: </i-col>
+              <i-col span="6">
+                优惠金额:
+              </i-col>
               <i-col
                 v-if="couponTemplateDetail.couponType === 'FREIGHT_COUPON'"
                 span="18"
@@ -199,7 +207,9 @@
                 {{ "N/A" }}
               </i-col>
               <i-col v-else span="18">
-                {{ couponTemplateDetail.couponFee | fenToYuanDot2Filters }}
+                {{
+                  couponTemplateDetail.couponFee | fenToYuanDot2Filters
+                }}
               </i-col>
             </Row>
           </i-col>
@@ -207,9 +217,13 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6"> 小购买金额: </i-col>
+              <i-col span="6">
+                小购买金额:
+              </i-col>
               <i-col span="18">
-                {{ couponTemplateDetail.minBuyFee | fenToYuanDot2Filters }}
+                {{
+                  couponTemplateDetail.minBuyFee | fenToYuanDot2Filters
+                }}
               </i-col>
             </Row>
           </i-col>
@@ -217,9 +231,13 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6"> 最高优惠金额: </i-col>
+              <i-col span="6">
+                最高优惠金额:
+              </i-col>
               <i-col v-if="couponTemplateDetail.maxDiscountFee" span="18">
-                {{ couponTemplateDetail.maxDiscountFee | fenToYuanDot2Filters }}
+                {{
+                  couponTemplateDetail.maxDiscountFee | fenToYuanDot2Filters
+                }}
               </i-col>
               <i-col v-else span="18">
                 {{ "N/A" }}
@@ -230,7 +248,9 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6"> 优惠券状态: </i-col>
+              <i-col span="6">
+                优惠券状态:
+              </i-col>
               <i-col
                 v-if="couponTemplateDetail.couponStatus === 'VALID'"
                 span="16"
@@ -259,7 +279,9 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6"> 优惠券图片: </i-col>
+              <i-col span="6">
+                优惠券图片:
+              </i-col>
               <i-col span="18">
                 <img :src="couponTemplateDetail.couponImage" width="80%">
               </i-col>
@@ -269,7 +291,9 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6"> 使用范围: </i-col>
+              <i-col span="6">
+                使用范围:
+              </i-col>
               <i-col
                 v-if="couponTemplateDetail.couponScope === 'STORE'"
                 span="16"
@@ -308,7 +332,9 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6"> 使用规则: </i-col>
+              <i-col span="6">
+                使用规则:
+              </i-col>
               <i-col span="18">
                 <Input
                   v-model="couponTemplateDetail.couponRules"
@@ -322,7 +348,9 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6"> 创建人: </i-col>
+              <i-col span="6">
+                创建人:
+              </i-col>
               <i-col span="18">
                 {{ couponTemplateDetail.createUser }}
               </i-col>
@@ -332,7 +360,9 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6"> 创建时间: </i-col>
+              <i-col span="6">
+                创建时间:
+              </i-col>
               <i-col span="18">
                 {{ couponTemplateDetail.createTime }}
               </i-col>
@@ -341,7 +371,9 @@
         </Row>
       </div>
       <div slot="footer">
-        <Button type="primary" @click="handleClose"> 关闭 </Button>
+        <Button type="primary" @click="handleClose">
+          关闭
+        </Button>
       </div>
     </Modal>
     <!-- 添加运费券模板 -->
@@ -349,9 +381,7 @@
       <p slot="header">
         <i-col>
           {{
-            tempModalType === modalType.edit
-              ? "修改优惠券模板"
-              : "创建优惠券模板"
+            tempModalType === modalType.edit ? "修改优惠券模板" : "创建优惠券模板"
           }}
         </i-col>
       </p>
@@ -397,7 +427,7 @@
             </FormItem>
             </Col>
           </Row>
-          <Row v-if="this.couponTemplateDetail.couponType != 'FREIGHT_COUPON'">
+          <Row v-if="couponTemplateDetail.couponType != 'FREIGHT_COUPON'">
             <Col span="18">
             <p
               v-show="couponTemplateDetail.couponType == 'DISCOUNT_COUPON'"
@@ -449,7 +479,7 @@
             </FormItem>
             </Col>
           </Row>
-          <Row v-if="this.couponTemplateDetail.couponType == 'DISCOUNT_COUPON'">
+          <Row v-if="couponTemplateDetail.couponType == 'DISCOUNT_COUPON'">
             <Col span="18">
             <FormItem
               label="最高优惠金额:"
@@ -571,7 +601,9 @@
         </Form>
       </div>
       <div slot="footer">
-        <Button @click="handleEditClose"> 关闭 </Button>
+        <Button @click="handleEditClose">
+          关闭
+        </Button>
         <Button
           :loading="modalViewLoading"
           type="primary"
@@ -973,9 +1005,11 @@ export default {
       this.modalViewLoading = true;
       editCouponTemplate(this.couponTemplateDetail)
         .then((res) => {
+          this.modalEdit = false;
+          this.modalViewLoading = false;
           this.getTableData();
         })
-        .finally(() => {
+        .catch(() => {
           this.modalEdit = false;
           this.modalViewLoading = false;
         });
@@ -1045,8 +1079,12 @@ export default {
           }
           this.tableData = res.rows;
           this.total = res.total;
+          this.loading = false;
+          this.searchLoading = false;
+          this.clearSearchLoading = false;
         })
-        .finally(() => {
+        .catch((error) => {
+          console.log(error);
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;

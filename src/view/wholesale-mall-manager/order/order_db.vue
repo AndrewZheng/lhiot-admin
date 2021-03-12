@@ -142,12 +142,12 @@
               <Icon type="md-refresh" />&nbsp;清除
             </Button>
           </Row>
-          <div v-if="printFlag === true" class="ml15 mt10">
+          <div v-if="printFlag===true" class="ml15 mt10">
             已完成打印
-            <i style="color: red">{{ printNum }}</i> 条配送单
+            <i style="color:red">{{ printNum }}</i> 条配送单
           </div>
         </div>
-        <div slot="operations" style="margin-left: -30px">
+        <div slot="operations" style="margin-left:-30px">
           <Button
             v-show="isSalesmanAnalysis"
             v-waves
@@ -184,7 +184,7 @@
             <Icon type="md-download" />导出配送单
           </Button>
           <Button
-            v-if="flag === true"
+            v-if="flag===true"
             :loading="downloadLoading"
             class="search-btn mr2"
             type="success"
@@ -192,12 +192,12 @@
           >
             <Icon type="md-download" />在线打印
           </Button>
-          <Button v-if="flag === false" class="search-btn mr2" type="success">
+          <Button v-if="flag===false" class="search-btn mr2" type="success">
             <Icon type="md-download" />正在打印中...
           </Button>
         </div>
       </tables>
-      <div style="margin: 10px; overflow: hidden">
+      <div style="margin: 10px;overflow: hidden">
         <Row type="flex" justify="end">
           <Page
             :total="total"
@@ -222,7 +222,9 @@
         <Row>
           <i-col span="12">
             <Row class-name="mb10">
-              <i-col span="6"> 订单编号: </i-col>
+              <i-col span="6">
+                订单编号:
+              </i-col>
               <i-col span="18">
                 {{ orderDetail.orderCode }}
               </i-col>
@@ -230,9 +232,11 @@
           </i-col>
           <i-col span="12">
             <Row class-name="mb10">
-              <i-col span="6"> 订单状态: </i-col>
+              <i-col span="6">
+                订单状态:
+              </i-col>
               <i-col span="18">
-                {{ orderDetail.orderStatus | wholesaleOrderStatusFilter }}
+                {{ orderDetail.orderStatus| wholesaleOrderStatusFilter }}
               </i-col>
             </Row>
           </i-col>
@@ -240,7 +244,9 @@
         <Row>
           <i-col span="12">
             <Row class-name="mb10">
-              <i-col span="6"> 海鼎编号: </i-col>
+              <i-col span="6">
+                海鼎编号:
+              </i-col>
               <i-col span="18">
                 {{ orderDetail.hdCode }}
               </i-col>
@@ -248,7 +254,9 @@
           </i-col>
           <i-col span="12">
             <Row class-name="mb10">
-              <i-col span="6"> 海鼎状态: </i-col>
+              <i-col span="6">
+                海鼎状态:
+              </i-col>
               <i-col span="18">
                 {{ orderDetail.hdStatus | wholesaleHdStatusFilter }}
               </i-col>
@@ -258,7 +266,9 @@
         <Row>
           <i-col span="12">
             <Row class-name="mb10">
-              <i-col span="6"> 下单时间: </i-col>
+              <i-col span="6">
+                下单时间:
+              </i-col>
               <i-col span="18">
                 {{ orderDetail.createTime }}
               </i-col>
@@ -266,11 +276,15 @@
           </i-col>
         </Row>
 
-        <Divider orientation="center"> 支付信息 </Divider>
+        <Divider orientation="center">
+          支付信息
+        </Divider>
         <Row>
           <i-col span="12">
             <Row class-name="mb10">
-              <i-col span="6"> 支付类型: </i-col>
+              <i-col span="6">
+                支付类型:
+              </i-col>
               <i-col span="18">
                 {{ orderDetail.settlementType | wholeslaePayTypeFilter }}
               </i-col>
@@ -278,7 +292,9 @@
           </i-col>
           <i-col span="12">
             <Row class-name="mb10">
-              <i-col span="6"> 支付状态: </i-col>
+              <i-col span="6">
+                支付状态:
+              </i-col>
               <i-col span="18">
                 {{ orderDetail.payStatus | payStatusFilter }}
               </i-col>
@@ -288,7 +304,9 @@
         <Row>
           <i-col span="12">
             <Row class-name="mb10">
-              <i-col span="6"> 订单金额: </i-col>
+              <i-col span="6">
+                订单金额:
+              </i-col>
               <i-col span="18">
                 {{ orderDetail.totalFee | fenToYuanDot2Filters }}
               </i-col>
@@ -296,7 +314,9 @@
           </i-col>
           <i-col span="12">
             <Row class-name="mb10">
-              <i-col span="6"> 优惠金额: </i-col>
+              <i-col span="6">
+                优惠金额:
+              </i-col>
               <i-col span="18">
                 {{ orderDetail.discountFee | fenToYuanDot2Filters }}
               </i-col>
@@ -306,7 +326,9 @@
         <Row>
           <i-col span="12">
             <Row class-name="mb10">
-              <i-col span="6"> 配送费: </i-col>
+              <i-col span="6">
+                配送费:
+              </i-col>
               <i-col span="18">
                 {{ orderDetail.deliveryFee | fenToYuanDot2Filters }}
               </i-col>
@@ -314,7 +336,9 @@
           </i-col>
           <i-col span="12">
             <Row class-name="mb10">
-              <i-col span="6"> 应付金额: </i-col>
+              <i-col span="6">
+                应付金额:
+              </i-col>
               <i-col span="18">
                 {{ orderDetail.payableFee | fenToYuanDot2Filters }}
               </i-col>
@@ -324,19 +348,25 @@
         <Row>
           <i-col span="12">
             <Row class-name="mb10">
-              <i-col span="6"> 支付时间: </i-col>
+              <i-col span="6">
+                支付时间:
+              </i-col>
               <i-col span="18">
-                {{ orderDetail.paymentTime ? orderDetail.paymentTime : "N/A" }}
+                {{ orderDetail.paymentTime? orderDetail.paymentTime: 'N/A' }}
               </i-col>
             </Row>
           </i-col>
         </Row>
 
-        <Divider orientation="center"> 用户信息 </Divider>
+        <Divider orientation="center">
+          用户信息
+        </Divider>
         <Row>
           <i-col span="12">
             <Row class-name="mb10">
-              <i-col span="6"> 门店名称: </i-col>
+              <i-col span="6">
+                门店名称:
+              </i-col>
               <i-col span="18">
                 {{ orderDetail.shopName }}
               </i-col>
@@ -344,7 +374,9 @@
           </i-col>
           <i-col span="12">
             <Row class-name="mb10">
-              <i-col span="6"> 店长名称: </i-col>
+              <i-col span="6">
+                店长名称:
+              </i-col>
               <i-col span="18">
                 {{ orderDetail.userName }}
               </i-col>
@@ -354,7 +386,9 @@
         <Row>
           <i-col span="12">
             <Row class-name="mb10">
-              <i-col span="6"> 店长手机: </i-col>
+              <i-col span="6">
+                店长手机:
+              </i-col>
               <i-col span="18">
                 {{ orderDetail.phone }}
               </i-col>
@@ -362,7 +396,9 @@
           </i-col>
           <i-col span="12">
             <Row class-name="mb10">
-              <i-col span="6"> 所属业务员: </i-col>
+              <i-col span="6">
+                所属业务员:
+              </i-col>
               <i-col span="18">
                 {{ orderDetail.saleUserName }}
               </i-col>
@@ -370,11 +406,15 @@
           </i-col>
         </Row>
 
-        <Divider orientation="center"> 配送信息 </Divider>
+        <Divider orientation="center">
+          配送信息
+        </Divider>
         <Row>
           <i-col span="12">
             <Row class-name="mb10">
-              <i-col span="6"> 收货人: </i-col>
+              <i-col span="6">
+                收货人:
+              </i-col>
               <i-col span="18">
                 {{ deliveryInfo.contactsName }}
               </i-col>
@@ -382,7 +422,9 @@
           </i-col>
           <i-col span="12">
             <Row class-name="mb10">
-              <i-col span="6"> 联系方式: </i-col>
+              <i-col span="6">
+                联系方式:
+              </i-col>
               <i-col span="18">
                 {{ deliveryInfo.phone }}
               </i-col>
@@ -392,7 +434,9 @@
         <Row>
           <i-col span="12">
             <Row class-name="mb10">
-              <i-col span="6"> 收货地址: </i-col>
+              <i-col span="6">
+                收货地址:
+              </i-col>
               <i-col span="18">
                 {{ address }}
               </i-col>
@@ -400,7 +444,9 @@
           </i-col>
           <i-col span="12">
             <Row class-name="mb10">
-              <i-col span="6"> 收货时间: </i-col>
+              <i-col span="6">
+                收货时间:
+              </i-col>
               <i-col span="18">
                 {{ orderDetail.receiveTime }}
               </i-col>
@@ -408,17 +454,17 @@
           </i-col>
         </Row>
 
-        <Divider orientation="center"> 商品信息 </Divider>
+        <Divider orientation="center">
+          商品信息
+        </Divider>
         <Row>
-          <tables
-            v-model="orderDetail.orderGoodsList"
-            :columns="goodsColumns"
-            border
-          ></tables>
+          <tables v-model="orderDetail.orderGoodsList" :columns="goodsColumns" border></tables>
         </Row>
       </div>
       <div slot="footer">
-        <Button type="primary" @click="handleClose"> 关闭 </Button>
+        <Button type="primary" @click="handleClose">
+          关闭
+        </Button>
       </div>
     </Modal>
     <!-- 确认打印弹框 -->
@@ -426,14 +472,20 @@
       <p slot="header">
         <span>在线打印配送单</span>
       </p>
-      <div class="print">是否在线打印 {{ printQuantity }} 条订单</div>
+      <div class="print">
+        是否在线打印 {{ printQuantity }} 条订单
+      </div>
       <div slot="footer">
-        <Button @click="handlePrintClose"> 关闭 </Button>
-        <Button type="primary" @click="handlePrintSubmit"> 确定 </Button>
+        <Button @click="handlePrintClose">
+          关闭
+        </Button>
+        <Button type="primary" @click="handlePrintSubmit">
+          确定
+        </Button>
       </div>
     </Modal>
     <!-- 在线打印 -->
-    <div ref="printTable" style="display: none">
+    <div ref="printTable" style="display:none">
       <table
         border="1"
         height="700"
@@ -441,16 +493,18 @@
         cellspacing="0"
         cellpadding="0"
         align="center"
-        style="fontsize: 12px"
+        style="fontSize:12px"
       >
         <thead>
           <tr align="center">
-            <th colspan="9" style="font-size: 26px">
+            <th colspan="9" style="font-size:26px;">
               <img
                 src="http://resource.shuiguoshule.com.cn/product_image/2020-03-31/OVFftIF74gHs2Qa01dF2.png"
-                style="width: 120px; height: 39px; float: left"
+                style="width:120px;height:39px;float:left;"
               >
-              <p style="margin-right: 120px; color: #666666">万翼果联销售单</p>
+              <p style="margin-right:120px;color:#666666">
+                万翼果联销售单
+              </p>
             </th>
           </tr>
         </thead>
@@ -458,14 +512,24 @@
         <tbody id="tab"></tbody>
         <tbody id="tabTotal"></tbody>
         <tr align="left">
-          <td colspan="9" style="height: 60px">发货备注:</td>
+          <td colspan="9" style="height:60px">
+            发货备注:
+          </td>
         </tr>
         <tfoot>
-          <tr style="height: 40px">
-            <td colspan="3">配送员签字:</td>
-            <td colspan="2">司机签字:</td>
-            <td colspan="2">客户签字:</td>
-            <td colspan="2">仓库审核:</td>
+          <tr style="height:40px">
+            <td colspan="3">
+              配送员签字:
+            </td>
+            <td colspan="2">
+              司机签字:
+            </td>
+            <td colspan="2">
+              客户签字:
+            </td>
+            <td colspan="2">
+              仓库审核:
+            </td>
           </tr>
         </tfoot>
       </table>
@@ -990,7 +1054,7 @@ export default {
         params.row.orderStatus === 'DISPATCHING'
       ) {
         sureReceive({ orderId: params.row.id })
-          .then((res) => {
+          .then(res => {
             this.loading = false;
             this.$Message.success('确认收货成功');
             this.getTableData();
@@ -1020,7 +1084,7 @@ export default {
     handleView(params) {
       this.loading = true;
       getOrder({ id: params.row.id })
-        .then((res) => {
+        .then(res => {
           this.orderDetail = res;
           if (this.orderDetail.deliveryAddress) {
             const deliveryInfo = JSON.parse(this.orderDetail.deliveryAddress);
@@ -1040,7 +1104,7 @@ export default {
         this.searchRowData.salesmanId = this.$route.query.id;
       }
       getOrderPages(this.searchRowData)
-        .then((res) => {
+        .then(res => {
           this.tableData = res.rows;
           this.total = res.total;
           this.loading = false;
@@ -1058,7 +1122,7 @@ export default {
       var tableData;
       // 导出不分页 按条件查出多少条导出多少条 限制每次最多5000条
       this.searchRowData.rows = this.total > 5000 ? 5000 : this.total;
-      getOrderPages(this.searchRowData).then((res) => {
+      getOrderPages(this.searchRowData).then(res => {
         tableData = res.rows;
         // 恢复正常页数
         this.searchRowData.rows = 20;
@@ -1068,11 +1132,11 @@ export default {
     handleDown(tableData) {
       exporGoodsStandard({
         exportType: 'ORDER_INFO'
-      }).then((res) => {
+      }).then(res => {
         const tableColumns = res;
         // 表格数据导出字段翻译
         const _this = this;
-        tableData.forEach((item) => {
+        tableData.forEach(item => {
           const deliveryAddress = JSON.parse(item['deliveryAddress']);
           item['orderCode'] = item['orderCode'] + '';
           item['hdCode'] = item['hdCode'] + '';
@@ -1130,7 +1194,7 @@ export default {
         exportOrder({
           exportType: name,
           searchParam: this.searchRowData
-        }).then((res) => {
+        }).then(res => {
           const tableData = res.rows;
           const tableColumns = res.columns;
           // 表格数据导出字段翻译
@@ -1151,7 +1215,7 @@ export default {
         exportOrder({
           exportType: name,
           searchParam: orderCodes
-        }).then((res) => {
+        }).then(res => {
           const tableData = res.rows;
           const tableColumns = res.columns;
           this.$refs.tables.handleCustomDownload({
@@ -1169,7 +1233,7 @@ export default {
       }
 
       if (this.tableDataSelected.length > 0) {
-        sendHdManual({ orderCode: this.selectedOrderCodes }).then((res) => {
+        sendHdManual({ orderCode: this.selectedOrderCodes }).then(res => {
           this.$Message.info('海鼎重发成功');
           this.getTableData();
         });
@@ -1178,13 +1242,13 @@ export default {
     onSelectionAll(selection) {
       this.tableDataSelected = selection;
       this.selectedOrderCodes = selection
-        .map((item) => item.orderCode.toString())
+        .map(item => item.orderCode.toString())
         .join(',');
     },
     onSelectionChange(selection) {
       this.tableDataSelected = selection;
       this.selectedOrderCodes = selection
-        .map((item) => item.orderCode.toString())
+        .map(item => item.orderCode.toString())
         .join(',');
     },
     handleBack() {
@@ -1210,7 +1274,7 @@ export default {
         };
       }
       getPrintOrder(data)
-        .then((res) => {
+        .then(res => {
           this.printQuantity = res.length;
           this.printFlag = false;
           this.modalAffirm = true;
@@ -1235,7 +1299,7 @@ export default {
       var otabTotal = document.getElementById('tabTotal');
       var _this = this;
       getPrintOrder(data)
-        .then((res) => {
+        .then(res => {
           this.$nextTick(() => {
             for (let j = 3; j < res.length; j++) {
               this.amount = 0;

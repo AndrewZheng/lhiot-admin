@@ -33,15 +33,15 @@
             clearable
           >
             <Option
-              v-for="(item, index) in rewardTypeEnum"
-              :key="index"
+              v-for="(item,index) in rewardTypeEnum"
               :value="item.value"
+              :key="index"
               class="ptb2-5"
             >{{ item.label }}</Option>
           </Select>
           <Button
             v-waves
-            :search-loading="searchLoading"
+            :searchLoading="searchLoading"
             class="search-btn mr5"
             type="primary"
             @click="handleSearch"
@@ -75,7 +75,7 @@
           </Poptip>
         </div>
       </tables>
-      <div style="margin: 10px; overflow: hidden">
+      <div style="margin: 10px;overflow: hidden">
         <Row type="flex" justify="end">
           <Page
             :total="total"
@@ -91,46 +91,26 @@
 
     <Modal v-model="modalEdit" :mask-closable="false">
       <p slot="header">
-        <span>{{ isCreate ? "创建签到奖励" : "编辑签到奖励" }}</span>
+        <span>{{ isCreate?'创建签到奖励':'编辑签到奖励' }}</span>
       </p>
       <div class="modal-content" style="margin-top: 20px">
-        <Form
-          ref="editForm"
-          :label-width="100"
-          :model="signRewardDetail"
-          :rules="ruleInline"
-        >
+        <Form ref="editForm" :label-width="100" :model="signRewardDetail" :rules="ruleInline">
           <Row>
             <FormItem label="连续签到天数:" prop="continueSignDay">
-              <Input
-                v-model="signRewardDetail.continueSignDay"
-                placeholder="请输入签到天数"
-                style="width: 200px"
-              ></Input>
+              <Input v-model="signRewardDetail.continueSignDay" placeholder="请输入签到天数" style="width: 200px"></Input>
             </FormItem>
           </Row>
           <Row>
             <FormItem label="获得积分:" prop="getIntegral">
-              <Input
-                v-model="signRewardDetail.getIntegral"
-                placeholder="请输入任务积分"
-                style="width: 200px"
-              ></Input>
+              <Input v-model="signRewardDetail.getIntegral" placeholder="请输入任务积分" style="width: 200px"></Input>
             </FormItem>
           </Row>
-          <Row v-if="signRewardDetail.rewardType === 'GIFTPACK'">
+          <Row v-if="signRewardDetail.rewardType==='GIFTPACK'">
             <FormItem label="礼包类型:" prop="giftPackType">
               <Input v-model="giftPackTypeStr" style="width: 200px" readonly>
-              <Button
-                v-if="signRewardDetail.giftPackType === 'COUPON'"
-                slot="append"
-                type="success"
-                icon="ios-settings"
-                class="pr5"
-                @click="handleConfig"
-              ></Button>
+              <Button v-if="signRewardDetail.giftPackType==='COUPON'" slot="append" type="success" icon="ios-settings" class="pr5" @click="handleConfig"></Button>
               </Input>
-              <!-- <Select
+            <!-- <Select
                 v-model="signRewardDetail.giftPackType"
                 class="search-col mr5"
                 placeholder="请选择"
@@ -152,14 +132,14 @@
                 v-model="signRewardDetail.rewardType"
                 class="search-col mr5"
                 placeholder="请选择"
-                style="width: 200px"
+                style="width:200px"
                 clearable
                 @on-change="rewardTypeChange"
               >
                 <Option
                   v-for="item in rewardTypeEnum"
-                  :key="item.value"
                   :value="item.value"
+                  :key="item.value"
                   class="ptb2-5"
                 >{{ item.label }}</Option>
               </Select>
@@ -169,11 +149,7 @@
       </div>
       <div slot="footer">
         <Button @click="handleEditClose">关闭</Button>
-        <Button
-          :loading="modalEditLoading"
-          type="primary"
-          @click="handleSubmit"
-        >确定</Button>
+        <Button :loading="modalEditLoading" type="primary" @click="handleSubmit">确定</Button>
       </div>
     </Modal>
   </div>
@@ -292,7 +268,7 @@ export default {
     getTableData() {
       this.loading = true;
       getSignRewardPages(this.searchRowData)
-        .then((res) => {
+        .then(res => {
           this.tableData = res.rows;
           this.total = res.total;
         })
@@ -311,8 +287,8 @@ export default {
     handleConfig() {
       this.turnToPage({
         name: 'small-hand-coupon',
-        params: { couponBusinessType: 'ACTIVITY_SIGN_COUPON' }
-      });
+        params: { couponBusinessType: 'ACTIVITY_SIGN_COUPON',pageStatus:"signReward" }
+      })
     },
     handleCreate() {
       this.$refs.editForm.resetFields();
@@ -327,7 +303,7 @@ export default {
       this.modalEdit = true;
     },
     handleSubmit() {
-      this.$refs.editForm.validate((valid) => {
+      this.$refs.editForm.validate(valid => {
         if (valid) {
           if (this.isCreate) {
             this.createTableRow();
@@ -342,7 +318,7 @@ export default {
     editTableRow() {
       this.modalEditLoading = true;
       editSignReward(this.signRewardDetail)
-        .then((res) => {
+        .then(res => {
           this.modalEdit = false;
           this.getTableData();
           this.resetFields();
@@ -353,8 +329,8 @@ export default {
     },
     createTableRow() {
       createSignReward(this.signRewardDetail)
-        .then((res) => {})
-        .finally((res) => {
+        .then(res => {})
+        .finally(res => {
           this.modalEdit = false;
           this.getTableData();
           this.resetFields();
@@ -371,7 +347,7 @@ export default {
       deleteSignReward({
         ids
       })
-        .then((res) => {
+        .then(res => {
           const totalPage = Math.ceil(this.total / this.pageSize);
           if (
             this.tableData.length === this.tableDataSelected.length &&

@@ -767,7 +767,9 @@
                 :key="`storeList-col-${item.storeId}`"
                 :value="item.storeId"
                 class="ptb2-5"
-              >{{ item.storeName }}</Option>
+              >
+                {{ item.storeName }}
+              </Option>
             </Select>
           </Row>
         </i-col>
@@ -1262,7 +1264,12 @@ export default {
           width: 130,
           key: 'contactPhone'
         },
-        { align: 'center', title: '商品名称', width: 150, key: 'productNames' },
+        {
+          title: '商品名称',
+          align: 'center',
+          minWidth: 300,
+          key: 'productNames'
+        },
         {
           title: '下单门店',
           align: 'center',
@@ -1341,7 +1348,6 @@ export default {
             return <div>{amount}</div>;
           }
         },
-        { align: 'center', title: '商品名称', width: 150, key: 'productNames' },
         {
           title: '活动名称',
           width: 120,
@@ -1350,13 +1356,13 @@ export default {
         {
           title: '券名称',
           align: 'center',
-          width: 120,
+          width: 150,
           key: 'couponName'
         },
         {
           title: '提货类型',
           align: 'center',
-          width: 100,
+          width: 110,
           key: 'receivingWay',
           render: (h, params, vm) => {
             const { row } = params;
@@ -1384,7 +1390,7 @@ export default {
         {
           title: '是否退款',
           align: 'center',
-          width: 100,
+          width: 110,
           key: 'isAllRefund',
           render: (h, params, vm) => {
             const { row } = params;
@@ -1411,7 +1417,7 @@ export default {
         {
           title: '退款金额',
           align: 'center',
-          width: 100,
+          width: 110,
           key: 'refundFee',
           render(h, params, vm) {
             const refund = fenToYuanDot2(params.row.refundFee);
@@ -1421,8 +1427,9 @@ export default {
         {
           title: '订单状态',
           align: 'center',
-          width: 100,
+          width: 110,
           key: 'orderStatus',
+          fixed: 'right',
           render: (h, params, vm) => {
             const { row } = params;
             // WAIT_PAYMENT("待支付"),PAYMENTING("支付中"),WAIT_SEND_OUT("待发货"),
@@ -1485,6 +1492,7 @@ export default {
           title: '海鼎状态',
           align: 'center',
           width: 100,
+          fixed: 'right',
           key: 'hdStatus',
           render: (h, params, vm) => {
             const { row } = params;
@@ -1611,10 +1619,10 @@ export default {
         this.$Message.error('已失效的订单不能操作退款');
         return;
       }
-      if (params.row.orderType === 'POINTS_BUYING') {
-        this.$Message.error('积分兑换的订单不能操作退款');
-        return;
-      }
+      // if (params.row.orderType === "POINTS_BUYING") {
+      //   this.$Message.error("积分兑换的订单不能操作退款");
+      //   return;
+      // }
       if (params.row.apply === 'S_MALL') {
         refundPt({ orderCode: params.row.code })
           .then((res) => {
@@ -1958,16 +1966,24 @@ export default {
       return sums;
     },
     getStore() {
-      getStorePages({ page: 1, rows: -1 }).then((res) => {
-        this.storeList = res.rows;
-      });
+      getStorePages({ page: 1, rows: -1 })
+        .then((res) => {
+          this.storeList = res.rows;
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     },
     modifyStoreInOrder() {
       // TODO 未测试
-      modifyStoreInOrder(this.currentTableRowSelected).then((res) => {
-        this.$Message.info('调货成功！');
-        this.transferModalView = false;
-      });
+      modifyStoreInOrder(this.currentTableRowSelected)
+        .then((res) => {
+          this.$Message.info('调货成功！');
+          this.transferModalView = false;
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     },
     resendToHd() {
       // TODO 未测试

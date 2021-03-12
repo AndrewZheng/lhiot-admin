@@ -134,7 +134,9 @@
         <Row class-name="mb20">
           <i-col span="12">
             <Row>
-              <i-col span="6"> 团购活动编号: </i-col>
+              <i-col span="6">
+                团购活动编号:
+              </i-col>
               <i-col span="18">
                 {{ teambuyDetail.id }}
               </i-col>
@@ -142,7 +144,9 @@
           </i-col>
           <i-col span="12">
             <Row>
-              <i-col span="6"> 活动类型: </i-col>
+              <i-col span="6">
+                活动类型:
+              </i-col>
               <i-col span="18">
                 {{ teambuyDetail.teamBuyType | teamBuyTypeFilter }}
               </i-col>
@@ -152,7 +156,9 @@
         <Row class-name="mb20">
           <i-col span="12">
             <Row>
-              <i-col span="6"> 活动名称: </i-col>
+              <i-col span="6">
+                活动名称:
+              </i-col>
               <i-col span="18">
                 {{ teambuyDetail.activityName }}
               </i-col>
@@ -160,7 +166,9 @@
           </i-col>
           <i-col span="12">
             <Row>
-              <i-col span="6"> 创建时间: </i-col>
+              <i-col span="6">
+                创建时间:
+              </i-col>
               <i-col span="18">
                 {{ teambuyDetail.createTime }}
               </i-col>
@@ -170,7 +178,9 @@
         <Row class-name="mb20">
           <i-col span="12">
             <Row>
-              <i-col span="6"> 活动内容: </i-col>
+              <i-col span="6">
+                活动内容:
+              </i-col>
               <i-col span="18">
                 {{ teambuyDetail.content }}
               </i-col>
@@ -178,7 +188,9 @@
           </i-col>
           <i-col span="12">
             <Row>
-              <i-col span="6"> 活动状态: </i-col>
+              <i-col span="6">
+                活动状态:
+              </i-col>
               <i-col span="18">
                 {{ teambuyDetail.status | teamBuyStatusFilter }}
               </i-col>
@@ -188,7 +200,9 @@
         <Row class-name="mb20">
           <i-col span="12">
             <Row>
-              <i-col span="6"> 排序序号: </i-col>
+              <i-col span="6">
+                排序序号:
+              </i-col>
               <i-col span="18">
                 {{ teambuyDetail.rank }}
               </i-col>
@@ -196,7 +210,9 @@
           </i-col>
           <i-col span="12">
             <Row>
-              <i-col span="6"> 活动banner: </i-col>
+              <i-col span="6">
+                活动banner:
+              </i-col>
               <i-col span="18">
                 <img :src="teambuyDetail.banner" style="width: 100%">
               </i-col>
@@ -206,7 +222,9 @@
         <Row class-name="mb20">
           <i-col span="12">
             <Row>
-              <i-col span="6"> 有效期起: </i-col>
+              <i-col span="6">
+                有效期起:
+              </i-col>
               <i-col span="18">
                 {{
                   (this.teambuyDetail.startTime = this.$moment(
@@ -219,7 +237,9 @@
           <i-col span="12">
             <Row>
               <!-- {{ teambuyDetail.endTime }} -->
-              <i-col span="6"> 有效期止: </i-col>
+              <i-col span="6">
+                有效期止:
+              </i-col>
               <i-col span="18">
                 {{
                   (this.teambuyDetail.endTime = this.$moment(
@@ -233,13 +253,17 @@
         <Row class-name="mb20">
           <i-col span="12">
             <Row v-if="teambuyDetail.deliveryEndTimeDay > 0">
-              <i-col span="6"> 提货截止天数: </i-col>
+              <i-col span="6">
+                提货截止天数:
+              </i-col>
               <i-col span="18">
                 {{ teambuyDetail.deliveryEndTimeDay }}
               </i-col>
             </Row>
             <Row v-else>
-              <i-col span="6"> 提货截止时间: </i-col>
+              <i-col span="6">
+                提货截止时间:
+              </i-col>
               <i-col span="18">
                 {{
                   (teambuyDetail.deliveryEndTime = this.$moment(
@@ -251,7 +275,9 @@
           </i-col>
           <i-col span="12">
             <Row>
-              <i-col span="6"> 成团有效时长: </i-col>
+              <i-col span="6">
+                成团有效时长:
+              </i-col>
               <i-col span="18">
                 {{ teambuyDetail.validSeconds }}
               </i-col>
@@ -261,7 +287,9 @@
         <Row class-name="mb20">
           <i-col span="12">
             <Row>
-              <i-col span="6"> 成团人数: </i-col>
+              <i-col span="6">
+                成团人数:
+              </i-col>
               <i-col span="18">
                 {{ teambuyDetail.fullUserNum }}
               </i-col>
@@ -269,7 +297,9 @@
           </i-col>
           <i-col span="12">
             <Row>
-              <i-col span="6"> 参团信息列表: </i-col>
+              <i-col span="6">
+                参团信息列表:
+              </i-col>
               <i-col span="18">
                 {{ teambuyDetail.joinInfoStatus | teamBuyStatusFilter }}
               </i-col>
@@ -279,7 +309,9 @@
         <Row class-name="mb20">
           <i-col span="12">
             <Row>
-              <i-col span="6"> 是否模拟成团: </i-col>
+              <i-col span="6">
+                是否模拟成团:
+              </i-col>
               <i-col span="18">
                 {{ teambuyDetail.robot | teamBuyStatusFilter }}
               </i-col>
@@ -287,7 +319,9 @@
           </i-col>
           <i-col span="12">
             <Row>
-              <i-col span="6"> 状态多少秒: </i-col>
+              <i-col span="6">
+                状态多少秒:
+              </i-col>
               <i-col span="18">
                 {{ teambuyDetail.robotStartSecond }}
               </i-col>
@@ -297,7 +331,9 @@
         <Row class-name="mb20">
           <i-col span="12">
             <Row>
-              <i-col span="6"> 商品规格: </i-col>
+              <i-col span="6">
+                商品规格:
+              </i-col>
               <i-col span="18">
                 {{ teambuyDetail.standardId }}
               </i-col>
@@ -305,7 +341,9 @@
           </i-col>
           <i-col span="12">
             <Row>
-              <i-col span="6"> 规格描述: </i-col>
+              <i-col span="6">
+                规格描述:
+              </i-col>
               <i-col span="18">
                 {{ teambuyDetail.standardDesc }}
               </i-col>
@@ -315,7 +353,9 @@
         <Row class-name="mb20">
           <i-col span="12">
             <Row>
-              <i-col span="6"> 原价: </i-col>
+              <i-col span="6">
+                原价:
+              </i-col>
               <i-col span="18">
                 {{ teambuyDetail.originalPrice | fenToYuanDot2Filters }}
               </i-col>
@@ -323,7 +363,9 @@
           </i-col>
           <i-col span="12">
             <Row>
-              <i-col span="6"> 活动价: </i-col>
+              <i-col span="6">
+                活动价:
+              </i-col>
               <i-col span="18">
                 {{ teambuyDetail.activityPrice | fenToYuanDot2Filters }}
               </i-col>
@@ -333,7 +375,9 @@
         <Row class-name="mb20">
           <i-col span="12">
             <Row>
-              <i-col span="6"> 成本价: </i-col>
+              <i-col span="6">
+                成本价:
+              </i-col>
               <i-col span="18">
                 {{ teambuyDetail.costPrice | fenToYuanDot2Filters }}
               </i-col>
@@ -341,7 +385,9 @@
           </i-col>
           <i-col span="12">
             <Row>
-              <i-col span="6"> 商品毛利: </i-col>
+              <i-col span="6">
+                商品毛利:
+              </i-col>
               <i-col span="18">
                 {{ teambuyDetail.productProfitPrice | fenToYuanDot2Filters }}
               </i-col>
@@ -351,7 +397,9 @@
         <Row class-name="mb20">
           <i-col span="12">
             <Row>
-              <i-col span="6"> 佣金比例: </i-col>
+              <i-col span="6">
+                佣金比例:
+              </i-col>
               <i-col span="18">
                 {{ teambuyDetail.commissionScale + "%" }}
               </i-col>
@@ -359,7 +407,9 @@
           </i-col>
           <i-col span="12">
             <Row>
-              <i-col span="6"> 佣金金额: </i-col>
+              <i-col span="6">
+                佣金金额:
+              </i-col>
               <i-col span="18">
                 {{ teambuyDetail.commissionPrice | fenToYuanDot2Filters }}
               </i-col>
@@ -369,7 +419,9 @@
         <Row class-name="mb20">
           <i-col span="12">
             <Row>
-              <i-col span="6"> 团长优惠: </i-col>
+              <i-col span="6">
+                团长优惠:
+              </i-col>
               <i-col span="18">
                 {{ teambuyDetail.tourDiscount | fenToYuanDot2Filters }}
               </i-col>
@@ -377,7 +429,9 @@
           </i-col>
           <i-col span="12">
             <Row>
-              <i-col span="6"> 限购次数: </i-col>
+              <i-col span="6">
+                限购次数:
+              </i-col>
               <i-col span="18">
                 {{ teambuyDetail.triesLimit }}
               </i-col>
@@ -387,7 +441,9 @@
         <Row class-name="mb20">
           <i-col span="12">
             <Row>
-              <i-col span="6"> 库存数量: </i-col>
+              <i-col span="6">
+                库存数量:
+              </i-col>
               <i-col span="18">
                 {{ teambuyDetail.productNum }}
               </i-col>
@@ -395,7 +451,9 @@
           </i-col>
           <i-col span="12">
             <Row>
-              <i-col span="6"> 已售份数: </i-col>
+              <i-col span="6">
+                已售份数:
+              </i-col>
               <i-col span="18">
                 {{ teambuyDetail.saleQuantity }}
               </i-col>
@@ -405,7 +463,9 @@
         <Row class-name="mb20">
           <i-col span="12">
             <Row>
-              <i-col span="6"> 红包活动设置: </i-col>
+              <i-col span="6">
+                红包活动设置:
+              </i-col>
               <i-col span="18">
                 {{
                   teambuyDetail.rewardActivitySetting
@@ -418,7 +478,9 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="3"> 关联门店: </i-col>
+              <i-col span="3">
+                关联门店:
+              </i-col>
               <i-col span="16">
                 {{ showStoreName }}
               </i-col>
@@ -427,7 +489,9 @@
         </Row>
       </div>
       <div slot="footer">
-        <Button type="primary" @click="handleClose"> 关闭 </Button>
+        <Button type="primary" @click="handleClose">
+          关闭
+        </Button>
       </div>
     </Modal>
 
@@ -707,6 +771,8 @@
                 </i-col>
                 <i-col span="12">
                   <FormItem label="成团有效时长:" prop="validSeconds">
+                    <!-- TODO 后期插件修改 -->
+                    <!-- <TimePicker type="time" placeholder="成团有效时长" style="width: 200px" @on-change=""></TimePicker> -->
                     <InputNumber
                       v-model="teambuyDetail.hour"
                       :min="0"
@@ -743,14 +809,7 @@
               <Row>
                 <i-col span="12">
                   <FormItem label="是否模拟成团:" prop="robot">
-                    <Select
-                      v-model="teambuyDetail.robot"
-                      style="width: 200px"
-                      :disabled="
-                        tempModalType === modalType.edit &&
-                          teambuyDetail.status === 'on'
-                      "
-                    >
+                    <Select v-model="teambuyDetail.robot" style="width: 200px">
                       <Option
                         v-for="item in teamBuyStatus"
                         :key="item.value"
@@ -768,10 +827,6 @@
                     <Select
                       v-model="teambuyDetail.joinInfoStatus"
                       style="width: 200px"
-                      :disabled="
-                        tempModalType === modalType.edit &&
-                          teambuyDetail.status === 'on'
-                      "
                     >
                       <Option
                         v-for="item in teamBuyStatus"
@@ -809,10 +864,6 @@
                     <Input
                       v-model="teambuyDetail.robotStartSecond"
                       style="width: 200px"
-                      :readonly="
-                        tempModalType === modalType.edit &&
-                          teambuyDetail.status === 'on'
-                      "
                     ></Input>
                   </FormItem>
                 </i-col>
@@ -863,16 +914,16 @@
               </Row>
               <Row>
                 <!-- <i-col span="12">
-                <FormItem label="成本价:" prop="costPrice">
-                  <InputNumber
-                    :min="0"
-                    readonly
-                    :value="costPriceComputed"
-                    @on-change="costPriceInputNumberOnchange"
-                    style="width: 200px"
-                  ></InputNumber>
-                </FormItem>
-              </i-col> -->
+                  <FormItem label="成本价:" prop="costPrice">
+                    <InputNumber
+                      :min="0"
+                      readonly
+                      :value="costPriceComputed"
+                      @on-change="costPriceInputNumberOnchange"
+                      style="width: 200px"
+                    ></InputNumber>
+                  </FormItem>
+                </i-col> -->
                 <i-col span="12">
                   <FormItem label="成本价:" prop="costPrice">
                     {{ teambuyDetail.costPrice | fenToYuanDot2Filters }}
@@ -888,7 +939,8 @@
               </Row>
               <Row>
                 <p style="color: #ff3861; margin-left: 58px">
-                  * 佣金比例为0~50的整数 (单位%)* 按活动价的比例计算佣金
+                  * 佣金比例为0~50的整数 (单位%)*
+                  按活动价的比例计算佣金
                 </p>
                 <i-col span="12">
                   <FormItem label="佣金比例:" prop="commissionScale">
@@ -933,7 +985,7 @@
                   </FormItem>
                 </i-col>
                 <i-col span="12">
-                  <FormItem label="限购次数:" prop="triesLimit">
+                  <FormItem label="限购份数:" prop="triesLimit">
                     <InputNumber
                       v-model="teambuyDetail.triesLimit"
                       :min="0"
@@ -974,25 +1026,6 @@
             >
               <Row>
                 <i-col span="12">
-                  <FormItem label="关联门店:">
-                    <Select
-                      v-model="teambuyDetail.relationStoreType"
-                      style="width: 200px"
-                    >
-                      <Option
-                        v-for="item in relationStoreTypeEnum"
-                        :key="item.value"
-                        :value="item.value"
-                        class="ptb2-5"
-                        style="padding-left: 5px"
-                        @click.native="selectStore(item)"
-                      >
-                        {{ item.label }}
-                      </Option>
-                    </Select>
-                  </FormItem>
-                </i-col>
-                <i-col span="12">
                   <FormItem label="红包活动设置:" prop="rewardActivitySetting">
                     <Select
                       v-model="teambuyDetail.rewardActivitySetting"
@@ -1011,16 +1044,55 @@
                   </FormItem>
                 </i-col>
               </Row>
+              <Row>
+                <i-col span="12">
+                  <FormItem label="关联门店:">
+                    <Select
+                      v-model="teambuyDetail.relationStoreType"
+                      style="width: 200px"
+                    >
+                      <Option
+                        v-for="item in relationStoreTypeEnum"
+                        :key="item.value"
+                        :value="item.value"
+                        class="ptb2-5"
+                        style="padding-left: 5px"
+                        @click.native="selectStore(item)"
+                      >
+                        {{ item.label }}
+                      </Option>
+                    </Select>
+                  </FormItem>
+                </i-col>
+                <i-col v-show="showStoreList" span="12">
+                  <FormItem
+                    :label-width="85"
+                    label="所属城市:"
+                    prop="cityCode"
+                  >
+                    <Select
+                      v-model="teambuyDetail.cityCode"
+                      style="width: 220px"
+                      @on-change="handleCitySwitch"
+                    >
+                      <Option
+                        v-for="(item, index) in cityList"
+                        :key="index"
+                        :value="item.cityCode"
+                        class="ptb2-5"
+                        style="padding-left: 5px"
+                      >
+                        {{ item.cityName }}
+                      </Option>
+                    </Select>
+                  </FormItem>
+                </i-col>
+              </Row>
               <Row v-show="showStoreList">
-                <i-col span="24">
+                <i-col v-if="storeData.length>0" span="24">
                   <FormItem>
                     <div
-                      style="
-                        border-bottom: 1px solid #e9e9e9;
-                        padding-bottom: 6px;
-                        margin-bottom: 6px;
-                        display: flex;
-                      "
+                      class="bottom-line"
                     >
                       <div style="margin-left: -54px; margin-right: 18px">
                         {{ storeNameList[0] }}
@@ -1048,15 +1120,10 @@
                     </CheckboxGroup>
                   </FormItem>
                 </i-col>
-                <i-col span="24">
+                <i-col v-if="storeData1.length>0" span="24">
                   <FormItem>
                     <div
-                      style="
-                        border-bottom: 1px solid #e9e9e9;
-                        padding-bottom: 6px;
-                        margin-bottom: 6px;
-                        display: flex;
-                      "
+                      class="bottom-line"
                     >
                       <div style="margin-left: -54px; margin-right: 18px">
                         {{ storeNameList[1] }}
@@ -1084,15 +1151,10 @@
                     </CheckboxGroup>
                   </FormItem>
                 </i-col>
-                <i-col span="24">
+                <i-col v-if="storeData2.length>0" span="24">
                   <FormItem>
                     <div
-                      style="
-                        border-bottom: 1px solid #e9e9e9;
-                        padding-bottom: 6px;
-                        margin-bottom: 6px;
-                        display: flex;
-                      "
+                      class="bottom-line"
                     >
                       <div style="margin-left: -54px; margin-right: 18px">
                         {{ storeNameList[2] }}
@@ -1120,15 +1182,10 @@
                     </CheckboxGroup>
                   </FormItem>
                 </i-col>
-                <i-col span="24">
+                <i-col v-if="storeData3.length>0" span="24">
                   <FormItem>
                     <div
-                      style="
-                        border-bottom: 1px solid #e9e9e9;
-                        padding-bottom: 6px;
-                        margin-bottom: 6px;
-                        display: flex;
-                      "
+                      class="bottom-line"
                     >
                       <div style="margin-left: -54px; margin-right: 18px">
                         {{ storeNameList[3] }}
@@ -1156,15 +1213,10 @@
                     </CheckboxGroup>
                   </FormItem>
                 </i-col>
-                <i-col span="24">
+                <i-col v-if="storeData4.length>0" span="24">
                   <FormItem>
                     <div
-                      style="
-                        border-bottom: 1px solid #e9e9e9;
-                        padding-bottom: 6px;
-                        margin-bottom: 6px;
-                        display: flex;
-                      "
+                      class="bottom-line"
                     >
                       <div style="margin-left: -54px; margin-right: 18px">
                         {{ storeNameList[4] }}
@@ -1192,15 +1244,10 @@
                     </CheckboxGroup>
                   </FormItem>
                 </i-col>
-                <i-col span="24">
+                <i-col v-if="storeData5.length>0" span="24">
                   <FormItem>
                     <div
-                      style="
-                        border-bottom: 1px solid #e9e9e9;
-                        padding-bottom: 6px;
-                        margin-bottom: 6px;
-                        display: flex;
-                      "
+                      class="bottom-line"
                     >
                       <div style="margin-left: -54px; margin-right: 18px">
                         {{ storeNameList[5] }}
@@ -1228,15 +1275,10 @@
                     </CheckboxGroup>
                   </FormItem>
                 </i-col>
-                <i-col span="24">
+                <i-col v-if="storeData6.length>0" span="24">
                   <FormItem>
                     <div
-                      style="
-                        border-bottom: 1px solid #e9e9e9;
-                        padding-bottom: 6px;
-                        margin-bottom: 6px;
-                        display: flex;
-                      "
+                      class="bottom-line"
                     >
                       <div style="margin-left: -54px; margin-right: 18px">
                         {{ storeNameList[6] }}
@@ -1270,7 +1312,9 @@
         </Tabs>
       </div>
       <div slot="footer">
-        <Button @click="handleEditClose"> 关闭 </Button>
+        <Button @click="handleEditClose">
+          关闭
+        </Button>
         <!-- <Button :loading="modalViewLoading" type="primary" @click="handleSubmit">确定</Button>-->
         <Button
           v-if="step == 'firstStep'"
@@ -1289,10 +1333,6 @@
           确定
         </Button>
       </div>
-    </Modal>
-
-    <Modal v-model="uploadVisible" title="图片预览">
-      <img :src="imgUploadViewItem" style="width: 100%">
     </Modal>
 
     <Modal v-model="modalProduct" :width="1200" title="关联商品" footer-hide>
@@ -1368,7 +1408,9 @@
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8"> 商品ID: </i-col>
+              <i-col span="8">
+                商品ID:
+              </i-col>
               <i-col span="16">
                 {{ productStandardDetail.productId }}
               </i-col>
@@ -1376,7 +1418,9 @@
           </i-col>
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8"> 商品名称: </i-col>
+              <i-col span="8">
+                商品名称:
+              </i-col>
               <i-col span="16">
                 {{ productStandardDetail.baseProductName }}
               </i-col>
@@ -1386,7 +1430,9 @@
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8"> 商品分类: </i-col>
+              <i-col span="8">
+                商品分类:
+              </i-col>
               <i-col span="16">
                 {{ productStandardDetail.groupName }}
               </i-col>
@@ -1394,7 +1440,9 @@
           </i-col>
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8"> 基础单位: </i-col>
+              <i-col span="8">
+                基础单位:
+              </i-col>
               <i-col span="16">
                 {{ productStandardDetail.baseUnit }}
               </i-col>
@@ -1404,7 +1452,9 @@
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8"> 商品编号: </i-col>
+              <i-col span="8">
+                商品编号:
+              </i-col>
               <i-col span="16">
                 {{ productStandardDetail.productCode }}
               </i-col>
@@ -1412,7 +1462,9 @@
           </i-col>
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8"> 商品条码: </i-col>
+              <i-col span="8">
+                商品条码:
+              </i-col>
               <i-col span="16">
                 {{ productStandardDetail.baseBarcode }}
               </i-col>
@@ -1422,7 +1474,9 @@
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8"> 商品主图: </i-col>
+              <i-col span="8">
+                商品主图:
+              </i-col>
               <i-col span="16">
                 <img
                   :src="productStandardDetail.baseImage"
@@ -1436,18 +1490,24 @@
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8"> 商品描述: </i-col>
+              <i-col span="8">
+                商品描述:
+              </i-col>
               <i-col span="16">
                 {{ productStandardDetail.baseProductDescription }}
               </i-col>
             </Row>
           </i-col>
         </Row>
-        <Divider orientation="center"> 商品规格 </Divider>
+        <Divider orientation="center">
+          商品规格
+        </Divider>
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8"> 上架商品名称: </i-col>
+              <i-col span="8">
+                上架商品名称:
+              </i-col>
               <i-col span="16">
                 {{ productStandardDetail.productName }}
               </i-col>
@@ -1455,7 +1515,9 @@
           </i-col>
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8"> 上架商品描述: </i-col>
+              <i-col span="8">
+                上架商品描述:
+              </i-col>
               <i-col span="16">
                 {{ productStandardDetail.productDescription }}
               </i-col>
@@ -1465,7 +1527,9 @@
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8"> 上架商品主图: </i-col>
+              <i-col span="8">
+                上架商品主图:
+              </i-col>
               <i-col v-if="productStandardDetail.image" span="16">
                 <img
                   :src="productStandardDetail.image"
@@ -1479,7 +1543,9 @@
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8"> 商品条码: </i-col>
+              <i-col span="8">
+                商品条码:
+              </i-col>
               <i-col span="16">
                 {{ productStandardDetail.barcode }}
               </i-col>
@@ -1487,7 +1553,9 @@
           </i-col>
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8"> 商品状态: </i-col>
+              <i-col span="8">
+                商品状态:
+              </i-col>
               <i-col span="16">
                 {{
                   productStandardDetail.shelvesStatus | customPlanStatusFilters
@@ -1499,7 +1567,9 @@
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8"> 商品规格: </i-col>
+              <i-col span="8">
+                商品规格:
+              </i-col>
               <i-col span="16">
                 {{ productStandardDetail.specification }}
               </i-col>
@@ -1507,7 +1577,9 @@
           </i-col>
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8"> 数量/重量: </i-col>
+              <i-col span="8">
+                数量/重量:
+              </i-col>
               <i-col span="16">
                 {{ productStandardDetail.standardQty }}
               </i-col>
@@ -1517,7 +1589,9 @@
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8"> 商品原价: </i-col>
+              <i-col span="8">
+                商品原价:
+              </i-col>
               <i-col span="16">
                 {{ productStandardDetail.price | fenToYuanDot2Filters }}
               </i-col>
@@ -1525,7 +1599,9 @@
           </i-col>
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8"> 售卖价格: </i-col>
+              <i-col span="8">
+                售卖价格:
+              </i-col>
               <i-col span="16">
                 {{ productStandardDetail.salePrice | fenToYuanDot2Filters }}
               </i-col>
@@ -1533,18 +1609,20 @@
           </i-col>
         </Row>
         <!-- <Row>
-        <i-col span="12">
-          <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-            <i-col span="8">SVIP价格:</i-col>
-            <i-col span="16">{{ productStandardDetail.svipPrice | fenToYuanDot2Filters }}</i-col>
-          </Row>
-        </i-col>
-      </Row>-->
+          <i-col span="12">
+            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+              <i-col span="8">SVIP价格:</i-col>
+              <i-col span="16">{{ productStandardDetail.svipPrice | fenToYuanDot2Filters }}</i-col>
+            </Row>
+          </i-col>
+        </Row>-->
 
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8"> 商品单位: </i-col>
+              <i-col span="8">
+                商品单位:
+              </i-col>
               <i-col span="16">
                 {{ productStandardDetail.productUnit }}
               </i-col>
@@ -1552,7 +1630,9 @@
           </i-col>
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8"> 商品排序: </i-col>
+              <i-col span="8">
+                商品排序:
+              </i-col>
               <i-col span="16">
                 {{ productStandardDetail.rank }}
               </i-col>
@@ -1561,16 +1641,23 @@
         </Row>
       </div>
       <div slot="footer">
-        <Button type="primary" @click="handleGoodsClose"> 关闭 </Button>
+        <Button type="primary" @click="handleGoodsClose">
+          关闭
+        </Button>
       </div>
+    </Modal>
+
+    <Modal v-model="uploadVisible" title="图片预览">
+      <img :src="imgUploadViewItem" style="width: 100%">
     </Modal>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
 import Tables from '_c/tables';
+import config from '@/config';
 import IViewUpload from '_c/iview-upload';
-import _ from 'lodash';
+
 import {
   deleteTeamBuy,
   getTeamBuyPages,
@@ -1585,15 +1672,18 @@ import uploadMixin from '@/mixins/uploadMixin';
 import deleteMixin from '@/mixins/deleteMixin.js';
 import tableMixin from '@/mixins/tableMixin.js';
 import searchMixin from '@/mixins/searchMixin.js';
+import relationStoreMixin from '@/mixins/relationStoreMixin.js';
 import {
   teamBuyStatusConvert,
-  customPlanStatusConvert
+  customPlanStatusConvert,
+  expandTypeConvert
 } from '@/libs/converStatus';
 import {
   teamBuyStatusEnum,
   teamBuyTypeEnum,
   rewardActivitySettingEnum,
-  relationStoreTypeEnum
+  relationStoreTypeEnum,
+  expandTypeEnum
 } from '@/libs/enumerate';
 import {
   fenToYuanDot2,
@@ -1653,7 +1743,7 @@ const teambuyDetail = {
   second: null,
   relationStoreType: 'ALL',
   validDateType: 'FIXED_DATE',
-  content: ''
+  cityCode: '0744'
 };
 
 const roleRowData = {
@@ -1714,7 +1804,7 @@ const productStandardDetail = {
 
 const productRowData = {
   productId: '',
-  productType: 'ORDINARY_PRODUCT',
+  productType: 'TEAM_BUY_PRODUCT',
   barcode: '',
   productCode: '',
   productName: '',
@@ -1730,138 +1820,32 @@ export default {
     Tables,
     IViewUpload
   },
-  mixins: [uploadMixin, deleteMixin, tableMixin, searchMixin],
+  mixins: [uploadMixin, deleteMixin, tableMixin, searchMixin, relationStoreMixin],
   data() {
     return {
-      ruleInline: {
-        rank: [
-          { required: true, message: '请输入排序序号' },
-          {
-            validator(rule, value, callback, source, options) {
-              const errors = [];
-              if (!/^[0-9]+$/.test(value)) {
-                errors.push(new Error('必须为整数'));
-              }
-              callback(errors);
-            }
-          }
-        ],
-        activityName: [{ required: true, message: '请输入活动名称' }],
-        teamBuyType: [{ required: true, message: '请选择活动类型' }],
-        content: [{ required: true, message: '请输入活动内容' }],
-        status: [{ required: true, message: '请选择活动状态' }],
-        banner: [{ required: true, message: '请上传活动banner ' }],
-        startTime: [{ required: true, message: '请输入有效期起' }],
-        endTime: [{ required: true, message: '请输入有效期止' }],
-        deliveryEndTime: [{ required: true, message: '请输入提货截止时间' }],
-        validSeconds: [{ required: true, message: '请输入成团有效时长' }],
-        productProfitPrice: [{ required: true, message: '商品毛利' }],
-        commissionPrice: [{ required: true, message: '佣金金额' }],
-        originalPrice: [{ required: true, message: '商品原价' }],
-        commissionScale: [
-          { required: true, message: '请输入佣金比例' },
-          {
-            validator(rule, value, callback, source, options) {
-              const errors = [];
-              if (!/^([1-4]?\d(\.[05])?|50(\.0)?)$/.test(value)) {
-                errors.push(new Error('必须为0~50的整数'));
-              }
-              callback(errors);
-            }
-          }
-        ],
-        fullUserNum: [
-          { required: true, message: '请输入成团人数' },
-          {
-            validator(rule, value, callback, source, options) {
-              const errors = [];
-              if (!/^[0-9]+$/.test(value)) {
-                errors.push(new Error('必须为整数'));
-              }
-              callback(errors);
-            }
-          }
-        ],
-        costPrice: [
-          { required: true, message: '请输入商品成本价' },
-          {
-            message: '必须为大于0的数字',
-            pattern: /^(?!(0[0-9]{0,}$))[0-9]{1,}[.]{0,}[0-9]{0,}$/
-          }
-        ],
-        joinInfoStatus: [{ required: true, message: '请选择参团信息列表状态' }],
-        robot: [{ required: true, message: '请选择是否模拟成团' }],
-        robotStartSecond: [
-          { required: true, message: '请填写状态多少秒:' },
-          {
-            validator(rule, value, callback, source, options) {
-              const errors = [];
-              if (!/^[0-9]+$/.test(value)) {
-                errors.push(new Error('必须为整数'));
-              }
-              callback(errors);
-            }
-          }
-        ],
-        standardId: [{ required: true, message: '请选择商品规格' }],
-        standardDesc: [{ required: true, message: '请输入规格描述' }],
-        activityPrice: [
-          { required: true, message: '请输入商品活动价' },
-          {
-            message: '必须为大于0的数字',
-            pattern: /^(?!(0[0-9]{0,}$))[0-9]{1,}[.]{0,}[0-9]{0,}$/
-          }
-        ],
-        tourDiscount: [{ required: true, message: '请选择团长优惠' }],
-        triesLimit: [
-          { required: true, message: '请输入限购次数' },
-          {
-            validator(rule, value, callback, source, options) {
-              const errors = [];
-              if (!/^[-0-9]+$/.test(value)) {
-                errors.push(new Error('必须为整数'));
-              }
-              callback(errors);
-            }
-          }
-        ],
-        productNum: [
-          { required: true, message: '请选择库存数量' },
-          {
-            validator(rule, value, callback, source, options) {
-              const errors = [];
-              if (!/^[-0-9]+$/.test(value)) {
-                errors.push(new Error('必须为整数'));
-              }
-              callback(errors);
-            }
-          }
-        ],
-        saleQuantity: [
-          { required: true, message: '请输入已售份数' },
-          {
-            validator(rule, value, callback, source, options) {
-              const errors = [];
-              if (!/^[-0-9]+$/.test(value)) {
-                errors.push(new Error('必须为整数'));
-              }
-              callback(errors);
-            }
-          }
-        ],
-        // singleTeambuyPrice: [
-        //   { required: true, message: "请输入单人团购价格" },
-        //   {
-        //     message: "必须为大于0的数字",
-        //     pattern: /^(?!(0[0-9]{0,}$))[0-9]{1,}[.]{0,}[0-9]{0,}$/
-        //   }
-        // ],
-        rewardActivitySetting: [
-          { required: true, message: '请选择红包活动设置' }
-        ]
-      },
+      flagShipList: [],
+      oldPicture: [],
+      newPicture: [],
+      save: [],
+      productStandardDetail: [],
+      productData: [],
+      tableDataSelected: [],
       defaultListMain: [],
       uploadListMain: [],
+      productTotal: 0,
+      loading: true,
+      modalProduct: false,
+      createLoading: false,
+      modalViewLoading: false,
+      exportExcelLoading: false,
+      modalGoodsStandard: false,
+      showStoreList: false,
+      showValidDate: true,
+      firstSuccess: true,
+      isEnvironment: null,
+      currentTableRowSelected: null,
+      groupStatus: '',
+      step: 'firstStep',
       activityStatus: [
         { label: '未开始', value: 'off' },
         { label: '进行中', value: 'on' },
@@ -1883,27 +1867,9 @@ export default {
       ],
       teamBuyStatusEnum,
       teamBuyTypeEnum,
+      expandTypeEnum,
       rewardActivitySettingEnum,
       relationStoreTypeEnum,
-      groupStatus: '',
-      modalGoodsStandard: false,
-      flagShipList: [],
-      storeNameList: [],
-      storeList: [],
-      storeData: [],
-      storeData1: [],
-      storeData2: [],
-      storeData3: [],
-      storeData4: [],
-      storeData5: [],
-      storeData6: [],
-      storeData7: [],
-      storeIds: [],
-      storeListData: [],
-      oldPicture: [],
-      newPicture: [],
-      save: [],
-      productStandardDetail: [],
       columns: [
         // {
         //   type: "selection",
@@ -2169,6 +2135,26 @@ export default {
           minWidth: 150
         },
         {
+          title: '商品类型',
+          align: 'center',
+          key: 'productType',
+          minWidth: 130,
+          render: (h, params, vm) => {
+            const { row } = params;
+            if (row.productType == 'TEAM_BUY_PRODUCT') {
+              return (
+                <div>
+                  <tag color='magenta'>
+                    {expandTypeConvert(row.productType).label}
+                  </tag>
+                </div>
+              );
+            } else {
+              return <div>N/A</div>;
+            }
+          }
+        },
+        {
           title: '规格',
           align: 'center',
           key: 'specification',
@@ -2240,40 +2226,137 @@ export default {
           key: 'rank'
         }
       ],
-      productData: [],
-      productTotal: 0,
-      loading: true,
-      showStoreName: '',
-      modalProduct: false,
-      createLoading: false,
-      modalViewLoading: false,
-      exportExcelLoading: false,
-      showStoreList: false,
-      showValidDate: true,
-      indeterminate: false,
-      indeterminate1: false,
-      indeterminate2: false,
-      indeterminate3: false,
-      indeterminate4: false,
-      indeterminate5: false,
-      indeterminate6: false,
-      indeterminate7: false,
-      checkAll: false,
-      checkAll1: false,
-      checkAll2: false,
-      checkAll3: false,
-      checkAll4: false,
-      checkAll5: false,
-      checkAll6: false,
-      checkAll7: false,
-      step: 'firstStep',
-      firstSuccess: true,
-      currentTableRowSelected: null,
-      tableDataSelected: [],
       searchRowData: _.cloneDeep(roleRowData),
       searchProductRowData: _.cloneDeep(productRowData),
       productDetail: _.cloneDeep(productStandardDetail),
-      teambuyDetail: _.cloneDeep(teambuyDetail)
+      teambuyDetail: _.cloneDeep(teambuyDetail),
+      ruleInline: {
+        rank: [
+          { required: true, message: '请输入排序序号' },
+          {
+            validator(rule, value, callback, source, options) {
+              const errors = [];
+              if (!/^[0-9]+$/.test(value)) {
+                errors.push(new Error('必须为整数'));
+              }
+              callback(errors);
+            }
+          }
+        ],
+        activityName: [{ required: true, message: '请输入活动名称' }],
+        teamBuyType: [{ required: true, message: '请选择活动类型' }],
+        content: [{ required: true, message: '请输入活动内容' }],
+        status: [{ required: true, message: '请选择活动状态' }],
+        banner: [{ required: true, message: '请上传活动banner ' }],
+        startTime: [{ required: true, message: '请输入有效期起' }],
+        endTime: [{ required: true, message: '请输入有效期止' }],
+        deliveryEndTime: [{ required: true, message: '请输入提货截止时间' }],
+        validSeconds: [{ required: true, message: '请输入成团有效时长' }],
+        productProfitPrice: [{ required: true, message: '商品毛利' }],
+        commissionPrice: [{ required: true, message: '佣金金额' }],
+        originalPrice: [{ required: true, message: '商品原价' }],
+        commissionScale: [
+          { required: true, message: '请输入佣金比例' },
+          {
+            validator(rule, value, callback, source, options) {
+              const errors = [];
+              if (!/^([1-4]?\d(\.[05])?|50(\.0)?)$/.test(value)) {
+                errors.push(new Error('必须为0~50的整数'));
+              }
+              callback(errors);
+            }
+          }
+        ],
+        fullUserNum: [
+          { required: true, message: '请输入成团人数' },
+          {
+            validator(rule, value, callback, source, options) {
+              const errors = [];
+              if (!/^[0-9]+$/.test(value)) {
+                errors.push(new Error('必须为整数'));
+              }
+              callback(errors);
+            }
+          }
+        ],
+        costPrice: [
+          { required: true, message: '请输入商品成本价' },
+          {
+            message: '必须为大于0的数字',
+            pattern: /^(?!(0[0-9]{0,}$))[0-9]{1,}[.]{0,}[0-9]{0,}$/
+          }
+        ],
+        joinInfoStatus: [{ required: true, message: '请选择参团信息列表状态' }],
+        robot: [{ required: true, message: '请选择是否模拟成团' }],
+        robotStartSecond: [
+          { required: true, message: '请填写状态多少秒:' },
+          {
+            validator(rule, value, callback, source, options) {
+              const errors = [];
+              if (!/^[0-9]+$/.test(value)) {
+                errors.push(new Error('必须为整数'));
+              }
+              callback(errors);
+            }
+          }
+        ],
+        standardId: [{ required: true, message: '请选择商品规格' }],
+        standardDesc: [{ required: true, message: '请输入规格描述' }],
+        activityPrice: [
+          { required: true, message: '请输入商品活动价' },
+          {
+            message: '必须为大于0的数字',
+            pattern: /^(?!(0[0-9]{0,}$))[0-9]{1,}[.]{0,}[0-9]{0,}$/
+          }
+        ],
+        tourDiscount: [{ required: true, message: '请选择团长优惠' }],
+        triesLimit: [
+          { required: true, message: '请输入限购次数' },
+          {
+            validator(rule, value, callback, source, options) {
+              const errors = [];
+              if (!/^[-0-9]+$/.test(value)) {
+                errors.push(new Error('必须为整数'));
+              }
+              callback(errors);
+            }
+          }
+        ],
+        productNum: [
+          { required: true, message: '请选择库存数量' },
+          {
+            validator(rule, value, callback, source, options) {
+              const errors = [];
+              if (!/^[-0-9]+$/.test(value)) {
+                errors.push(new Error('必须为整数'));
+              }
+              callback(errors);
+            }
+          }
+        ],
+        saleQuantity: [
+          { required: true, message: '请输入已售份数' },
+          {
+            validator(rule, value, callback, source, options) {
+              const errors = [];
+              if (!/^[-0-9]+$/.test(value)) {
+                errors.push(new Error('必须为整数'));
+              }
+              callback(errors);
+            }
+          }
+        ],
+        // singleTeambuyPrice: [
+        //   { required: true, message: "请输入单人团购价格" },
+        //   {
+        //     message: "必须为大于0的数字",
+        //     pattern: /^(?!(0[0-9]{0,}$))[0-9]{1,}[.]{0,}[0-9]{0,}$/
+        //   }
+        // ],
+        rewardActivitySetting: [
+          { required: true, message: '请选择红包活动设置' }
+        ]
+      }
     };
   },
   computed: {
@@ -2302,12 +2385,37 @@ export default {
     }
   },
   mounted() {
-    this.getStore();
     this.searchRowData = _.cloneDeep(roleRowData);
+    this.getStore();
     this.getTableData();
   },
-  created() {},
+  created() {
+    this.isEnvironment = config.isEnvironment;
+  },
   methods: {
+    getStore(isCheck) {
+      getAreaStorePages(this.teambuyDetail.cityCode)
+        .then((res) => {
+          this.storeList = res.array;
+          this.storeData = res.array[0] && res.array[0].storeList || [];
+          this.storeData1 = res.array[1] && res.array[1].storeList || [];
+          this.storeData2 = res.array[2] && res.array[2].storeList || [];
+          this.storeData3 = res.array[3] && res.array[3].storeList || [];
+          this.storeData4 = res.array[4] && res.array[4].storeList || [];
+          this.storeData5 = res.array[5] && res.array[5].storeList || [];
+          this.storeData6 = res.array[6] && res.array[6].storeList || [];
+          const data = [];
+          this.storeNameList = [];
+          res.array.forEach(item => {
+            this.storeNameList.push(item.storeName);
+            data.push(item.storeList);
+          });
+          this.storeListData = data;
+          if (isCheck) {
+            this.handleCheckSelected();
+          }
+        });
+    },
     costPriceInputNumberOnchange(value) {
       this.teambuyDetail.costPrice = yuanToFenNumber(value);
       this.teambuyDetail.productProfitPrice =
@@ -2333,12 +2441,6 @@ export default {
       this.$refs[name].validate((valid) => {
         if (valid) {
           if (
-            _this.teambuyDetail.costPrice > _this.teambuyDetail.activityPrice
-          ) {
-            this.$Message.error('成本价不能大于活动价格');
-            return;
-          }
-          if (
             _this.teambuyDetail.teamBuyType === 'OLD_AND_NEW' &&
             _this.teambuyDetail.fullUserNum <= 1
           ) {
@@ -2346,6 +2448,12 @@ export default {
             return;
           }
           if (_this.teambuyDetail.validDateType === 'FIXED_DATE') {
+            // 如果选择绝对日期，判空 时间控件null转date对象变为Invalid date字符串
+            console.log(`deliveryEndTime: ${_this.teambuyDetail.deliveryEndTime}`);
+            if (_this.teambuyDetail.deliveryEndTime === 'Invalid date') {
+              _this.$Message.error('请输入提货截止时间');
+              return;
+            }
             _this.teambuyDetail.deliveryEndTimeDay = 0;
           } else {
             _this.teambuyDetail.deliveryEndTime = null;
@@ -2383,12 +2491,12 @@ export default {
             _this.$Message.error('商品份额必须被成团人数整除!');
             return;
           }
-          if (
-            _this.teambuyDetail.productNum < _this.teambuyDetail.fullUserNum
-          ) {
-            _this.$Message.error('库存数量不能小于成团人数!');
-            return;
-          }
+          // if (
+          //   _this.teambuyDetail.productNum < _this.teambuyDetail.fullUserNum
+          // ) {
+          //   _this.$Message.error("库存数量不能小于成团人数!");
+          //   return;
+          // }
           if (
             _this.teambuyDetail.tourDiscount >=
             _this.teambuyDetail.activityPrice
@@ -2447,37 +2555,21 @@ export default {
       }
     },
     handleEditClose() {
-      // if (this.newPicture.length > 0) {
-      //   const urls = {
-      //     urls: this.newPicture
-      //   };
-      //   this.deletePicture(urls);
-      // }
       this.oldPicture = [];
       this.newPicture = [];
       this.modalEdit = false;
     },
-    // deletePicture(urls) {
-    //   deletePicture({
-    //     urls
-    //   })
-    //     .then(res => {})
-    //     .catch(() => {});
-    // },
     createStore() {
       this.modalViewLoading = true;
       this.teambuyDetail.id = null; // 新建时不需要传递id
       createTeamBuy(this.teambuyDetail)
         .then((res) => {
-          this.modalViewLoading = false;
           this.modalEdit = false;
           this.$Message.success('创建成功!');
           this.getTableData();
         })
-        .catch(() => {
+        .finally(() => {
           this.modalViewLoading = false;
-          this.modalEdit = false;
-          this.getTableData();
         });
     },
     editStore() {
@@ -2502,13 +2594,9 @@ export default {
       editTeamBuy(this.teambuyDetail)
         .then((res) => {
           this.getTableData();
-          this.$Message.success('操作成功!');
           this.modalEdit = false;
-          this.modalViewLoading = false;
         })
-        .catch(() => {
-          this.modalEdit = false;
-          this.getTableData();
+        .finally(() => {
           this.modalViewLoading = false;
         });
     },
@@ -2546,7 +2634,6 @@ export default {
         this.currentTableRowSelected.productProfitPrice = null;
         this.currentTableRowSelected.commissionScale = null;
         this.currentTableRowSelected.commissionPrice = null;
-        this.currentTableRowSelected.banner = null;
         this.currentTableRowSelected.status = null;
         this.currentTableRowSelected.rank = null;
         this.currentTableRowSelected.storeId = null;
@@ -2556,14 +2643,16 @@ export default {
         this.currentTableRowSelected.deliveryEndTime = null;
         this.currentTableRowSelected.deliveryEndTimeDay = null;
         this.currentTableRowSelected.activityPrice = null;
-        // this.currentTableRowSelected.singleTeambuyPrice = null;
+        this.currentTableRowSelected.singleTeambuyPrice = null;
         this.currentTableRowSelected.hour = hourTime;
         this.currentTableRowSelected.minute = minuteTime;
         this.currentTableRowSelected.second = secondTime;
+        if (this.isEnvironment) {
+          this.currentTableRowSelected.banner = null;
+        }
         this.teambuyDetail = _.cloneDeep(this.currentTableRowSelected);
+        this.setDefaultUploadList(this.teambuyDetail);
       }
-
-      // this.getStore();
       this.modalEdit = true;
     },
     // 删除
@@ -2613,27 +2702,19 @@ export default {
       this.modalView = true;
     },
     relationStore() {
-      if (
-        this.teambuyDetail.storeIds === null ||
-        this.teambuyDetail.storeIds === ''
-      ) {
+      if (!this.teambuyDetail.storeIds) {
         return '全部门店';
       }
-      const ids = this.teambuyDetail.storeIds
-        .substring(1, this.teambuyDetail.storeIds.length - 1)
-        .split('][');
-      const list = this.storeListData;
+      const ids = this.teambuyDetail.storeIds.substring(1, this.teambuyDetail.storeIds.length - 1).split('][');
       let str = '';
-      if (list.length > 0) {
-        ids.forEach((id) => {
-          const item = list.find((item) => item.storeId == id);
-          str += item.storeName + ',';
-        });
-        return str.substring(0, str.length - 1);
-      }
+      ids.forEach((id) => {
+        const item = this.allStoreList.find(item => item.storeId == id);
+        if (!item) { return; }
+        str += item.storeName + ',';
+      });
+      return str.substring(0, str.length - 1);
     },
     handleEdit(params) {
-      const _this = this;
       this.step = 'firstStep';
       this.firstSuccess = true;
       this.save = [];
@@ -2666,173 +2747,21 @@ export default {
         this.showValidDate = true;
         this.teambuyDetail.validDateType = 'FIXED_DATE';
       }
-      //  ||
+
       if (
         this.teambuyDetail.storeIds !== null &&
         this.teambuyDetail.storeIds !== ''
       ) {
         this.showStoreList = true;
         this.teambuyDetail.relationStoreType = 'PART';
-        const storeIds = this.teambuyDetail.storeIds
-          .substring(1, this.teambuyDetail.storeIds.length - 1)
-          .split('][');
-        storeIds.forEach((element) => {
-          this.storeIds.push(parseInt(element));
-        });
-        // 全选/反选按钮的样式
-        const sameArray = _this.storeList[0].storeList.filter(function(item) {
-          return _this.storeIds.indexOf(item.storeId) != -1;
-        });
-
-        if (
-          sameArray.length > 0 &&
-          sameArray.length === this.storeList[0].storeList.length
-        ) {
-          this.indeterminate = false;
-          this.checkAll = true;
-        } else if (
-          sameArray.length > 0 &&
-          sameArray.length < this.storeList[0].storeList.length
-        ) {
-          this.indeterminate = true;
-          this.checkAll = false;
-        } else {
-          this.indeterminate = false;
-          this.checkAll = false;
-        }
-        const sameArray1 = _this.storeList[1].storeList.filter(function(item) {
-          return _this.storeIds.indexOf(item.storeId) != -1;
-        });
-        if (
-          sameArray1.length > 0 &&
-          sameArray1.length === this.storeList[1].storeList.length
-        ) {
-          this.indeterminate1 = false;
-          this.checkAll1 = true;
-        } else if (
-          sameArray1.length > 0 &&
-          sameArray1.length < this.storeList[1].storeList.length
-        ) {
-          this.indeterminate1 = true;
-          this.checkAll1 = false;
-        } else {
-          this.indeterminate1 = false;
-          this.checkAll1 = false;
-        }
-        const sameArray2 = _this.storeList[2].storeList.filter(function(item) {
-          return _this.storeIds.indexOf(item.storeId) != -1;
-        });
-        if (
-          sameArray2.length > 0 &&
-          sameArray2.length === this.storeList[2].storeList.length
-        ) {
-          this.indeterminate2 = false;
-          this.checkAll2 = true;
-        } else if (
-          sameArray2.length > 0 &&
-          sameArray2.length < this.storeList[2].storeList.length
-        ) {
-          this.indeterminate2 = true;
-          this.checkAll2 = false;
-        } else {
-          this.indeterminate2 = false;
-          this.checkAll2 = false;
-        }
-        const sameArray3 = _this.storeList[3].storeList.filter(function(item) {
-          return _this.storeIds.indexOf(item.storeId) != -1;
-        });
-        if (
-          sameArray3.length > 0 &&
-          sameArray3.length === this.storeList[3].storeList.length
-        ) {
-          this.indeterminate3 = false;
-          this.checkAll3 = true;
-        } else if (
-          sameArray3.length > 0 &&
-          sameArray3.length < this.storeList[3].storeList.length
-        ) {
-          this.indeterminate3 = true;
-          this.checkAll3 = false;
-        } else {
-          this.indeterminate3 = false;
-          this.checkAll3 = false;
-        }
-        const sameArray4 = _this.storeList[4].storeList.filter(function(item) {
-          return _this.storeIds.indexOf(item.storeId) != -1;
-        });
-        if (
-          sameArray4.length > 0 &&
-          sameArray4.length === this.storeList[4].storeList.length
-        ) {
-          this.indeterminate4 = false;
-          this.checkAll4 = true;
-        } else if (
-          sameArray4.length > 0 &&
-          sameArray4.length < this.storeList[4].storeList.length
-        ) {
-          this.indeterminate4 = true;
-          this.checkAll4 = false;
-        } else {
-          this.indeterminate4 = false;
-          this.checkAll4 = false;
-        }
-        const sameArray5 = _this.storeList[5].storeList.filter(function(item) {
-          return _this.storeIds.indexOf(item.storeId) != -1;
-        });
-        if (
-          sameArray5.length > 0 &&
-          sameArray5.length === this.storeList[5].storeList.length
-        ) {
-          this.indeterminate5 = false;
-          this.checkAll5 = true;
-        } else if (
-          sameArray5.length > 0 &&
-          sameArray5.length < this.storeList[5].storeList.length
-        ) {
-          this.indeterminate5 = true;
-          this.checkAll5 = false;
-        } else {
-          this.indeterminate5 = false;
-          this.checkAll5 = false;
-        }
-        const sameArray6 = _this.storeList[6].storeList.filter(function(item) {
-          return _this.storeIds.indexOf(item.storeId) != -1;
-        });
-        if (
-          sameArray6.length > 0 &&
-          sameArray6.length === this.storeList[6].storeList.length
-        ) {
-          this.indeterminate6 = false;
-          this.checkAll6 = true;
-        } else if (
-          sameArray6.length > 0 &&
-          sameArray6.length < this.storeList[6].storeList.length
-        ) {
-          this.indeterminate6 = true;
-          this.checkAll6 = false;
-        } else {
-          this.indeterminate6 = false;
-          this.checkAll6 = false;
-        }
-        // let sameArray7 = _this.storeList[7].storeList.filter(function (item) {
-        //   return _this.storeIds.indexOf(item.storeId) != -1;
-        // });
-        // if (
-        //   sameArray7.length > 0 &&
-        //   sameArray7.length === this.storeList[7].storeList.length
-        // ) {
-        //   this.indeterminate7 = false;
-        //   this.checkAll7 = true;
-        // } else if (
-        //   sameArray7.length > 0 &&
-        //   sameArray7.length < this.storeList[7].storeList.length
-        // ) {
-        //   this.indeterminate7 = true;
-        //   this.checkAll7 = false;
-        // } else {
-        //   this.indeterminate7 = false;
-        //   this.checkAll7 = false;
-        // }
+        const storeIds = this.teambuyDetail.storeIds.substring(1, this.teambuyDetail.storeIds.length - 1).split('][');
+        storeIds.forEach((element) => { this.storeIds.push(parseInt(element)); });
+        console.log('selected storeIds:', this.storeIds);
+        const firstStoreId = this.storeIds[0];
+        // 编辑时从返回的第一个storeId单独查询下cityCode来反选城市
+        const storeObj = this.allStoreList.find(item => item.storeId === firstStoreId);
+        this.teambuyDetail.cityCode = storeObj.cityCode;
+        this.getStore(true);
       } else {
         this.showStoreList = false;
         this.teambuyDetail.relationStoreType = 'ALL'; // storeIds为''默认关联的门店则是全部门店
@@ -2867,23 +2796,6 @@ export default {
         this.exportExcelLoading = false;
       });
     },
-    getTableData() {
-      if (!this.searchRowData.status) {
-        this.searchRowData.sidx = 'createTime';
-        this.searchRowData.sort = 'desc';
-      }
-      this.loading = true;
-      getTeamBuyPages(this.searchRowData)
-        .then((res) => {
-          this.tableData = res.rows;
-          this.total = res.total;
-        })
-        .finally(() => {
-          this.loading = false;
-          this.searchLoading = false;
-          this.clearSearchLoading = false;
-        });
-    },
     handleRemoveMain(file) {
       this.$refs.uploadMain.deleteFile(file);
       this.teambuyDetail.storeImage = null;
@@ -2895,6 +2807,26 @@ export default {
       this.teambuyDetail.banner = fileList[0].url;
       this.newPicture.push(fileList[0].url);
       this.oldPicture = this.save;
+    },
+    getTableData() {
+      if (!this.searchRowData.status) {
+        this.searchRowData.sidx = 'createTime';
+        this.searchRowData.sort = 'desc';
+      }
+      getTeamBuyPages(this.searchRowData)
+        .then((res) => {
+          this.tableData = res.rows;
+          this.total = res.total;
+          this.loading = false;
+          this.searchLoading = false;
+          this.clearSearchLoading = false;
+        })
+        .catch((error) => {
+          console.log(error);
+          this.loading = false;
+          this.searchLoading = false;
+          this.clearSearchLoading = false;
+        });
     },
     startTimeChange(value, date) {
       this.teambuyDetail.startTime = value;
@@ -2954,12 +2886,9 @@ export default {
       this.teambuyDetail.productProfitPrice =
         this.teambuyDetail.activityPrice - this.teambuyDetail.costPrice;
       // 活动价修改后，佣金金额也需要跟着变
-      if (!this.teambuyDetail.commissionScale) {
-        return;
-      }
+      if (!this.teambuyDetail.commissionScale) { return; }
       this.teambuyDetail.commissionPrice = Math.floor(
-        this.teambuyDetail.activityPrice *
-          (this.teambuyDetail.commissionScale / 100)
+        this.teambuyDetail.activityPrice * (this.teambuyDetail.commissionScale / 100)
       );
     },
     // singleTeambuyPriceInputNumberOnchange(value) {
@@ -2971,31 +2900,14 @@ export default {
     selectStore(options) {
       if (options.value === 'ALL') {
         this.teambuyDetail.relationStoreType = 'ALL';
-        // this.teambuyDetail.storeIds = "";
-        this.tempModalType === 'edit'
-          ? (this.teambuyDetail.storeIds = '')
-          : (this.teambuyDetail.storeIds = null);
+        this.tempModalType === 'edit' ? (this.teambuyDetail.storeIds = '') : (this.teambuyDetail.storeIds = null);
         this.showStoreList = false;
       } else if (options.value === 'PART') {
         this.teambuyDetail.relationStoreType = 'PART';
-        this.indeterminate = false;
-        this.checkAll = false;
-        this.indeterminate1 = false;
-        this.checkAll1 = false;
-        this.indeterminate2 = false;
-        this.checkAll2 = false;
-        this.indeterminate3 = false;
-        this.checkAll3 = false;
-        this.indeterminate4 = false;
-        this.checkAll4 = false;
-        this.indeterminate5 = false;
-        this.checkAll5 = false;
-        this.indeterminate6 = false;
-        this.checkAll6 = false;
-        this.indeterminate7 = false;
-        this.checkAll7 = false;
-        this.storeIds = [];
-        this.teambuyDetail.storeIds = '';
+        // 新增时默认反选长沙市
+        if (this.isCreate) { this.teambuyDetail.cityCode = '0744'; }
+        this.storeCheckRest();
+        this.getStore();
         this.showStoreList = true;
       }
     },
@@ -3008,27 +2920,25 @@ export default {
         this.teambuyDetail.validDateType = 'UN_FIXED_DATE';
       }
     },
-    // TODO 选择门店id方法 1.9.0
-    getStore() {
-      getAreaStorePages().then((res) => {
-        this.storeList = res.array;
-        this.storeData = res.array[0].storeList;
-        this.storeData1 = res.array[1].storeList;
-        this.storeData2 = res.array[2].storeList;
-        this.storeData3 = res.array[3].storeList;
-        this.storeData4 = res.array[4].storeList;
-        this.storeData5 = res.array[5].storeList;
-        this.storeData6 = res.array[6].storeList;
-        // this.storeData7 = res.array[7].storeList;
-        const data = [];
-        for (const val of res.array) {
-          this.storeNameList.push(val.storeName);
-          data.push(val.storeList);
-        }
-        for (const value of data) {
-          this.storeListData = this.storeListData.concat(value);
-        }
-      });
+    storeCheckRest() {
+      this.indeterminate = false;
+      this.checkAll = false;
+      this.indeterminate1 = false;
+      this.checkAll1 = false;
+      this.indeterminate2 = false;
+      this.checkAll2 = false;
+      this.indeterminate3 = false;
+      this.checkAll3 = false;
+      this.indeterminate4 = false;
+      this.checkAll4 = false;
+      this.indeterminate5 = false;
+      this.checkAll5 = false;
+      this.indeterminate6 = false;
+      this.checkAll6 = false;
+      this.indeterminate7 = false;
+      this.checkAll7 = false;
+      this.storeIds = [];
+      this.teambuyDetail.storeIds = '';
     },
     handleCheckAll(value) {
       const _this = this;
@@ -3298,6 +3208,7 @@ export default {
       ) {
         this.indeterminate = false;
         this.checkAll = true;
+        this.teambuyDetail.storeIds = '[' + data.join('][') + ']';
       } else if (
         data.length > 0 &&
         sameArray.length < this.storeList[0].storeList.length
@@ -3321,6 +3232,7 @@ export default {
       ) {
         this.indeterminate1 = false;
         this.checkAll1 = true;
+        this.teambuyDetail.storeIds = '[' + data.join('][') + ']';
       } else if (
         data.length > 0 &&
         sameArray1.length < this.storeList[1].storeList.length
@@ -3344,6 +3256,7 @@ export default {
       ) {
         this.indeterminate2 = false;
         this.checkAll2 = true;
+        this.teambuyDetail.storeIds = '[' + data.join('][') + ']';
       } else if (
         data.length > 0 &&
         sameArray2.length < this.storeList[2].storeList.length
@@ -3367,6 +3280,7 @@ export default {
       ) {
         this.indeterminate3 = false;
         this.checkAll3 = true;
+        this.teambuyDetail.storeIds = '[' + data.join('][') + ']';
       } else if (
         data.length > 0 &&
         sameArray3.length < this.storeList[3].storeList.length
@@ -3390,6 +3304,7 @@ export default {
       ) {
         this.indeterminate4 = false;
         this.checkAll4 = true;
+        this.teambuyDetail.storeIds = '[' + data.join('][') + ']';
       } else if (
         data.length > 0 &&
         sameArray4.length < this.storeList[4].storeList.length
@@ -3413,6 +3328,7 @@ export default {
       ) {
         this.indeterminate5 = false;
         this.checkAll5 = true;
+        this.teambuyDetail.storeIds = '[' + data.join('][') + ']';
       } else if (
         data.length > 0 &&
         sameArray5.length < this.storeList[5].storeList.length
@@ -3436,6 +3352,7 @@ export default {
       ) {
         this.indeterminate6 = false;
         this.checkAll6 = true;
+        this.teambuyDetail.storeIds = '[' + data.join('][') + ']';
       } else if (
         data.length > 0 &&
         sameArray6.length < this.storeList[6].storeList.length
@@ -3449,29 +3366,6 @@ export default {
         this.checkAll6 = false;
       }
     },
-    // checkAllGroupChange7(data) {
-    //   let sameArray7 = this.storeList[7].storeList.filter(function (item) {
-    //     return data.indexOf(item.storeId) != -1;
-    //   });
-    //   if (
-    //     data.length > 0 &&
-    //     sameArray7.length === this.storeList[7].storeList.length
-    //   ) {
-    //     this.indeterminate7 = false;
-    //     this.checkAll7 = true;
-    //   } else if (
-    //     data.length > 0 &&
-    //     sameArray7.length < this.storeList[7].storeList.length
-    //   ) {
-    //     this.indeterminate7 = true;
-    //     this.checkAll7 = false;
-    //     this.teambuyDetail.storeIds = "[" + data.join("][") + "]";
-    //   }
-    //   if (sameArray7.length === 0) {
-    //     this.indeterminate7 = false;
-    //     this.checkAll7 = false;
-    //   }
-    // },
     onRowClick(row, index) {
       // 给团购活动赋值
       this.teambuyDetail.standardId = row.id;
@@ -3543,7 +3437,6 @@ export default {
           this.productStandardDetail = res;
           this.modalGoodsStandard = true;
         })
-        .catch((error) => {});
     },
     handleGoodsClose() {
       this.loading = false;

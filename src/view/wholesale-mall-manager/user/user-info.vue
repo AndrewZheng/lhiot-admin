@@ -8,6 +8,7 @@
         :loading="loading"
         :search-area-column="24"
         :operate-area-column="5"
+        :need-permission="true"
         editable
         searchable
         border
@@ -28,7 +29,7 @@
             v-model="searchRowData.phone"
             placeholder="用户电话"
             class="search-input"
-            style="width: 100px"
+            style="width: 130px"
             clearable
           ></Input>
           <Input
@@ -70,7 +71,7 @@
               {{ item.label }}
             </Option>
           </Select>
-          <!-- <Select
+          <Select
             v-model="searchRowData.userGrade"
             class="search-col"
             placeholder="用户等级"
@@ -85,7 +86,7 @@
             >
               {{ item.label }}
             </Option>
-          </Select> -->
+          </Select>
           <Select
             v-model="searchRowData.isVip"
             class="search-col"
@@ -118,7 +119,7 @@
               {{ item.label }}
             </Option>
           </Select>
-          <!-- <Select
+          <Select
             v-model="searchRowData.shopType"
             class="search-col"
             placeholder="门店类型"
@@ -133,7 +134,7 @@
             >
               {{ item.label }}
             </Option>
-          </Select> -->
+          </Select>
           <Cascader
             change-on-select
             :data="data"
@@ -215,7 +216,9 @@
           <Row>
             <i-col span="12">
               <FormItem label="门店名称:" prop="shopName">
-                {{ userDetail.shopName }}
+                {{
+                  userDetail.shopName
+                }}
               </FormItem>
             </i-col>
             <i-col span="12">
@@ -228,12 +231,16 @@
           <Row>
             <i-col span="12">
               <FormItem label="手机号码:" prop="phone">
-                {{ userDetail.phone }}
+                {{
+                  userDetail.phone
+                }}
               </FormItem>
             </i-col>
             <i-col span="12">
               <FormItem label="微信昵称:" prop="nickname">
-                {{ userDetail.nickname }}
+                {{
+                  userDetail.nickname
+                }}
               </FormItem>
             </i-col>
           </Row>
@@ -248,7 +255,9 @@
                 {{ sexConvertName }}
               </FormItem>
               <FormItem label="余额:" prop="balance">
-                {{ userBalance }}
+                {{
+                  userBalance
+                }}
               </FormItem>
             </i-col>
           </Row>
@@ -274,7 +283,9 @@
             </i-col>
             <i-col span="12">
               <FormItem label="所属业务员:" prop="saleUserName">
-                {{ userDetail.saleUserName }}
+                {{
+                  userDetail.saleUserName
+                }}
               </FormItem>
             </i-col>
           </Row>
@@ -359,7 +370,9 @@
         </Form>
       </div>
       <div slot="footer">
-        <Button @click="handleEditClose"> 关闭 </Button>
+        <Button @click="handleEditClose">
+          关闭
+        </Button>
         <Button
           :loading="modalViewLoading"
           type="primary"
@@ -449,7 +462,9 @@
         </div>
       </Card>
       <div slot="footer">
-        <Button @click="modalUser = false"> 关闭 </Button>
+        <Button @click="modalUser = false">
+          关闭
+        </Button>
         <Button
           :loading="modalViewLoading"
           type="primary"
@@ -542,7 +557,7 @@ const columns = [
     align: 'center',
     key: 'id',
     fixed: 'left',
-    width: 70
+    width: 90
   },
   {
     title: '所属地区',
@@ -622,6 +637,7 @@ const columns = [
     title: '用户类型',
     align: 'center',
     key: 'userType',
+    fixed: 'right',
     width: 110,
     render: (h, params, vm) => {
       const { row } = params;
@@ -650,6 +666,7 @@ const columns = [
     title: '用户状态',
     align: 'center',
     key: 'userStatus',
+    fixed: 'right',
     width: 100,
     render: (h, params, vm) => {
       const { row } = params;
@@ -893,8 +910,8 @@ export default {
   created() {
     this.data = city;
     this.getTableData();
-    // this.getShopType();
-    // this.getUserGrade();
+    this.getShopType();
+    this.getUserGrade();
     this.loginName = sessionStorage.getItem('loginName');
   },
   methods: {

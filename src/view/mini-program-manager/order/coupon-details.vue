@@ -58,13 +58,8 @@
             </Button>
           </Row>
         </div>
-        <div slot="operations" style="margin-left: -50px">
-          <Button
-            v-waves
-            class="search-btn ml5 mr5"
-            type="primary"
-            @click="goBack"
-          >
+        <div slot="operations" style="margin-left:-50px">
+          <Button v-waves class="search-btn ml5 mr5" type="primary" @click="goBack">
             <Icon type="ios-arrow-back" />&nbsp;返回
           </Button>
           <Button
@@ -77,7 +72,7 @@
           </Button>
         </div>
       </tables>
-      <div style="margin: 10px; overflow: hidden">
+      <div style="margin: 10px;overflow: hidden">
         <Row type="flex" justify="end">
           <Page
             :total="total"
@@ -290,7 +285,7 @@ export default {
     getTableData() {
       this.loading = true;
       getOrderCouponDetails(this.searchRowData)
-        .then((res) => {
+        .then(res => {
           this.tableData = res.rows;
           this.total = res.total;
           this.loading = false;
@@ -308,15 +303,15 @@ export default {
       this.searchRowData.rows = this.total > 5000 ? 5000 : this.total;
       const pageSize = this.searchRowData.page;
       this.searchRowData.page = 1;
-      getOrderCouponDetails(this.searchRowData).then((res) => {
+      getOrderCouponDetails(this.searchRowData).then(res => {
         const tableData = res.rows;
         // 恢复正常页数
         this.searchRowData.rows = 10;
         this.searchRowData.page = pageSize;
         // 表格数据导出字段翻译
         const _this = this;
-        tableData.forEach((item) => {
-          const obj = _this.storeList.find((x) => item.storeId === x.storeId);
+        tableData.forEach(item => {
+          const obj = _this.storeList.find(x => item.storeId === x.storeId);
           item['code'] = item['code'] + '';
           item['apply'] = appTypeConvert(item['apply']).label;
           item['storeId'] =
@@ -332,7 +327,9 @@ export default {
             item['orderStatus']
           ).label;
           item['hdStatus'] = miniHdStatusConvert(item['hdStatus']).label;
-          item['receivingWay'] = receivingWayConvert(item['receivingWay']);
+          item['receivingWay'] = receivingWayConvert(
+            item['receivingWay']
+          );
           item['status'] = miniOrderStatusConvert(item['status']).label;
         });
         const date = this.$moment(new Date()).format('YYYYMMDDHHmmss');

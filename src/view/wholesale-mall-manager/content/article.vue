@@ -22,101 +22,101 @@
         <div slot="searchCondition">
           <Row>
             <Col span="24">
-            <Input
-              v-model="searchRowData.articleTitle"
-              placeholder="文章标题"
-              class="search-input"
-              style="width: auto"
-            ></Input>
-            <Select
-              v-model="searchRowData.articleType"
-              class="search-col"
-              placeholder="文章类别"
-              style="width: 90px"
-              clearable
-            >
-              <Option
-                v-for="item in articleTypeEnum"
-                :key="item.value"
-                :value="item.value"
-                class="ptb2-5"
+              <Input
+                v-model="searchRowData.articleTitle"
+                placeholder="文章标题"
+                class="search-input"
+                style="width: auto"
+              ></Input>
+              <Select
+                v-model="searchRowData.articleType"
+                class="search-col"
+                placeholder="文章类别"
+                style="width: 90px"
+                clearable
               >
-                {{ item.label }}
-              </Option>
-            </Select>
-            <Select
-              v-model="searchRowData.createType"
-              class="search-col"
-              placeholder="创作类别"
-              style="width: 90px"
-              clearable
-            >
-              <Option
-                v-for="item in createTypeEnum"
-                :key="item.value"
-                :value="item.value"
-                class="ptb2-5"
+                <Option
+                  v-for="item in articleTypeEnum"
+                  :key="item.value"
+                  :value="item.value"
+                  class="ptb2-5"
+                >
+                  {{ item.label }}
+                </Option>
+              </Select>
+              <Select
+                v-model="searchRowData.createType"
+                class="search-col"
+                placeholder="创作类别"
+                style="width: 90px"
+                clearable
               >
-                {{ item.label }}
-              </Option>
-            </Select>
-            <DatePicker
-              v-model="searchRowData.beginCreateAt"
-              format="yyyy-MM-dd HH:mm:ss"
-              type="datetime"
-              placeholder="注册时间起"
-              class="search-input"
-              style="width: 150px"
-              @on-change="startTimeChange"
-            />
-            <i>-</i>
-            <DatePicker
-              v-model="searchRowData.endCreateAt"
-              format="yyyy-MM-dd HH:mm:ss"
-              type="datetime"
-              placeholder="注册时间止"
-              class="search-input"
-              style="width: 150px"
-              @on-change="endTimeChange"
-            />
+                <Option
+                  v-for="item in createTypeEnum"
+                  :key="item.value"
+                  :value="item.value"
+                  class="ptb2-5"
+                >
+                  {{ item.label }}
+                </Option>
+              </Select>
+              <DatePicker
+                v-model="searchRowData.beginCreateAt"
+                format="yyyy-MM-dd HH:mm:ss"
+                type="datetime"
+                placeholder="注册时间起"
+                class="search-input"
+                style="width: 150px"
+                @on-change="startTimeChange"
+              />
+              <i>-</i>
+              <DatePicker
+                v-model="searchRowData.endCreateAt"
+                format="yyyy-MM-dd HH:mm:ss"
+                type="datetime"
+                placeholder="注册时间止"
+                class="search-input"
+                style="width: 150px"
+                @on-change="endTimeChange"
+              />
 
-            <DatePicker
-              v-model="searchRowData.beginPublishAt"
-              format="yyyy-MM-dd HH:mm:ss"
-              type="datetime"
-              class="search-input"
-              style="width: 150px"
-              placeholder="发布时间起"
-              @on-change="startPublishChange"
-            />
-            <i>-</i>
-            <DatePicker
-              v-model="searchRowData.endPublishAt"
-              type="datetime"
-              placeholder="发布时间止"
-              style="width: 150px"
-              @on-change="endPublishChange"
-            />
-            <Button
-              v-waves
-              class="search-btn"
-              type="primary"
-              @click="handleSearch"
-            >
-              <Icon type="md-search" />&nbsp;搜索
-            </Button>
-            <Button
-              v-waves
-              :loading="clearSearchLoading"
-              class="search-btn"
-              type="info"
-              @click="handleClear"
-            >
-              <Icon type="md-refresh" />&nbsp;清除
-            </Button>
+              <DatePicker
+                v-model="searchRowData.beginPublishAt"
+                format="yyyy-MM-dd HH:mm:ss"
+                type="datetime"
+                class="search-input"
+                style="width: 150px"
+                placeholder="发布时间起"
+                @on-change="startPublishChange"
+              />
+              <i>-</i>
+              <DatePicker
+                v-model="searchRowData.endPublishAt"
+                type="datetime"
+                placeholder="发布时间止"
+                style="width: 150px"
+                @on-change="endPublishChange"
+              />
+              <Button
+                v-waves
+                class="search-btn"
+                type="primary"
+                @click="handleSearch"
+              >
+                <Icon type="md-search" />&nbsp;搜索
+              </Button>
+              <Button
+                v-waves
+                :loading="clearSearchLoading"
+                class="search-btn"
+                type="info"
+                @click="handleClear"
+              >
+                <Icon type="md-refresh" />&nbsp;清除
+              </Button>
             </Col>
           </Row>
-          <Row style="margin-top: 10px; float: right">
+          <Row style="margin-top:10px;float:right">
             <Button v-waves type="success" class="mr5" @click="addArticle">
               <Icon type="md-add" /> 添加
             </Button>
@@ -234,63 +234,63 @@
 </template>
 
 <script type="text/ecmascript-6">
-import Tables from '_c/tables';
-import BookTypeOption from '_c/book-type-option';
+import Tables from "_c/tables";
+import BookTypeOption from "_c/book-type-option";
 
-import { getArticlesPages, deleteArticle, editArticle } from '@/api/wholesale';
-import deleteMixin from '@/mixins/deleteMixin.js';
-import tableMixin from '@/mixins/tableMixin.js';
-import searchMixin from '@/mixins/searchMixin.js';
-import uploadMixin from '@/mixins/uploadMixin';
-import { articleTypeEnum, createTypeEnum } from '@/libs/enumerate';
-import { articleTypeConvert, createTypeConvert } from '@/libs/converStatus';
+import { getArticlesPages, deleteArticle, editArticle } from "@/api/wholesale";
+import deleteMixin from "@/mixins/deleteMixin.js";
+import tableMixin from "@/mixins/tableMixin.js";
+import searchMixin from "@/mixins/searchMixin.js";
+import uploadMixin from "@/mixins/uploadMixin";
+import { articleTypeEnum, createTypeEnum } from "@/libs/enumerate";
+import { articleTypeConvert, createTypeConvert } from "@/libs/converStatus";
 
 const articleDetail = {
   id: 0,
-  articleAuthor: '',
-  articleTitle: '',
-  publishStatus: '',
-  articleContent: '',
-  contentImage: '',
-  articleUrl: '',
-  introduce: '',
-  auditor: '',
-  editAt: '',
-  publishTime: '',
-  keywords: '',
-  readAmount: '',
-  articleSubhead: '',
-  createTime: '',
-  articleType: '', // perday-每日精选 industry-行业趋势
-  createType: '', // original-原创文章 reprint-转载文章
+  articleAuthor: "",
+  articleTitle: "",
+  publishStatus: "",
+  articleContent: "",
+  contentImage: "",
+  articleUrl: "",
+  introduce: "",
+  auditor: "",
+  editAt: "",
+  publishTime: "",
+  keywords: "",
+  readAmount: "",
+  articleSubhead: "",
+  createTime: "",
+  articleType: "", // perday-每日精选 industry-行业趋势
+  createType: "", // original-原创文章 reprint-转载文章
   rankNum: 0,
-  resouceUrl: ''
+  resouceUrl: "",
 };
 
 const roleRowData = {
-  articleTitle: '',
-  articleType: '',
-  createType: '',
-  keywords: '',
-  beginPublishAt: '',
-  endPublishAt: '',
-  beginCreateAt: '',
-  endCreateAt: '',
+  articleTitle: "",
+  articleType: "",
+  createType: "",
+  keywords: "",
+  beginPublishAt: "",
+  endPublishAt: "",
+  beginCreateAt: "",
+  endCreateAt: "",
   page: 1,
-  rows: 10
+  rows: 10,
 };
 
 export default {
   components: {
     Tables,
-    BookTypeOption
+    BookTypeOption,
   },
   mixins: [deleteMixin, tableMixin, searchMixin, uploadMixin],
   data() {
     return {
       articleTypeEnum,
       createTypeEnum,
-      exportType: 'xlsx',
+      exportType: "xlsx",
       modalViewLoading: false,
       downloadLoading: false,
       defaultListMain: [],
@@ -298,47 +298,47 @@ export default {
       searchRowData: this._.cloneDeep(roleRowData),
       articleDetail: this._.cloneDeep(articleDetail),
       ruleInline: {
-        articleTitle: { required: true, message: '请输入文章标题' },
-        articleAuthor: { required: true, message: '请输入作者' },
-        publishStatus: { required: true, message: '请选择文章状态' },
-        keywords: { required: true, message: '请输入文章关键词' },
-        articleUrl: { required: true, message: '请上传图片' },
-        articleContent: { required: true, message: '请填写内容' }
+        articleTitle: { required: true, message: "请输入文章标题" },
+        articleAuthor: { required: true, message: "请输入作者" },
+        publishStatus: { required: true, message: "请选择文章状态" },
+        keywords: { required: true, message: "请输入文章关键词" },
+        articleUrl: { required: true, message: "请上传图片" },
+        articleContent: { required: true, message: "请填写内容" },
       },
       columns: [
         {
-          type: 'selection',
-          key: '',
+          type: "selection",
+          key: "",
           width: 60,
-          align: 'center',
-          fixed: 'left'
+          align: "center",
+          fixed: "left",
         },
         {
-          title: '文章标题',
-          key: 'articleTitle',
-          align: 'center',
+          title: "文章标题",
+          key: "articleTitle",
+          align: "center",
           minWidth: 200,
-          fixed: 'left'
+          fixed: "left",
         },
         {
-          title: '文章类别',
-          key: 'articleType',
+          title: "文章类别",
+          key: "articleType",
           width: 120,
-          align: 'center',
+          align: "center",
           render: (h, params, vm) => {
             const { row } = params;
-            if (row.articleType === 'perday') {
+            if (row.articleType === "perday") {
               return (
                 <div>
-                  <tag color='primary'>
+                  <tag color="primary">
                     {articleTypeConvert(row.articleType)}
                   </tag>
                 </div>
               );
-            } else if (row.articleType === 'industry') {
+            } else if (row.articleType === "industry") {
               return (
                 <div>
-                  <tag color='warning'>
+                  <tag color="warning">
                     {articleTypeConvert(row.articleType)}
                   </tag>
                 </div>
@@ -346,31 +346,31 @@ export default {
             } else {
               return <div>N/A</div>;
             }
-          }
+          },
         },
         {
-          title: '创作类别',
-          key: 'createType',
+          title: "创作类别",
+          key: "createType",
           width: 120,
-          align: 'center',
+          align: "center",
           render: (h, params, vm) => {
             const { row } = params;
-            if (row.createType === 'original') {
+            if (row.createType === "original") {
               return (
                 <div>
-                  <tag color='pink'>{createTypeConvert(row.createType)}</tag>
+                  <tag color="pink">{createTypeConvert(row.createType)}</tag>
                 </div>
               );
-            } else if (row.createType === 'reprint') {
+            } else if (row.createType === "reprint") {
               return (
                 <div>
-                  <tag color='yellow'>{createTypeConvert(row.createType)}</tag>
+                  <tag color="yellow">{createTypeConvert(row.createType)}</tag>
                 </div>
               );
             } else {
               return <div>N/A</div>;
             }
-          }
+          },
         },
         // {
         //   title: '关键词',
@@ -378,57 +378,57 @@ export default {
         //   width: 150
         // },
         {
-          title: '创建时间',
+          title: "创建时间",
           width: 180,
-          align: 'center',
-          key: 'createTime'
+          align: "center",
+          key: "createTime",
         },
         {
-          title: '发布时间',
-          align: 'center',
+          title: "发布时间",
+          align: "center",
           width: 180,
-          key: 'publishTime',
-          sortable: true
+          key: "publishTime",
+          sortable: true,
         },
         {
-          title: '发布状态',
-          key: 'publishStatus',
+          title: "发布状态",
+          key: "publishStatus",
           width: 100,
-          align: 'center',
+          align: "center",
           render: (h, params, vm) => {
             const { row } = params;
-            if (row.publishStatus === 'published') {
+            if (row.publishStatus === "published") {
               return (
                 <div>
-                  <tag color='success'>{'已发布'}</tag>
+                  <tag color="success">{"已发布"}</tag>
                 </div>
               );
-            } else if (row.publishStatus === 'unpublished') {
+            } else if (row.publishStatus === "unpublished") {
               return (
                 <div>
-                  <tag color='error'>{'未发布'}</tag>
+                  <tag color="error">{"未发布"}</tag>
                 </div>
               );
             } else {
               return <div>{row.publishStatus}</div>;
             }
-          }
+          },
         },
         {
-          title: '排序',
+          title: "排序",
           maxwidth: 40,
           sortable: true,
-          align: 'center',
-          key: 'rankNum'
+          align: "center",
+          key: "rankNum",
         },
         {
-          title: '操作',
+          title: "操作",
           minWidth: 180,
-          align: 'center',
-          key: 'handle',
-          options: ['onArticleStatus', 'view', 'edit', 'delete']
-        }
-      ]
+          align: "center",
+          key: "handle",
+          options: ["onArticleStatus", "view", "edit", "delete"],
+        },
+      ],
     };
   },
   created() {
@@ -464,7 +464,7 @@ export default {
     deleteTable(ids) {
       this.loading = true;
       deleteArticle({
-        ids
+        ids,
       })
         .then((res) => {
           const totalPage = Math.ceil(this.total / this.searchRowData.pageSize);
@@ -483,16 +483,16 @@ export default {
         });
     },
     addArticle(params) {
-      this.turnToPage('wholesale-article-edit');
+      this.turnToPage("wholesale-article-edit");
     },
     onArticleStatus(params) {
       console.log(params.row.publishStatus);
       // this.tableData[params.index].onSale = !this.tableData[params.index].onSale;
       this.articleDetail = this._.cloneDeep(params.row);
-      if (this.articleDetail.publishStatus == 'PUBLISH') {
-        this.articleDetail.publishStatus = 'UN_PUBLISH';
+      if (this.articleDetail.publishStatus == "PUBLISH") {
+        this.articleDetail.publishStatus = "UN_PUBLISH";
       } else {
-        this.articleDetail.publishStatus = 'PUBLISH';
+        this.articleDetail.publishStatus = "PUBLISH";
       }
       this.editTableRow();
     },
@@ -500,7 +500,7 @@ export default {
       this.modalViewLoading = true;
       this.loading = true;
       editArticle(this.articleDetail).then((res) => {
-        this.$Message.success('修改成功!');
+        this.$Message.success("修改成功!");
         this.modalViewLoading = false;
         this.loading = false;
         this.getTableData();
@@ -513,8 +513,8 @@ export default {
     },
     handleEdit(params) {
       this.turnToPage({
-        name: 'wholesale-article-edit',
-        query: { id: params.row.id }
+        name: "wholesale-article-edit",
+        query: { id: params.row.id },
       });
     },
     getTableData() {
@@ -537,17 +537,17 @@ export default {
         const tableData = res.rows;
         // 表格数据导出字段翻译
         tableData.forEach((item) => {
-          item['publishStatus'] === 'published'
-            ? (item['publishStatus'] = '发布')
-            : (item['publishStatus'] = '未发布');
+          item["publishStatus"] === "published"
+            ? (item["publishStatus"] = "发布")
+            : (item["publishStatus"] = "未发布");
         });
         this.$refs.tables.handleDownload({
           filename: `文章信息-${new Date().valueOf()}`,
-          data: tableData
+          data: tableData,
         });
       });
-    }
-  }
+    },
+  },
 };
 </script>
 

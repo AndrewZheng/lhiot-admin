@@ -39,12 +39,7 @@
               {{ item.value }}
             </Option>
           </Select>
-          <Button
-            v-waves
-            class="search-btn mr5"
-            type="primary"
-            @click="handleSearch"
-          >
+          <Button v-waves class="search-btn mr5" type="primary" @click="handleSearch">
             <Icon type="md-search" />&nbsp;搜索
           </Button>
           <Button v-waves class="search-btn" type="info" @click="handleClear">
@@ -60,7 +55,7 @@
           </Button>
         </div>
       </tables>
-      <div style="margin: 10px; overflow: hidden">
+      <div style="margin: 10px;overflow: hidden">
         <Row type="flex" justify="end">
           <Page
             :total="total"
@@ -77,24 +72,15 @@
     <!-- 创建/修改模态框 -->
     <Modal v-model="modalEdit" :mask-closable="false" :width="450">
       <p slot="header">
-        <span>{{ !rowData.id ? "创建角色" : "编辑角色" }}</span>
+        <span>{{ !rowData.id? '创建角色': '编辑角色' }}</span>
       </p>
       <div class="modal-content">
-        <Form
-          ref="editForm"
-          :model="rowData"
-          :rules="ruleValidate"
-          :label-width="80"
-        >
+        <Form ref="editForm" :model="rowData" :rules="ruleValidate" :label-width="80">
           <FormItem label="角色名称" prop="name">
             <Input v-model="rowData.name" placeholder="请输入角色名称"></Input>
           </FormItem>
           <FormItem label="角色状态" prop="status">
-            <Select
-              v-model="rowData.status"
-              class="search-col"
-              placeholder="请选择用户状态"
-            >
+            <Select v-model="rowData.status" class="search-col" placeholder="请选择用户状态">
               <Option
                 v-for="item in roleStatusList"
                 :key="`search-col-${item.key}`"
@@ -107,7 +93,7 @@
           <FormItem label="角色描述" prop="roleDesc">
             <Input
               v-model="rowData.roleDesc"
-              :autosize="{ minRows: 2, maxRows: 5 }"
+              :autosize="{minRows: 2,maxRows: 5}"
               width="100px"
               type="textarea"
               placeholder="请输入角色描述"
@@ -116,11 +102,7 @@
         </Form>
       </div>
       <div slot="footer">
-        <Button
-          :loading="loadingBtn"
-          type="primary"
-          @click="handleSubmit('editForm')"
-        >
+        <Button :loading="loadingBtn" type="primary" @click="handleSubmit('editForm')">
           <span v-if="!loadingBtn">确认</span>
           <span v-else>确认中...</span>
         </Button>
@@ -132,24 +114,12 @@
       <div class="modal-content">
         <Tabs v-model="step" size="small">
           <TabPane label="创建角色" name="roleAdd">
-            <Form
-              ref="editForm"
-              :model="rowData"
-              :rules="ruleValidate"
-              :label-width="80"
-            >
+            <Form ref="editForm" :model="rowData" :rules="ruleValidate" :label-width="80">
               <FormItem label="角色名称" prop="name">
-                <Input
-                  v-model="rowData.name"
-                  placeholder="请输入角色名称"
-                ></Input>
+                <Input v-model="rowData.name" placeholder="请输入角色名称"></Input>
               </FormItem>
               <FormItem label="角色状态" prop="status">
-                <Select
-                  v-model="rowData.status"
-                  class="search-col"
-                  placeholder="请选择用户状态"
-                >
+                <Select v-model="rowData.status" class="search-col" placeholder="请选择用户状态">
                   <Option
                     v-for="item in roleStatusList"
                     :key="`search-col-${item.key}`"
@@ -162,7 +132,7 @@
               <FormItem label="角色描述" prop="roleDesc">
                 <Input
                   v-model="rowData.roleDesc"
-                  :autosize="{ minRows: 2, maxRows: 5 }"
+                  :autosize="{ minRows: 2,maxRows: 5}"
                   type="textarea"
                   placeholder="请输入角色描述"
                 ></Input>
@@ -181,16 +151,20 @@
           </TabPane>
         </Tabs>
       </div>
-      <div v-if="step == 'roleAdd' && !isCreated" slot="footer">
+      <div v-if="step=='roleAdd' && !isCreated" slot="footer">
         <Button type="primary" @click="handleSubmit('editForm')">
           下一步
         </Button>
       </div>
-      <div v-else-if="step == 'menuAdd'" slot="footer">
-        <Button type="primary" @click="handleMenuOk"> 保存 </Button>
+      <div v-else-if="step=='menuAdd'" slot="footer">
+        <Button type="primary" @click="handleMenuOk">
+          保存
+        </Button>
       </div>
       <div v-else slot="footer">
-        <Button type="primary" @click="handleCloseAdd"> 关闭 </Button>
+        <Button type="primary" @click="handleCloseAdd">
+          关闭
+        </Button>
       </div>
     </Modal>
 
@@ -283,9 +257,7 @@ export default {
         name: [
           { required: true, message: '角色名称不能为空', trigger: 'blur' }
         ],
-        status: [
-          { required: true, message: '请选择角色状态', trigger: 'blur' }
-        ]
+        status: [{ required: true, message: '请选择角色状态', trigger: 'blur' }]
       },
       columns: [
         {
@@ -360,7 +332,7 @@ export default {
     getTableData() {
       this.loading = true;
       getRoleData(this.searchRowData)
-        .then((res) => {
+        .then(res => {
           this.tableData = res.array;
           this.total = res.total;
         })
@@ -369,7 +341,7 @@ export default {
         });
     },
     getMenuOperateList() {
-      getMenuOperatesByRoleId().then((res) => {
+      getMenuOperatesByRoleId().then(res => {
         if (res && res.array.length > 0) {
           const menuList = buildMenu(res.array);
           const map = {
@@ -411,25 +383,23 @@ export default {
         id: this.rowData.id,
         menuIds: this.selectedIds.join(','),
         operationIds: this.selectedOperationIds.join(',')
-      })
-        .then((res) => {
-          if (this.modalMenu) {
-            this.modalMenu = false;
-            this.$Message.info('修改成功');
-          } else if (this.modalAdd) {
-            this.modalAdd = false;
-            this.$Message.info('保存成功');
-            this.isCreated = true;
-          }
-          // 成功过后更改当前用户的权限
-          this.$store.dispatch('changePermission').then((res) => {
-            this.$router.addRoutes(this.$store.getters.getActualRouter);
-            this.reload();
-          });
-        })
-        .finally(() => {
-          this.loadingBtn = false;
+      }).then(res => {
+        if (this.modalMenu) {
+          this.modalMenu = false;
+          this.$Message.info('修改成功');
+        } else if (this.modalAdd) {
+          this.modalAdd = false;
+          this.$Message.info('保存成功');
+          this.isCreated = true;
+        }
+        // 成功过后更改当前用户的权限
+        this.$store.dispatch('changePermission').then(res => {
+          this.$router.addRoutes(this.$store.getters.getActualRouter);
+          this.reload();
         });
+      }).finally(() => {
+        this.loadingBtn = false;
+      });
     },
     handleCreate() {
       this.rowData = _.cloneDeep(roleRowData);
@@ -447,31 +417,33 @@ export default {
     },
     handleDelete(params) {
       const { row } = params;
-      deleteRole(row.id).then((res) => {
-        if (res === 0) {
-          this.$Message.error('已关联用户 删除失败');
-        } else {
-          this.$Message.info('删除成功');
-          this.getTableData();
-        }
-      });
+      deleteRole(row.id)
+        .then(res => {
+          if (res === 0) {
+            this.$Message.error('已关联用户 删除失败');
+          } else {
+            this.$Message.info('删除成功');
+            this.getTableData();
+          }
+        });
     },
     handleDeleteBatch() {
       if (this.ids.length === 0) {
         this.$Message.error('请至少选择一行记录');
         return;
       }
-      deleteRole(this.ids).then((res) => {
-        if (res === 0) {
-          this.$Message.error('有角色已关联用户 删除失败');
-        } else {
-          this.$Message.info('删除成功');
-          this.getTableData();
-        }
-      });
+      deleteRole(this.ids)
+        .then(res => {
+          if (res === 0) {
+            this.$Message.error('有角色已关联用户 删除失败');
+          } else {
+            this.$Message.info('删除成功');
+            this.getTableData();
+          }
+        });
     },
     onSelectionChange(selection) {
-      this.ids = selection.map((item) => item.id.toString());
+      this.ids = selection.map(item => item.id.toString());
     },
     handleEdit(params) {
       const { row } = params;
@@ -480,11 +452,11 @@ export default {
     },
     handleSubmit(name) {
       this.loadingBtn = true;
-      this.$refs[name].validate((valid) => {
+      this.$refs[name].validate(valid => {
         if (valid) {
           if (!this.rowData.id) {
             createRole(this.rowData)
-              .then((res) => {
+              .then(res => {
                 this.modalEdit = false;
                 this.$Message.info('保存成功');
                 this.step = 'menuAdd';
@@ -492,18 +464,18 @@ export default {
                 this.isCreated = true;
                 this.rowData.id = res.id;
                 this.getTableData();
-              })
-              .finally(() => {
+              }).finally(() => {
                 this.loadingBtn = false;
               });
           } else {
-            editRole(this.rowData).then((res) => {
-              this.loadingBtn = false;
-              this.modalEdit = false;
-              this.$Message.info('更新成功');
-              this.resetRowData();
-              this.getTableData();
-            });
+            editRole(this.rowData)
+              .then(res => {
+                this.loadingBtn = false;
+                this.modalEdit = false;
+                this.$Message.info('更新成功');
+                this.resetRowData();
+                this.getTableData();
+              });
           }
         } else {
           this.$Message.warning('请先完善信息');
@@ -519,7 +491,7 @@ export default {
       this.selectedOperationIds = [];
       // 根据当前roleId获取所拥有的菜单和操作权限
       getMenuOperatesByRoleId(this.rowData.id)
-        .then((res) => {
+        .then(res => {
           if (res && res.array.length > 0) {
             const menuList = buildMenu(res.array);
             const map = {
@@ -538,7 +510,7 @@ export default {
       const selectedNodes = this.$refs.menuTree.getCheckedAndIndeterminateNodes();
       const menuIds = [];
       const operationIds = [];
-      selectedNodes.forEach((node) => {
+      selectedNodes.forEach(node => {
         if (node.type === 'OPERATION') {
           operationIds.push(node.operationId);
         } else {
@@ -552,12 +524,10 @@ export default {
     },
     findParent(item) {
       const result = [];
-      const findParentIds = (node) => {
+      const findParentIds = node => {
         result.push(node.id);
         if (node && node.parentid) {
-          const parent = this.originMenuList.find(
-            (o) => o.id === node.parentid
-          );
+          const parent = this.originMenuList.find(o => o.id === node.parentid);
           findParentIds(parent);
         }
       };

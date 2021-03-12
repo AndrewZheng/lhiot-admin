@@ -156,9 +156,6 @@
           </Row>
           <div class="ml15 mt10">
             <i style="color: red">*</i> 选中单条数据再点击添加,可复制当前数据
-            <span class="brand-red">
-              Tips: 除普通商品外的所有活动商品规格添加完后请点击列表蓝色按钮完成折扣配置，否则视为普通商品规格
-            </span>
           </div>
         </div>
       </tables>
@@ -789,7 +786,7 @@
                       ref="uploadMultiple_"
                       :default-list="defaultListMultiple_"
                       :image-size="imageSize"
-                      :max-num="10"
+                      :max-num="5"
                       group-type="base_image"
                       file-dir="product"
                       multiple
@@ -977,12 +974,43 @@
                     productStandardDetail.productType === 'ORDINARY_PRODUCT'
                   "
                   span="10"
-                  style="margin-left: 55px"
+                  style="margin-left: 82px"
+                >
+                  <FormItem
+                    :label-width="120"
+                    label="是否限制用券:"
+                    prop="productType"
+                  >
+                    <Select
+                      v-model="productStandardDetail.isCanCoupon"
+                      placeholder="请选择"
+                      style="width: 120px"
+                    >
+                      <Option
+                        v-for="(item, index) in isUseCoupon"
+                        :key="index"
+                        :value="item.value"
+                        class="ptb2-5"
+                        style="padding-left: 5px; width: 100px"
+                      >
+                        {{ item.label }}
+                      </Option>
+                    </Select>
+                  </FormItem>
+                </i-col>
+              </Row>
+              <Row>
+                <i-col
+                  v-show="
+                    productStandardDetail.productType === 'ORDINARY_PRODUCT'
+                  "
+                  span="10"
                 >
                   <FormItem label="起购份数:" prop="startNum">
                     <InputNumber
                       v-model="productStandardDetail.startNum"
                       :min="1"
+                      style="width: 120px"
                     ></InputNumber>
                   </FormItem>
                 </i-col>
@@ -1127,7 +1155,7 @@
                       ref="uploadShareMultiple"
                       :default-list="defaulSharetListMultiple"
                       :image-size="imageSize"
-                      :max-num="10"
+                      :max-num="5"
                       group-type="base_image"
                       file-dir="product"
                       multiple
@@ -1154,25 +1182,6 @@
             >
               <Row>
                 <i-col span="12">
-                  <FormItem label="关联门店:">
-                    <Select
-                      v-model="productStandardDetail.relationStoreType"
-                      style="width: 200px"
-                    >
-                      <Option
-                        v-for="item in relationStoreTypeEnum"
-                        :key="item.value"
-                        :value="item.value"
-                        class="ptb2-5"
-                        style="padding-left: 5px"
-                        @click.native="selectStore(item)"
-                      >
-                        {{ item.label }}
-                      </Option>
-                    </Select>
-                  </FormItem>
-                </i-col>
-                <i-col span="12">
                   <FormItem label="锁定门店上下架:" prop="whetherLockShelf">
                     <Select
                       v-model="productStandardDetail.whetherLockShelf"
@@ -1191,16 +1200,55 @@
                   </FormItem>
                 </i-col>
               </Row>
+              <Row>
+                <i-col span="12">
+                  <FormItem label="关联门店:">
+                    <Select
+                      v-model="productStandardDetail.relationStoreType"
+                      style="width: 220px"
+                    >
+                      <Option
+                        v-for="item in relationStoreTypeEnum"
+                        :key="item.value"
+                        :value="item.value"
+                        class="ptb2-5"
+                        style="padding-left: 5px"
+                        @click.native="selectStore(item)"
+                      >
+                        {{ item.label }}
+                      </Option>
+                    </Select>
+                  </FormItem>
+                </i-col>
+                <i-col v-show="showStoreList" span="12">
+                  <FormItem
+                    :label-width="85"
+                    label="所属城市:"
+                    prop="cityCode"
+                  >
+                    <Select
+                      v-model="productStandardDetail.cityCode"
+                      style="width: 220px"
+                      @on-change="handleCitySwitch"
+                    >
+                      <Option
+                        v-for="(item, index) in cityList"
+                        :key="index"
+                        :value="item.cityCode"
+                        class="ptb2-5"
+                        style="padding-left: 5px"
+                      >
+                        {{ item.cityName }}
+                      </Option>
+                    </Select>
+                  </FormItem>
+                </i-col>
+              </Row>
               <Row v-show="showStoreList">
-                <i-col span="24">
+                <i-col v-if="storeData.length>0" span="24">
                   <FormItem>
                     <div
-                      style="
-                        border-bottom: 1px solid #e9e9e9;
-                        padding-bottom: 6px;
-                        margin-bottom: 6px;
-                        display: flex;
-                      "
+                      class="bottom-line"
                     >
                       <div style="margin-left: -54px; margin-right: 18px">
                         {{ storeNameList[0] }}
@@ -1228,15 +1276,10 @@
                     </CheckboxGroup>
                   </FormItem>
                 </i-col>
-                <i-col span="24">
+                <i-col v-if="storeData1.length>0" span="24">
                   <FormItem>
                     <div
-                      style="
-                        border-bottom: 1px solid #e9e9e9;
-                        padding-bottom: 6px;
-                        margin-bottom: 6px;
-                        display: flex;
-                      "
+                      class="bottom-line"
                     >
                       <div style="margin-left: -54px; margin-right: 18px">
                         {{ storeNameList[1] }}
@@ -1264,15 +1307,10 @@
                     </CheckboxGroup>
                   </FormItem>
                 </i-col>
-                <i-col span="24">
+                <i-col v-if="storeData2.length>0" span="24">
                   <FormItem>
                     <div
-                      style="
-                        border-bottom: 1px solid #e9e9e9;
-                        padding-bottom: 6px;
-                        margin-bottom: 6px;
-                        display: flex;
-                      "
+                      class="bottom-line"
                     >
                       <div style="margin-left: -54px; margin-right: 18px">
                         {{ storeNameList[2] }}
@@ -1300,15 +1338,10 @@
                     </CheckboxGroup>
                   </FormItem>
                 </i-col>
-                <i-col span="24">
+                <i-col v-if="storeData3.length>0" span="24">
                   <FormItem>
                     <div
-                      style="
-                        border-bottom: 1px solid #e9e9e9;
-                        padding-bottom: 6px;
-                        margin-bottom: 6px;
-                        display: flex;
-                      "
+                      class="bottom-line"
                     >
                       <div style="margin-left: -54px; margin-right: 18px">
                         {{ storeNameList[3] }}
@@ -1336,15 +1369,10 @@
                     </CheckboxGroup>
                   </FormItem>
                 </i-col>
-                <i-col span="24">
+                <i-col v-if="storeData4.length>0" span="24">
                   <FormItem>
                     <div
-                      style="
-                        border-bottom: 1px solid #e9e9e9;
-                        padding-bottom: 6px;
-                        margin-bottom: 6px;
-                        display: flex;
-                      "
+                      class="bottom-line"
                     >
                       <div style="margin-left: -54px; margin-right: 18px">
                         {{ storeNameList[4] }}
@@ -1372,15 +1400,10 @@
                     </CheckboxGroup>
                   </FormItem>
                 </i-col>
-                <i-col span="24">
+                <i-col v-if="storeData5.length>0" span="24">
                   <FormItem>
                     <div
-                      style="
-                        border-bottom: 1px solid #e9e9e9;
-                        padding-bottom: 6px;
-                        margin-bottom: 6px;
-                        display: flex;
-                      "
+                      class="bottom-line"
                     >
                       <div style="margin-left: -54px; margin-right: 18px">
                         {{ storeNameList[5] }}
@@ -1408,15 +1431,10 @@
                     </CheckboxGroup>
                   </FormItem>
                 </i-col>
-                <i-col span="24">
+                <i-col v-if="storeData6.length>0" span="24">
                   <FormItem>
                     <div
-                      style="
-                        border-bottom: 1px solid #e9e9e9;
-                        padding-bottom: 6px;
-                        margin-bottom: 6px;
-                        display: flex;
-                      "
+                      class="bottom-line"
                     >
                       <div style="margin-left: -54px; margin-right: 18px">
                         {{ storeNameList[6] }}
@@ -1444,28 +1462,6 @@
                     </CheckboxGroup>
                   </FormItem>
                 </i-col>
-                <!-- <i-col span="24">
-                  <FormItem>
-                    <div
-                      style="border-bottom: 1px solid #e9e9e9;padding-bottom:6px;margin-bottom:6px;display:flex;"
-                    >
-                      <div style="margin-left:-54px;margin-right:18px">{{storeNameList[7]}}</div>
-                      <Checkbox
-                        :indeterminate="indeterminate7"
-                        :value="checkAll7"
-                        @click.prevent.native="handleCheckAll(7)"
-                      >全选/反选</Checkbox>
-                    </div>
-                    <CheckboxGroup v-model="storeIds" @on-change="checkAllGroupChange7">
-                      <Checkbox
-                        v-for="item in storeData7"
-                        ref="checkBox"
-                        :key="item.storeId"
-                        :label="item.storeId"
-                      >{{ item.storeName }}</Checkbox>
-                    </CheckboxGroup>
-                  </FormItem>
-                </i-col>-->
               </Row>
             </Form>
           </TabPane>
@@ -1958,9 +1954,10 @@
 
 <script type="text/ecmascript-6">
 import Tables from '_c/tables';
+import config from '@/config';
 import DragList from '_c/drag-list';
 import IViewUpload from '_c/iview-upload';
-import _ from 'lodash';
+
 import {
   createProductStandard,
   deleteProductStandard,
@@ -1978,6 +1975,7 @@ import uploadMixin from '@/mixins/uploadMixin';
 import deleteMixin from '@/mixins/deleteMixin.js';
 import tableMixin from '@/mixins/tableMixin.js';
 import searchMixin from '@/mixins/searchMixin.js';
+import relationStoreMixin from '@/mixins/relationStoreMixin.js';
 import {
   getSmallGoodsStandard,
   fenToYuanDot2,
@@ -2045,7 +2043,9 @@ const productStandardDetail = {
   positionName: null,
   dbId: null,
   svipPrice: null,
-  shareImage: null
+  shareImage: null,
+  isCanCoupon: 'YES',
+  cityCode: '0744'
 };
 
 const roleRowData = {
@@ -2113,11 +2113,10 @@ export default {
     IViewUpload,
     DragList
   },
-  mixins: [uploadMixin, deleteMixin, searchMixin, tableMixin],
+  mixins: [uploadMixin, deleteMixin, searchMixin, tableMixin, relationStoreMixin],
   data() {
     return {
-      step: 'firstStep',
-      firstSuccess: true,
+      productData: [],
       unitsList: [],
       descriptionList: [],
       rotationImageList: [],
@@ -2132,38 +2131,54 @@ export default {
       shareUploadListMultiple: [],
       uploadListMultiple: [],
       uploadListMultiple_: [],
-      storeNameList: [],
-      storeList: [],
-      storeData: [],
-      storeData1: [],
-      storeData2: [],
-      storeData3: [],
-      storeData4: [],
-      storeData5: [],
-      storeData6: [],
-      storeData7: [],
-      storeIds: [],
-      storeListData: [],
+      productTotal: 0,
+      firstSuccess: true,
+      showBack: false,
+      isEnvironment: null,
+      loading: true,
+      modalViewLoading: false,
+      modalView: false,
+      modalEdit: false,
+      modalDiscount: false,
+      modalHdSvip: false,
+      modalProduct: false,
+      modalSort: false,
+      searchMinPrice: null,
+      searchMaxPrice: null,
+      clickFlag: '',
+      HdSvipInfo: '',
+      shelvesStatus: [
+        {
+          label: '上架',
+          value: 'VALID'
+        },
+        {
+          label: '下架',
+          value: 'INVALID'
+        }
+      ],
+      whetherLockShelfStatus: [
+        {
+          label: '是',
+          value: 'YES'
+        },
+        {
+          label: '否',
+          value: 'NO'
+        }
+      ],
+      dropConClass: {
+        left: ['drop-box', 'left-drop-box'],
+        right: ['drop-box', 'right-drop-box']
+      },
+      step: 'firstStep',
+      tempModalType: 'create',
+      isUseCoupon: [
+        { label: '可用券', value: 'YES' },
+        { label: '不可用券', value: 'NO' }
+      ],
       expandTypeEnum,
       relationStoreTypeEnum,
-      clickFlag: '',
-      showStoreList: false,
-      indeterminate: false,
-      indeterminate1: false,
-      indeterminate2: false,
-      indeterminate3: false,
-      indeterminate4: false,
-      indeterminate5: false,
-      indeterminate6: false,
-      indeterminate7: false,
-      checkAll: false,
-      checkAll1: false,
-      checkAll2: false,
-      checkAll3: false,
-      checkAll4: false,
-      checkAll5: false,
-      checkAll6: false,
-      checkAll7: false,
       ruleValidate: {
         limitNum: [
           { required: false, message: '请输入限购份数', trigger: 'blur' }
@@ -2420,7 +2435,7 @@ export default {
         // },
         {
           title: '商品类型',
-          minWidth: 120,
+          minWidth: 130,
           key: 'productType',
           align: 'center',
           render: (h, params, vm) => {
@@ -2466,6 +2481,22 @@ export default {
                 </div>
               );
             } else if (row.productType == 'SHARE_PRODUCT') {
+              return (
+                <div>
+                  <tag color='green'>
+                    {expandTypeConvert(row.productType).label}
+                  </tag>
+                </div>
+              );
+            } else if (row.productType == 'TEAM_BUY_PRODUCT') {
+              return (
+                <div>
+                  <tag color='green'>
+                    {expandTypeConvert(row.productType).label}
+                  </tag>
+                </div>
+              );
+            } else if (row.productType == 'PRE_SALE_PRODUCT') {
               return (
                 <div>
                   <tag color='green'>
@@ -2614,60 +2645,11 @@ export default {
           }
         }
       ],
-      modalType: {
-        view: 'view',
-        edit: 'edit',
-        create: 'create'
-      },
-      dropConClass: {
-        left: ['drop-box', 'left-drop-box'],
-        right: ['drop-box', 'right-drop-box']
-      },
-      tempModalType: 'create',
-      tableData: [],
-      total: 0,
-      productData: [],
-      productTotal: 0,
-      loading: true,
-      showStoreName: '',
-      modalViewLoading: false,
-      modalView: false,
-      modalEdit: false,
-      modalDiscount: false,
-      modalHdSvip: false,
-      modalProduct: false,
-      modalSort: false,
-      searchRowData: roleRowData,
-      searchProductRowData: productRowData,
-      productStandardDetail: productStandardDetail,
-      proStandardExpand: proStandardExpand,
-      productDetail: productDetail,
-      // 选中的行
-      tableDataSelected: [],
-      showBack: false,
-      HdSvipInfo: '',
-      shelvesStatus: [
-        {
-          label: '上架',
-          value: 'VALID'
-        },
-        {
-          label: '下架',
-          value: 'INVALID'
-        }
-      ],
-      whetherLockShelfStatus: [
-        {
-          label: '是',
-          value: 'YES'
-        },
-        {
-          label: '否',
-          value: 'NO'
-        }
-      ],
-      searchMinPrice: null,
-      searchMaxPrice: null
+      searchRowData: _.cloneDeep(roleRowData),
+      searchProductRowData: _.cloneDeep(productRowData),
+      productStandardDetail: _.cloneDeep(productStandardDetail),
+      proStandardExpand: _.cloneDeep(proStandardExpand),
+      productDetail: _.cloneDeep(productDetail)
     };
   },
   computed: {
@@ -2694,22 +2676,49 @@ export default {
     }
   },
   created() {
+    this.isEnvironment = config.isEnvironment;
     this.showBack = this.$route.name === 'small-goods-relation-standard';
     this.getTableData();
   },
   mounted() {
     this.getStore();
-    getProductUnits().then((res) => {
-      res.array.forEach((value) => {
-        const map = { label: 'label', value: 'value' };
-        map.value = value.id;
-        map.label = value.unitName;
-        this.unitsList.push(map);
-        this.createLoading = false;
-      });
-    });
+    this.getProductUnits();
   },
   methods: {
+    getProductUnits() {
+      getProductUnits().then((res) => {
+        res.array.forEach((value) => {
+          const map = { label: 'label', value: 'value' };
+          map.value = value.id;
+          map.label = value.unitName;
+          this.unitsList.push(map);
+          this.createLoading = false;
+        });
+      });
+    },
+    getStore(isCheck) {
+      getAreaStorePages(this.productStandardDetail.cityCode)
+        .then((res) => {
+          this.storeList = res.array;
+          this.storeData = res.array[0] && res.array[0].storeList || [];
+          this.storeData1 = res.array[1] && res.array[1].storeList || [];
+          this.storeData2 = res.array[2] && res.array[2].storeList || [];
+          this.storeData3 = res.array[3] && res.array[3].storeList || [];
+          this.storeData4 = res.array[4] && res.array[4].storeList || [];
+          this.storeData5 = res.array[5] && res.array[5].storeList || [];
+          this.storeData6 = res.array[6] && res.array[6].storeList || [];
+          const data = [];
+          this.storeNameList = [];
+          res.array.forEach(item => {
+            this.storeNameList.push(item.storeName);
+            data.push(item.storeList);
+          });
+          this.storeListData = data;
+          if (isCheck) {
+            this.handleCheckSelected();
+          }
+        });
+    },
     priceInputNumberOnchange(value) {
       this.productStandardDetail.price = yuanToFenNumber(value);
     },
@@ -2847,27 +2856,19 @@ export default {
       this.modalView = true;
     },
     relationStore() {
-      if (
-        this.productStandardDetail.storeIds === null ||
-        this.productStandardDetail.storeIds === ''
-      ) {
+      if (!this.productStandardDetail.storeIds) {
         return '全部门店';
       }
-      const ids = this.productStandardDetail.storeIds
-        .substring(1, this.productStandardDetail.storeIds.length - 1)
-        .split('][');
-      const list = this.storeListData;
+      const ids = this.productStandardDetail.storeIds.substring(1, this.productStandardDetail.storeIds.length - 1).split('][');
       let str = '';
-      if (list.length > 0) {
-        ids.forEach((id) => {
-          const item = list.find((item) => item.storeId == id);
-          str += item.storeName + ',';
-        });
-        return str.substring(0, str.length - 1);
-      }
+      ids.forEach((id) => {
+        const item = this.allStoreList.find(item => item.storeId == id);
+        if (!item) { return; }
+        str += item.storeName + ',';
+      });
+      return str.substring(0, str.length - 1);
     },
     handleEdit(params) {
-      const _this = this;
       this.step = 'firstStep';
       this.firstSuccess = true;
       this.productStandardDetail.storeIds = '';
@@ -2902,162 +2903,13 @@ export default {
         const storeIds = this.productStandardDetail.storeIds
           .substring(1, this.productStandardDetail.storeIds.length - 1)
           .split('][');
-        storeIds.forEach((element) => {
-          this.storeIds.push(parseInt(element));
-        });
-        // 全选/反选按钮的样式
-        const sameArray = _this.storeList[0].storeList.filter(function(item) {
-          return _this.storeIds.indexOf(item.storeId) != -1;
-        });
-        if (
-          sameArray.length > 0 &&
-          sameArray.length === this.storeList[0].storeList.length
-        ) {
-          this.indeterminate = false;
-          this.checkAll = true;
-        } else if (
-          sameArray.length > 0 &&
-          sameArray.length < this.storeList[0].storeList.length
-        ) {
-          this.indeterminate = true;
-          this.checkAll = false;
-        } else {
-          this.indeterminate = false;
-          this.checkAll = false;
-        }
-        const sameArray1 = _this.storeList[1].storeList.filter(function(item) {
-          return _this.storeIds.indexOf(item.storeId) != -1;
-        });
-        if (
-          sameArray1.length > 0 &&
-          sameArray1.length === this.storeList[1].storeList.length
-        ) {
-          this.indeterminate1 = false;
-          this.checkAll1 = true;
-        } else if (
-          sameArray1.length > 0 &&
-          sameArray1.length < this.storeList[1].storeList.length
-        ) {
-          this.indeterminate1 = true;
-          this.checkAll1 = false;
-        } else {
-          this.indeterminate1 = false;
-          this.checkAll1 = false;
-        }
-        const sameArray2 = _this.storeList[2].storeList.filter(function(item) {
-          return _this.storeIds.indexOf(item.storeId) != -1;
-        });
-        if (
-          sameArray2.length > 0 &&
-          sameArray2.length === this.storeList[2].storeList.length
-        ) {
-          this.indeterminate2 = false;
-          this.checkAll2 = true;
-        } else if (
-          sameArray2.length > 0 &&
-          sameArray2.length < this.storeList[2].storeList.length
-        ) {
-          this.indeterminate2 = true;
-          this.checkAll2 = false;
-        } else {
-          this.indeterminate2 = false;
-          this.checkAll2 = false;
-        }
-        const sameArray3 = _this.storeList[3].storeList.filter(function(item) {
-          return _this.storeIds.indexOf(item.storeId) != -1;
-        });
-        if (
-          sameArray3.length > 0 &&
-          sameArray3.length === this.storeList[3].storeList.length
-        ) {
-          this.indeterminate3 = false;
-          this.checkAll3 = true;
-        } else if (
-          sameArray3.length > 0 &&
-          sameArray3.length < this.storeList[3].storeList.length
-        ) {
-          this.indeterminate3 = true;
-          this.checkAll3 = false;
-        } else {
-          this.indeterminate3 = false;
-          this.checkAll3 = false;
-        }
-        const sameArray4 = _this.storeList[4].storeList.filter(function(item) {
-          return _this.storeIds.indexOf(item.storeId) != -1;
-        });
-        if (
-          sameArray4.length > 0 &&
-          sameArray4.length === this.storeList[4].storeList.length
-        ) {
-          this.indeterminate4 = false;
-          this.checkAll4 = true;
-        } else if (
-          sameArray4.length > 0 &&
-          sameArray4.length < this.storeList[4].storeList.length
-        ) {
-          this.indeterminate4 = true;
-          this.checkAll4 = false;
-        } else {
-          this.indeterminate4 = false;
-          this.checkAll4 = false;
-        }
-        const sameArray5 = _this.storeList[5].storeList.filter(function(item) {
-          return _this.storeIds.indexOf(item.storeId) != -1;
-        });
-        if (
-          sameArray5.length > 0 &&
-          sameArray5.length === this.storeList[5].storeList.length
-        ) {
-          this.indeterminate5 = false;
-          this.checkAll5 = true;
-        } else if (
-          sameArray5.length > 0 &&
-          sameArray5.length < this.storeList[5].storeList.length
-        ) {
-          this.indeterminate5 = true;
-          this.checkAll5 = false;
-        } else {
-          this.indeterminate5 = false;
-          this.checkAll5 = false;
-        }
-        const sameArray6 = _this.storeList[6].storeList.filter(function(item) {
-          return _this.storeIds.indexOf(item.storeId) != -1;
-        });
-        if (
-          sameArray6.length > 0 &&
-          sameArray6.length === this.storeList[6].storeList.length
-        ) {
-          this.indeterminate6 = false;
-          this.checkAll6 = true;
-        } else if (
-          sameArray6.length > 0 &&
-          sameArray6.length < this.storeList[6].storeList.length
-        ) {
-          this.indeterminate6 = true;
-          this.checkAll6 = false;
-        } else {
-          this.indeterminate6 = false;
-          this.checkAll6 = false;
-        }
-        // let sameArray7 = _this.storeList[7].storeList.filter(function (item) {
-        //   return _this.storeIds.indexOf(item.storeId) != -1;
-        // });
-        // if (
-        //   sameArray7.length > 0 &&
-        //   sameArray7.length === this.storeList[7].storeList.length
-        // ) {
-        //   this.indeterminate7 = false;
-        //   this.checkAll7 = true;
-        // } else if (
-        //   sameArray7.length > 0 &&
-        //   sameArray7.length < this.storeList[7].storeList.length
-        // ) {
-        //   this.indeterminate7 = true;
-        //   this.checkAll7 = false;
-        // } else {
-        //   this.indeterminate7 = false;
-        //   this.checkAll7 = false;
-        // }
+        storeIds.forEach((element) => { this.storeIds.push(parseInt(element)); });
+        console.log('selected storeIds:', this.storeIds);
+        const firstStoreId = this.storeIds[0];
+        // 编辑时从返回的第一个storeId单独查询下cityCode来反选城市
+        const storeObj = this.allStoreList.find(item => item.storeId === firstStoreId);
+        this.productStandardDetail.cityCode = storeObj.cityCode;
+        this.getStore(true);
       } else {
         this.showStoreList = false;
         this.productStandardDetail.relationStoreType = 'ALL'; // storeIds为''默认关联的门店则是全部门店
@@ -3138,13 +2990,6 @@ export default {
       // 复制数据
       if (this.currentTableRowSelected) {
         this.currentTableRowSelected.productId = null;
-        // this.currentTableRowSelected.baseProductName = null;
-        // this.currentTableRowSelected.groupName = null;
-        // this.currentTableRowSelected.baseUnit = null;
-        // this.currentTableRowSelected.productCode = null;
-        // this.currentTableRowSelected.baseBarcode = null;
-        // this.currentTableRowSelected.baseImage = null;
-        // this.currentTableRowSelected.baseProductDescription = null;
         this.currentTableRowSelected.costPrice = null;
         this.currentTableRowSelected.productProfitPrice = null;
         this.currentTableRowSelected.commissionScale = null;
@@ -3156,14 +3001,19 @@ export default {
         this.currentTableRowSelected.price = null;
         this.currentTableRowSelected.salePrice = null;
         this.currentTableRowSelected.productStandardExpand = null;
-        this.currentTableRowSelected.rotationImage = '';
-        this.currentTableRowSelected.shareImage = '';
+        if (this.isEnvironment) {
+          this.currentTableRowSelected.rotationImage = '';
+          this.currentTableRowSelected.shareImage = '';
+          this.currentTableRowSelected.image = null;
+          this.currentTableRowSelected.detailImage = null;
+          this.productStandardDetail.description = null;
+        }
         this.productStandardDetail = _.cloneDeep(this.currentTableRowSelected);
       }
       this.tempModalType = this.modalType.create;
-      this.productStandardDetail.description = null;
-      // this.productStandardDetail.standardQty = 0;
-      // this.productStandardDetail.rank = 0;
+      if (this.isEnvironment) {
+        this.productStandardDetail.description = null;
+      }
       this.setDefaultUploadList(this.productStandardDetail);
       this.modalEdit = true;
     },
@@ -3207,7 +3057,6 @@ export default {
         this.searchRowData.rows = 10;
         this.searchRowData.page = pageSize;
         // 表格数据导出字段翻译
-        const _this = this;
         tableData.forEach((item) => {
           item['price'] = (item['price'] / 100.0).toFixed(2);
           item['salePrice'] = (item['salePrice'] / 100.0).toFixed(2);
@@ -3361,20 +3210,17 @@ export default {
         });
     },
     editProductStandard() {
+      console.log('before sumbit obj:', this.productStandardDetail);
       this.modalViewLoading = true;
       editProductStandard({
         ...this.productStandardDetail
       })
         .then((res) => {
           this.modalEdit = false;
-          this.modalViewLoading = false;
-          // this.productStandardDetail = productStandardDetail;
-          // this.productStandardDetail.productId = this.$route.params.id;
           this.$Message.success('操作成功!');
           this.getTableData();
         })
-        .catch(() => {
-          this.modalEdit = false;
+        .finally(() => {
           this.modalViewLoading = false;
         });
     },
@@ -3719,48 +3565,32 @@ export default {
         this.showStoreList = false;
       } else if (options.value === 'PART') {
         this.productStandardDetail.relationStoreType = 'PART';
-        this.indeterminate = false;
-        this.checkAll = false;
-        this.indeterminate1 = false;
-        this.checkAll1 = false;
-        this.indeterminate2 = false;
-        this.checkAll2 = false;
-        this.indeterminate3 = false;
-        this.checkAll3 = false;
-        this.indeterminate4 = false;
-        this.checkAll4 = false;
-        this.indeterminate5 = false;
-        this.checkAll5 = false;
-        this.indeterminate6 = false;
-        this.checkAll6 = false;
-        this.indeterminate7 = false;
-        this.checkAll7 = false;
-        this.storeIds = [];
-        this.productStandardDetail.storeIds = '';
+        // 新增时默认反选长沙市
+        if (this.isCreate) { this.productStandardDetail.cityCode = '0744'; }
+        this.storeCheckRest();
+        this.getStore();
         this.showStoreList = true;
       }
     },
-    getStore() {
-      getAreaStorePages()
-        .then((res) => {
-          this.storeList = res.array;
-          this.storeData = res.array[0].storeList;
-          this.storeData1 = res.array[1].storeList;
-          this.storeData2 = res.array[2].storeList;
-          this.storeData3 = res.array[3].storeList;
-          this.storeData4 = res.array[4].storeList;
-          this.storeData5 = res.array[5].storeList;
-          this.storeData6 = res.array[6].storeList;
-          // this.storeData7 = res.array[7].storeList;
-          const data = [];
-          for (const val of res.array) {
-            this.storeNameList.push(val.storeName);
-            data.push(val.storeList);
-          }
-          for (const value of data) {
-            this.storeListData = this.storeListData.concat(value);
-          }
-        })
+    storeCheckRest() {
+      this.indeterminate = false;
+      this.checkAll = false;
+      this.indeterminate1 = false;
+      this.checkAll1 = false;
+      this.indeterminate2 = false;
+      this.checkAll2 = false;
+      this.indeterminate3 = false;
+      this.checkAll3 = false;
+      this.indeterminate4 = false;
+      this.checkAll4 = false;
+      this.indeterminate5 = false;
+      this.checkAll5 = false;
+      this.indeterminate6 = false;
+      this.checkAll6 = false;
+      this.indeterminate7 = false;
+      this.checkAll7 = false;
+      this.storeIds = [];
+      this.productStandardDetail.storeIds = '';
     },
     handleCheckAll(value) {
       const _this = this;
@@ -3987,38 +3817,6 @@ export default {
           this.productStandardDetail.storeIds = '[' + newArray.join('][') + ']';
         }
       }
-      // if (value === 7) {
-      //   const allIds7 = [];
-      //   let beforeIds = [];
-      //   if (this.indeterminate7) {
-      //     this.checkAll7 = false;
-      //   } else {
-      //     this.checkAll7 = !this.checkAll7;
-      //   }
-      //   this.indeterminate7 = false;
-      //   if (this.checkAll7) {
-      //     if (this.storeIds != null) {
-      //       for (let val of this.storeIds) {
-      //         allIds7.push(val);
-      //       }
-      //     }
-      //     this.storeList[value].storeList.forEach((item) => {
-      //       allIds7.push(item.storeId);
-      //       beforeIds.push(item.storeId);
-      //     });
-      //     this.storeIds = allIds7;
-      //     this.productStandardDetail.storeIds = "[" + allIds7.join("][") + "]";
-      //   } else {
-      //     this.storeList[value].storeList.forEach((item) => {
-      //       beforeIds.push(item.storeId);
-      //     });
-      //     let newArray = _this.storeIds.filter(function (item) {
-      //       return beforeIds.indexOf(item) == -1;
-      //     });
-      //     this.storeIds = newArray;
-      //     this.productStandardDetail.storeIds = "[" + newArray.join("][") + "]";
-      //   }
-      // }
     },
     checkAllGroupChange(data) {
       const sameArray = this.storeList[0].storeList.filter(function(item) {
@@ -4030,6 +3828,7 @@ export default {
       ) {
         this.indeterminate = false;
         this.checkAll = true;
+        this.productStandardDetail.storeIds = '[' + data.join('][') + ']';
       } else if (
         data.length > 0 &&
         sameArray.length < this.storeList[0].storeList.length
@@ -4053,6 +3852,7 @@ export default {
       ) {
         this.indeterminate1 = false;
         this.checkAll1 = true;
+        this.productStandardDetail.storeIds = '[' + data.join('][') + ']';
       } else if (
         data.length > 0 &&
         sameArray1.length < this.storeList[1].storeList.length
@@ -4076,6 +3876,7 @@ export default {
       ) {
         this.indeterminate2 = false;
         this.checkAll2 = true;
+        this.productStandardDetail.storeIds = '[' + data.join('][') + ']';
       } else if (
         data.length > 0 &&
         sameArray2.length < this.storeList[2].storeList.length
@@ -4090,6 +3891,7 @@ export default {
       }
     },
     checkAllGroupChange3(data) {
+      console.log(`selected storeids:`, data);
       const sameArray3 = this.storeList[3].storeList.filter(function(item) {
         return data.indexOf(item.storeId) != -1;
       });
@@ -4099,6 +3901,7 @@ export default {
       ) {
         this.indeterminate3 = false;
         this.checkAll3 = true;
+        this.productStandardDetail.storeIds = '[' + data.join('][') + ']';
       } else if (
         data.length > 0 &&
         sameArray3.length < this.storeList[3].storeList.length
@@ -4106,6 +3909,7 @@ export default {
         this.indeterminate3 = true;
         this.checkAll3 = false;
         this.productStandardDetail.storeIds = '[' + data.join('][') + ']';
+        console.log(`selected storeids in obj:`, this.productStandardDetail.storeIds);
       }
       if (sameArray3.length === 0) {
         this.indeterminate3 = false;
@@ -4122,6 +3926,7 @@ export default {
       ) {
         this.indeterminate4 = false;
         this.checkAll4 = true;
+        this.productStandardDetail.storeIds = '[' + data.join('][') + ']';
       } else if (
         data.length > 0 &&
         sameArray4.length < this.storeList[4].storeList.length
@@ -4145,6 +3950,7 @@ export default {
       ) {
         this.indeterminate5 = false;
         this.checkAll5 = true;
+        this.productStandardDetail.storeIds = '[' + data.join('][') + ']';
       } else if (
         data.length > 0 &&
         sameArray5.length < this.storeList[5].storeList.length
@@ -4168,6 +3974,7 @@ export default {
       ) {
         this.indeterminate6 = false;
         this.checkAll6 = true;
+        this.productStandardDetail.storeIds = '[' + data.join('][') + ']';
       } else if (
         data.length > 0 &&
         sameArray6.length < this.storeList[6].storeList.length
@@ -4181,29 +3988,6 @@ export default {
         this.checkAll6 = false;
       }
     }
-    // checkAllGroupChange7(data) {
-    //   let sameArray7 = this.storeList[7].storeList.filter(function (item) {
-    //     return data.indexOf(item.storeId) != -1;
-    //   });
-    //   if (
-    //     data.length > 0 &&
-    //     sameArray7.length === this.storeList[7].storeList.length
-    //   ) {
-    //     this.indeterminate7 = false;
-    //     this.checkAll7 = true;
-    //   } else if (
-    //     data.length > 0 &&
-    //     sameArray7.length < this.storeList[7].storeList.length
-    //   ) {
-    //     this.indeterminate7 = true;
-    //     this.checkAll7 = false;
-    //     this.productStandardDetail.storeIds = "[" + data.join("][") + "]";
-    //   }
-    //   if (sameArray7.length === 0) {
-    //     this.indeterminate7 = false;
-    //     this.checkAll7 = false;
-    //   }
-    // },
   }
 };
 </script>

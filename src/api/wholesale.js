@@ -586,7 +586,7 @@ export const storeAssign = (data) => {
     method: 'post'
   });
 }
-// /wholesale-small/system-setting/findByName/{name} SHOP_TYPE USER_GRADE
+///wholesale-small/system-setting/findByName/{name} SHOP_TYPE USER_GRADE
 // 会员查询 门店类型与用户类型
 export const getShopType = () => {
   return $http.request({
@@ -730,7 +730,7 @@ export const getFinanceRefuse = (data) => {
   });
 };
 
-// 根据id 手动发起售后 /wholesale-small/post-sale/submit
+//根据id 手动发起售后 /wholesale-small/post-sale/submit
 export const handSubmitRefuse = (data) => {
   return $http.request({
     url: `/wholesale-small/post-sale/submit?orderId=${data.id}`,
@@ -746,7 +746,7 @@ export const getOrderGoods = (data) => {
     method: 'post',
     data: data,
     headers: {
-      'rows': -1
+      'rows': -1,
     }
   });
 };

@@ -1,6 +1,6 @@
 <template>
   <div class="m-role">
-    <div style="margin-bottom: 30px">
+    <div style="margin-bottom:30px">
       <Card>
         <h3>集字活动数据统计</h3>
         <tables
@@ -20,19 +20,19 @@
 </template>
 
 <script type="text/ecmascript-6">
-import Tables from '_c/tables';
-import _ from 'lodash';
-import { getCollectWordStatistics } from '@/api/mini-program';
-import uploadMixin from '@/mixins/uploadMixin';
-import deleteMixin from '@/mixins/deleteMixin.js';
-import tableMixin from '@/mixins/tableMixin.js';
-import searchMixin from '@/mixins/searchMixin.js';
+import Tables from "_c/tables";
+import _ from "lodash";
+import { getCollectWordStatistics } from "@/api/mini-program";
+import uploadMixin from "@/mixins/uploadMixin";
+import deleteMixin from "@/mixins/deleteMixin.js";
+import tableMixin from "@/mixins/tableMixin.js";
+import searchMixin from "@/mixins/searchMixin.js";
 
 const couponTemplateDetail = {};
 
 export default {
   components: {
-    Tables
+    Tables,
   },
   mixins: [uploadMixin, deleteMixin, tableMixin, searchMixin],
   data() {
@@ -40,27 +40,27 @@ export default {
       inviteData: [],
       dataColumns: [
         {
-          title: '兑换获券人数',
-          key: 'exchangeUserCount',
-          align: 'center'
+          title: "兑换获券人数",
+          key: "exchangeUserCount",
+          align: "center",
         },
         {
-          title: '参与活动人数',
-          key: 'joinUserCount',
-          align: 'center'
+          title: "参与活动人数",
+          key: "joinUserCount",
+          align: "center",
         },
         {
-          title: '用券人数',
-          align: 'center',
-          key: 'useUserCount'
+          title: "用券人数",
+          align: "center",
+          key: "useUserCount",
         },
         {
-          title: '集满人数',
-          align: 'center',
-          key: 'fullUserCount'
-        }
+          title: "集满人数",
+          align: "center",
+          key: "fullUserCount",
+        },
       ],
-      couponTemplateDetail: _.cloneDeep(couponTemplateDetail)
+      couponTemplateDetail: _.cloneDeep(couponTemplateDetail),
     };
   },
   computed: {},
@@ -82,8 +82,8 @@ export default {
           this.searchLoading = false;
           this.clearSearchLoading = false;
         });
-    }
-  }
+    },
+  },
 };
 </script>
 <style lang="scss" scoped>

@@ -13,11 +13,14 @@
 ## 当前版本：dev
 
 ## 分支版本
-- dev                 水果熟了1.9.2.1   | 万翼果联1.2.3 | dev
-- sgsl_small          水果熟了1.9.0   | 万翼果联1.2.1 | Pro
-- lh_small分支        绿航果业+1.8.0  | 绿航批发商城1.2.0 | Pro
-- qgg_small分支       恰果果+1.6.5    | 恰果果订货平台1.2.0 | Pro
-- lh_farming 分支     绿航农业 v1.0.0 | Pro
+- dev                   水果熟了1.9.3.2   | 万翼果联1.2.3 | dev
+- sgsl_small            水果熟了1.9.3.2   | 万翼果联1.2.3 | Pro
+- lh_small              绿航果业+1.9.0  | 绿航批发商城1.2.1 | Pro
+- lh_small_upgrade      绿航果业+1.9.0 | 万翼果联1.2.1 | Pro
+- lh_small_dev          绿航果业+1.9.2  | 绿航批发商城1.2.1 | dev
+- qgg_small             恰果果+1.6.5    | 恰果果订货平台1.2.0 | Pro
+- lh_farming            绿航农业 v1.1.0 | Pro
+- v1.9.2.1              水果熟了1.9.2.1 | 万翼果联1.2.3 | Pro
 
 ## Install
 ```bush

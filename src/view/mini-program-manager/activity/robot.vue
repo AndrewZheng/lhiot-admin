@@ -47,13 +47,7 @@
           </Row>
         </div>
         <div slot="operations">
-          <Button
-            v-waves
-            :loading="createLoading"
-            type="success"
-            class="mr5"
-            @click="addStore"
-          >
+          <Button v-waves :loading="createLoading" type="success" class="mr5" @click="addStore">
             <Icon type="md-add" />添加
           </Button>
           <Poptip
@@ -69,7 +63,7 @@
           </Poptip>
         </div>
       </tables>
-      <div style="margin: 10px; overflow: hidden">
+      <div style="margin: 10px;overflow: hidden">
         <Row type="flex" justify="end">
           <Page
             :total="total"
@@ -91,7 +85,9 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6"> 主键ID: </i-col>
+              <i-col span="6">
+                主键ID:
+              </i-col>
               <i-col span="18">
                 {{ robotDetail.id }}
               </i-col>
@@ -101,7 +97,9 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6"> 门店id: </i-col>
+              <i-col span="6">
+                门店id:
+              </i-col>
               <i-col span="18">
                 {{ robotDetail.storeId }}
               </i-col>
@@ -111,7 +109,9 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6"> 门店名称: </i-col>
+              <i-col span="6">
+                门店名称:
+              </i-col>
               <i-col span="18">
                 {{ robotDetail.storeName }}
               </i-col>
@@ -121,7 +121,9 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6"> 用户id: </i-col>
+              <i-col span="6">
+                用户id:
+              </i-col>
               <i-col span="18">
                 {{ robotDetail.userId }}
               </i-col>
@@ -131,7 +133,9 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6"> 收货人: </i-col>
+              <i-col span="6">
+                收货人:
+              </i-col>
               <i-col span="18">
                 {{ robotDetail.receiverName }}
               </i-col>
@@ -141,7 +145,9 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6"> 联系方式: </i-col>
+              <i-col span="6">
+                联系方式:
+              </i-col>
               <i-col span="18">
                 {{ robotDetail.receiverMobile }}
               </i-col>
@@ -151,7 +157,9 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6"> 用户昵称: </i-col>
+              <i-col span="6">
+                用户昵称:
+              </i-col>
               <i-col span="18">
                 {{ robotDetail.nickName }}
               </i-col>
@@ -161,7 +169,9 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6"> 用户头像: </i-col>
+              <i-col span="6">
+                用户头像:
+              </i-col>
               <i-col span="18">
                 <img :src="robotDetail.avater" style="width: 150px">
               </i-col>
@@ -170,29 +180,24 @@
         </Row>
       </div>
       <div slot="footer">
-        <Button type="primary" @click="handleClose"> 关闭 </Button>
+        <Button type="primary" @click="handleClose">
+          关闭
+        </Button>
       </div>
     </Modal>
 
     <Modal v-model="modalEdit" :z-index="1000" :mask-closable="false">
       <p slot="header">
-        <i-col>{{
-          tempModalType === modalType.edit ? "修改机器人信息" : "创建机器人信息"
-        }}</i-col>
+        <i-col>{{ tempModalType===modalType.edit?'修改机器人信息':'创建机器人信息' }}</i-col>
       </p>
       <div class="modal-content">
-        <Form
-          ref="modalEdit"
-          :model="robotDetail"
-          :rules="ruleInline"
-          :label-width="90"
-        >
+        <Form ref="modalEdit" :model="robotDetail" :rules="ruleInline" :label-width="90">
           <Row>
             <Col span="18">
             <FormItem :label-width="85" label="所属门店:" prop="storeId">
               <Select v-model="robotDetail.storeId">
                 <Option
-                  v-for="(item, index) in flagShipList"
+                  v-for="(item,index) in flagShipList"
                   :key="index"
                   :value="item.storeId"
                   class="ptb2-5"
@@ -215,7 +220,7 @@
           <Row>
             <Col span="18">
             <FormItem label="收货人:" prop="receiverName">
-              <Input v-model="robotDetail.receiverName"></Input>
+              <Input v-model="robotDetail.receiverName "></Input>
             </FormItem>
             </Col>
           </Row>
@@ -234,41 +239,20 @@
             </Col>
           </Row>
           <Row>
-            <FormItem
-              label="用户头像   推荐使用尺寸为400X225(单位:px):"
-              prop="avater"
-            >
-              <Input
-                v-show="false"
-                v-model="robotDetail.avater"
-                style="width: auto"
-              ></Input>
-              <div
-                v-for="item in uploadListMain"
-                :key="item.url"
-                class="demo-upload-list"
-              >
+            <FormItem label="用户头像   推荐使用尺寸为400X225(单位:px):" prop="avater">
+              <Input v-show="false" v-model="robotDetail.avater" style="width: auto"></Input>
+              <div v-for="item in uploadListMain" :key="item.url" class="demo-upload-list">
                 <template v-if="item.status === 'finished'">
                   <div>
                     <img :src="item.url">
                     <div class="demo-upload-list-cover">
-                      <Icon
-                        type="ios-eye-outline"
-                        @click.native="handleUploadView(item)"
-                      ></Icon>
-                      <Icon
-                        type="ios-trash-outline"
-                        @click.native="handleRemoveMain(item)"
-                      ></Icon>
+                      <Icon type="ios-eye-outline" @click.native="handleUploadView(item)"></Icon>
+                      <Icon type="ios-trash-outline" @click.native="handleRemoveMain(item)"></Icon>
                     </div>
                   </div>
                 </template>
                 <template v-else>
-                  <Progress
-                    v-if="item.showProgress"
-                    :percent="item.percentage"
-                    hide-info
-                  ></Progress>
+                  <Progress v-if="item.showProgress" :percent="item.percentage" hide-info></Progress>
                 </template>
               </div>
               <IViewUpload
@@ -279,10 +263,7 @@
                 file-dir="activity"
                 @on-success="handleSuccessMain"
               >
-                <div
-                  slot="content"
-                  style="width: 58px; height: 58px; line-height: 58px"
-                >
+                <div slot="content" style="width:58px;height:58px;line-height:58px">
                   <Icon type="ios-camera" size="20"></Icon>
                 </div>
               </IViewUpload>
@@ -291,12 +272,10 @@
         </Form>
       </div>
       <div slot="footer">
-        <Button @click="handleEditClose"> 关闭 </Button>
-        <Button
-          :loading="modalViewLoading"
-          type="primary"
-          @click="handleSubmit('modalEdit')"
-        >
+        <Button @click="handleEditClose">
+          关闭
+        </Button>
+        <Button :loading="modalViewLoading" type="primary" @click="handleSubmit('modalEdit')">
           确定
         </Button>
       </div>
@@ -444,7 +423,7 @@ export default {
     getStorePages({
       page: 1,
       rows: 100
-    }).then((res) => {
+    }).then(res => {
       this.flagShipList = res.rows;
       this.createLoading = false;
     });
@@ -468,7 +447,7 @@ export default {
       //   };
       //   this.deletePicture(urls);
       // }
-      this.$refs[name].validate((valid) => {
+      this.$refs[name].validate(valid => {
         if (valid) {
           if (this.tempModalType === this.modalType.create) {
             // 添加状态
@@ -503,7 +482,7 @@ export default {
     createStore() {
       this.modalViewLoading = true;
       createRobot(this.robotDetail)
-        .then((res) => {
+        .then(res => {
           this.modalViewLoading = false;
           this.modalEdit = false;
           this.$Message.success('创建成功!');
@@ -517,7 +496,7 @@ export default {
     editStore() {
       this.modalViewLoading = true;
       editRobot(this.robotDetail)
-        .then((res) => {
+        .then(res => {
           this.modalEdit = false;
           this.modalViewLoading = false;
           this.getTableData();
@@ -543,20 +522,26 @@ export default {
       this.deleteTable(params.row.storeId);
     },
     deleteTable(ids) {
+      this.loading = true;
       deleteRobot({
         ids
-      }).then((res) => {
-        const totalPage = Math.ceil(this.total / this.searchRowData.pageSize);
-        if (
-          this.tableData.length == this.tableDataSelected.length &&
-          this.searchRowData.page === totalPage &&
-          this.searchRowData.page !== 1
-        ) {
-          this.searchRowData.page -= 1;
-        }
-        this.tableDataSelected = [];
-        this.getTableData();
-      });
+      })
+        .then(res => {
+          const totalPage = Math.ceil(this.total / this.searchRowData.pageSize);
+          if (
+            this.tableData.length == this.tableDataSelected.length &&
+            this.searchRowData.page === totalPage &&
+            this.searchRowData.page !== 1
+          ) {
+            this.searchRowData.page -= 1;
+          }
+          this.tableDataSelected = [];
+          this.getTableData();
+        })
+        .catch(err => {
+          console.log(err);
+          this.loading = false;
+        });
     },
     // 设置编辑商品的图片列表
     setDefaultUploadList(res) {
@@ -585,13 +570,16 @@ export default {
       this.modalEdit = true;
     },
     getTableData() {
-      this.loading = true;
       getRobotPages(this.searchRowData)
-        .then((res) => {
+        .then(res => {
           this.tableData = res.rows;
           this.total = res.total;
+          this.loading = false;
+          this.searchLoading = false;
+          this.clearSearchLoading = false;
         })
-        .finally(() => {
+        .catch(error => {
+          console.log(error);
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;

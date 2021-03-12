@@ -33,8 +33,8 @@
                 type="button"
                 @on-change="timeChange"
               >
-                <Radio label="今日"></Radio>
                 <Radio label="昨日"></Radio>
+                <Radio label="今日"></Radio>
                 <Radio label="最近7天"></Radio>
                 <Radio label="最近30天"></Radio>
                 <Radio label="自定义时间"></Radio>
@@ -106,8 +106,8 @@
                 type="button"
                 @on-change="timeChangeMaterial"
               >
-                <Radio label="今日"></Radio>
                 <Radio label="昨日"></Radio>
+                <Radio label="今日"></Radio>
                 <Radio label="最近7天"></Radio>
                 <Radio label="最近30天"></Radio>
                 <Radio label="自定义时间"></Radio>
@@ -177,7 +177,7 @@
                 type="info"
                 @click="handleClearMaterial"
               >
-                <Icon type="md-refresh" />&nbsp;清除
+                <Icon type="md-refresh" />&nbsp;搜索
               </Button>
               <Button
                 v-waves
@@ -220,7 +220,9 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6"> ID: </i-col>
+              <i-col span="6">
+                ID:
+              </i-col>
               <i-col span="18">
                 {{ storeMaterielDetail.id }}
               </i-col>
@@ -230,7 +232,9 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6"> 物料名称: </i-col>
+              <i-col span="6">
+                物料名称:
+              </i-col>
               <i-col span="18">
                 {{ storeMaterielDetail.materielName }}
               </i-col>
@@ -240,7 +244,9 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6"> 门店名称: </i-col>
+              <i-col span="6">
+                门店名称:
+              </i-col>
               <i-col span="18">
                 {{ storeMaterielDetail.storeName }}
               </i-col>
@@ -250,7 +256,9 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6"> 页面路径: </i-col>
+              <i-col span="6">
+                页面路径:
+              </i-col>
               <i-col span="18">
                 {{ storeMaterielDetail.pagePath }}
               </i-col>
@@ -260,7 +268,9 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6"> 创建时间: </i-col>
+              <i-col span="6">
+                创建时间:
+              </i-col>
               <i-col span="18">
                 {{ storeMaterielDetail.createTime }}
               </i-col>
@@ -270,7 +280,9 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6"> 二维码: </i-col>
+              <i-col span="6">
+                二维码:
+              </i-col>
               <i-col v-show="storeMaterielDetail.qrCodePath" span="18">
                 <div
                   class="demo-upload-list"
@@ -284,7 +296,9 @@
         </Row>
       </div>
       <div slot="footer">
-        <Button type="primary" @click="handleClose"> 关闭 </Button>
+        <Button type="primary" @click="handleClose">
+          关闭
+        </Button>
       </div>
     </Modal>
 
@@ -325,7 +339,9 @@
           <Row v-if="tempModalType === modalType.edit">
             <Col span="22">
             <FormItem label="已关联门店:" prop="storeName">
-              {{ storeMaterielDetail.storeName }}
+              {{
+                storeMaterielDetail.storeName
+              }}
             </FormItem>
             </Col>
           </Row>
@@ -354,7 +370,9 @@
                   :key="`search-col-${item.value}`"
                   style="padding: 0 8px"
                   :value="item.value"
-                >{{ item.label }}</Option>
+                >
+                  {{ item.label }}
+                </Option>
               </Select>
             </FormItem>
             </Col>
@@ -362,7 +380,9 @@
         </Form>
       </div>
       <div slot="footer">
-        <Button @click="handleEditClose"> 关闭 </Button>
+        <Button @click="handleEditClose">
+          关闭
+        </Button>
         <Button
           :loading="modalViewLoading"
           type="primary"
@@ -453,8 +473,8 @@ export default {
       createLoading: false,
       topStatus: 'source',
       totalPage: 0,
-      button: '今日',
-      buttonMaterial: '今日',
+      button: '昨日',
+      buttonMaterial: '昨日',
       tableData: [],
       tableDataMaterial: [],
       storeList: [],
@@ -649,7 +669,7 @@ export default {
       var month = date.getMonth() + 1;
       var day = date.getDate();
       var today = `${year}-${month}-${day}`;
-      if (value === '昨日') {
+      if (value === '昨日' || this.button === '昨日') {
         const date = new Date();
         date.setDate(date.getDate() - 1);
         var year = date.getFullYear();
@@ -660,16 +680,6 @@ export default {
         this.searchRowData.endDate = yesterday;
       }
       if (value === '今日') {
-        const date = new Date();
-        date.setDate(date.getDate());
-        var year = date.getFullYear();
-        var month = date.getMonth() + 1;
-        var day = date.getDate();
-        var today = `${year}-${month}-${day}`;
-        this.searchRowData.beginDate = today;
-        this.searchRowData.endDate = today;
-      }
-      if (this.button === '今日') {
         const date = new Date();
         date.setDate(date.getDate());
         var year = date.getFullYear();
@@ -702,10 +712,9 @@ export default {
       userSourceRecordTotal(this.searchRowData)
         .then((res) => {
           this.tableData = res;
-          this.createLoading = false;
-        })
-        .finally(() => {
+        }).finally(() => {
           this.loading = false;
+          this.createLoading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
         });
@@ -717,7 +726,7 @@ export default {
       var month = date.getMonth() + 1;
       var day = date.getDate();
       var today = `${year}-${month}-${day}`;
-      if (value === '昨日') {
+      if (value === '昨日' || this.buttonMaterial === '昨日') {
         const date = new Date();
         date.setDate(date.getDate() - 1);
         var year = date.getFullYear();
@@ -727,7 +736,7 @@ export default {
         this.searchRowDataMaterial.createTimeBegin = yesterday;
         this.searchRowDataMaterial.createTimeEnd = yesterday;
       }
-      if (value === '今日' || this.buttonMaterial === '今日') {
+      if (value === '今日') {
         const date = new Date();
         date.setDate(date.getDate());
         var year = date.getFullYear();
@@ -767,8 +776,12 @@ export default {
         .then((res) => {
           this.tableDataMaterial = res.rows;
           this.totalPage = res.total;
+          this.loading = false;
+          this.searchLoading = false;
+          this.clearSearchLoading = false;
         })
-        .finally(() => {
+        .catch((error) => {
+          console.log(error);
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
@@ -820,6 +833,7 @@ export default {
     handleStoreId(value) {
       if (value) {
         const data = value.label.trim().split('-');
+        console.log(`trim data:`, data);
         this.storeMaterielDetail.storeCode = data[1];
         this.storeMaterielDetail.storeName = data[0];
       }
@@ -889,7 +903,7 @@ export default {
       this.getTableData();
     },
     handleSearchMaterial() {
-      this.searchRowData.page = 1;
+      this.searchRowDataMaterial.page = 1;
       this.getTableDataMaterial();
     },
     handleClearMaterial() {

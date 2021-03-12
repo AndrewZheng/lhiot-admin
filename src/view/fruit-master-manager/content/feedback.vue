@@ -41,18 +41,16 @@
           >
             <Option
               v-for="item in feedbackStatus"
-              :key="item.value"
               :value="item.value"
+              :key="item.value"
               class="ml15 mt10"
-            >
-              {{ item.label }}
-            </Option>
+            >{{ item.label }}</Option>
           </Select>
           <Button v-waves :loading="searchLoading" class="search-btn mr5" type="primary" @click="handleSearch">
-            <Icon type="md-search" />&nbsp;搜索
+            <Icon type="md-search"/>&nbsp;搜索
           </Button>
           <Button v-waves :loading="clearSearchLoading" class="search-btn" type="info" @click="handleClear">
-            <Icon type="md-refresh" />&nbsp;清除条件
+            <Icon type="md-refresh"/>&nbsp;清除条件
           </Button>
         </div>
       </tables>
@@ -79,80 +77,52 @@
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">
-                ID:
-              </i-col>
-              <i-col span="16">
-                {{ feedbackDetail.id }}
-              </i-col>
+              <i-col span="8">ID:</i-col>
+              <i-col span="16">{{ feedbackDetail.id }}</i-col>
             </Row>
           </i-col>
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">
-                应用类型:
-              </i-col>
-              <i-col span="16">
-                {{ applicationTypeComputed() }}
-              </i-col>
+              <i-col span="8">应用类型:</i-col>
+              <i-col span="16">{{ applicationTypeComputed() }}</i-col>
             </Row>
           </i-col>
         </Row>
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">
-                反馈用户:
-              </i-col>
-              <i-col span="16">
-                {{ feedbackDetail.nickname }}
-              </i-col>
+              <i-col span="8">反馈用户:</i-col>
+              <i-col span="16">{{ feedbackDetail.nickname }}</i-col>
             </Row>
           </i-col>
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">
-                反馈时间:
-              </i-col>
-              <i-col span="16">
-                {{ feedbackDetail.createAt }}
-              </i-col>
+              <i-col span="8">反馈时间:</i-col>
+              <i-col span="16">{{ feedbackDetail.createAt }}</i-col>
             </Row>
           </i-col>
         </Row>
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">
-                标题:
-              </i-col>
-              <i-col span="16">
-                {{ feedbackDetail.title }}
-              </i-col>
+              <i-col span="8">标题:</i-col>
+              <i-col span="16">{{ feedbackDetail.title }}</i-col>
             </Row>
           </i-col>
         </Row>
         <Row :gutter="24" type="flex" align="middle" class-name="mb10">
           <i-col span="24">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="4">
-                反馈内容:
-              </i-col>
-              <i-col span="16">
-                {{ feedbackDetail.content }}
-              </i-col>
+              <i-col span="4">反馈内容:</i-col>
+              <i-col span="16">{{ feedbackDetail.content }}</i-col>
             </Row>
           </i-col>
         </Row>
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">
-                反馈状态:
-              </i-col>
-              <i-col span="16">
-                {{ feedbackDetail.status|feedbackStatusFilters }}
-              </i-col>
+              <i-col span="8">反馈状态:</i-col>
+              <i-col span="16">{{ feedbackDetail.status|feedbackStatusFilters }}</i-col>
             </Row>
           </i-col>
         </Row>
@@ -160,34 +130,22 @@
           <Row :gutter="8" type="flex" align="middle" class-name="mb10">
             <i-col span="12">
               <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-                <i-col span="8">
-                  回复人:
-                </i-col>
-                <i-col span="16">
-                  {{ feedbackDetail.backEditor }}
-                </i-col>
+                <i-col span="8">回复人:</i-col>
+                <i-col span="16">{{ feedbackDetail.backEditor }}</i-col>
               </Row>
             </i-col>
             <i-col span="12">
               <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-                <i-col span="8">
-                  回复时间:
-                </i-col>
-                <i-col span="16">
-                  {{ feedbackDetail.feedbackAt }}
-                </i-col>
+                <i-col span="8">回复时间:</i-col>
+                <i-col span="16">{{ feedbackDetail.feedbackAt }}</i-col>
               </Row>
             </i-col>
           </Row>
           <Row :gutter="8" type="flex" align="middle" class-name="mb10">
             <i-col span="12">
               <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-                <i-col span="8">
-                  回复内容:
-                </i-col>
-                <i-col span="16">
-                  {{ feedbackDetail.backMessage }}
-                </i-col>
+                <i-col span="8">回复内容:</i-col>
+                <i-col span="16">{{ feedbackDetail.backMessage }}</i-col>
               </Row>
             </i-col>
           </Row>
@@ -205,9 +163,7 @@
         </Form>
       </div>
       <div v-if="tempModalType === modalType.edit" slot="footer">
-        <Button :loading="feedbackLoading" type="primary" @click="handleEditOk('modalEdit')">
-          确认
-        </Button>
+        <Button :loading="feedbackLoading" type="primary" @click="handleEditOk('modalEdit')">确认</Button>
       </div>
       <!--
       <div slot="footer">
@@ -401,7 +357,11 @@ export default {
       getFeedbacksPages(this.searchRowData).then(res => {
         this.tableData = res.array;
         this.total = res.total;
-      }).finally(() => {
+        this.loading = false;
+        this.searchLoading = false;
+        this.clearSearchLoading = false;
+      }).catch(error => {
+        console.log(error);
         this.loading = false;
         this.searchLoading = false;
         this.clearSearchLoading = false;

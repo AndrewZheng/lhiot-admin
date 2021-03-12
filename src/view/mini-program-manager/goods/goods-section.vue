@@ -79,8 +79,8 @@
                 v-waves
                 :loading="clearSearchLoading"
                 type="warning"
-                class="mr5"
                 @click="handleBack"
+                class="mr5"
               >
                 <Icon type="ios-arrow-back" />&nbsp;返回所有板块
               </Button>
@@ -119,7 +119,7 @@
     <Modal v-model="modalEdit" :mask-closable="false" :width="1200">
       <p slot="header">
         <span>{{
-          isCreate ? "添加板块商品" : "编辑板块"
+          tempModalType == modalType.create ? "添加板块商品" : "编辑板块"
         }}</span>
       </p>
       <div class="modal-content">
@@ -129,13 +129,13 @@
           :rules="ruleInline"
         >
           <!-- 编辑 -->
-          <Row v-if="isEdit">
+          <Row v-if="tempModalType == modalType.edit">
             <FormItem label="请选择要更换的商品板块:">
               <Cascader
-                v-model="defaultGoodsSectionData"
                 :data="goodsSectionData"
                 change-on-select
                 size="large"
+                v-model="defaultGoodsSectionData"
                 span="21"
                 style="width: 70%"
                 @on-change="goodsSectionChange"
@@ -143,12 +143,12 @@
             </FormItem>
           </Row>
           <!-- 添加 -->
-          <Row v-if="isCreate">
+          <Row v-if="tempModalType == modalType.create">
             <FormItem>
               <tables
                 ref="tables"
-                v-model="productData"
                 :columns="productColumns"
+                v-model="productData"
                 search-place="top"
                 searchable
                 highlight-row
@@ -207,7 +207,7 @@
             </FormItem>
           </Row>
           <FormItem
-            v-if="isCreate"
+            v-if="tempModalType == modalType.create"
             label="排序:"
             prop="rank"
           >
@@ -221,16 +221,13 @@
         </Form>
       </div>
       <div slot="footer">
-        <Button @click="handleEditClose">
-          关闭
-        </Button>
+        <Button @click="handleEditClose">关闭</Button>
         <Button
           :loading="modalViewLoading"
           type="primary"
           @click="handleSubmit('editForm')"
+          >确认</Button
         >
-          确认
-        </Button>
       </div>
     </Modal>
     <!-- 查看 -->
@@ -248,66 +245,48 @@
         <Row class-name="mb20">
           <i-col span="12">
             <Row>
-              <i-col span="8">
-                商品名称:
-              </i-col>
-              <i-col span="16">
-                {{ discount.productName }}
-              </i-col>
+              <i-col span="8">商品名称:</i-col>
+              <i-col span="16">{{ discount.productName }}</i-col>
             </Row>
           </i-col>
           <i-col span="12">
             <Row>
-              <i-col span="8">
-                商品类型:
-              </i-col>
+              <i-col span="8">商品类型:</i-col>
               <i-col
+                span="16"
                 v-if="discount.expandType === 'DISCOUNT_PRODUCT'"
-                span="16"
               >
-                <tag color="magenta">
-                  {{ "折扣商品" }}
-                </tag>
+                <tag color="magenta">{{ "折扣商品" }}</tag>
               </i-col>
               <i-col
+                span="16"
                 v-else-if="discount.expandType === 'PULL_NEW_PRODUCT'"
-                span="16"
               >
-                <tag color="orange">
-                  {{ "老拉新商品" }}
-                </tag>
+                <tag color="orange">{{ "老拉新商品" }}</tag>
               </i-col>
               <i-col
+                span="16"
                 v-else-if="discount.expandType === 'NEW_TRY_PRODUCT'"
-                span="16"
               >
-                <tag color="orange">
-                  {{ "新品尝鲜商品" }}
-                </tag>
+                <tag color="orange">{{ "新品尝鲜商品" }}</tag>
               </i-col>
               <i-col
+                span="16"
                 v-else-if="discount.expandType === 'SHARE_PRODUCT'"
-                span="16"
               >
-                <tag color="orange">
-                  {{ "分享赚商品" }}
-                </tag>
+                <tag color="orange">{{ "分享赚商品" }}</tag>
               </i-col>
               <i-col
+                span="16"
                 v-else-if="discount.expandType === 'ASSIST_PRODUCT'"
-                span="16"
               >
-                <tag color="orange">
-                  {{ "助力商品" }}
-                </tag>
+                <tag color="orange">{{ "助力商品" }}</tag>
               </i-col>
               <i-col
-                v-else-if="discount.expandType === 'SECKILL_PRODUCT'"
                 span="16"
+                v-else-if="discount.expandType === 'SECKILL_PRODUCT'"
               >
-                <tag color="orange">
-                  {{ "限时秒杀商品" }}
-                </tag>
+                <tag color="orange">{{ "限时秒杀商品" }}</tag>
               </i-col>
             </Row>
           </i-col>
@@ -315,82 +294,56 @@
         <Row class-name="mb20">
           <i-col span="12">
             <Row>
-              <i-col span="8">
-                商品原价:
-              </i-col>
-              <i-col span="16">
-                {{ discount.price }}
-              </i-col>
+              <i-col span="8">商品原价:</i-col>
+              <i-col span="16">{{ discount.price }}</i-col>
             </Row>
           </i-col>
           <i-col span="12">
             <Row>
-              <i-col span="8">
-                售卖价格:
-              </i-col>
-              <i-col span="16">
-                {{ discount.salePrice }}
-              </i-col>
+              <i-col span="8">售卖价格:</i-col>
+              <i-col span="16">{{ discount.salePrice }}</i-col>
             </Row>
           </i-col>
         </Row>
         <Row class-name="mb20">
           <i-col span="12" style="color: red">
             <Row>
-              <i-col span="8">
-                折扣价:
-              </i-col>
-              <i-col span="16">
-                {{ discount.discountPrice }}
-              </i-col>
+              <i-col span="8">折扣价:</i-col>
+              <i-col span="16">{{ discount.discountPrice }}</i-col>
             </Row>
           </i-col>
           <i-col span="12">
             <Row>
-              <i-col span="8">
-                折扣率:
-              </i-col>
-              <i-col span="16">
-                {{ discount.discountRate + "折" }}
-              </i-col>
+              <i-col span="8">折扣率:</i-col>
+              <i-col span="16">{{ discount.discountRate + "折" }}</i-col>
             </Row>
           </i-col>
         </Row>
         <Row class-name="mb20">
           <i-col span="12">
             <Row>
-              <i-col span="8">
-                起购份数:
-              </i-col>
-              <i-col span="16">
-                {{ discount.startNum }}
-              </i-col>
+              <i-col span="8">起购份数:</i-col>
+              <i-col span="16">{{ discount.startNum }}</i-col>
             </Row>
           </i-col>
           <i-col span="12">
             <Row>
-              <i-col span="8">
-                限购份数:
-              </i-col>
-              <i-col span="16">
-                {{ discount.limitNum }}
-              </i-col>
+              <i-col span="8">限购份数:</i-col>
+              <i-col span="16">{{ discount.limitNum }}</i-col>
             </Row>
           </i-col>
         </Row>
       </div>
       <div slot="footer">
-        <Button type="primary" @click="handleViewClose">
-          关闭
-        </Button>
+        <Button type="primary" @click="handleViewClose">关闭</Button>
       </div>
     </Modal>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
-import Tables from '_c/tables';
-import _ from 'lodash';
+import Tables from "_c/tables";
+import _ from "lodash";
 import {
   getProductSectionRelationPages,
   createProductSectionRelation,
@@ -398,114 +351,114 @@ import {
   getProductStandardsPages,
   editProductSectionRelation,
   getProductSectionTree,
-  getProStandardExpand
-} from '@/api/mini-program';
-import { buildMenu, convertTree, convertTreeCategory } from '@/libs/util';
-import CommonIcon from '_c/common-icon';
-import uploadMixin from '@/mixins/uploadMixin';
-import tableMixin from '@/mixins/tableMixin.js';
-import searchMixin from '@/mixins/searchMixin.js';
-import deleteMixin from '@/mixins/deleteMixin.js';
-import { fenToYuanDot2 } from '@/libs/util';
+  getProStandardExpand,
+} from "@/api/mini-program";
+import { buildMenu, convertTree, convertTreeCategory } from "@/libs/util";
+import CommonIcon from "_c/common-icon";
+import uploadMixin from "@/mixins/uploadMixin";
+import tableMixin from "@/mixins/tableMixin.js";
+import searchMixin from "@/mixins/searchMixin.js";
+import deleteMixin from "@/mixins/deleteMixin.js";
+import { fenToYuanDot2 } from "@/libs/util";
 import {
   customPlanStatusConvert,
   appTypeConvert,
-  expandTypeConvert
-} from '@/libs/converStatus';
-import { appTypeEnum, expandTypeEnum } from '@/libs/enumerate';
+  expandTypeConvert,
+} from "@/libs/converStatus";
+import { appTypeEnum, expandTypeEnum } from "@/libs/enumerate";
 
 const productStandardDetail = {
-  applyType: '',
-  barcode: '',
-  baseBarcode: '',
-  baseImage: '',
+  applyType: "",
+  barcode: "",
+  baseBarcode: "",
+  baseImage: "",
   baseQty: 0,
   baseUnit: null,
   baseUnitId: 0,
-  description: '',
+  description: "",
   groupId: 0,
   groupName: null,
-  hdSkuid: '',
+  hdSkuid: "",
   id: 0,
-  image: '',
+  image: "",
   largeImage: null,
   limitQty: null,
   price: 0,
-  productCode: '',
-  productDescription: '',
+  productCode: "",
+  productDescription: "",
   productId: 0,
-  productName: '',
+  productName: "",
   productSectionId: 0,
   productSectionRank: 0,
   productStandardId: 0,
   productStandardIds: null,
-  productUnit: '',
+  productUnit: "",
   rank: null,
   salePrice: 0,
-  shelvesStatus: '',
+  shelvesStatus: "",
   smallImage: null,
-  sourceCode: '',
-  specification: '',
+  sourceCode: "",
+  specification: "",
   standardQty: 0.5,
-  status: '',
+  status: "",
   unitId: 0,
-  videoImage: '',
-  videoUrl: ''
+  videoImage: "",
+  videoUrl: "",
 };
 
 const currentCategory = {
-  applyType: 'S_MALL',
+  applyType: "S_MALL",
   id: 0,
   parentId: 0,
   sectionProductId: 0,
-  sectionName: '',
-  sectionImg: '',
+  sectionName: "",
+  sectionImg: "",
   rankNo: 0,
   productStandardList: [],
-  positionName: ''
+  positionName: "",
 };
 
 const roleRowData = {
   productName: null,
   page: 1,
   rows: 10,
-  sidx: 'product_section_rank'
+  sidx: "product_section_rank",
 };
 
 const relationData = {
   id: 0,
   productStandardIds: 0,
   productSectionId: 0,
-  productSectionRank: 0
+  productSectionRank: 0,
 };
 
 const productRowData = {
-  productStandardId: '',
-  productId: '',
-  barcode: '',
-  productCode: '',
-  productName: '',
-  shelvesStatus: 'VALID',
-  minPrice: '',
-  maxPrice: '',
+  productStandardId: "",
+  productId: "",
+  barcode: "",
+  productCode: "",
+  productName: "",
+  shelvesStatus: "VALID",
+  minPrice: "",
+  maxPrice: "",
   page: 1,
   rows: 10,
-  productType: ''
+  productType: "",
 };
 
 const productColumns = [
   {
-    type: 'selection',
-    key: '',
+    type: "selection",
+    key: "",
     width: 60,
-    align: 'center',
-    fixed: 'left'
+    align: "center",
+    fixed: "left",
   },
   {
-    title: '商品条码',
-    key: 'barcode',
+    title: "商品条码",
+    key: "barcode",
     minWidth: 150,
-    align: 'center'
+    align: "center",
   },
   // {
   //   title: "商品编号",
@@ -514,41 +467,41 @@ const productColumns = [
   //   minWidth: 150,
   // },
   {
-    title: '商品名称',
-    key: 'productName',
+    title: "商品名称",
+    key: "productName",
     minWidth: 150,
-    align: 'center'
+    align: "center",
   },
   {
-    title: '规格',
-    key: 'specification',
+    title: "规格",
+    key: "specification",
     minWidth: 80,
-    align: 'center'
+    align: "center",
   },
   {
-    title: '单位',
-    key: 'productUnit',
+    title: "单位",
+    key: "productUnit",
     minWidth: 80,
-    align: 'center'
+    align: "center",
   },
   {
-    title: '售价',
-    key: 'price',
+    title: "售价",
+    key: "price",
     minWidth: 80,
-    align: 'center',
+    align: "center",
     render(h, params, vm) {
       const amount = fenToYuanDot2(params.row.price);
       return <div>{amount}</div>;
-    }
+    },
   },
   {
-    title: '折扣价',
-    key: 'discountPrice',
+    title: "折扣价",
+    key: "discountPrice",
     minWidth: 80,
-    align: 'center',
+    align: "center",
     render(h, params, vm) {
       const { row } = params;
-      if (row.productType == 'SHARE_PRODUCT') {
+      if (row.productType == "SHARE_PRODUCT") {
         const amount = fenToYuanDot2(params.row.salePrice);
         return <div>{amount}</div>;
       } else {
@@ -561,82 +514,82 @@ const productColumns = [
           return <div>N/A</div>;
         }
       }
-    }
+    },
   },
   {
-    title: '起购份数',
-    key: 'startNum',
+    title: "起购份数",
+    key: "startNum",
     minWidth: 100,
-    align: 'center'
+    align: "center",
   },
   {
-    title: '商品类型',
+    title: "商品类型",
     minWidth: 110,
-    key: 'productType',
-    align: 'center',
+    key: "productType",
+    align: "center",
     render: (h, params, vm) => {
       const { row } = params;
 
-      if (row.productType == 'DISCOUNT_PRODUCT') {
+      if (row.productType == "DISCOUNT_PRODUCT") {
         return (
           <div>
-            <tag color='magenta'>
+            <tag color="magenta">
               {expandTypeConvert(row.productType).label}
             </tag>
           </div>
         );
-      } else if (row.productType == 'PULL_NEW_PRODUCT') {
+      } else if (row.productType == "PULL_NEW_PRODUCT") {
         return (
           <div>
-            <tag color='orange'>{expandTypeConvert(row.productType).label}</tag>
+            <tag color="orange">{expandTypeConvert(row.productType).label}</tag>
           </div>
         );
-      } else if (row.productType == 'SECKILL_PRODUCT') {
+      } else if (row.productType == "SECKILL_PRODUCT") {
         return (
           <div>
-            <tag color='blue'>{expandTypeConvert(row.productType).label}</tag>
+            <tag color="blue">{expandTypeConvert(row.productType).label}</tag>
           </div>
         );
-      } else if (row.productType == 'SHARE_PRODUCT') {
+      } else if (row.productType == "SHARE_PRODUCT") {
         return (
           <div>
-            <tag color='blue'>{expandTypeConvert(row.productType).label}</tag>
+            <tag color="blue">{expandTypeConvert(row.productType).label}</tag>
           </div>
         );
-      } else if (row.productType == 'ASSIST_PRODUCT') {
+      } else if (row.productType == "ASSIST_PRODUCT") {
         return (
           <div>
-            <tag color='green'>{expandTypeConvert(row.productType).label}</tag>
+            <tag color="green">{expandTypeConvert(row.productType).label}</tag>
           </div>
         );
-      } else if (row.productType == 'ORDINARY_PRODUCT') {
+      } else if (row.productType == "ORDINARY_PRODUCT") {
         return (
           <div>
-            <tag color='green'>{expandTypeConvert(row.productType).label}</tag>
+            <tag color="green">{expandTypeConvert(row.productType).label}</tag>
           </div>
         );
       }
-    }
+    },
   },
   {
-    title: '状态',
+    title: "状态",
     minWidth: 90,
-    key: 'shelvesStatus',
-    align: 'center',
+    key: "shelvesStatus",
+    align: "center",
     render: (h, params, vm) => {
       const { row } = params;
-      if (row.shelvesStatus === 'VALID') {
+      if (row.shelvesStatus === "VALID") {
         return (
           <div>
-            <tag color='success'>
+            <tag color="success">
               {customPlanStatusConvert(row.shelvesStatus).label}
             </tag>
           </div>
         );
-      } else if (row.shelvesStatus === 'INVALID') {
+      } else if (row.shelvesStatus === "INVALID") {
         return (
           <div>
-            <tag color='error'>
+            <tag color="error">
               {customPlanStatusConvert(row.shelvesStatus).label}
             </tag>
           </div>
@@ -644,48 +597,48 @@ const productColumns = [
       }
       return (
         <div>
-          <tag color='primary'>
+          <tag color="primary">
             {customPlanStatusConvert(row.shelvesStatus).label}
           </tag>
         </div>
       );
-    }
+    },
   },
   {
-    title: '排序',
-    key: 'rank',
+    title: "排序",
+    key: "rank",
     minWidth: 70,
-    align: 'center'
-  }
+    align: "center",
+  },
 ];
 export default {
   components: {
     Tables,
-    CommonIcon
+    CommonIcon,
   },
   mixins: [tableMixin, searchMixin, deleteMixin],
   data() {
     return {
       ruleInline: {
         productId: [
-          { required: true, message: '请选择关联商品' },
+          { required: true, message: "请选择关联商品" },
           {
-            message: '请选择要关联的商品',
-            pattern: /^(?!(0[0-9]{0,}$))[0-9]{1,}[.]{0,}[0-9]{0,}$/
-          }
+            message: "请选择要关联的商品",
+            pattern: /^(?!(0[0-9]{0,}$))[0-9]{1,}[.]{0,}[0-9]{0,}$/,
+          },
         ],
         specificationQty: [
-          { required: true, message: '请输入安全库存' },
+          { required: true, message: "请输入安全库存" },
           {
             validator(rule, value, callback, source, options) {
               const errors = [];
               if (!/^[1-9]\d*$/.test(value)) {
-                errors.push(new Error('必须为非零整数'));
+                errors.push(new Error("必须为非零整数"));
               }
               callback(errors);
-            }
-          }
-        ]
+            },
+          },
+        ],
         // rank: [{ required: true, message: "请输入商品排序" }]
       },
       appTypeEnum,
@@ -694,87 +647,87 @@ export default {
       discount: [],
       columns: [
         {
-          type: 'selection',
+          type: "selection",
           width: 60,
-          align: 'center',
-          fixed: 'left'
+          align: "center",
+          fixed: "left",
         },
         {
-          title: '商品名称',
-          key: 'productName',
-          align: 'center',
+          title: "商品名称",
+          key: "productName",
+          align: "center",
           minWidth: 160,
-          fixed: 'left'
+          fixed: "left",
         },
         {
-          title: '商品条码',
-          key: 'barcode',
-          align: 'center',
-          minWidth: 150
+          title: "商品条码",
+          key: "barcode",
+          align: "center",
+          minWidth: 150,
         },
         {
-          title: '商品编号',
-          key: 'productCode',
-          align: 'center',
-          minWidth: 150
+          title: "商品编号",
+          key: "productCode",
+          align: "center",
+          minWidth: 150,
         },
         {
-          title: '规格',
-          key: 'specification',
-          align: 'center',
-          minWidth: 90
+          title: "规格",
+          key: "specification",
+          align: "center",
+          minWidth: 90,
         },
         {
-          title: '单位',
-          key: 'productUnit',
-          align: 'center',
-          minWidth: 80
+          title: "单位",
+          key: "productUnit",
+          align: "center",
+          minWidth: 80,
         },
         {
-          title: '商品原价',
-          key: 'price',
+          title: "商品原价",
+          key: "price",
           minWidth: 100,
-          align: 'center',
+          align: "center",
+          render(h, params, vm) {
+            const amount = fenToYuanDot2(params.row.price);
+            return <div>{amount}</div>;
+          },
+        },
+        {
+          title: "售卖价格",
+          key: "salePrice",
+          align: "center",
+          minWidth: 100,
           render(h, params, vm) {
             const amount = fenToYuanDot2(params.row.salePrice);
             return <div>{amount}</div>;
-          }
+          },
         },
         {
-          title: '售卖价格',
-          key: 'salePrice',
-          align: 'center',
-          minWidth: 100,
-          render(h, params, vm) {
-            const amount = fenToYuanDot2(params.row.salePrice);
-            return <div>{amount}</div>;
-          }
+          title: "所属板块",
+          key: "sectionName",
+          align: "center",
+          minWidth: 140,
         },
         {
-          title: '所属板块',
-          key: 'sectionName',
-          align: 'center',
-          minWidth: 140
-        },
-        {
-          title: '商品状态',
-          key: 'shelvesStatus',
-          align: 'center',
+          title: "商品状态",
+          key: "shelvesStatus",
+          align: "center",
           minWidth: 100,
           render: (h, params, vm) => {
             const { row } = params;
-            if (row.shelvesStatus === 'VALID') {
+            if (row.shelvesStatus === "VALID") {
               return (
                 <div>
-                  <tag color='success'>
+                  <tag color="success">
                     {customPlanStatusConvert(row.shelvesStatus).label}
                   </tag>
                 </div>
               );
-            } else if (row.shelvesStatus === 'INVALID') {
+            } else if (row.shelvesStatus === "INVALID") {
               return (
                 <div>
-                  <tag color='error'>
+                  <tag color="error">
                     {customPlanStatusConvert(row.shelvesStatus).label}
                   </tag>
                 </div>
@@ -782,36 +735,36 @@ export default {
             } else {
               return (
                 <div>
-                  <tag color='primary'>N/A</tag>
+                  <tag color="primary">N/A</tag>
                 </div>
               );
             }
-          }
+          },
         },
         {
-          title: '排序',
+          title: "排序",
           minWidth: 90,
-          key: 'productSectionRank',
-          sortable: 'true',
-          align: 'center'
+          key: "productSectionRank",
+          sortable: "true",
+          align: "center",
         },
         {
-          title: '操作',
-          align: 'center',
-          key: 'handle',
-          fixed: 'right',
+          title: "操作",
+          align: "center",
+          key: "handle",
+          fixed: "right",
           minWidth: 180,
-          options: ['view', 'exchange', 'edit', 'delete']
-        }
+          options: ["view", "exchange", "edit", "delete"],
+        },
       ],
       productColumns: productColumns,
       modalEdit: false,
       modalChange: false,
       modalViewLoading: false,
       modalEditLoading: false,
-      currentParentName: '',
+      currentParentName: "",
       currentSectionId: 0,
-      currentSectionCode: '',
+      currentSectionCode: "",
       currentStandard: _.cloneDeep(productStandardDetail),
       currentCategory: _.cloneDeep(currentCategory),
       searchRowData: _.cloneDeep(roleRowData),
@@ -821,7 +774,7 @@ export default {
       goodsSectionData: [],
       defaultGoodsSectionData: [41],
       productData: [],
-      productTotal: 0
+      productTotal: 0,
     };
   },
   computed: {},
@@ -850,27 +803,27 @@ export default {
       this.searchLoading = true;
       this.getTableData();
       this.$refs.tables.exportCsv({
-        filename: filename + '-' + new Date().valueOf() + '.csv'
+        filename: filename + "-" + new Date().valueOf() + ".csv",
       });
     },
     handleBack() {
-      this.currentCategory.sectionName = '所有板块';
+      this.currentCategory.sectionName = "所有板块";
       this.initMenuList();
       this.resetSearchRowData();
     },
     renderContent(h, { root, node, data }) {
-      if (data.type == 'PARENT') {
+      if (data.type == "PARENT") {
         return (
           <div
             style={{
-              display: 'inline-block',
-              width: '100%',
-              fontSize: '14px',
-              cursor: 'pointer'
+              display: "inline-block",
+              width: "100%",
+              fontSize: "14px",
+              cursor: "pointer",
             }}
           >
             <span>
-              <CommonIcon type='ios-folder' class='mr10' />
+              <CommonIcon type="ios-folder" class="mr10" />
             </span>
             <span onClick={() => this.handleClick({ root, node, data })}>
               {data.title}
@@ -881,14 +834,14 @@ export default {
         return (
           <div
             style={{
-              display: 'inline-block',
-              width: '100%',
-              fontSize: '14px',
-              cursor: 'pointer'
+              display: "inline-block",
+              width: "100%",
+              fontSize: "14px",
+              cursor: "pointer",
             }}
           >
             <span>
-              <CommonIcon type='ios-paper' class='mr10' />
+              <CommonIcon type="ios-paper" class="mr10" />
             </span>
             <span onClick={() => this.handleClick({ root, node, data })}>
               {data.title}
@@ -904,24 +857,24 @@ export default {
     // 添加商品
     addProSection() {
       if (!this.currentSectionId) {
-        this.$Message.warning('请先从左侧选择一个板块');
+        this.$Message.warning("请先从左侧选择一个板块");
         return;
       }
       this.searchProductRowData.page = 1;
-      if (this.currentSectionCode === 'PULL_NEW') {
-        this.searchProductRowData.productType = 'PULL_NEW_PRODUCT';
-      } else if (this.currentSectionCode === 'ZKSP') {
-        this.searchProductRowData.productType = 'DISCOUNT_PRODUCT';
-      } else if (this.currentSectionCode === 'SECKILL') {
-        this.searchProductRowData.productType = 'SECKILL_PRODUCT';
-      } else if (this.currentSectionCode === 'ASSIST') {
-        this.searchProductRowData.productType = 'ASSIST_PRODUCT';
-      } else if (this.currentSectionCode === 'SHARE') {
-        this.searchProductRowData.productType = 'SHARE_PRODUCT';
-      } else if (this.currentSectionCode === 'SVIP') {
-        this.searchProductRowData.productType = '';
+      if (this.currentSectionCode === "PULL_NEW") {
+        this.searchProductRowData.productType = "PULL_NEW_PRODUCT";
+      } else if (this.currentSectionCode === "ZKSP") {
+        this.searchProductRowData.productType = "DISCOUNT_PRODUCT";
+      } else if (this.currentSectionCode === "SECKILL") {
+        this.searchProductRowData.productType = "SECKILL_PRODUCT";
+      } else if (this.currentSectionCode === "ASSIST") {
+        this.searchProductRowData.productType = "ASSIST_PRODUCT";
+      } else if (this.currentSectionCode === "SHARE") {
+        this.searchProductRowData.productType = "SHARE_PRODUCT";
+      } else if (this.currentSectionCode === "SVIP") {
+        this.searchProductRowData.productType = "";
       } else {
-        this.searchProductRowData.productType = 'ORDINARY_PRODUCT';
+        this.searchProductRowData.productType = "ORDINARY_PRODUCT";
       }
       this.$refs.editForm.resetFields();
       this.getProductTableData();
@@ -933,7 +886,7 @@ export default {
     },
     handleEdit(params) {
       if (!this.currentSectionId || this.currentSectionId == 0) {
-        this.$Message.warning('请从左侧选择一个板块');
+        this.$Message.warning("请从左侧选择一个板块");
         return;
       }
       const { row } = params;
@@ -949,11 +902,11 @@ export default {
       this.$refs[name].validate((valid) => {
         if (valid) {
           if (!this.productStandardRelation.productSectionId) {
-            this.$Message.warning('商品板块id不能为空');
+            this.$Message.warning("商品板块id不能为空");
             return;
           }
           if (!this.productStandardRelation.productStandardIds) {
-            this.$Message.warning('请选择一条商品信息');
+            this.$Message.warning("请选择一条商品信息");
             return;
           }
           if (this.tempModalType === this.modalType.create) {
@@ -978,7 +931,7 @@ export default {
     },
     handleView(params) {
       getProStandardExpand({
-        id: params.row.productStandardId
+        id: params.row.productStandardId,
       }).then((res) => {
         if (res) {
           this.discount = res;
@@ -990,7 +943,7 @@ export default {
           this.discount.salePrice = fenToYuanDot2(params.row.salePrice);
           this.modalView = true;
         } else {
-          this.$Message.error('当前商品不是活动商品');
+          this.$Message.error("当前商品不是活动商品");
           return;
         }
       });
@@ -1002,7 +955,7 @@ export default {
     deleteTable(ids) {
       this.loading = true;
       deleteProductSectionRelation({
-        ids
+        ids,
       })
         .then((res) => {
           const totalPage = Math.ceil(this.total / this.pageSize);
@@ -1046,8 +999,8 @@ export default {
         // if (res && res.array.length > 0) {
         const menuList = buildMenu(res.array);
         const map = {
-          title: 'title',
-          children: 'children'
+          title: "title",
+          children: "children",
         };
         this.menuData = convertTree(menuList, map, true);
         this.goodsSectionData = convertTreeCategory(menuList, map, true);
@@ -1060,8 +1013,8 @@ export default {
     handleClick({ root, node, data }) {
       this.loading = true;
       // 展开当前节点
-      if (typeof data.expand === 'undefined') {
-        this.$set(data, 'expend', false);
+      if (typeof data.expand === "undefined") {
+        this.$set(data, "expend", false);
         if (data.children) {
           this.expandChildren(data.children);
         }
@@ -1079,8 +1032,8 @@ export default {
     },
     expandChildren(array) {
       array.forEach((item) => {
-        if (typeof item.expand === 'undefined') {
-          this.$set(item, 'expend', false);
+        if (typeof item.expand === "undefined") {
+          this.$set(item, "expend", false);
         } else {
           item.expand = !item.expand;
         }
@@ -1095,7 +1048,7 @@ export default {
     onSelectionChange(selection) {
       this.productStandardRelation.productStandardIds = selection
         .map((item) => item.id.toString())
-        .join(',');
+        .join(",");
     },
     onRelationSelectionChange(selection) {
       // if (selection.length > 1) {
@@ -1104,10 +1057,10 @@ export default {
       // }
       this.productStandardRelation.productStandardIds = selection
         .map((item) => item.productStandardId.toString())
-        .join(',');
+        .join(",");
       this.productStandardRelation.id = selection
         .map((item) => item.id.toString())
-        .join(',');
+        .join(",");
     },
     // 选择分类
     goodsSectionChange(value, selectedData) {
@@ -1136,8 +1089,8 @@ export default {
       this.searchRowData.page = 1;
       this.searchRowData.rows = pageSize;
       this.getTableData();
-    }
-  }
+    },
+  },
 };
 </script>
 

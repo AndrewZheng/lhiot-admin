@@ -50,15 +50,15 @@
             <Select
               v-model="searchRowData.onOff"
               placeholder="活动状态"
-              style="padding-right: 5px; width: 100px"
+              style="padding-right: 5px;width: 100px"
               clearable
             >
               <Option
-                v-for="(item, index) in imageStatusEnum"
+                v-for="(item,index) in imageStatusEnum"
                 :key="index"
                 :value="item.value"
                 class="ptb2-5"
-                style="padding-left: 5px; width: 100px"
+                style="padding-left: 5px;width: 100px"
               >
                 {{ item.label }}
               </Option>
@@ -82,19 +82,11 @@
             </Button>
           </Row>
           <Row>
-            <div>
-              *同一时间段请不要开启多个活动，若开启多个活动，则以最新创建活动为主
-            </div>
+            <div>*同一时间段请不要开启多个活动，若开启多个活动，则以最新创建活动为主</div>
           </Row>
         </div>
         <div slot="operations">
-          <Button
-            v-waves
-            :loading="createLoading"
-            type="success"
-            class="mr5"
-            @click="addRecharge"
-          >
+          <Button v-waves :loading="createLoading" type="success" class="mr5" @click="addRecharge">
             <Icon type="md-add" /> 添加
           </Button>
           <Poptip
@@ -110,7 +102,7 @@
           </Poptip>
         </div>
       </tables>
-      <div style="margin: 10px; overflow: hidden">
+      <div style="margin: 10px;overflow: hidden">
         <Row type="flex" justify="end">
           <Page
             :total="total"
@@ -132,7 +124,9 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6"> 活动名称: </i-col>
+              <i-col span="6">
+                活动名称:
+              </i-col>
               <i-col span="18">
                 {{ rechargeDetail.activityName }}
               </i-col>
@@ -142,7 +136,9 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6"> 活动状态: </i-col>
+              <i-col span="6">
+                活动状态:
+              </i-col>
               <i-col span="18">
                 {{ rechargeDetail.onOff | imageStatusFilter }}
               </i-col>
@@ -152,7 +148,9 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6"> 开始时间: </i-col>
+              <i-col span="6">
+                开始时间:
+              </i-col>
               <i-col span="18">
                 {{ rechargeDetail.startTime }}
               </i-col>
@@ -162,7 +160,9 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6"> 结束时间: </i-col>
+              <i-col span="6">
+                结束时间:
+              </i-col>
               <i-col span="18">
                 {{ rechargeDetail.endTime }}
               </i-col>
@@ -172,7 +172,9 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6"> 创建人: </i-col>
+              <i-col span="6">
+                创建人:
+              </i-col>
               <i-col span="18">
                 {{ rechargeDetail.createBy }}
               </i-col>
@@ -182,7 +184,9 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6"> 创建时间: </i-col>
+              <i-col span="6">
+                创建时间:
+              </i-col>
               <i-col span="18">
                 {{ rechargeDetail.createTime }}
               </i-col>
@@ -192,7 +196,9 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6"> 更新时间: </i-col>
+              <i-col span="6">
+                更新时间:
+              </i-col>
               <i-col span="18">
                 {{ rechargeDetail.updateTime }}
               </i-col>
@@ -201,30 +207,22 @@
         </Row>
       </div>
       <div slot="footer">
-        <Button type="primary" @click="handleClose"> 关闭 </Button>
+        <Button type="primary" @click="handleClose">
+          关闭
+        </Button>
       </div>
     </Modal>
 
     <Modal v-model="modalEdit" :z-index="1000" :mask-closable="false">
       <p slot="header">
-        <i-col>{{
-          tempModalType === modalType.edit ? "修改充值活动" : "创建充值活动"
-        }}</i-col>
+        <i-col>{{ tempModalType===modalType.edit?'修改充值活动':'创建充值活动' }}</i-col>
       </p>
       <div class="modal-content">
-        <Form
-          ref="modalEdit"
-          :model="rechargeDetail"
-          :rules="ruleInline"
-          :label-width="80"
-        >
+        <Form ref="modalEdit" :model="rechargeDetail" :rules="ruleInline" :label-width="80">
           <Row>
             <Col span="18">
             <FormItem label="活动名称:" prop="activityName">
-              <Input
-                v-model="rechargeDetail.activityName"
-                placeholder="活动名称"
-              ></Input>
+              <Input v-model="rechargeDetail.activityName" placeholder="活动名称"></Input>
             </FormItem>
             </Col>
           </Row>
@@ -233,11 +231,11 @@
             <FormItem label="活动状态:" prop="onOff">
               <Select v-model="rechargeDetail.onOff" clearable>
                 <Option
-                  v-for="(item, index) in imageStatusEnum"
+                  v-for="(item,index) in imageStatusEnum"
                   :key="index"
                   :value="item.value"
                   class="ptb2-5"
-                  style="padding-left: 5px; width: 100%"
+                  style="padding-left: 5px;width: 100%"
                 >
                   {{ item.label }}
                 </Option>
@@ -299,7 +297,7 @@
             </FormItem>
             </Col>
           </Row>-->
-          <Row v-if="tempModalType === modalType.edit">
+          <Row v-if="tempModalType===modalType.edit">
             <Form
               ref="modalCreate"
               :model="addRelationDetail"
@@ -341,7 +339,9 @@
                 </Col>
               </Row>
             </Form>
-            <Divider orientation="center"> 充值活动规则 </Divider>
+            <Divider orientation="center">
+              充值活动规则
+            </Divider>
             <tables
               v-model="relationDetail"
               :columns="relationColumns"
@@ -355,12 +355,10 @@
         </Form>
       </div>
       <div slot="footer">
-        <Button @click="handleEditClose"> 关闭 </Button>
-        <Button
-          :loading="modalViewLoading"
-          type="primary"
-          @click="handleSubmit('modalEdit')"
-        >
+        <Button @click="handleEditClose">
+          关闭
+        </Button>
+        <Button :loading="modalViewLoading" type="primary" @click="handleSubmit('modalEdit')">
           确定
         </Button>
       </div>
@@ -632,7 +630,7 @@ export default {
       this.$refs.modalEdit.resetFields();
     },
     handleSubmit(name) {
-      this.$refs[name].validate((valid) => {
+      this.$refs[name].validate(valid => {
         if (valid) {
           if (
             compareData(
@@ -658,7 +656,7 @@ export default {
     createRecharge() {
       this.modalViewLoading = true;
       createRecharge(this.rechargeDetail)
-        .then((res) => {
+        .then(res => {
           this.modalViewLoading = false;
           this.modalEdit = false;
           this.$Message.success('创建成功!');
@@ -672,7 +670,7 @@ export default {
     editRecharge() {
       this.modalViewLoading = true;
       editRecharge(this.rechargeDetail)
-        .then((res) => {
+        .then(res => {
           this.modalEdit = false;
           this.modalViewLoading = false;
           this.getTableData();
@@ -701,7 +699,7 @@ export default {
       deleteRecharge({
         ids
       })
-        .then((res) => {
+        .then(res => {
           const totalPage = Math.ceil(this.total / this.searchRowData.pageSize);
           if (
             this.tableData.length == this.tableDataSelected.length &&
@@ -713,7 +711,7 @@ export default {
           this.tableDataSelected = [];
           this.getTableData();
         })
-        .catch((err) => {
+        .catch(err => {
           console.log(err);
           this.loading = false;
         });
@@ -734,13 +732,16 @@ export default {
       this.modalEdit = true;
     },
     getTableData() {
-      this.loading = true;
       getRechargePages(this.searchRowData)
-        .then((res) => {
+        .then(res => {
           this.tableData = res.rows;
           this.total = res.total;
+          this.loading = false;
+          this.searchLoading = false;
+          this.clearSearchLoading = false;
         })
-        .finally(() => {
+        .catch(error => {
+          console.log(error);
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
@@ -748,10 +749,10 @@ export default {
     },
     getRelationTableData() {
       getRechargeRulePages(this.searchRelationRowData)
-        .then((res) => {
+        .then(res => {
           // 设置行是否可编辑
           if (res.rows.length !== 0) {
-            res.rows.forEach((element) => {
+            res.rows.forEach(element => {
               element.isEdit = false;
             });
             this.relationDetail = res.rows;
@@ -759,8 +760,12 @@ export default {
             this.relationDetail = null;
           }
           // this.total = res.total;
+          this.loading = false;
+          this.searchLoading = false;
+          this.clearSearchLoading = false;
         })
-        .finally(() => {
+        .catch(error => {
+          console.log(error);
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
@@ -810,10 +815,10 @@ export default {
         return;
       }
       editRechargeRule(row)
-        .then((res) => {
+        .then(res => {
           this.getRelationTableData();
         })
-        .finally((res) => {
+        .finally(res => {
           this.tempTableLoading = false;
         });
       this.tempTableLoading = false;
@@ -822,18 +827,18 @@ export default {
     modalHandleDelete(params) {
       this.tempTableLoading = true;
       deleteRechargeRule({ ids: params.row.id })
-        .then((res) => {
+        .then(res => {
           this.relationDetail = this.relationDetail.filter(
             (item, index) => index !== params.row.initRowIndex
           );
           this.getRelationTableData();
         })
-        .finally((res) => {
+        .finally(res => {
           this.tempTableLoading = false;
         });
     },
     addTempData(name) {
-      this.$refs[name].validate((valid) => {
+      this.$refs[name].validate(valid => {
         if (valid) {
           if (
             this.addRelationDetail.giveFee > this.addRelationDetail.rechargeFee
@@ -853,7 +858,7 @@ export default {
     createRelation() {
       this.modalViewLoading = true;
       createRechargeRule(this.addRelationDetail)
-        .then((res) => {
+        .then(res => {
           this.modalViewLoading = false;
           this.modalEdit = false;
           this.$Message.success('创建成功!');

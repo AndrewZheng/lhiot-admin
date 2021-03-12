@@ -27,50 +27,44 @@
             <Select
               v-model="searchRowData.gender"
               placeholder="性别"
-              style="padding-right: 5px; width: 100px"
+              style="padding-right: 5px;width: 100px"
               clearable
             >
               <Option
-                v-for="(item, index) in genderEnum"
-                :key="index"
+                v-for="(item,index) in genderEnum"
                 :value="item.value"
+                :key="index"
                 class="ptb2-5"
                 style="padding-left: 5px"
-              >
-                {{ item.label }}
-              </Option>
+              >{{ item.label }}</Option>
             </Select>
             <Select
               v-model="searchRowData.isCommunity"
               placeholder="是否社群用户"
-              style="padding-right: 5px; width: 130px"
+              style="padding-right: 5px;width: 130px"
               clearable
             >
               <Option
-                v-for="(item, index) in communityEnum"
-                :key="index"
+                v-for="(item,index) in communityEnum"
                 :value="item.value"
+                :key="index"
                 class="ptb2-5"
                 style="padding-left: 5px"
-              >
-                {{ item.label }}
-              </Option>
+              >{{ item.label }}</Option>
             </Select>
             <Select
               v-model="searchRowData.userType"
               placeholder="用户类型"
-              style="padding-right: 5px; width: 100px"
+              style="padding-right: 5px;width: 100px"
               clearable
             >
               <Option
-                v-for="(item, index) in userEnum"
-                :key="index"
+                v-for="(item,index) in userEnum"
                 :value="item.value"
+                :key="index"
                 class="ptb2-5"
                 style="padding-left: 5px"
-              >
-                {{ item.label }}
-              </Option>
+              >{{ item.label }}</Option>
             </Select>
             <DatePicker
               v-model="searchRowData.regBeginTime"
@@ -112,7 +106,7 @@
           </Row>
         </div>
       </tables>
-      <div style="margin: 10px; overflow: hidden">
+      <div style="margin: 10px;overflow: hidden">
         <Row type="flex" justify="end">
           <Page
             :total="total"
@@ -129,25 +123,25 @@
 </template>
 
 <script type="text/ecmascript-6">
-import Tables from '_c/tables';
-import CountTo from '_c/count-to';
-import _ from 'lodash';
-import { getUsersInfo, setUserClass, setStaff } from '@/api/mini-program';
-import tableMixin from '@/mixins/tableMixin.js';
-import searchMixin from '@/mixins/searchMixin.js';
-import { setSmallGoodsStandard } from '@/libs/util';
+import Tables from "_c/tables";
+import CountTo from "_c/count-to";
+import _ from "lodash";
+import { getUsersInfo, setUserClass, setStaff } from "@/api/mini-program";
+import tableMixin from "@/mixins/tableMixin.js";
+import searchMixin from "@/mixins/searchMixin.js";
+import { setSmallGoodsStandard } from "@/libs/util";
 
 const userDetail = {
-  nickName: '',
-  phone: '',
-  gender: '',
-  consumeSumAmount: '',
-  rechargeSumAmount: '',
-  isCommunity: '',
-  isCommunity: '',
-  userType: '',
-  registrationAt: '',
-  userClass: 'EXTERIOR'
+  nickName: "",
+  phone: "",
+  gender: "",
+  consumeSumAmount: "",
+  rechargeSumAmount: "",
+  isCommunity: "",
+  isCommunity: "",
+  userType: "",
+  registrationAt: "",
+  userClass: "EXTERIOR",
 };
 
 const roleRowData = {
@@ -159,141 +153,141 @@ const roleRowData = {
   regBeginTime: null,
   regEndTime: null,
   page: 1,
-  rows: 10
+  rows: 10,
 };
 
 export default {
   components: {
     Tables,
-    CountTo
+    CountTo,
   },
   mixins: [tableMixin, searchMixin],
   data() {
     return {
       columns: [
         {
-          title: '会员ID',
-          key: 'id',
-          align: 'center',
-          width: '90px'
+          title: "会员ID",
+          key: "id",
+          align: "center",
+          width: "90px",
         },
         {
-          title: '昵称',
-          key: 'nickName',
-          align: 'center'
+          title: "昵称",
+          key: "nickName",
+          align: "center",
         },
         {
-          title: '手机号码',
-          key: 'phone',
-          align: 'center',
-          width: '140px'
+          title: "手机号码",
+          key: "phone",
+          align: "center",
+          width: "140px",
         },
         {
-          title: '性别',
-          key: 'gender',
-          align: 'center',
-          width: '80px',
+          title: "性别",
+          key: "gender",
+          align: "center",
+          width: "80px",
           render(h, params) {
             const { row } = params;
-            if (row.gender === '1') {
-              return <div>{'男'}</div>;
-            } else if (row.gender === '2') {
-              return <div>{'女'}</div>;
+            if (row.gender === "1") {
+              return <div>{"男"}</div>;
+            } else if (row.gender === "2") {
+              return <div>{"女"}</div>;
             } else {
-              return <div>{'未知'}</div>;
+              return <div>{"未知"}</div>;
             }
-          }
+          },
         },
         {
-          title: '消费总额',
-          align: 'center',
-          key: 'consumeSumAmount'
+          title: "消费总额",
+          align: "center",
+          key: "consumeSumAmount",
         },
         {
-          title: '充值总额',
-          key: 'rechargeSumAmount',
-          align: 'center'
+          title: "充值总额",
+          key: "rechargeSumAmount",
+          align: "center",
         },
         {
-          title: '社群成员',
-          key: 'isCommunity',
-          align: 'center',
-          width: '100px',
+          title: "社群成员",
+          key: "isCommunity",
+          align: "center",
+          width: "100px",
           render(h, params) {
             const { row } = params;
-            if (row.isCommunity === 'YES') {
+            if (row.isCommunity === "YES") {
               return (
                 <div>
-                  <tag color='orange'>{'是'}</tag>
-                </div>
-              );
-            } else {
-              return (
-                <div>
-                  <tag color='blue'>{'否'}</tag>
-                </div>
-              );
-            }
-          }
-        },
-        {
-          title: '用户类型',
-          key: 'userType',
-          align: 'center',
-          width: '120px',
-          render(h, params) {
-            const { row } = params;
-            if (row.userType === 'CONSUMER') {
-              return (
-                <div>
-                  <tag color='blue'>普通用户</tag>
-                </div>
-              );
-            } else if (row.userType === 'STAFF') {
-              return (
-                <div>
-                  <tag color='gold'>员工特权</tag>
+                  <tag color="orange">{"是"}</tag>
                 </div>
               );
             } else {
               return (
                 <div>
-                  <tag color='blue'>N/A</tag>
+                  <tag color="blue">{"否"}</tag>
                 </div>
               );
             }
-          }
+          },
         },
         {
-          title: '注册时间',
-          key: 'registrationAt',
-          align: 'center'
+          title: "用户类型",
+          key: "userType",
+          align: "center",
+          width: "120px",
+          render(h, params) {
+            const { row } = params;
+            if (row.userType === "CONSUMER") {
+              return (
+                <div>
+                  <tag color="blue">{"普通用户"}</tag>
+                </div>
+              );
+            } else if (row.userType === "STAFF") {
+              return (
+                <div>
+                  <tag color="gold">{"员工特权"}</tag>
+                </div>
+              );
+            } else {
+              return (
+                <div>
+                  <tag color="blue">{"N/A"}</tag>
+                </div>
+              );
+            }
+          },
         },
         {
-          title: '操作',
-          align: 'center',
+          title: "注册时间",
+          key: "registrationAt",
+          align: "center",
+        },
+        {
+          title: "操作",
+          align: "center",
           width: 120,
-          key: 'handle',
-          options: ['upgrade', 'staff']
-        }
+          key: "handle",
+          options: ["upgrade", "staff"],
+        },
       ],
       genderEnum: [
-        { label: '男', value: '1' },
-        { label: '女', value: '2' },
-        { label: '未知', value: '0' }
+        { label: "男", value: "1" },
+        { label: "女", value: "2" },
+        { label: "未知", value: "0" },
       ],
       communityEnum: [
-        { label: '是', value: 'YES' },
-        { label: '否', value: 'NO' }
+        { label: "是", value: "YES" },
+        { label: "否", value: "NO" },
       ],
       userEnum: [
-        { label: '普通用户', value: 'CONSUMER' },
-        { label: '员工特权', value: 'STAFF' }
+        { label: "普通用户", value: "CONSUMER" },
+        { label: "员工特权", value: "STAFF" },
       ],
       createLoading: false,
       modalViewLoading: false,
       searchRowData: _.cloneDeep(roleRowData),
-      userDetail: _.cloneDeep(userDetail)
+      userDetail: _.cloneDeep(userDetail),
     };
   },
   mounted() {
@@ -307,12 +301,17 @@ export default {
       this.getTableData();
     },
     getTableData() {
+      const _this = this;
       getUsersInfo(this.searchRowData)
         .then((res) => {
           this.tableData = res.rows;
           this.total = res.total;
+          this.loading = false;
+          this.searchLoading = false;
+          this.clearSearchLoading = false;
         })
-        .finally(() => {
+        .catch((error) => {
+          console.log(error);
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
@@ -327,35 +326,39 @@ export default {
     onUpgrade(params) {
       this.userDetail = _.cloneDeep(params.row);
       this.userDetail.userClass =
-        params.row.userClass == 'EXTERIOR' || params.row.userClass == null
-          ? 'INTERIOR'
-          : 'EXTERIOR';
-      setUserClass(this.userDetail).then((res) => {
-        this.$Message.info('操作成功');
-        this.getTableData();
-      });
+        params.row.userClass == "EXTERIOR" || params.row.userClass == null
+          ? "INTERIOR"
+          : "EXTERIOR";
+      setUserClass(this.userDetail)
+        .then((res) => {
+          this.$Message.info("操作成功");
+          this.getTableData();
+        })
+        .catch((error) => {});
     },
     onStaff(params) {
-      const rows = params.row;
-      const _this = this;
-      rows.topStatus = 'manage';
+      let rows = params.row;
+      let _this = this;
+      rows.topStatus = "manage";
       this.userDetail = _.cloneDeep(params.row);
       this.userDetail.userType =
-        params.row.userType == 'CONSUMER' ? 'STAFF' : 'CONSUMER';
-      setStaff(this.userDetail).then((res) => {
-        this.$Message.info('操作成功');
-        this.getTableData();
-        if (this.userDetail.userType === 'STAFF') {
-          setTimeout(function() {
-            setSmallGoodsStandard(rows);
-            _this.turnToPage({
-              name: 'small-member-relation-handCheck'
-            });
-          }, 2000);
-        }
-      });
-    }
-  }
+        params.row.userType == "CONSUMER" ? "STAFF" : "CONSUMER";
+      setStaff(this.userDetail)
+        .then((res) => {
+          this.$Message.info("操作成功");
+          this.getTableData();
+          if (this.userDetail.userType === "STAFF") {
+            setTimeout(function () {
+              setSmallGoodsStandard(rows);
+              _this.turnToPage({
+                name: "small-member-relation-handCheck",
+              });
+            }, 2000);
+          }
+        })
+        .catch((error) => {});
+    },
+  },
 };
 </script>
 

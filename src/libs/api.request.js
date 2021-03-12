@@ -9,7 +9,7 @@ const imsAxios = new HttpRequest(baseUrl, 'IMS_SERVICE', 'blob');
 const imgAxios = new HttpRequest(imgUploadUrl, 'IMG_SERVICE');
 const exportAxios = new HttpRequest(exportUploadUrl, 'EXPORT_SERVICE');
 export default {
-  install: function(Vue, Option) {
+  install: function (Vue, Option) {
     Object.defineProperty(Vue.prototype, '$http', {
       value: Axios
     });

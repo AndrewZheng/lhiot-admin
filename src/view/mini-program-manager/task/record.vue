@@ -38,7 +38,7 @@
             clearable
           >
             <Option
-              v-for="(item, index) in taskTypeEnum"
+              v-for="(item,index) in taskTypeEnum"
               :key="index"
               :value="item.value"
               class="ptb2-5"
@@ -54,7 +54,7 @@
             clearable
           >
             <Option
-              v-for="(item, index) in rewardTypeEnum"
+              v-for="(item,index) in rewardTypeEnum"
               :key="index"
               :value="item.value"
               class="ptb2-5"
@@ -102,7 +102,7 @@
         </div>
         <div slot="operations"></div>
       </tables>
-      <div style="margin: 10px; overflow: hidden">
+      <div style="margin: 10px;overflow: hidden">
         <Row type="flex" justify="end">
           <Page
             :total="total"
@@ -266,7 +266,7 @@ export default {
           title: '领取时间',
           align: 'center',
           key: 'receiveTime',
-          width: '120'
+          width: '120',
         },
         {
           title: '创建时间',
@@ -285,7 +285,7 @@ export default {
     getTableData() {
       this.loading = true;
       getTaskRecordPages(this.searchRowData)
-        .then((res) => {
+        .then(res => {
           this.tableData = res.rows;
           this.total = res.total;
         })

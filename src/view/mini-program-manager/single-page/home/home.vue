@@ -44,93 +44,28 @@
         </div>
       </Card>
     </Row>
+    <!-- tab分类 -->
     <Row :gutter="20" style="margin-top: 20px">
-      <i-col span="6">
-        <Card shadow>
-          <div class="topStore">
-            <h3>门店排行</h3>
-            <div class="tabStore">
-              <span
-                data-index="COUNT_ORDER_AMOUNT"
-                :class="storeStatus == 'COUNT_ORDER_AMOUNT' ? 'checked' : ''"
-                @click="storeDataChange"
-              >今日销售额</span>
-              <span
-                data-index="COUNT_ORDER"
-                :class="storeStatus == 'COUNT_ORDER' ? 'checked' : ''"
-                @click="storeDataChange"
-              >今日订单数</span>
-            </div>
-          </div>
-          <div
-            v-for="(item, i) in storeRank"
-            :key="`items-${i}`"
-            class="storeRanking"
-          >
-            <div>
-              <b>{{ i + 1 }}</b>
-              <span>{{ item.storeName }}</span>
-            </div>
-            <p v-if="storeStatus == 'COUNT_ORDER_AMOUNT'">
-              {{ item.sumAmount }}
-            </p>
-            <p v-else>
-              {{ item.totalCount }}
-            </p>
-          </div>
-        </Card>
-      </i-col>
-      <i-col span="18">
-        <Card shadow>
-          <tables
-            ref="tables"
-            v-model="tableData"
-            :columns="columns"
-            :loading="loading"
-            :search-area-column="18"
-            :operate-area-column="6"
-            editable
-            searchable
-            border
-            search-place="top"
-          >
-            <div slot="searchCondition">
-              <div style="display: flex; align-items: center">
-                <h3 style="display: inline-block">商品点赞/点踩排行</h3>
-                <div class="seniority">
-                  <span
-                    data-index="PRAISE"
-                    :class="seniorityStatus == 'PRAISE' ? 'checked' : ''"
-                    @click="productDataChange"
-                  >按点赞排行</span>
-                  <span
-                    data-index="TREAD"
-                    :class="seniorityStatus == 'TREAD' ? 'checked' : ''"
-                    @click="productDataChange"
-                  >按点踩排行</span>
-                </div>
-              </div>
-            </div>
-          </tables>
-          <div style="margin: 10px; overflow: hidden">
-            <Row type="flex" justify="end">
-              <Page
-                :total="total"
-                :current="searchRowData.page"
-                show-sizer
-                show-total
-                @on-change="changePage"
-                @on-page-size-change="changePageSize"
-              ></Page>
-            </Row>
-          </div>
-        </Card>
-      </i-col>
-    </Row>
-    <Row :gutter="20" style="margin-top: 20px">
-      <Card shadow>
+      <div class="tabChange">
+        <b
+          data-index="productStanard"
+          :class="topStatus == 'productStanard' ? 'hot' : ''"
+          @click="assistDataChange"
+        >商品规格销售排行</b>
+        <b
+          data-index="productSell"
+          :class="topStatus == 'productSell' ? 'hot' : ''"
+          @click="assistDataChange"
+        >门店商品销售统计</b>
+        <b
+          data-index="productEvaluate"
+          :class="topStatus == 'productEvaluate' ? 'hot' : ''"
+          @click="assistDataChange"
+        >商品点赞/点踩排行</b>
+      </div>
+      <Card v-show="topStatus == 'productStanard'" shadow>
         <tables
-          ref="tables"
+          ref="goodsTableData"
           v-model="goodsTableData"
           :columns="goodsColumns"
           :loading="loading"
@@ -142,100 +77,88 @@
           search-place="top"
         >
           <div slot="searchCondition">
-            <div style="display: flex; align-items: center">
-              <h3 style="display: inline-block">商品规格销售排行</h3>
-              <div class="seniority">
-                <span
-                  data-index="SALE_COUNT"
-                  :class="saleStatus == 'SALE_COUNT' ? 'checked' : ''"
-                  @click="saleDataChange"
-                >按销售数排</span>
-                <span
-                  data-index="SALE_AMOUNT"
-                  :class="saleStatus == 'SALE_AMOUNT' ? 'checked' : ''"
-                  @click="saleDataChange"
-                >按销售额排</span>
-              </div>
-              <Input
-                v-model="goodsSearchRowData.productName"
-                placeholder="商品名称"
-                class="search-input mr5"
-                style="width: 160px; margin-left: 30px"
-                clearable
-              ></Input>
-              <Select
-                v-model="goodsSearchRowData.productType"
-                class="ml5"
-                placeholder="规格类型"
-                style="width: 130px"
-                clearable
+            <RadioGroup v-model="button" type="button" @on-change="timeChange">
+              <Radio label="今日"></Radio>
+              <Radio label="昨日"></Radio>
+              <Radio label="最近7天"></Radio>
+              <Radio label="最近30天"></Radio>
+              <Radio label="自定义时间"></Radio>
+            </RadioGroup>
+            <DatePicker
+              v-show="mark === true"
+              v-model="goodsSearchRowData.beginDate"
+              format="yyyy-MM-dd"
+              type="date"
+              placeholder="开始时间"
+              style="width: 120px"
+              @on-change="startTimeChange"
+            />
+            <i v-show="mark === true">-</i>
+            <DatePicker
+              v-show="mark === true"
+              v-model="goodsSearchRowData.endDate"
+              format="yyyy-MM-dd"
+              type="date"
+              placeholder="结束时间"
+              class="search-input"
+              style="width: 120px"
+              @on-change="endTimeChange"
+            />
+            <Input
+              v-model="goodsSearchRowData.productName"
+              placeholder="商品名称"
+              class="search-input"
+              style="width: 160px"
+              clearable
+            ></Input>
+            <Select
+              v-model="goodsSearchRowData.productType"
+              class=""
+              placeholder="规格类型"
+              style="width: 130px"
+              clearable
+            >
+              <Option
+                v-for="item in expandTypeEnum"
+                :key="item.value"
+                :value="item.value"
+                style="margin: -10px 0 0 -5px"
               >
-                <Option
-                  v-for="item in expandTypeEnum"
-                  :key="item.value"
-                  :value="item.value"
-                  style="margin: -10px 0 0 -5px"
-                >
-                  {{ item.label }}
-                </Option>
-              </Select>
-              <p class="mark" style="margin: 0 10px 0 20px">时间：</p>
-              <RadioGroup
-                v-model="button"
-                type="button"
-                @on-change="timeChange"
+                {{ item.label }}
+              </Option>
+            </Select>
+            <Select
+              v-model="goodsSearchRowData.rankingType"
+              class="search-col mr2"
+              placeholder="排序字段"
+              style="width: 120px"
+            >
+              <Option
+                v-for="item in goodsRankingType"
+                :key="`orderType-col-${item.value}`"
+                :value="item.value"
+                class="ptb2-5"
               >
-                <Radio label="今日"></Radio>
-                <Radio label="昨日"></Radio>
-                <Radio label="最近7天"></Radio>
-                <Radio label="最近30天"></Radio>
-                <Radio label="自定义时间"></Radio>
-              </RadioGroup>
-            </div>
-            <div style="float: right; margin-top: 5px">
-              <div v-show="mark === true" class="mark">
-                <DatePicker
-                  v-model="goodsSearchRowData.beginDate"
-                  format="yyyy-MM-dd"
-                  type="date"
-                  placeholder="自定义开始时间"
-                  class="search-input"
-                  style="width: 150px"
-                  @on-change="startTimeChange"
-                />
-                <i>-</i>
-                <DatePicker
-                  v-model="goodsSearchRowData.endDate"
-                  format="yyyy-MM-dd"
-                  type="date"
-                  placeholder="自定义结束时间"
-                  class="search-input mr5"
-                  style="width: 150px"
-                  @on-change="endTimeChange"
-                />
-              </div>
-              <Button
-                class="search-btn mr5"
-                type="primary"
-                @click="handleGoodsSearch"
-              >
-                <Icon type="md-search" />&nbsp;搜索
-              </Button>
-              <Button
-                class="search-btn mr5"
-                type="info"
-                @click="handleGoodsClear"
-              >
-                <Icon type="md-refresh" />&nbsp;清除
-              </Button>
-              <Button
-                class="search-btn mr2"
-                type="warning"
-                @click="handleDownload"
-              >
-                <Icon type="md-download" />导出数据
-              </Button>
-            </div>
+                {{ item.label }}
+              </Option>
+            </Select>
+            <Button
+              class="search-btn"
+              type="primary"
+              @click="handleGoodsSearch"
+            >
+              <Icon type="md-search" />&nbsp;搜索
+            </Button>
+            <Button class="search-btn" type="info" @click="handleGoodsClear">
+              <Icon type="md-refresh" />&nbsp;清除
+            </Button>
+            <Button
+              class="search-btn"
+              type="warning"
+              @click="handleDownload('productStanard')"
+            >
+              <Icon type="md-download" />导出
+            </Button>
           </div>
         </tables>
         <div style="margin: 10px; overflow: hidden">
@@ -247,6 +170,123 @@
               show-total
               @on-change="goodsChangePage"
               @on-page-size-change="goodsChangePageSize"
+            ></Page>
+          </Row>
+        </div>
+      </Card>
+      <Card v-show="topStatus == 'productSell'" shadow>
+        <tables
+          ref="sellTableData"
+          v-model="sellTableData"
+          :columns="sellColumns"
+          :loading="loading"
+          :search-area-column="24"
+          :operate-area-column="6"
+          editable
+          searchable
+          border
+          search-place="top"
+        >
+          <div slot="searchCondition">
+            <Input
+              v-model="sellSearchRowData.storeName"
+              placeholder="门店名称"
+              class="search-input"
+              style="width: 160px"
+              clearable
+            ></Input>
+            <Select
+              v-model="sellSearchRowData.storeArea"
+              class=""
+              placeholder="所属区域"
+              style="width: 130px"
+              clearable
+            >
+              <Option
+                v-for="item in storeArea"
+                :key="item.value"
+                :value="item.value"
+                style="margin: -10px 0 0 -5px"
+              >
+                {{ item.label }}
+              </Option>
+            </Select>
+            <Select
+              v-model="sellSearchRowData.sidx"
+              class="search-col mr2"
+              placeholder="排序字段"
+              style="width: 120px"
+            >
+              <Option
+                v-for="item in sellRankingType"
+                :key="`orderType-col-${item.value}`"
+                :value="item.value"
+                class="ptb2-5"
+              >
+                {{ item.label }}
+              </Option>
+            </Select>
+            <Button class="search-btn" type="primary" @click="handleSellSearch">
+              <Icon type="md-search" />&nbsp;搜索
+            </Button>
+            <Button class="search-btn" type="info" @click="handleSellClear">
+              <Icon type="md-refresh" />&nbsp;清除
+            </Button>
+            <Button
+              class="search-btn"
+              type="warning"
+              @click="handleDownload('productSell')"
+            >
+              <Icon type="md-download" />导出
+            </Button>
+          </div>
+        </tables>
+        <div style="margin: 10px; overflow: hidden">
+          <Row type="flex" justify="end">
+            <Page
+              :total="sellTotal"
+              :current="sellSearchRowData.page"
+              show-sizer
+              show-total
+              @on-change="sellChangePage"
+              @on-page-size-change="sellChangePageSize"
+            ></Page>
+          </Row>
+        </div>
+      </Card>
+      <Card v-show="topStatus == 'productEvaluate'" shadow>
+        <tables
+          ref="tables"
+          v-model="tableData"
+          :columns="columns"
+          :loading="loading"
+          :search-area-column="18"
+          :operate-area-column="6"
+          editable
+          searchable
+          border
+          search-place="top"
+        >
+          <div slot="searchCondition">
+            <RadioGroup
+              v-model="seniorityButton"
+              type="button"
+              @on-change="productDataChange"
+            >
+              <Radio label="按点赞排行排序"></Radio>
+              <Radio label="按点踩排行排序"></Radio>
+            </RadioGroup>
+          </div>
+        </tables>
+        <div style="margin: 10px; overflow: hidden">
+          <Row type="flex" justify="end">
+            <Page
+              :total="total"
+              :current="searchRowData.page"
+              show-sizer
+              show-total
+              @on-change="changePage"
+              @on-page-size-change="changePageSize"
             ></Page>
           </Row>
         </div>
@@ -264,9 +304,10 @@ import _ from 'lodash';
 import {
   getWaitOrder,
   getOrderTotal,
-  storeRanking,
   productRanking,
-  productStanardRanking
+  productStanardRanking,
+  getStoreAreaPages,
+  getStoreSaleTotalPages
 } from '@/api/mini-program';
 import tableMixin from '@/mixins/tableMixin.js';
 import searchMixin from '@/mixins/searchMixin.js';
@@ -294,6 +335,24 @@ const goodsRoleRowData = {
   rows: 10
 };
 
+const sellRoleRowData = {
+  storeName: '',
+  storeArea: '',
+  page: 1,
+  rows: 10,
+  sidx: 'sumAmount',
+  sort: 'desc'
+};
+
+const storeRowData = {
+  aera: '',
+  areaName: '',
+  sidx: 'id',
+  sort: 'asc',
+  page: 1,
+  rows: 10
+};
+
 export default {
   name: 'Home',
   components: {
@@ -305,17 +364,31 @@ export default {
   data() {
     return {
       mark: false,
+      topStatus: 'productStanard',
       button: '今日',
+      seniorityButton: '按点赞排行排序',
       brandType: config.brandType,
-      storeStatus: 'COUNT_ORDER_AMOUNT',
       seniorityStatus: 'PRAISE',
-      saleStatus: 'SALE_COUNT',
-      storeRank: [],
       goodsTableData: [],
+      sellTableData: [],
+      storeArea: [],
+      areaList: [],
       expandTypeEnum,
       goodsTotal: 0,
+      sellTotal: 0,
       searchRowData: _.cloneDeep(roleRowData),
       goodsSearchRowData: _.cloneDeep(goodsRoleRowData),
+      sellSearchRowData: _.cloneDeep(sellRoleRowData),
+      storeSearchRowData: _.cloneDeep(storeRowData),
+
+      goodsRankingType: [
+        { label: '销售数排序', value: 'SALE_COUNT' },
+        { label: '销售额排序', value: 'SALE_AMOUNT' }
+      ],
+      sellRankingType: [
+        { label: '订单数', value: 'totalCount' },
+        { label: '销售额', value: 'sumAmount' }
+      ],
       inforCardData: [
         {
           title: '预售订单',
@@ -424,13 +497,13 @@ export default {
           title: '点赞',
           align: 'center',
           key: 'praiseCount',
-          width: '80px'
+          width: '180px'
         },
         {
           title: '点踩',
           key: 'treadCount',
           align: 'center',
-          width: '80px'
+          width: '180px'
         }
       ],
       goodsColumns: [
@@ -530,6 +603,22 @@ export default {
                   </tag>
                 </div>
               );
+            } else if (row.productType == 'TEAM_BUY_PRODUCT') {
+              return (
+                <div>
+                  <tag color='green'>
+                    {expandTypeConvert(row.productType).label}
+                  </tag>
+                </div>
+              );
+            } else if (row.productType == 'PRE_SALE_PRODUCT') {
+              return (
+                <div>
+                  <tag color='green'>
+                    {expandTypeConvert(row.productType).label}
+                  </tag>
+                </div>
+              );
             }
           }
         },
@@ -537,7 +626,7 @@ export default {
           title: '价格',
           key: 'price',
           align: 'center',
-          width: '120px'
+          width: '110px'
         },
         {
           title: '销售份数',
@@ -550,6 +639,121 @@ export default {
           key: 'saleAmount',
           align: 'center',
           width: '120px'
+        },
+        {
+          title: '在售率',
+          key: 'sellingRate',
+          align: 'center',
+          width: '100px',
+          render(h, params) {
+            const { row } = params;
+            if (!row.sellingRate) {
+              return h('div', 'N/A');
+            } else {
+              return h('div', row.sellingRate + '%');
+            }
+          }
+        },
+        {
+          title: '动销率',
+          align: 'center',
+          key: 'turnoverRate',
+          width: '100px',
+          render(h, params) {
+            const { row } = params;
+
+            if (!row.turnoverRate) {
+              return h('div', 'N/A');
+            } else {
+              return h('div', row.turnoverRate + '%');
+            }
+          }
+        },
+        {
+          title: '售罄率',
+          key: 'soldOutRate',
+          align: 'center',
+          width: '100px',
+          render(h, params) {
+            const { row } = params;
+
+            if (!row.soldOutRate) {
+              return h('div', 'N/A');
+            } else {
+              return h('div', row.soldOutRate + '%');
+            }
+          }
+        }
+      ],
+      sellColumns: [
+        {
+          title: '排名',
+          key: 'ranking',
+          align: 'center',
+          minWidth: 100,
+          render(h, params, vm) {
+            const { row } = params;
+            return <div>{row._index + 1}</div>;
+          }
+        },
+        {
+          title: '门店名称',
+          key: 'storeName',
+          align: 'center',
+          minWidth: 100
+        },
+        {
+          title: '所属区域',
+          key: 'storeArea',
+          align: 'center',
+          minWidth: 160,
+          render: (h, params, vm) => {
+            const { row } = params;
+            const obj = this.areaList.find((item) => {
+              return item.area === row.storeArea;
+            });
+            if (obj) {
+              return h('span', obj.areaName + '');
+            } else {
+              return h('span', row.storeArea + '');
+            }
+          }
+        },
+        {
+          title: '在售商品数',
+          align: 'center',
+          key: 'sellingCount',
+          minWidth: 100
+        },
+        {
+          title: '可售商品数',
+          key: 'canSaleCount',
+          align: 'center',
+          minWidth: 100
+        },
+        {
+          title: '动销商品数',
+          align: 'center',
+          key: 'runSaleCount',
+          minWidth: 100
+        },
+        {
+          title: '售罄商品数',
+          key: 'soldOutCount',
+          align: 'center',
+          minWidth: 100
+        },
+        {
+          title: '订单数',
+          key: 'totalCount',
+          align: 'center',
+          minWidth: 100
+        },
+        {
+          title: '销售额',
+          align: 'center',
+          key: 'sumAmount',
+          minWidth: 100
         }
       ]
     };
@@ -574,14 +778,14 @@ export default {
     this.goodsSearchRowData = _.cloneDeep(goodsRoleRowData);
     this.getWaitOrder();
     this.getOrderTotal();
-    this.getStoreRanking();
+    this.getSellTableData();
     this.getTableData();
     this.getGoodsTableData();
+    this.getStoreAreaPages();
   },
   methods: {
     // 头部数据
     getWaitOrder() {
-      const _this = this;
       getWaitOrder()
         .then((res) => {
           const newData = _.cloneDeep(this.inforCardData);
@@ -595,37 +799,48 @@ export default {
           }
           this.inforCardData = newData;
         })
-        .catch((error) => {});
     },
     // 销售数据
     getOrderTotal() {
-      const _this = this;
-      getOrderTotal().then((res) => {
-        this.orderTotalData[0].todayNum = res.nowSumAmount;
-        this.orderTotalData[0].yesterdayNum = res.yesSumAmount;
-        this.orderTotalData[1].todayNum = res.nowSumTotal;
-        this.orderTotalData[1].yesterdayNum = res.yesSumTotal;
-        this.orderTotalData[2].todayNum = res.nowReturnAmount;
-        this.orderTotalData[2].yesterdayNum = res.yesReturnAmount;
-        this.orderTotalData[3].todayNum = res.nowReturnTotal;
-        this.orderTotalData[3].yesterdayNum = res.yesReturnTotal;
-      });
-    },
-    // 门店排行
-    getStoreRanking(rankingType) {
-      rankingType = !rankingType ? 'COUNT_ORDER_AMOUNT' : rankingType;
-      storeRanking(rankingType).then((res) => {
-        this.storeRank = res;
-      });
+      getOrderTotal()
+        .then((res) => {
+          this.orderTotalData[0].todayNum = res.nowSumAmount;
+          this.orderTotalData[0].yesterdayNum = res.yesSumAmount;
+          this.orderTotalData[1].todayNum = res.nowSumTotal;
+          this.orderTotalData[1].yesterdayNum = res.yesSumTotal;
+          this.orderTotalData[2].todayNum = res.nowReturnAmount;
+          this.orderTotalData[2].yesterdayNum = res.yesReturnAmount;
+          this.orderTotalData[3].todayNum = res.nowReturnTotal;
+          this.orderTotalData[3].yesterdayNum = res.yesReturnTotal;
+        })
     },
     getTableData() {
-      this.loading = true;
       productRanking(this.searchRowData)
         .then((res) => {
           this.tableData = res.rows;
           this.total = res.total;
+          this.loading = false;
+          this.searchLoading = false;
+          this.clearSearchLoading = false;
         })
-        .finally(() => {
+        .catch((error) => {
+          console.log(error);
+          this.loading = false;
+          this.searchLoading = false;
+          this.clearSearchLoading = false;
+        });
+    },
+    getSellTableData(value) {
+      getStoreSaleTotalPages(this.sellSearchRowData)
+        .then((res) => {
+          this.sellTableData = res.rows;
+          this.sellTotal = res.total;
+          this.loading = false;
+          this.searchLoading = false;
+          this.clearSearchLoading = false;
+        })
+        .catch((error) => {
+          console.log(error);
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
@@ -705,6 +920,18 @@ export default {
           this.clearSearchLoading = false;
         });
     },
+    getStoreAreaPages() {
+      getStoreAreaPages(this.storeSearchRowData)
+        .then((res) => {
+          this.areaList = res.rows;
+          res.rows.forEach((value) => {
+            const map = { label: 'label', value: 'value' };
+            map.value = value.area;
+            map.label = value.areaName;
+            this.storeArea.push(map);
+          });
+        })
+    },
     goodsChangePage(page) {
       this.goodsSearchRowData.page = page;
       this.getGoodsTableData();
@@ -713,6 +940,15 @@ export default {
       this.goodsSearchRowData.page = 1;
       this.goodsSearchRowData.rows = pageSize;
       this.getGoodsTableData();
+    },
+    sellChangePage(page) {
+      this.sellSearchRowData.page = page;
+      this.getSellTableData();
+    },
+    sellChangePageSize(pageSize) {
+      this.sellSearchRowData.page = 1;
+      this.sellSearchRowData.rows = pageSize;
+      this.getSellTableData();
     },
     // 跳转
     handgoIng(i) {
@@ -726,33 +962,13 @@ export default {
         }
       });
     },
-    storeDataChange(e) {
-      const index = e.currentTarget.dataset.index;
-      if (this.storeStatus === index) {
-        return;
-      } else {
-        this.storeStatus = index;
-        this.getStoreRanking(this.storeStatus);
-      }
-    },
-    productDataChange(e) {
-      const index = e.currentTarget.dataset.index;
-      if (this.seniorityStatus === index) {
-        return;
-      } else {
-        this.seniorityStatus = index;
-        this.searchRowData.rankingType = this.seniorityStatus;
+    productDataChange(value) {
+      if (value === '按点赞排行排序') {
+        this.searchRowData.rankingType = 'PRAISE';
         this.getTableData();
-      }
-    },
-    saleDataChange(e) {
-      const index = e.currentTarget.dataset.index;
-      if (this.saleStatus === index) {
-        return;
       } else {
-        this.saleStatus = index;
-        this.goodsSearchRowData.rankingType = this.saleStatus;
-        this.getGoodsTableData();
+        this.searchRowData.rankingType = 'TREAD';
+        this.getTableData();
       }
     },
     timeChange(value) {
@@ -800,36 +1016,73 @@ export default {
       this.getGoodsTableData('今日');
       this.mark = false;
     },
+    handleSellSearch() {
+      this.sellSearchRowData.page = 1;
+      this.searchLoading = true;
+      this.getSellTableData();
+    },
+    handleSellClear() {
+      this.sellSearchRowData = _.cloneDeep(sellRoleRowData);
+      this.getSellTableData();
+    },
+    assistDataChange(e) {
+      const index = e.currentTarget.dataset.index;
+      if (this.topStatus === index) {
+        return;
+      }
+      this.topStatus = index;
+    },
     // 导出数据
-    handleDownload() {
-      // 导出不分页 按条件查出多少条导出多少条 限制每次最多5000条
-      this.goodsSearchRowData.rows =
-        this.goodsTotal > 5000 ? 5000 : this.goodsTotal;
-      const pageSize = this.searchRowData.page;
-      this.goodsSearchRowData.page = 1;
-      this.goodsSearchRowData.beginDate = this.$moment(
-        this.goodsSearchRowData.beginDate
-      ).format('YYYY-MM-DD');
-      this.goodsSearchRowData.endDate = this.$moment(
-        this.goodsSearchRowData.endDate
-      ).format('YYYY-MM-DD');
-      productStanardRanking(this.goodsSearchRowData).then((res) => {
-        const tableData = res.rows;
-        // 恢复正常页数
-        this.goodsSearchRowData.rows = 10;
-        this.goodsSearchRowData.page = pageSize;
-        // 表格数据导出字段翻译
-        const _this = this;
-        tableData.forEach((item, index) => {
-          item['productType'] = expandTypeConvert(item['productType']).label;
-          item['ranking'] = Number(index) + 1;
+    handleDownload(value) {
+      if (value === 'productStanard') {
+        // 导出不分页 按条件查出多少条导出多少条 限制每次最多5000条
+        this.goodsSearchRowData.rows =
+          this.goodsTotal > 5000 ? 5000 : this.goodsTotal;
+        const pageSize = this.goodsSearchRowData.page;
+        this.goodsSearchRowData.page = 1;
+        this.goodsSearchRowData.beginDate = this.$moment(
+          this.goodsSearchRowData.beginDate
+        ).format('YYYY-MM-DD');
+        this.goodsSearchRowData.endDate = this.$moment(
+          this.goodsSearchRowData.endDate
+        ).format('YYYY-MM-DD');
+        productStanardRanking(this.goodsSearchRowData).then((res) => {
+          const tableData = res.rows;
+          // 恢复正常页数
+          this.goodsSearchRowData.rows = 10;
+          this.goodsSearchRowData.page = pageSize;
+          // 表格数据导出字段翻译
+          const _this = this;
+          const date = this.$moment(new Date()).format('YYYYMMDDHHmmss');
+          this.$refs.goodsTableData.handleDownload({
+            filename: `商品规格销售排行统计-${date}`,
+            data: tableData
+          });
         });
-        const date = this.$moment(new Date()).format('YYYYMMDDHHmmss');
-        this.$refs.tables.handleDownload({
-          filename: `商品规格销售排行统计-${date}`,
-          data: tableData
+      } else {
+        // 导出不分页 按条件查出多少条导出多少条 限制每次最多5000条
+        this.sellSearchRowData.rows =
+          this.sellTotal > 5000 ? 5000 : this.sellTotal;
+        const pageSize = this.sellSearchRowData.page;
+        this.sellSearchRowData.page = 1;
+        getStoreSaleTotalPages(this.sellSearchRowData).then((res) => {
+          const tableData = res.rows;
+          // 恢复正常页数
+          this.sellSearchRowData.rows = 10;
+          this.sellSearchRowData.page = pageSize;
+          // 表格数据导出字段翻译
+          const _this = this;
+          tableData.forEach((item, index) => {
+            item['productType'] = expandTypeConvert(item['productType']).label;
+            item['ranking'] = Number(index) + 1;
+          });
+          const date = this.$moment(new Date()).format('YYYYMMDDHHmmss');
+          this.$refs.sellTableData.handleDownload({
+            filename: `门店商品销售排行统计-${date}`,
+            data: tableData
+          });
         });
-      });
+      }
     }
   }
 };
@@ -941,5 +1194,33 @@ export default {
 }
 .mark {
   display: inline-block;
+}
+.tabChange {
+  height: 50px;
+  width: 600px;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  bottom: -5px;
+  left: 0;
+  background: rgb(245, 247, 249);
+  border: 1px solid rgb(232, 234, 236);
+  border-radius: 10px 10px 0 0;
+  b {
+    display: block;
+    width: 200px;
+    height: 48px;
+    cursor: pointer;
+    line-height: 43px;
+    text-align: center;
+    border-radius: 10px 10px 0 0;
+  }
+}
+.hot {
+  display: inline-block;
+  // color: red;
+  background-color: #fff;
 }
 </style>
