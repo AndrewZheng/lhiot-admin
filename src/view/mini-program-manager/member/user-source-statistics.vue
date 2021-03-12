@@ -311,7 +311,7 @@
       <p slot="header">
         <i-col>
           {{
-            tempModalType === modalType.edit ? "修改门店物料" : "创建门店物料"
+            isEdit ? "修改门店物料" : "创建门店物料"
           }}
         </i-col>
       </p>
@@ -336,7 +336,7 @@
             </FormItem>
             </Col>
           </Row>
-          <Row v-if="tempModalType === modalType.edit">
+          <Row v-if="isEdit">
             <Col span="22">
             <FormItem label="已关联门店:" prop="storeName">
               {{
@@ -349,7 +349,7 @@
             <Col span="22">
             <FormItem
               :label="
-                tempModalType === modalType.edit ? '更换门店:' : '关联门店:'
+                isEdit ? '更换门店:' : '关联门店:'
               "
               prop="storeId"
             >
@@ -357,7 +357,7 @@
                 v-model="storeMaterielDetail.storeId"
                 class="search-col"
                 :placeholder="
-                  tempModalType === modalType.edit
+                  isEdit
                     ? '请选择需更换的门店'
                     : '请选择需关联的门店'
                 "
@@ -397,7 +397,6 @@
 
 <script type="text/ecmascript-6">
 import Tables from '_c/tables';
-import _ from 'lodash';
 import {
   userSourceRecordTotal,
   getStoreMateriel,
@@ -408,13 +407,9 @@ import {
   getStoreMaterielDel
 } from '@/api/mini-program';
 import uploadMixin from '@/mixins/uploadMixin';
-import deleteMixin from '@/mixins/deleteMixin.js';
 import tableMixin from '@/mixins/tableMixin.js';
-import searchMixin from '@/mixins/searchMixin.js';
 import {
-  fenToYuanDot2,
-  fenToYuanDot2Number,
-  yuanToFenNumber
+  fenToYuanDot2
 } from '@/libs/util';
 
 const storeMaterielDetail = {
@@ -434,7 +429,6 @@ const storeMaterielDetail = {
   visitUserCount: 0
 };
 
-// 第一个tables
 const roleRowData = {
   beginDate: null,
   endDate: null
@@ -450,6 +444,7 @@ const roleRowDataMaterial = {
   page: 1,
   rows: 10
 };
+
 const roleRowDataStore = {
   page: 1,
   rows: -1
@@ -459,25 +454,17 @@ export default {
   components: {
     Tables
   },
-  mixins: [uploadMixin, deleteMixin, tableMixin, searchMixin],
+  mixins: [uploadMixin, tableMixin],
   data() {
     return {
-      ruleInline: {
-        materielName: [{ required: true, message: '请输入物料名称' }],
-        pagePath: [{ required: false, message: '请输入页面路径' }],
-        storeId: [{ required: true, message: '请选择关联门店' }]
-      },
+      tableDataMaterial: [],
+      storeList: [],
       mark: false,
       markMaterial: false,
-      modalViewLoading: false,
-      createLoading: false,
       topStatus: 'source',
       totalPage: 0,
       button: '昨日',
       buttonMaterial: '昨日',
-      tableData: [],
-      tableDataMaterial: [],
-      storeList: [],
       rankType: [
         {
           label: '访问人数',
@@ -504,6 +491,11 @@ export default {
           value: 'amountPayableCount'
         }
       ],
+      ruleInline: {
+        materielName: [{ required: true, message: '请输入物料名称' }],
+        pagePath: [{ required: false, message: '请输入页面路径' }],
+        storeId: [{ required: true, message: '请选择关联门店' }]
+      },
       dataColumns: [
         {
           title: '用户来源',
@@ -663,56 +655,28 @@ export default {
       this.$refs.modalEdit.resetFields();
     },
     getTableData(value) {
-      const date = new Date();
-      date.setDate(date.getDate());
-      var year = date.getFullYear();
-      var month = date.getMonth() + 1;
-      var day = date.getDate();
-      var today = `${year}-${month}-${day}`;
+      const today = this.getDateByParam(0);
       if (value === '昨日' || this.button === '昨日') {
-        const date = new Date();
-        date.setDate(date.getDate() - 1);
-        var year = date.getFullYear();
-        var month = date.getMonth() + 1;
-        var day = date.getDate();
-        var yesterday = `${year}-${month}-${day}`;
+        const yesterday = this.getDateByParam(-1);
         this.searchRowData.beginDate = yesterday;
         this.searchRowData.endDate = yesterday;
-      }
-      if (value === '今日') {
-        const date = new Date();
-        date.setDate(date.getDate());
-        var year = date.getFullYear();
-        var month = date.getMonth() + 1;
-        var day = date.getDate();
-        var today = `${year}-${month}-${day}`;
+      } else if (value === '今日') {
         this.searchRowData.beginDate = today;
         this.searchRowData.endDate = today;
-      }
-      if (value === '最近7天') {
-        const date = new Date();
-        date.setDate(date.getDate() - 7);
-        var year = date.getFullYear();
-        var month = date.getMonth() + 1;
-        var day = date.getDate();
-        var sevenDay = `${year}-${month}-${day}`;
+      } else if (value === '最近7天') {
+        const sevenDay = this.getDateByParam(-7);
         this.searchRowData.beginDate = sevenDay;
         this.searchRowData.endDate = today;
-      }
-      if (value === '最近30天') {
-        const date = new Date();
-        date.setDate(date.getDate() - 30);
-        var year = date.getFullYear();
-        var month = date.getMonth() + 1;
-        var day = date.getDate();
-        var toMonth = `${year}-${month}-${day}`;
+      } else if (value === '最近30天') {
+        const toMonth = this.getDateByParam(-30);
         this.searchRowData.beginDate = toMonth;
         this.searchRowData.endDate = today;
       }
       userSourceRecordTotal(this.searchRowData)
         .then((res) => {
           this.tableData = res;
-        }).finally(() => {
+        })
+        .finally(() => {
           this.loading = false;
           this.createLoading = false;
           this.searchLoading = false;
@@ -720,49 +684,20 @@ export default {
         });
     },
     getTableDataMaterial(value) {
-      const date = new Date();
-      date.setDate(date.getDate());
-      var year = date.getFullYear();
-      var month = date.getMonth() + 1;
-      var day = date.getDate();
-      var today = `${year}-${month}-${day}`;
+      const today = this.getDateByParam(0);
       if (value === '昨日' || this.buttonMaterial === '昨日') {
-        const date = new Date();
-        date.setDate(date.getDate() - 1);
-        var year = date.getFullYear();
-        var month = date.getMonth() + 1;
-        var day = date.getDate();
-        var yesterday = `${year}-${month}-${day}`;
+        const yesterday = this.getDateByParam(-1);
         this.searchRowDataMaterial.createTimeBegin = yesterday;
         this.searchRowDataMaterial.createTimeEnd = yesterday;
-      }
-      if (value === '今日') {
-        const date = new Date();
-        date.setDate(date.getDate());
-        var year = date.getFullYear();
-        var month = date.getMonth() + 1;
-        var day = date.getDate();
-        var today = `${year}-${month}-${day}`;
+      } else if (value === '今日') {
         this.searchRowDataMaterial.createTimeBegin = today;
         this.searchRowDataMaterial.createTimeEnd = today;
-      }
-      if (value === '最近7天') {
-        const date = new Date();
-        date.setDate(date.getDate() - 7);
-        var year = date.getFullYear();
-        var month = date.getMonth() + 1;
-        var day = date.getDate();
-        var sevenDay = `${year}-${month}-${day}`;
+      } else if (value === '最近7天') {
+        const sevenDay = this.getDateByParam(-7);
         this.searchRowDataMaterial.createTimeBegin = sevenDay;
         this.searchRowDataMaterial.createTimeEnd = today;
-      }
-      if (value === '最近30天') {
-        const date = new Date();
-        date.setDate(date.getDate() - 30);
-        var year = date.getFullYear();
-        var month = date.getMonth() + 1;
-        var day = date.getDate();
-        var toMonth = `${year}-${month}-${day}`;
+      } else if (value === '最近30天') {
+        const toMonth = this.getDateByParam(-30);
         this.searchRowDataMaterial.createTimeBegin = toMonth;
         this.searchRowDataMaterial.createTimeEnd = today;
       }
@@ -776,12 +711,8 @@ export default {
         .then((res) => {
           this.tableDataMaterial = res.rows;
           this.totalPage = res.total;
-          this.loading = false;
-          this.searchLoading = false;
-          this.clearSearchLoading = false;
         })
-        .catch((error) => {
-          console.log(error);
+        .finally(() => {
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
@@ -839,45 +770,24 @@ export default {
       }
     },
     timeChange(value) {
-      if (value === '今日') {
-        this.getTableData(value);
-        this.tableData = [];
-        this.mark = false;
-      } else if (value === '昨日') {
-        this.mark = false;
-        this.tableData = [];
-        this.getTableData(value);
-      } else if (value === '最近7天') {
-        this.mark = false;
-        this.tableData = [];
-        this.getTableData(value);
-      } else if (value === '最近30天') {
-        this.mark = false;
-        this.tableData = [];
-        this.getTableData(value);
-      } else if (value === '自定义时间') {
+      if (value === '自定义时间') {
         this.mark = true;
         this.searchRowData.beginDate = '';
         this.searchRowData.endDate = '';
+      } else {
+        this.mark = false;
+        this.tableData = [];
+        this.getTableData(value);
       }
     },
     timeChangeMaterial(value) {
-      if (value === '今日') {
-        this.getTableDataMaterial(value);
-        this.markMaterial = false;
-      } else if (value === '昨日') {
-        this.markMaterial = false;
-        this.getTableDataMaterial(value);
-      } else if (value === '最近7天') {
-        this.markMaterial = false;
-        this.getTableDataMaterial(value);
-      } else if (value === '最近30天') {
-        this.markMaterial = false;
-        this.getTableDataMaterial(value);
-      } else if (value === '自定义时间') {
+      if (value === '自定义时间') {
         this.markMaterial = true;
         this.searchRowDataMaterial.createTimeBegin = '';
         this.searchRowDataMaterial.createTimeEnd = '';
+      } else {
+        this.markMaterial = false;
+        this.getTableDataMaterial(value);
       }
     },
     startTimeChange(value, date) {
@@ -952,9 +862,6 @@ export default {
       })
         .then((res) => {
           this.storeMaterielDetail = _.cloneDeep(res);
-        })
-        .catch((err) => {
-          console.log(err);
         });
     },
     onSortChange(type) {
@@ -993,11 +900,9 @@ export default {
             this.storeMaterielDetail.storeId &&
             this.storeMaterielDetail.storeName
           ) {
-            if (this.tempModalType === this.modalType.create) {
-              // 添加状态
+            if (this.isCreate) {
               this.storeMaterielCreate();
-            } else if (this.tempModalType === this.modalType.edit) {
-              // 编辑状态
+            } else if (this.isEdit) {
               this.storeMaterielUpdate();
             }
           } else {

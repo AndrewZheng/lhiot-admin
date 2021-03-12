@@ -126,72 +126,72 @@
     >
       <p slot="header">
         <i-col>{{
-          tempModalType === modalType.edit ? "修改关键词" : "创建关键词"
+          isEdit ? "修改关键词" : "创建关键词"
         }}</i-col>
       </p>
       <div class="modal-content">
         <Form
-          ref="modalEdit"
+          ref="editForm"
           :model="keywordDetail"
           :rules="ruleInline"
           :label-width="130"
         >
           <Row>
             <Col span="18">
-              <FormItem label="关键词:" prop="keyword">
-                <Input
-                  v-model="keywordDetail.keyword"
-                  placeholder="请选择关键词"
-                ></Input>
-              </FormItem>
+            <FormItem label="关键词:" prop="keyword">
+              <Input
+                v-model="keywordDetail.keyword"
+                placeholder="请选择关键词"
+              ></Input>
+            </FormItem>
             </Col>
           </Row>
           <Row>
             <Col span="18">
-              <FormItem label="关联规格ID:" prop="mappingId">
-                <Input
-                  v-model="keywordDetail.mappingId"
-                  placeholder="请选择关联规格ID"
-                  readonly
-                >
-                  <Button
-                    slot="append"
-                    icon="ios-search"
-                    @click="handleRelation"
-                  ></Button>
-                </Input>
-              </FormItem>
+            <FormItem label="关联规格ID:" prop="mappingId">
+              <Input
+                v-model="keywordDetail.mappingId"
+                placeholder="请选择关联规格ID"
+                readonly
+              >
+              <Button
+                slot="append"
+                icon="ios-search"
+                @click="handleRelation"
+              ></Button>
+              </Input>
+            </FormItem>
             </Col>
           </Row>
           <Row>
             <Col span="18">
-              <FormItem label="商品规格列表:">
-                <div
-                  v-for="(item, index) in standardIdsArray"
-                  :value="item.value"
-                  :key="index"
-                  class="standardidList"
-                >
-                  {{ item.label }}
-                  <p
-                    class="delete"
-                    @click.stop="deleteGoods(index, item.value)"
-                  ></p>
-                </div>
-              </FormItem>
+            <FormItem label="商品规格列表:">
+              <div
+                v-for="(item, index) in standardIdsArray"
+                :key="index"
+                :value="item.value"
+                class="standardidList"
+              >
+                {{ item.label }}
+                <p
+                  class="delete"
+                  @click.stop="deleteGoods(index, item.value)"
+                ></p>
+              </div>
+            </FormItem>
             </Col>
           </Row>
           <Row>
             <Col span="18">
-              <FormItem label="关联商品规格名称:" prop="productName">
-                <Input
-                  v-model="keywordDetail.productName"
-                  :autosize="{ minRows: 3, maxRows: 8 }"
-                  type="textarea"
-                  readonly
-                  placeholder="关联商品规格名称"
-                ></Input>
-              </FormItem>
+            <FormItem label="关联商品规格名称:" prop="productName">
+              <Input
+                v-model="keywordDetail.productName"
+                :autosize="{ minRows: 3, maxRows: 8 }"
+                type="textarea"
+                readonly
+                placeholder="关联商品规格名称"
+              ></Input>
+            </FormItem>
             </Col>
           </Row>
         </Form>
@@ -199,11 +199,10 @@
       <div slot="footer">
         <Button @click="handleEditClose">关闭</Button>
         <Button
-          :loading="modalViewLoading"
+          :loading="modalEditLoading"
           type="primary"
-          @click="handleSubmit('modalEdit')"
-          >确定</Button
-        >
+          @click="handleSubmit"
+        >确定</Button>
       </div>
     </Modal>
 
@@ -223,8 +222,8 @@
             <FormItem>
               <tables
                 ref="tables"
-                :columns="productColumns"
                 v-model="productData"
+                :columns="productColumns"
                 search-place="top"
                 searchable
                 highlight-row
@@ -287,11 +286,10 @@
       <div slot="footer">
         <Button @click="handleGoodsClose">关闭</Button>
         <Button
-          :loading="modalViewLoading"
+          :loading="modalEditLoading"
           type="primary"
           @click="handleGoodsSubmit"
-          >确认</Button
-        >
+        >确认</Button>
       </div>
     </Modal>
     <Modal
@@ -310,140 +308,136 @@
 </template>
 
 <script type="text/ecmascript-6">
-import Tables from "_c/tables";
-import _ from "lodash";
+import Tables from '_c/tables';
 import {
   deleteKeywords,
   getKeywordsPages,
   updateKeywords,
   createKeywords,
-  getProductStandardsPages,
-} from "@/api/mini-program";
-import deleteMixin from "@/mixins/deleteMixin.js";
-import tableMixin from "@/mixins/tableMixin.js";
-import searchMixin from "@/mixins/searchMixin.js";
-import { imageStatusConvert } from "@/libs/converStatus";
-import { imageStatusEnum } from "@/libs/enumerate";
-import { fenToYuanDot2 } from "@/libs/util";
-import { customPlanStatusConvert } from "@/libs/converStatus";
+  getProductStandardsPages
+} from '@/api/mini-program';
+import tableMixin from '@/mixins/tableMixin.js';
+import { imageStatusEnum } from '@/libs/enumerate';
+import { fenToYuanDot2 } from '@/libs/util';
+import { customPlanStatusConvert, expandTypeConvert } from '@/libs/converStatus';
 const keywordDetail = {
-  keyword: "",
-  mappingId: "",
-  productName: "",
+  keyword: '',
+  mappingId: '',
+  productName: ''
 };
 
 const roleRowData = {
-  keyword: "",
-  mappingId: "",
-  productName: "",
+  keyword: '',
+  mappingId: '',
+  productName: '',
   page: 1,
-  rows: 10,
+  rows: 10
 };
 const productColumns = [
   {
-    type: "selection",
-    key: "",
+    type: 'selection',
+    key: '',
     width: 60,
-    align: "center",
-    fixed: "left",
+    align: 'center',
+    fixed: 'left'
   },
   {
-    title: "规格ID",
-    key: "id",
-    align: "center",
-    minWidth: 70,
+    title: '规格ID',
+    key: 'id',
+    align: 'center',
+    minWidth: 70
   },
   {
-    title: "商品条码",
-    key: "barcode",
+    title: '商品条码',
+    key: 'barcode',
     minWidth: 150,
-    align: "center",
+    align: 'center'
   },
   {
-    title: "商品编号",
-    key: "productCode",
-    align: "center",
+    title: '商品编号',
+    key: 'productCode',
+    align: 'center',
+    minWidth: 150
+  },
+  {
+    title: '商品名称',
+    key: 'productName',
     minWidth: 150,
+    align: 'center'
   },
   {
-    title: "商品名称",
-    key: "productName",
-    minWidth: 150,
-    align: "center",
-  },
-  {
-    title: "规格",
-    key: "specification",
+    title: '规格',
+    key: 'specification',
     minWidth: 90,
-    align: "center",
+    align: 'center'
   },
   {
-    title: "单位",
-    key: "productUnit",
+    title: '单位',
+    key: 'productUnit',
     minWidth: 90,
-    align: "center",
+    align: 'center'
   },
   {
-    title: "售价",
-    key: "price",
+    title: '售价',
+    key: 'price',
     minWidth: 90,
-    align: "center",
+    align: 'center',
     render(h, params, vm) {
       const amount = fenToYuanDot2(params.row.price);
       return <div>{amount}</div>;
-    },
+    }
   },
   {
-    title: "起购份数",
-    key: "startNum",
+    title: '起购份数',
+    key: 'startNum',
     minWidth: 100,
-    align: "center",
+    align: 'center'
   },
   {
-    title: "商品类型",
+    title: '商品类型',
     minWidth: 120,
-    key: "expandType",
-    align: "center",
+    key: 'expandType',
+    align: 'center',
     render: (h, params, vm) => {
       const { row } = params;
 
       if (row.productStandardExpand != null) {
-        if (row.productStandardExpand.expandType == "DISCOUNT_PRODUCT") {
+        if (row.productStandardExpand.expandType === 'DISCOUNT_PRODUCT') {
           return (
             <div>
-              <tag color="magenta">
+              <tag color='magenta'>
                 {expandTypeConvert(row.productStandardExpand.expandType).label}
               </tag>
             </div>
           );
-        } else if (row.productStandardExpand.expandType == "PULL_NEW_PRODUCT") {
+        } else if (row.productStandardExpand.expandType === 'PULL_NEW_PRODUCT') {
           return (
             <div>
-              <tag color="orange">
+              <tag color='orange'>
                 {expandTypeConvert(row.productStandardExpand.expandType).label}
               </tag>
             </div>
           );
-        } else if (row.productStandardExpand.expandType == "SECKILL_PRODUCT") {
+        } else if (row.productStandardExpand.expandType === 'SECKILL_PRODUCT') {
           return (
             <div>
-              <tag color="blue">
+              <tag color='blue'>
                 {expandTypeConvert(row.productStandardExpand.expandType).label}
               </tag>
             </div>
           );
-        } else if (row.productStandardExpand.expandType == "SHARE_PRODUCT") {
+        } else if (row.productStandardExpand.expandType === 'SHARE_PRODUCT') {
           return (
             <div>
-              <tag color="blue">
+              <tag color='blue'>
                 {expandTypeConvert(row.productStandardExpand.expandType).label}
               </tag>
             </div>
           );
-        } else if (row.productStandardExpand.expandType == "ASSIST_PRODUCT") {
+        } else if (row.productStandardExpand.expandType === 'ASSIST_PRODUCT') {
           return (
             <div>
-              <tag color="green">
+              <tag color='green'>
                 {expandTypeConvert(row.productStandardExpand.expandType).label}
               </tag>
             </div>
@@ -452,31 +446,31 @@ const productColumns = [
       } else {
         return (
           <div>
-            <tag color="cyan">{"普通商品"}</tag>
+            <tag color='cyan'>{'普通商品'}</tag>
           </div>
         );
       }
-    },
+    }
   },
   {
-    title: "商品状态",
+    title: '商品状态',
     minWidth: 100,
-    key: "shelvesStatus",
-    align: "center",
+    key: 'shelvesStatus',
+    align: 'center',
     render: (h, params, vm) => {
       const { row } = params;
-      if (row.shelvesStatus === "VALID") {
+      if (row.shelvesStatus === 'VALID') {
         return (
           <div>
-            <tag color="success">
+            <tag color='success'>
               {customPlanStatusConvert(row.shelvesStatus).label}
             </tag>
           </div>
         );
-      } else if (row.shelvesStatus === "INVALID") {
+      } else if (row.shelvesStatus === 'INVALID') {
         return (
           <div>
-            <tag color="error">
+            <tag color='error'>
               {customPlanStatusConvert(row.shelvesStatus).label}
             </tag>
           </div>
@@ -484,98 +478,96 @@ const productColumns = [
       }
       return (
         <div>
-          <tag color="primary">
+          <tag color='primary'>
             {customPlanStatusConvert(row.shelvesStatus).label}
           </tag>
         </div>
       );
-    },
-  },
+    }
+  }
 ];
 const productRowData = {
-  productStandardId: "",
-  productId: "",
-  barcode: "",
-  productCode: "",
-  productName: "",
-  shelvesStatus: "VALID",
-  minPrice: "",
-  maxPrice: "",
+  productStandardId: '',
+  productId: '',
+  barcode: '',
+  productCode: '',
+  productName: '',
+  shelvesStatus: 'VALID',
+  minPrice: '',
+  maxPrice: '',
   page: 1,
   rows: 10,
-  expandType: "IGNORE_TYPE",
+  expandType: 'IGNORE_TYPE'
 };
 const relationData = {
   id: 0,
   productStandardIds: 0,
   productSectionId: 0,
-  productSectionRank: 0,
+  productSectionRank: 0
 };
 export default {
   components: {
-    Tables,
+    Tables
   },
-  mixins: [deleteMixin, tableMixin, searchMixin],
+  mixins: [tableMixin],
   data() {
     return {
-      ruleInline: {
-        activityCode: [{ required: true, message: "请输入活动编码" }],
-        activityName: [{ required: true, message: "请输入活动名称" }],
-      },
       modalProduct: false,
-      columns: [
-        {
-          type: "selection",
-          width: 60,
-          align: "center",
-        },
-        {
-          title: "ID",
-          align: "center",
-          key: "id",
-          width: 60,
-        },
-        {
-          title: "关键词",
-          align: "center",
-          key: "keyword",
-          width: 180,
-        },
-        {
-          title: "关联规格ID",
-          align: "center",
-          key: "mappingId",
-          width: 260,
-        },
-        {
-          title: "关联商品规格名称",
-          align: "center",
-          key: "productName",
-        },
-        {
-          title: "操作",
-          align: "center",
-          width: 180,
-          key: "handle",
-          options: ["view", "edit", "delete"],
-        },
-      ],
-      createLoading: false,
-      modalViewLoading: false,
       deleteAffirm: false,
-      goodsIndex: "",
-      deleteStandardId: "",
-      productColumns: productColumns,
+      productTotal: 0,
+      goodsIndex: '',
+      deleteStandardId: '',
       standardIdList: [],
       standardIdsArray: [],
       productNameList: [],
       productNameArray: [],
       productData: [],
-      productTotal: 0,
+      ruleInline: {
+        activityCode: [{ required: true, message: '请输入活动编码' }],
+        activityName: [{ required: true, message: '请输入活动名称' }]
+      },
+      productColumns: productColumns,
+      columns: [
+        {
+          type: 'selection',
+          width: 60,
+          align: 'center'
+        },
+        {
+          title: 'ID',
+          align: 'center',
+          key: 'id',
+          width: 60
+        },
+        {
+          title: '关键词',
+          align: 'center',
+          key: 'keyword',
+          width: 180
+        },
+        {
+          title: '关联规格ID',
+          align: 'center',
+          key: 'mappingId',
+          width: 260
+        },
+        {
+          title: '关联商品规格名称',
+          align: 'center',
+          key: 'productName'
+        },
+        {
+          title: '操作',
+          align: 'center',
+          width: 180,
+          key: 'handle',
+          options: ['view', 'edit', 'delete']
+        }
+      ],
       searchRowData: _.cloneDeep(roleRowData),
       keywordDetail: _.cloneDeep(keywordDetail),
       productStandardRelation: _.cloneDeep(relationData),
-      searchProductRowData: _.cloneDeep(productRowData),
+      searchProductRowData: _.cloneDeep(productRowData)
     };
   },
   mounted() {
@@ -585,52 +577,50 @@ export default {
   created() {},
   methods: {
     resetSearchRowData() {
+      this.clearSearchLoading = true;
       this.searchRowData = _.cloneDeep(roleRowData);
       this.getTableData();
     },
     resetFields() {
-      this.$refs.modalEdit.resetFields();
+      this.$refs.editForm.resetFields();
     },
-    handleSubmit(name) {
-      this.$refs[name].validate((valid) => {
+    handleSubmit() {
+      this.$refs.editForm.validate((valid) => {
         if (valid) {
-          if (this.tempModalType === this.modalType.create) {
+          if (this.isCreate) {
             // 添加状态
             this.createKeywords();
-          } else if (this.tempModalType === this.modalType.edit) {
+          } else if (this.isEdit) {
             // 编辑状态
             this.updateKeywords();
           }
         } else {
-          this.$Message.error("请完善信息!");
+          this.$Message.error('请完善信息!');
         }
       });
     },
     createKeywords() {
-      this.modalViewLoading = true;
+      this.modalEditLoading = true;
       createKeywords(this.keywordDetail)
         .then((res) => {
-          this.modalViewLoading = false;
           this.modalEdit = false;
-          this.$Message.success("创建成功!");
+          this.$Message.success('创建成功!');
           this.getTableData();
         })
-        .catch(() => {
-          this.modalViewLoading = false;
+        .finally(() => {
+          this.modalEditLoading = false;
         });
     },
     updateKeywords() {
-      this.modalViewLoading = true;
+      this.modalEditLoading = true;
       updateKeywords(this.keywordDetail)
         .then((res) => {
           this.modalEdit = false;
-          this.modalViewLoading = false;
-          this.$Message.success("修改成功!");
+          this.$Message.success('修改成功!');
           this.getTableData();
         })
-        .catch(() => {
-          this.modalEdit = false;
-          this.modalViewLoading = false;
+        .finally(() => {
+          this.modalEditLoading = false;
         });
     },
     addKeywords() {
@@ -645,27 +635,21 @@ export default {
       }
       this.modalEdit = true;
     },
-    // 删除
-    handleDelete(params) {
-      this.tableDataSelected = [];
-      this.tableDataSelected.push(params.row);
-      this.deleteTable(params.row.id);
-    },
     deleteTable(ids) {
       this.loading = true;
       deleteKeywords({
-        ids,
+        ids
       })
         .then((res) => {
           const totalPage = Math.ceil(this.total / this.searchRowData.pageSize);
           if (
-            this.tableData.length == this.tableDataSelected.length &&
+            this.tableData.length === this.tableDataSelected.length &&
             this.searchRowData.page === totalPage &&
             this.searchRowData.page !== 1
           ) {
             this.searchRowData.page -= 1;
           }
-          this.$Message.success("删除成功!");
+          this.$Message.success('删除成功!');
           this.tableDataSelected = [];
           this.getTableData();
         })
@@ -688,19 +672,19 @@ export default {
       this.productNameList = [];
       this.standardIdsArray = [];
       this.productNameArray = [];
-      let standardIdsData = [];
-      let productNameData = [];
+      const standardIdsData = [];
+      const productNameData = [];
       if (this.keywordDetail.mappingId) {
-        standardIdsData.push(this.keywordDetail.mappingId.split(","));
+        standardIdsData.push(this.keywordDetail.mappingId.split(','));
         standardIdsData[0].forEach((value) => {
-          const map = { label: "label", value: "value" };
+          const map = { label: 'label', value: 'value' };
           map.value = value;
           map.label = value;
           this.standardIdsArray.push(map);
         });
-        productNameData.push(this.keywordDetail.productName.split(","));
+        productNameData.push(this.keywordDetail.productName.split(','));
         productNameData[0].forEach((value) => {
-          const map = { label: "label", value: "value" };
+          const map = { label: 'label', value: 'value' };
           map.value = value;
           map.label = value;
           this.productNameArray.push(map);
@@ -709,16 +693,13 @@ export default {
       this.modalEdit = true;
     },
     getTableData() {
+      this.loading = true;
       getKeywordsPages(this.searchRowData)
         .then((res) => {
           this.tableData = res.rows;
           this.total = res.total;
-          this.loading = false;
-          this.searchLoading = false;
-          this.clearSearchLoading = false;
         })
-        .catch((error) => {
-          console.log(error);
+        .finally(() => {
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
@@ -766,26 +747,26 @@ export default {
       this.modalProduct = false;
     },
     handleGoodsSubmit() {
-      let keywordData = this.keywordDetail.mappingId.split(",");
-      let standardIdData = this.standardIdList[this.standardIdList.length - 1];
-      for (let value of keywordData) {
-        for (let val of standardIdData) {
+      const keywordData = this.keywordDetail.mappingId.split(',');
+      const standardIdData = this.standardIdList[this.standardIdList.length - 1];
+      for (const value of keywordData) {
+        for (const val of standardIdData) {
           if (value == val) {
-            this.$Message.info("当前关键字商品列表中存在选中的商品!");
+            this.$Message.info('当前关键字商品列表中存在选中的商品!');
             return;
           }
         }
       }
       if (this.standardIdList.length > 0) {
         this.standardIdList[this.standardIdList.length - 1].forEach((value) => {
-          const map = { label: "label", value: "value" };
+          const map = { label: 'label', value: 'value' };
           map.value = value;
           map.label = value;
           this.standardIdsArray.push(map);
         });
         this.productNameList[this.productNameList.length - 1].forEach(
           (value) => {
-            const map = { label: "label", value: "value" };
+            const map = { label: 'label', value: 'value' };
             map.value = value;
             map.label = value;
             this.productNameArray.push(map);
@@ -793,16 +774,16 @@ export default {
         );
         this.keywordDetail.mappingId = this.standardIdsArray
           .map((item) => item.value)
-          .join(",");
+          .join(',');
         this.keywordDetail.productName = this.productNameArray
           .map((item) => item.value)
-          .join(",");
+          .join(',');
       }
       this.modalProduct = false;
     },
     deleteGoods(index, standardId) {
-      this.goodsIndex = "";
-      this.deleteStandardId = "";
+      this.goodsIndex = '';
+      this.deleteStandardId = '';
       this.deleteAffirm = true;
       this.goodsIndex = index;
       this.deleteStandardId = standardId;
@@ -812,16 +793,16 @@ export default {
       this.productNameArray.splice(this.goodsIndex, 1);
       this.keywordDetail.mappingId = this.standardIdsArray
         .map((item) => item.value)
-        .join(",");
+        .join(',');
       this.keywordDetail.productName = this.productNameArray
         .map((item) => item.value)
-        .join(",");
+        .join(',');
       this.deleteAffirm = false;
     },
     affirmCancel() {
       this.deleteAffirm = false;
-    },
-  },
+    }
+  }
 };
 </script>
 

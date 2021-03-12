@@ -29,22 +29,23 @@
               v-model="searchRowData.deliveryAtType"
               class="search-col mr5"
               placeholder="配送时间段"
-              style="width: 150px" >
-              <Option v-for="item in deliveryAtTypeList" :value="item.value" :key="`search-col-${item.value}`" class="ptb2-5">
+              style="width: 150px"
+            >
+              <Option v-for="item in deliveryAtTypeList" :key="`search-col-${item.value}`" :value="item.value" class="ptb2-5">
                 {{ item.label }}
               </Option>
             </Select>
             <Button v-waves :loading="searchLoading" class="search-btn mr5" type="primary" @click="handleSearch">
-              <Icon type="md-search"/>&nbsp;搜索
+              <Icon type="md-search" />&nbsp;搜索
             </Button>
             <Button v-waves :loading="clearSearchLoading" class="search-btn" type="info" @click="handleClear">
-              <Icon type="md-refresh"/>&nbsp;清除条件
+              <Icon type="md-refresh" />&nbsp;清除条件
             </Button>
           </Row>
         </div>
         <div slot="operations">
           <Button v-waves type="success" class="mr5" @click="addChildren">
-            <Icon type="md-add"/>
+            <Icon type="md-add" />
             创建
           </Button>
           <Poptip
@@ -55,7 +56,7 @@
             @on-ok="poptipOk"
           >
             <Button type="error" class="mr5">
-              <Icon type="md-trash"/>
+              <Icon type="md-trash" />
               删除
             </Button>
           </Poptip>
@@ -69,7 +70,8 @@
             show-sizer
             show-total
             @on-change="changePage"
-            @on-page-size-change="changePageSize"></Page>
+            @on-page-size-change="changePageSize"
+          ></Page>
         </Row>
       </div>
     </Card>
@@ -93,7 +95,8 @@
                 placeholder="最小金额"
                 class="search-input"
                 style="width: 100px"
-                @on-change="postageDetailMinOrderAmountChange">
+                @on-change="postageDetailMinOrderAmountChange"
+              >
               </InputNumber>
             </FormItem>
             </Col>
@@ -106,7 +109,8 @@
                 placeholder="最大金额"
                 class="search-input"
                 style="width: 100px"
-                @on-change="postageDetailMaxOrderAmountChange">
+                @on-change="postageDetailMaxOrderAmountChange"
+              >
               </InputNumber>
             </FormItem>
             </Col>
@@ -114,7 +118,7 @@
           <Row>
             <FormItem :label-width="100" label="配送时间段:" prop="deliveryAtType">
               <RadioGroup v-model="postageDetail.deliveryAtType" :disabled="modalTypeComputed">
-                <Radio v-for="item in deliveryAtTypeEnum" :label="item.value" :disabled="modalTypeComputed" :key="item.value">
+                <Radio v-for="item in deliveryAtTypeEnum" :key="item.value" :label="item.value" :disabled="modalTypeComputed">
                   <span>{{ item.label }}</span>
                 </Radio>
               </RadioGroup>
@@ -123,22 +127,22 @@
           <Row>
             <FormItem prop="detailList">
               <tables
-                :columns="tableColumnComputed"
                 v-model="postageDetail.detailList"
+                :columns="tableColumnComputed"
                 border
                 @on-delete="postageRuleTableHandleDelete"
               ></tables>
             </FormItem>
           </Row>
-          <Row v-if="tempModalType === modalType.create || tempModalType === modalType.edit" class="mt15">
+          <Row v-if="isCreate || isEdit" class="mt15">
             <Button v-waves type="success" class="mr5" @click="addPostageRuleTableColumns">
-              <Icon type="md-add"/>
+              <Icon type="md-add" />
               添加
             </Button>
           </Row>
         </Form>
       </div>
-      <div v-if="tempModalType === modalType.create || tempModalType === modalType.edit" slot="footer">
+      <div v-if="isCreate || isEdit" slot="footer">
         <Button @click="handleEditClose">关闭</Button>
         <Button :loading="modalViewLoading" type="primary" @click="handleSubmit('modalEdit')">确定
         </Button>
@@ -151,8 +155,6 @@
 import Tables from '_c/tables';
 import { getDeliveryFeeRulePages, createDeliveryFeeRule, deleteDeliveryFeeRule, editDeliveryFeeRule } from '@/api/fruitermaster';
 import tableMixin from '@/mixins/tableMixin.js';
-import searchMixin from '@/mixins/searchMixin.js';
-import deleteMixin from '@/mixins/deleteMixin.js';
 import { deliveryAtTypeConvert } from '@/libs/converStatus';
 import { deliveryAtTypeEnum, updateWay, deliveryAtType } from '@/libs/enumerate';
 import { fenToYuanDot2Number, fenToYuanDot2, yuanToFenNumber } from '@/libs/util';
@@ -197,7 +199,7 @@ export default {
   components: {
     Tables
   },
-  mixins: [tableMixin, searchMixin, deleteMixin],
+  mixins: [tableMixin],
   data() {
     return {
       ruleInline: {
@@ -468,10 +470,10 @@ export default {
       // return;
       this.$refs[name].validate((valid) => {
         if (valid) {
-          if (this.tempModalType === this.modalType.create) {
+          if (this.isCreate) {
             // 添加状态
             this.createTableRow();
-          } else if (this.tempModalType === this.modalType.edit) {
+          } else if (this.isEdit) {
             // 编辑状态
             this.editTableRow();
           }
@@ -546,7 +548,7 @@ export default {
       return A;
     },
     postageRuleTableHandleDelete(params) {
-      if (this.tempModalType === this.modalType.create) {
+      if (this.isCreate) {
         this.postageDetail.detailList = params.tableData.filter((item, index) => index !== params.row.initRowIndex);
       } else {
         const index = this.tempDetailList.findIndex(item => {

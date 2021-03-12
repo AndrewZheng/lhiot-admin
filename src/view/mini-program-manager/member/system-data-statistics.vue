@@ -23,7 +23,7 @@
                 <Radio label="最近30天"></Radio>
                 <Radio label="自定义时间"></Radio>
               </RadioGroup>
-              <div class="mark" v-show="mark===true">
+              <div v-show="mark===true" class="mark">
                 <DatePicker
                   v-model="searchRowData1.beginDate"
                   format="yyyy-MM-dd"
@@ -45,10 +45,10 @@
                 />
               </div>
               <Button
+                v-show="mark===true"
                 class="search-btn mr5"
                 type="primary"
                 @click="handleSearch1"
-                v-show="mark===true"
               >
                 <Icon type="md-search" />&nbsp;搜索
               </Button>
@@ -64,19 +64,11 @@
 </template>
 
 <script type="text/ecmascript-6">
-import Tables from "_c/tables";
-import _ from "lodash";
-import { systemDataStatistics } from "@/api/mini-program";
-import uploadMixin from "@/mixins/uploadMixin";
-import deleteMixin from "@/mixins/deleteMixin.js";
-import tableMixin from "@/mixins/tableMixin.js";
-import searchMixin from "@/mixins/searchMixin.js";
-import {
-  fenToYuanDot2,
-  fenToYuanDot2Number,
-  yuanToFenNumber,
-  percent
-} from "@/libs/util";
+import Tables from '_c/tables';
+import _ from 'lodash';
+import { systemDataStatistics } from '@/api/mini-program';
+import tableMixin from '@/mixins/tableMixin.js';
+import { percent } from '@/libs/util';
 
 const couponTemplateDetail = {
   //   id: 0,
@@ -102,67 +94,67 @@ export default {
   components: {
     Tables
   },
-  mixins: [uploadMixin, deleteMixin, tableMixin, searchMixin],
+  mixins: [tableMixin],
   data() {
     return {
       mark: false,
-      button: "今日",
+      button: '今日',
       inviteData: [],
       dataColumns: [
         {
-          title: "新用户数量",
-          key: "newUser",
-          align: "center"
+          title: '新用户数量',
+          key: 'newUser',
+          align: 'center'
         },
         {
-          title: "新用户完成首单数量",
-          key: "newUserOrderNum",
-          align: "center"
+          title: '新用户完成首单数量',
+          key: 'newUserOrderNum',
+          align: 'center'
         },
         {
-          title: "新用户复购数量",
-          align: "center",
-          key: "newUserReOrderNum"
+          title: '新用户复购数量',
+          align: 'center',
+          key: 'newUserReOrderNum'
         },
         {
-          title: "新用户转化率",
-          key: "newUserOrderNum",
-          align: "center",
+          title: '新用户转化率',
+          key: 'newUserOrderNum',
+          align: 'center',
           render(h, params) {
             if (isNaN(params.row.newUserOrderNum / params.row.newUser)) {
-              return h("div", "0%");
+              return h('div', '0%');
             } else {
               return h(
-                "div",
+                'div',
                 percent(params.row.newUserOrderNum / params.row.newUser)
               );
             }
           }
         },
         {
-          title: "新用复购率",
-          align: "center",
-          key: "newUserReOrderNum",
+          title: '新用复购率',
+          align: 'center',
+          key: 'newUserReOrderNum',
           render(h, params) {
             if (isNaN(params.row.newUserReOrderNum / params.row.newUser)) {
-              return h("div", "0%");
+              return h('div', '0%');
             } else {
               return h(
-                "div",
+                'div',
                 percent(params.row.newUserReOrderNum / params.row.newUser)
               );
             }
           }
         },
         {
-          title: "开始日期",
-          key: "beginDate",
-          align: "center"
+          title: '开始日期',
+          key: 'beginDate',
+          align: 'center'
         },
         {
-          title: "结束日期",
-          key: "endDate",
-          align: "center"
+          title: '结束日期',
+          key: 'endDate',
+          align: 'center'
         }
       ],
       searchRowData1: _.cloneDeep(roleRowData1),
@@ -177,70 +169,33 @@ export default {
   created() {},
   methods: {
     getTableData1(value) {
-      let date = new Date();
-      date.setDate(date.getDate());
-      var year = date.getFullYear();
-      var month = date.getMonth() + 1;
-      var day = date.getDate();
-      var today = `${year}-${month}-${day}`;
-      if (value === "昨日") {
-        let date = new Date();
-        date.setDate(date.getDate() - 1);
-        var year = date.getFullYear();
-        var month = date.getMonth() + 1;
-        var day = date.getDate();
-        var yesterday = `${year}-${month}-${day}`;
+      const today = this.getDateByParam(0);
+      if (value === '昨日') {
+        const yesterday = this.getDateByParam(-1);
         this.searchRowData1.beginDate = yesterday;
         this.searchRowData1.endDate = yesterday;
-      }
-      if (value === "今日") {
-        let date = new Date();
-        date.setDate(date.getDate());
-        var year = date.getFullYear();
-        var month = date.getMonth() + 1;
-        var day = date.getDate();
-        var today = `${year}-${month}-${day}`;
+      } else if (value === '今日') {
         this.searchRowData1.beginDate = today;
         this.searchRowData1.endDate = today;
-      }
-      if (value === "最近7天") {
-        let date = new Date();
-        date.setDate(date.getDate() - 7);
-        var year = date.getFullYear();
-        var month = date.getMonth() + 1;
-        var day = date.getDate();
-        var sevenDay = `${year}-${month}-${day}`;
+      } else if (value === '最近7天') {
+        const sevenDay = this.getDateByParam(-7);
         this.searchRowData1.beginDate = sevenDay;
         this.searchRowData1.endDate = today;
-      }
-      if (value === "最近30天") {
-        let date = new Date();
-        date.setDate(date.getDate() - 30);
-        var year = date.getFullYear();
-        var month = date.getMonth() + 1;
-        var day = date.getDate();
-        var toMonth = `${year}-${month}-${day}`;
+      } else if (value === '最近30天') {
+        const toMonth = this.getDateByParam(-30);
         this.searchRowData1.beginDate = toMonth;
         this.searchRowData1.endDate = today;
       }
-      let date1 = new Date();
-      date1.setDate(date.getDate() - 1);
-      var year1 = date.getFullYear();
-      var month1 = date.getMonth() + 1;
-      var day1 = date.getDate();
-      var yesterday1 = `${year1}-${month1}-${day1}`;
-      if (this.button === "今日") {
+      const yesterday1 = this.getDateByParam(-1);
+      if (this.button === '今日') {
         this.searchRowData1.beginDate = yesterday1;
         this.searchRowData1.endDate = yesterday1;
       }
       systemDataStatistics(this.searchRowData1)
         .then(res => {
           this.inviteData.push(res);
-          this.loading = false;
-          this.searchLoading = false;
-          this.clearSearchLoading = false;
         })
-        .catch(error => {
+        .finally(() => {
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
@@ -251,40 +206,23 @@ export default {
       this.getTableData1();
     },
     timeChange(value) {
-      if (value === "今日") {
-        this.getTableData1(value);
-        this.inviteData = [];
-        this.mark = false;
-      } else if (value === "昨日") {
-        this.mark = false;
-        this.inviteData = [];
-        this.getTableData1(value);
-      } else if (value === "最近7天") {
-        this.mark = false;
-        this.inviteData = [];
-        this.getTableData1(value);
-      } else if (value === "最近30天") {
-        this.mark = false;
-        this.inviteData = [];
-        this.getTableData1(value);
-      } else if (value === "自定义时间") {
+      if (value === '自定义时间') {
         this.mark = true;
-        this.searchRowData1.beginDate = "";
-        this.searchRowData1.endDate = "";
+        this.searchRowData1.beginDate = '';
+        this.searchRowData1.endDate = '';
+      } else {
+        this.mark = false;
+        this.inviteData = [];
+        this.getTableData1(value);
       }
     },
     startTimeChange(value, date) {
-      this.button = "自定义时间";
+      this.button = '自定义时间';
       this.searchRowData1.beginDate = value;
     },
     endTimeChange(value, date) {
-      this.button = "自定义时间";
+      this.button = '自定义时间';
       this.searchRowData1.endDate = value;
-    },
-    handleSearch() {
-      this.searchRowData.page = 1;
-      this.searchLoading = true;
-      this.getTableData();
     }
   }
 };

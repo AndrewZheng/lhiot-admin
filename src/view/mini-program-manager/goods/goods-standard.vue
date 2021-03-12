@@ -48,7 +48,6 @@
               clearable
             ></Input>
             <Select
-              v-show="!showBack"
               v-model="searchRowData.shelvesStatus"
               class="search-col"
               placeholder="状态"
@@ -65,7 +64,6 @@
               </Option>
             </Select>
             <Select
-              v-show="!showBack"
               v-model="searchRowData.productType"
               class="ml5"
               placeholder="商品类型"
@@ -132,7 +130,6 @@
               @on-change="searchMaxPriceChange"
             ></InputNumber>
             <Button
-              v-show="!showBack"
               :search-loading="searchLoading"
               class="search-btn mr5"
               type="primary"
@@ -141,7 +138,6 @@
               <Icon type="md-search" />&nbsp;搜索
             </Button>
             <Button
-              v-show="!showBack"
               v-waves
               :loading="clearSearchLoading"
               class="search-btn"
@@ -151,19 +147,10 @@
               <Icon type="md-refresh" />&nbsp;清除
             </Button>
             <Button
-              v-show="showBack"
-              v-waves
-              class="search-btn ml5 mr5"
-              type="primary"
-              @click="goBack"
-            >
-              <Icon type="ios-arrow-back" />&nbsp;返回
-            </Button>
-            <Button
               v-waves
               class="search-btn ml5 mr5"
               type="success"
-              @click="handleCreateView"
+              @click="handleCreate"
             >
               <Icon type="md-add" />&nbsp;添加
             </Button>
@@ -179,11 +166,21 @@
             </Button>
             </Poptip>-->
             <Button
-              class="search-btn mr2"
+              v-waves
+              class="search-btn mr5"
               type="warning"
               @click="handleDownload"
             >
               <Icon type="md-download" />导出
+            </Button>
+            <Button
+              v-show="showBack"
+              v-waves
+              class="search-btn mr5"
+              type="primary"
+              @click="goBack"
+            >
+              <Icon type="ios-arrow-back" />&nbsp;返回
             </Button>
           </Row>
           <div class="ml15 mt10">
@@ -555,19 +552,23 @@
               <i-col span="3">
                 关联门店:
               </i-col>
-              <i-col span="18">
-                {{ showStoreName }}
+              <i-col v-if="relationStoreList.length > 0" span="18">
+                <Tag v-for="(item,index) in relationStoreList" :key="index" color="gold">{{ item }}</Tag>
+              </i-col>
+              <i-col v-else span="18">
+                全部门店
               </i-col>
             </Row>
           </i-col>
         </Row>
       </div>
       <div slot="footer">
-        <Button type="primary" @click="handleClose">
+        <Button type="primary" @click="modalView = false">
           关闭
         </Button>
       </div>
     </Modal>
+
     <!-- 添加 -->
     <Modal v-model="modalEdit" :mask-closable="false" :width="900">
       <p slot="header">
@@ -587,7 +588,6 @@
                   <FormItem label="商品ID:" prop="productId">
                     <Input
                       v-model="productStandardDetail.productId"
-                      readonly="readonly"
                     >
                     <Button
                       slot="append"
@@ -1256,10 +1256,9 @@
                   <FormItem
                     :label-width="85"
                     label="所属城市:"
-                    prop="cityCode"
                   >
                     <Select
-                      v-model="productStandardDetail.cityCode"
+                      v-model="cityCode"
                       style="width: 220px"
                       @on-change="handleCitySwitch"
                     >
@@ -1277,6 +1276,21 @@
                 </i-col>
               </Row>
               <Row v-show="showStoreList">
+                <i-col v-if="storeData.length>0" span="24">
+                  <FormItem>
+                    <div class="bottom-line">
+                      <div style="margin-left: -54px; margin-right: 18px">
+                        地级市全部门店
+                      </div>
+                      <Checkbox
+                        :value="checkAllStore"
+                        @click.prevent.native="handleCheckAll(-1)"
+                      >
+                        全选/反选
+                      </Checkbox>
+                    </div>
+                  </FormItem>
+                </i-col>
                 <i-col v-if="storeData.length>0" span="24">
                   <FormItem>
                     <div
@@ -1521,6 +1535,7 @@
         </Button>
       </div>
     </Modal>
+
     <!-- 折扣配置 -->
     <Modal
       v-model="modalDiscount"
@@ -1830,6 +1845,7 @@
         </Button>
       </div>
     </Modal>
+
     <!-- 海鼎会员价 -->
     <Modal
       v-model="modalHdSvip"
@@ -1989,7 +2005,6 @@ import Tables from '_c/tables';
 import config from '@/config';
 import DragList from '_c/drag-list';
 import IViewUpload from '_c/iview-upload';
-
 import {
   createProductStandard,
   deleteProductStandard,
@@ -2000,13 +2015,10 @@ import {
   getProductUnits,
   getProductPages,
   getHdProductInfo,
-  deletePicture,
   getAreaStorePages
 } from '@/api/mini-program';
 import uploadMixin from '@/mixins/uploadMixin';
-import deleteMixin from '@/mixins/deleteMixin.js';
 import tableMixin from '@/mixins/tableMixin.js';
-import searchMixin from '@/mixins/searchMixin.js';
 import relationStoreMixin from '@/mixins/relationStoreMixin.js';
 import {
   getSmallGoodsStandard,
@@ -2076,8 +2088,7 @@ const productStandardDetail = {
   dbId: null,
   svipPrice: null,
   shareImage: null,
-  isCanCoupon: 'YES',
-  cityCode: '0731'
+  isCanCoupon: 'YES'
 };
 
 const roleRowData = {
@@ -2147,7 +2158,8 @@ export default {
     IViewUpload,
     DragList
   },
-  mixins: [uploadMixin, deleteMixin, searchMixin, tableMixin, relationStoreMixin],
+  inject: ['reload'],
+  mixins: [uploadMixin, tableMixin, relationStoreMixin],
   data() {
     return {
       productData: [],
@@ -2165,14 +2177,11 @@ export default {
       shareUploadListMultiple: [],
       uploadListMultiple: [],
       uploadListMultiple_: [],
+      relationStoreList: [],
       productTotal: 0,
       firstSuccess: true,
       showBack: false,
       isEnvironment: null,
-      loading: true,
-      modalViewLoading: false,
-      modalView: false,
-      modalEdit: false,
       modalDiscount: false,
       modalHdSvip: false,
       modalProduct: false,
@@ -2380,7 +2389,7 @@ export default {
           align: 'center',
           minWidth: 100,
           key: 'price',
-          render(h, params, vm) {
+          render(h, params) {
             const amount = fenToYuanDot2(params.row.price);
             return <div>{amount}</div>;
           }
@@ -2390,7 +2399,7 @@ export default {
           align: 'center',
           minWidth: 100,
           key: 'salePrice',
-          render(h, params, vm) {
+          render(h, params) {
             const amount = fenToYuanDot2(params.row.salePrice);
             return <div>{amount}</div>;
           }
@@ -2440,7 +2449,7 @@ export default {
           minWidth: 100,
           key: 'whetherLockShelf',
           align: 'center',
-          render: (h, params, vm) => {
+          render: (h, params) => {
             const { row } = params;
             if (row.whetherLockShelf === 'YES') {
               return (
@@ -2731,9 +2740,17 @@ export default {
       return fenToYuanDot2Number(this.proStandardExpand.discountPrice);
     }
   },
+  watch: {
+    '$route': function(to, from) {
+      if (to.path === '/small-goods-standard') {
+        this.reload();
+      }
+    }
+  },
   created() {
     this.isEnvironment = config.isEnvironment;
-    this.showBack = this.$route.name === 'small-goods-relation-standard';
+    this.showBack = this.$route.path === '/small-goods-relation-standard';
+    this.resetSearchRowData();
     this.getTableData();
   },
   mounted() {
@@ -2753,7 +2770,7 @@ export default {
       });
     },
     getStore(isCheck) {
-      getAreaStorePages(this.productStandardDetail.cityCode)
+      getAreaStorePages(this.cityCode)
         .then((res) => {
           this.storeList = res.array;
           this.storeData = res.array[0] && res.array[0].storeList || [];
@@ -2897,9 +2914,6 @@ export default {
       // 清楚掉表单数据
       this.$refs.modalDiscount.resetFields();
     },
-    handleClose() {
-      this.modalView = false;
-    },
     handleView(params) {
       this.tempModalType = this.modalType.view;
       this.productStandardDetail = this._.cloneDeep(params.row);
@@ -2908,21 +2922,21 @@ export default {
           ','
         );
       }
-      this.showStoreName = this.relationStore();
+      this.relationStoreList = this.relationStore();
       this.modalView = true;
     },
     relationStore() {
+      const list = [];
       if (!this.productStandardDetail.storeIds) {
-        return '全部门店';
+        return list;
       }
       const ids = this.productStandardDetail.storeIds.substring(1, this.productStandardDetail.storeIds.length - 1).split('][');
-      let str = '';
       ids.forEach((id) => {
         const item = this.allStoreList.find(item => item.storeId == id);
         if (!item) { return; }
-        str += item.storeName + ',';
+        list.push(item.storeName);
       });
-      return str.substring(0, str.length - 1);
+      return list;
     },
     handleEdit(params) {
       this.step = 'firstStep';
@@ -2964,7 +2978,7 @@ export default {
         const firstStoreId = this.storeIds[0];
         // 编辑时从返回的第一个storeId单独查询下cityCode来反选城市
         const storeObj = this.allStoreList.find(item => item.storeId === firstStoreId);
-        this.productStandardDetail.cityCode = storeObj.cityCode;
+        this.cityCode = storeObj.cityCode;
         this.getStore(true);
       } else {
         this.showStoreList = false;
@@ -2974,8 +2988,8 @@ export default {
     },
     handleDiscount(params) {
       if (
-        params.row.productType == 'ORDINARY_PRODUCT' ||
-        params.row.productType == 'SHARE_PRODUCT'
+        params.row.productType === 'ORDINARY_PRODUCT' ||
+        params.row.productType === 'SHARE_PRODUCT'
       ) {
         this.$Message.error('普通商品&分享赚商品不允许配置');
         return;
@@ -3029,9 +3043,9 @@ export default {
     onCurrentChange(currentRow, oldCurrentRow) {
       this.currentTableRowSelected = currentRow;
     },
-    handleCreateView() {
-      this.clickFlag = true;
+    handleCreate() {
       this.step = 'firstStep';
+      this.clickFlag = true;
       this.firstSuccess = true;
       // this.resetFields();
       this.showStoreList = false;
@@ -3197,10 +3211,10 @@ export default {
           }
           this.defaultListMultiple_ = [];
           this.defaulSharetListMultiple = [];
-          if (this.tempModalType === this.modalType.create) {
+          if (this.isCreate) {
             this.createStandard();
             this.currentTableRowSelected = null;
-          } else if (this.tempModalType === this.modalType.edit) {
+          } else if (this.isEdit) {
             this.editProductStandard();
           }
         } else {
@@ -3241,7 +3255,7 @@ export default {
           }
           this.updateProStandardExpand();
         } else {
-          this.$Message.error('请完善信息!');
+          this.$Message.error('请完善商品规格信息!');
         }
       });
     },
@@ -3290,23 +3304,23 @@ export default {
       this.getTableData();
     },
     getTableData() {
+      this.loading = true;
       // 获取商品页面传过来的商品信息
-      if (this.$route.name === 'small-goods-relation-standard') {
+      if (this.showBack) {
         const goodsStandard = getSmallGoodsStandard();
-        if (goodsStandard != null && goodsStandard !== '') {
+        // console.log(`goodsStandard from cookie:`, goodsStandard);
+        if (goodsStandard) {
           // 给商品规格的商品和搜索条件赋值
           this.searchRowData.productId = goodsStandard.id;
-          this.productStandardDetail = this._.cloneDeep(goodsStandard);
+          this.productStandardDetail = _.cloneDeep(goodsStandard);
           this.productStandardDetail.productId = goodsStandard.id;
           this.productStandardDetail.baseUnit = goodsStandard.unitName;
-          this.productStandardDetail.baseProductName =
-            goodsStandard.productName;
+          this.productStandardDetail.baseProductName = goodsStandard.productName;
           this.productStandardDetail.baseImage = goodsStandard.image;
           this.productStandardDetail.image = goodsStandard.image;
-          this.productStandardDetail.baseProductDescription =
-            goodsStandard.description;
-          this.productStandardDetail.productDescription =
-            goodsStandard.description;
+          this.productStandardDetail.baseProductDescription = goodsStandard.description;
+          this.productStandardDetail.productDescription = goodsStandard.description;
+          this.productStandardDetail.barcode = goodsStandard.baseBarcode;
           // this.unitsList = goodsStandard.unitsList;
         }
       } else {
@@ -3317,11 +3331,8 @@ export default {
         .then((res) => {
           this.tableData = res.rows;
           this.total = res.total;
-          this.loading = false;
-          this.searchLoading = false;
-          this.clearSearchLoading = false;
         })
-        .catch(() => {
+        .finally(() => {
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
@@ -3522,6 +3533,10 @@ export default {
     },
     resetSearchRowData() {
       this.searchRowData = _.cloneDeep(roleRowData);
+      if (this.showBack) {
+        const goodsStandard = getSmallGoodsStandard();
+        this.searchRowData.productId = goodsStandard.id;
+      }
     },
     findUnit(unitId) {
       if (this.unitsList != null) {
@@ -3621,35 +3636,52 @@ export default {
         this.showStoreList = false;
       } else if (options.value === 'PART') {
         this.productStandardDetail.relationStoreType = 'PART';
-        // 新增时默认反选长沙市
-        if (this.isCreate) { this.productStandardDetail.cityCode = '0731'; }
+        // 默认反选长沙市
+        this.cityCode = '0731';
         this.storeCheckRest();
         this.getStore();
         this.showStoreList = true;
       }
     },
     storeCheckRest() {
-      this.indeterminate = false;
-      this.checkAll = false;
-      this.indeterminate1 = false;
-      this.checkAll1 = false;
-      this.indeterminate2 = false;
-      this.checkAll2 = false;
-      this.indeterminate3 = false;
-      this.checkAll3 = false;
-      this.indeterminate4 = false;
-      this.checkAll4 = false;
-      this.indeterminate5 = false;
-      this.checkAll5 = false;
-      this.indeterminate6 = false;
-      this.checkAll6 = false;
-      this.indeterminate7 = false;
-      this.checkAll7 = false;
+      this.checkBoxRest();
       this.storeIds = [];
       this.productStandardDetail.storeIds = '';
     },
     handleCheckAll(value) {
       const _this = this;
+      // 全选反选当前地级市所有门店
+      if (value === -1) {
+        const allIds = [];
+        const beforeIds = [];
+        this.checkAllStore = !this.checkAllStore;
+        if (this.checkAllStore) {
+          if (this.storeIds != null) {
+            for (const val of this.storeIds) {
+              allIds.push(val);
+            }
+          }
+          this.storeListData.forEach((item) => {
+            item.forEach(x => {
+              allIds.push(x.storeId);
+            })
+          });
+          this.storeIds = allIds;
+          this.productStandardDetail.storeIds = '[' + allIds.join('][') + ']';
+        } else {
+          this.storeListData.forEach((item) => {
+            item.forEach(x => {
+              beforeIds.push(x.storeId);
+            })
+          });
+          const newArray = _this.storeIds.filter(function(item) {
+            return beforeIds.indexOf(item) == -1;
+          });
+          this.storeIds = newArray;
+          this.productStandardDetail.storeIds = '[' + newArray.join('][') + ']';
+        }
+      }
+
       if (value === 0) {
         const allIds = [];
         const beforeIds = [];
@@ -3681,6 +3713,7 @@ export default {
           this.productStandardDetail.storeIds = '[' + newArray.join('][') + ']';
         }
       }
+
       if (value === 1) {
         const allIds1 = [];
         const beforeIds = [];
@@ -3713,6 +3746,7 @@ export default {
           this.productStandardDetail.storeIds = '[' + newArray.join('][') + ']';
         }
       }
+
       if (value === 2) {
         const allIds2 = [];
         const beforeIds = [];
@@ -3745,6 +3779,7 @@ export default {
           this.productStandardDetail.storeIds = '[' + newArray.join('][') + ']';
         }
       }
+
       if (value === 3) {
         const allIds3 = [];
         const beforeIds = [];
@@ -3777,6 +3812,7 @@ export default {
           this.productStandardDetail.storeIds = '[' + newArray.join('][') + ']';
         }
       }
+
       if (value === 4) {
         const allIds4 = [];
         const beforeIds = [];
@@ -3809,6 +3845,7 @@ export default {
           this.productStandardDetail.storeIds = '[' + newArray.join('][') + ']';
         }
       }
+
       if (value === 5) {
         const allIds5 = [];
         const beforeIds = [];
@@ -3841,6 +3878,7 @@ export default {
           this.productStandardDetail.storeIds = '[' + newArray.join('][') + ']';
         }
       }
+
       if (value === 6) {
         const allIds6 = [];
         const beforeIds = [];
@@ -3917,7 +3955,7 @@ export default {
         this.checkAll1 = false;
         this.productStandardDetail.storeIds = '[' + data.join('][') + ']';
       }
-      if (sameArray1.length == 0) {
+      if (sameArray1.length === 0) {
         this.indeterminate1 = false;
         this.checkAll1 = false;
       }
@@ -3941,7 +3979,7 @@ export default {
         this.checkAll2 = false;
         this.productStandardDetail.storeIds = '[' + data.join('][') + ']';
       }
-      if (sameArray2.length == 0) {
+      if (sameArray2.length === 0) {
         this.indeterminate2 = false;
         this.checkAll2 = false;
       }

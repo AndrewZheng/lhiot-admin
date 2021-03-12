@@ -53,20 +53,6 @@
               >{{ item.label }}</Option>
             </Select>
             <Select
-              v-model="searchRowData.userClass"
-              placeholder="是否白名单用户"
-              style="padding-right: 5px;width: 150px"
-              clearable
-            >
-              <Option
-                v-for="(item,index) in whiteListEnum"
-                :key="index"
-                :value="item.value"
-                class="ptb2-5"
-                style="padding-left: 5px"
-              >{{ item.label }}</Option>
-            </Select>
-            <Select
               v-model="searchRowData.userType"
               placeholder="用户类型"
               style="padding-right: 5px;width: 100px"
@@ -138,13 +124,9 @@
 
 <script type="text/ecmascript-6">
 import Tables from '_c/tables';
-import CountTo from '_c/count-to';
-import _ from 'lodash';
 import { getUsersInfo, setUserClass, setStaff } from '@/api/mini-program';
 import tableMixin from '@/mixins/tableMixin.js';
-import searchMixin from '@/mixins/searchMixin.js';
 import { setSmallGoodsStandard } from '@/libs/util';
-import { whiteListEnum } from '@/libs/enumerate';
 
 const userDetail = {
   nickName: '',
@@ -173,10 +155,9 @@ const roleRowData = {
 
 export default {
   components: {
-    Tables,
-    CountTo
+    Tables
   },
-  mixins: [tableMixin, searchMixin],
+  mixins: [tableMixin],
   data() {
     return {
       columns: [
@@ -299,9 +280,6 @@ export default {
         { label: '普通用户', value: 'CONSUMER' },
         { label: '员工特权', value: 'STAFF' }
       ],
-      whiteListEnum,
-      createLoading: false,
-      modalViewLoading: false,
       searchRowData: _.cloneDeep(roleRowData),
       userDetail: _.cloneDeep(userDetail)
     };
@@ -317,6 +295,7 @@ export default {
       this.getTableData();
     },
     getTableData() {
+      this.loading = true;
       getUsersInfo(this.searchRowData)
         .then((res) => {
           this.tableData = res.rows;
@@ -336,7 +315,10 @@ export default {
     },
     onUpgrade(params) {
       this.userDetail = _.cloneDeep(params.row);
-      this.userDetail.userClass = params.row.userClass === 'EXTERIOR' || params.row.userClass == null ? 'INTERIOR' : 'EXTERIOR';
+      this.userDetail.userClass =
+        params.row.userClass === 'EXTERIOR' || params.row.userClass == null
+          ? 'INTERIOR'
+          : 'EXTERIOR';
       setUserClass(this.userDetail)
         .then((res) => {
           this.$Message.info('操作成功');

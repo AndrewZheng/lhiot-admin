@@ -395,7 +395,7 @@
       </p>
       <div class="modal-content">
         <Form
-          ref="modalEdit"
+          ref="editForm"
           :model="storeDetail"
           :rules="ruleInline"
           :label-width="90"
@@ -685,9 +685,9 @@
           关闭
         </Button>
         <Button
-          :loading="modalViewLoading"
+          :loading="modalEditLoading"
           type="primary"
-          @click="handleSubmit('modalEdit')"
+          @click="handleSubmit"
         >
           确定
         </Button>
@@ -713,11 +713,8 @@ import {
   createStore
 } from '@/api/mini-program';
 import uploadMixin from '@/mixins/uploadMixin';
-import deleteMixin from '@/mixins/deleteMixin.js';
 import tableMixin from '@/mixins/tableMixin.js';
-import searchMixin from '@/mixins/searchMixin.js';
 import {
-  storeType,
   storeStatus,
   storeStatusEnum,
   storeTypeEnum,
@@ -725,8 +722,7 @@ import {
 } from '@/libs/enumerate';
 import {
   storeStatusConvert,
-  storeTypeConvert,
-  coordinateTypeConvert
+  storeTypeConvert
 } from '@/libs/converStatus';
 
 const storeDetail = {
@@ -769,15 +765,12 @@ export default {
     Tables,
     IViewUpload
   },
-  mixins: [uploadMixin, deleteMixin, tableMixin, searchMixin],
+  mixins: [uploadMixin, tableMixin],
   data() {
     return {
       storeStatusEnum,
       storeTypeEnum,
       coordinateTypeEnum,
-      modalViewLoading: false,
-      searchRowData: _.cloneDeep(roleRowData),
-      storeDetail: _.cloneDeep(storeDetail),
       defaultListMain: [],
       defaultWxImageList: [],
       uploadListMain: [],
@@ -978,7 +971,9 @@ export default {
         storeType: [{ required: true, message: '请选择门店类型' }],
         storeAddress: [{ required: true, message: '请填写门店地址' }],
         shopownerName: [{ required: true, message: '请填写店长姓名' }]
-      }
+      },
+      searchRowData: _.cloneDeep(roleRowData),
+      storeDetail: _.cloneDeep(storeDetail)
     };
   },
   computed: {
@@ -1032,6 +1027,7 @@ export default {
       });
     },
     handleCitySwitch(value) {
+      this.storeDetail.cityCode = value;
       // 当城市修改过后，重新获取区域列表
       getStoreAreas(value).then((res) => {
         this.areaList = res;
@@ -1039,17 +1035,16 @@ export default {
     },
     handleCityChange(value) {
       // 当城市修改过后，重新获取区域列表，门店列表
+      this.searchRowData.cityCode = value;
       this.getStoreAreas();
       this.getTableData();
     },
-    handleSubmit(name) {
-      this.$refs[name].validate((valid) => {
+    handleSubmit() {
+      this.$refs.editForm.validate((valid) => {
         if (valid) {
-          if (this.tempModalType === this.modalType.create) {
-            // 添加状态
+          if (this.isCreate) {
             this.createStore();
-          } else if (this.tempModalType === this.modalType.edit) {
-            // 编辑状态
+          } else if (this.isEdit) {
             this.editStore();
           }
         } else {
@@ -1063,7 +1058,7 @@ export default {
       this.modalEdit = false;
     },
     createStore() {
-      this.modalViewLoading = true;
+      this.modalEditLoading = true;
       createStore(this.storeDetail)
         .then((res) => {
           this.modalEdit = false;
@@ -1071,11 +1066,11 @@ export default {
           this.getTableData();
         })
         .finally(() => {
-          this.modalViewLoading = false;
+          this.modalEditLoading = false;
         });
     },
     editStore() {
-      this.modalViewLoading = true;
+      this.modalEditLoading = true;
       editStore(this.storeDetail)
         .then((res) => {
           this.modalEdit = false;
@@ -1083,25 +1078,22 @@ export default {
           this.getTableData();
         })
         .finally(() => {
-          this.modalViewLoading = false;
+          this.modalEditLoading = false;
         });
     },
     addStore() {
       this.resetFields();
-      if (this.tempModalType !== this.modalType.create) {
-        this.tempModalType = this.modalType.create;
-        this.storeDetail = _.cloneDeep(storeDetail);
-      }
+      this.tempModalType = this.modalType.create;
+      this.storeDetail = _.cloneDeep(storeDetail);
+      this.storeDetail.cityCode = this.searchRowData.cityCode ? this.searchRowData.cityCode : '0731';
       this.modalEdit = true;
     },
-    // 删除
     handleDelete(params) {
       this.tableDataSelected = [];
       this.tableDataSelected.push(params.row);
       this.deleteTable(params.row.storeId);
     },
     deleteTable(ids) {
-      this.loading = true;
       deleteStore({
         ids
       })
@@ -1116,9 +1108,6 @@ export default {
           }
           this.tableDataSelected = [];
           this.getTableData();
-        })
-        .finally(() => {
-          this.loading = false;
         });
     },
     resetSearchRowData() {
@@ -1127,7 +1116,7 @@ export default {
       this.getTableData();
     },
     resetFields() {
-      this.$refs.modalEdit.resetFields();
+      this.$refs.editForm.resetFields();
       this.$refs.uploadMain.clearFileList();
       this.uploadListMain = [];
       this.uploadwxImageList = [];

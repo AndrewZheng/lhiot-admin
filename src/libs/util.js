@@ -381,7 +381,6 @@ export const getNextRoute = (list, route) => {
     res = getHomeRoute(list);
   } else {
     const index = list.findIndex(item => routeEqual(item, route));
-    console.log(route, index, list.length);
     if (index === list.length - 1) res = list[list.length - 2];
     else res = list[index + 1];
   }
@@ -955,4 +954,34 @@ export const getSystemHomeNameNew = (toLodop) => {
     console.log('current system home: ', name);
   }
   return name;
+}
+
+// 根据当前系统时间+-法获取不同时间格式字符串
+export const getDateByParam = (param) => {
+  // param -1-昨天 0-今天 -7-最近7天 -30-最近30天 -365-汇总
+  const date = new Date();
+  switch (param) {
+    case 0:
+      date.setDate(date.getDate());
+      break;
+    case -1:
+      date.setDate(date.getDate() - 1);
+      break;
+    case -7:
+      date.setDate(date.getDate() - 7);
+      break;
+    case -30:
+      date.setDate(date.getDate() - 30);
+      break;
+    case -365:
+      date.setDate(date.getDate() - 365);
+      break;
+    default:
+      date.setDate(date.getDate());
+  }
+  const year = date.getFullYear();
+  const month = date.getMonth() + 1;
+  const day = date.getDate();
+  const dateStr = `${year}-${month}-${day}`;
+  return dateStr;
 }

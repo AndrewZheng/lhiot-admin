@@ -481,8 +481,11 @@
               <i-col span="3">
                 关联门店:
               </i-col>
-              <i-col span="16">
-                {{ showStoreName }}
+              <i-col v-if="relationStoreList.length > 0" span="16">
+                <Tag v-for="(item,index) in relationStoreList" :key="index" color="gold">{{ item }}</Tag>
+              </i-col>
+              <i-col v-else span="16">
+                全部门店
               </i-col>
             </Row>
           </i-col>
@@ -504,7 +507,7 @@
       <p slot="header">
         <i-col>
           {{
-            tempModalType === modalType.edit ? "修改团购活动" : "创建团购活动"
+            isEdit ? "修改团购活动" : "创建团购活动"
           }}
         </i-col>
       </p>
@@ -517,7 +520,7 @@
               :rules="ruleInline"
               :label-width="140"
             >
-              <Row v-show="tempModalType === modalType.edit">
+              <Row v-show="isEdit">
                 <i-col span="12">
                   <FormItem label="团购ID:" prop="id">
                     {{ teambuyDetail.id }}
@@ -535,7 +538,7 @@
                     <Input
                       v-model="teambuyDetail.activityName"
                       :readonly="
-                        tempModalType === modalType.edit &&
+                        isEdit &&
                           teambuyDetail.status === 'on'
                       "
                       style="width: 200px"
@@ -548,7 +551,7 @@
                       v-model="teambuyDetail.teamBuyType"
                       style="width: 200px"
                       :disabled="
-                        tempModalType === modalType.edit &&
+                        isEdit &&
                           teambuyDetail.status === 'on'
                       "
                     >
@@ -572,7 +575,7 @@
                       v-model="teambuyDetail.content"
                       style="width: 200px"
                       :readonly="
-                        tempModalType === modalType.edit &&
+                        isEdit &&
                           teambuyDetail.status === 'on'
                       "
                     ></Input>
@@ -586,7 +589,7 @@
                         :key="item.value"
                         :value="item.value"
                         :disabled="
-                          tempModalType === modalType.create &&
+                          isCreate &&
                             item.value == 'expire'
                         "
                         class="ptb2-5"
@@ -667,7 +670,7 @@
                       class="search-input"
                       style="width: 200px"
                       :readonly="
-                        tempModalType === modalType.edit &&
+                        isEdit &&
                           teambuyDetail.status === 'on'
                       "
                       @on-change="startTimeChange"
@@ -684,7 +687,7 @@
                       class="search-input"
                       style="width: 200px"
                       :readonly="
-                        tempModalType === modalType.edit &&
+                        isEdit &&
                           teambuyDetail.status === 'on'
                       "
                       @on-change="endTimeChange"
@@ -700,7 +703,7 @@
                       placeholder="券有效期类型"
                       style="width: 205px"
                       :disabled="
-                        tempModalType === modalType.edit &&
+                        isEdit &&
                           teambuyDetail.status === 'on'
                       "
                     >
@@ -718,10 +721,7 @@
                   </FormItem>
                 </i-col>
                 <i-col
-                  v-if="
-                    this.showValidDate ||
-                      teambuyDetail.validDateType == 'FIXED_DATE'
-                  "
+                  v-if="showValidDate || teambuyDetail.validDateType == 'FIXED_DATE'"
                   span="12"
                 >
                   <FormItem label="提货截止时间:" prop="deliveryEndTime">
@@ -733,7 +733,7 @@
                       class="search-input"
                       style="width: 200px"
                       :readonly="
-                        tempModalType === modalType.edit &&
+                        isEdit &&
                           teambuyDetail.status === 'on'
                       "
                       @on-change="deliveryEndTimeChange"
@@ -748,7 +748,7 @@
                       label="提货截止天数"
                       style="width: 160px"
                       :readonly="
-                        tempModalType === modalType.edit &&
+                        isEdit &&
                           teambuyDetail.status === 'on'
                       "
                     ></InputNumber>
@@ -763,7 +763,7 @@
                       :min="0"
                       style="width: 200px"
                       :readonly="
-                        tempModalType === modalType.edit &&
+                        isEdit &&
                           teambuyDetail.status === 'on'
                       "
                     ></InputNumber>
@@ -777,7 +777,7 @@
                       v-model="teambuyDetail.hour"
                       :min="0"
                       :readonly="
-                        tempModalType === modalType.edit &&
+                        isEdit &&
                           teambuyDetail.status === 'on'
                       "
                       style="width: 60px"
@@ -787,7 +787,7 @@
                       v-model="teambuyDetail.minute"
                       :min="0"
                       :readonly="
-                        tempModalType === modalType.edit &&
+                        isEdit &&
                           teambuyDetail.status === 'on'
                       "
                       style="width: 60px"
@@ -797,7 +797,7 @@
                       v-model="teambuyDetail.second"
                       :min="0"
                       :readonly="
-                        tempModalType === modalType.edit &&
+                        isEdit &&
                           teambuyDetail.status === 'on'
                       "
                       style="width: 60px"
@@ -889,7 +889,7 @@
                       placeholder="活动价"
                       style="width: 200px"
                       :readonly="
-                        tempModalType === modalType.edit &&
+                        isEdit &&
                           teambuyDetail.status === 'on'
                       "
                       @on-change="activityPriceInputNumberOnchange"
@@ -901,7 +901,7 @@
                     <InputNumber
                       :min="0"
                       :readonly="
-                        tempModalType === modalType.edit &&
+                        isEdit &&
                           teambuyDetail.status === 'on'
                       "
                       :value="tourDiscountComputed"
@@ -948,7 +948,7 @@
                       v-model="teambuyDetail.commissionScale"
                       :min="0"
                       :readonly="
-                        tempModalType === modalType.edit &&
+                        isEdit &&
                           teambuyDetail.status === 'on'
                       "
                       style="padding-right: 5px; width: 200px"
@@ -962,7 +962,7 @@
                   </FormItem>
                 </i-col>
               </Row>
-              <Divider v-show="tempModalType === modalType.edit">
+              <Divider v-show="isEdit">
                 可修改部分
               </Divider>
               <Row>
@@ -1068,10 +1068,9 @@
                   <FormItem
                     :label-width="85"
                     label="所属城市:"
-                    prop="cityCode"
                   >
                     <Select
-                      v-model="teambuyDetail.cityCode"
+                      v-model="cityCode"
                       style="width: 220px"
                       @on-change="handleCitySwitch"
                     >
@@ -1089,6 +1088,21 @@
                 </i-col>
               </Row>
               <Row v-show="showStoreList">
+                <i-col v-if="storeData.length>0" span="24">
+                  <FormItem>
+                    <div class="bottom-line">
+                      <div style="margin-left: -54px; margin-right: 18px">
+                        地级市全部门店
+                      </div>
+                      <Checkbox
+                        :value="checkAllStore"
+                        @click.prevent.native="handleCheckAll(-1)"
+                      >
+                        全选/反选
+                      </Checkbox>
+                    </div>
+                  </FormItem>
+                </i-col>
                 <i-col v-if="storeData.length>0" span="24">
                   <FormItem>
                     <div
@@ -1665,13 +1679,10 @@ import {
   createTeamBuy,
   getAreaStorePages,
   getProductStandardsPages,
-  deletePicture,
   getGoodsStandard
 } from '@/api/mini-program';
 import uploadMixin from '@/mixins/uploadMixin';
-import deleteMixin from '@/mixins/deleteMixin.js';
 import tableMixin from '@/mixins/tableMixin.js';
-import searchMixin from '@/mixins/searchMixin.js';
 import relationStoreMixin from '@/mixins/relationStoreMixin.js';
 import {
   teamBuyStatusConvert,
@@ -1742,8 +1753,7 @@ const teambuyDetail = {
   minute: null,
   second: null,
   relationStoreType: 'ALL',
-  validDateType: 'FIXED_DATE',
-  cityCode: '0731'
+  validDateType: 'FIXED_DATE'
 };
 
 const roleRowData = {
@@ -1820,10 +1830,11 @@ export default {
     Tables,
     IViewUpload
   },
-  mixins: [uploadMixin, deleteMixin, tableMixin, searchMixin, relationStoreMixin],
+  mixins: [uploadMixin, tableMixin, relationStoreMixin],
   data() {
     return {
       flagShipList: [],
+      relationStoreList: [],
       oldPicture: [],
       newPicture: [],
       save: [],
@@ -1891,7 +1902,7 @@ export default {
           minWidth: 100,
           render: (h, params) => {
             const { row } = params;
-            if (row.status == 'on') {
+            if (row.status === 'on') {
               return (
                 <div>
                   <tag color='success'>
@@ -1899,7 +1910,7 @@ export default {
                   </tag>
                 </div>
               );
-            } else if (row.status == 'off') {
+            } else if (row.status === 'off') {
               return (
                 <div>
                   <tag color='error'>
@@ -1907,7 +1918,7 @@ export default {
                   </tag>
                 </div>
               );
-            } else if (row.status == 'expire') {
+            } else if (row.status === 'expire') {
               return (
                 <div>
                   <tag color='warning'>
@@ -2141,7 +2152,7 @@ export default {
           minWidth: 130,
           render: (h, params, vm) => {
             const { row } = params;
-            if (row.productType == 'TEAM_BUY_PRODUCT') {
+            if (row.productType === 'TEAM_BUY_PRODUCT') {
               return (
                 <div>
                   <tag color='magenta'>
@@ -2226,10 +2237,6 @@ export default {
           key: 'rank'
         }
       ],
-      searchRowData: _.cloneDeep(roleRowData),
-      searchProductRowData: _.cloneDeep(productRowData),
-      productDetail: _.cloneDeep(productStandardDetail),
-      teambuyDetail: _.cloneDeep(teambuyDetail),
       ruleInline: {
         rank: [
           { required: true, message: '请输入排序序号' },
@@ -2356,7 +2363,11 @@ export default {
         rewardActivitySetting: [
           { required: true, message: '请选择红包活动设置' }
         ]
-      }
+      },
+      searchRowData: _.cloneDeep(roleRowData),
+      searchProductRowData: _.cloneDeep(productRowData),
+      productDetail: _.cloneDeep(productStandardDetail),
+      teambuyDetail: _.cloneDeep(teambuyDetail)
     };
   },
   computed: {
@@ -2385,7 +2396,6 @@ export default {
     }
   },
   mounted() {
-    this.searchRowData = _.cloneDeep(roleRowData);
     this.getStore();
     this.getTableData();
   },
@@ -2394,7 +2404,7 @@ export default {
   },
   methods: {
     getStore(isCheck) {
-      getAreaStorePages(this.teambuyDetail.cityCode)
+      getAreaStorePages(this.cityCode)
         .then((res) => {
           this.storeList = res.array;
           this.storeData = res.array[0] && res.array[0].storeList || [];
@@ -2587,8 +2597,9 @@ export default {
       }
       editTeamBuy(this.teambuyDetail)
         .then((res) => {
-          this.getTableData();
           this.modalEdit = false;
+          this.$Message.success('修改成功!');
+          this.getTableData();
         })
         .finally(() => {
           this.modalViewLoading = false;
@@ -2656,14 +2667,13 @@ export default {
       this.deleteTable(params.row.storeId);
     },
     deleteTable(ids) {
-      this.loading = true;
       deleteTeamBuy({
         ids
       })
         .then((res) => {
           const totalPage = Math.ceil(this.total / this.searchRowData.pageSize);
           if (
-            this.tableData.length == this.tableDataSelected.length &&
+            this.tableData.length === this.tableDataSelected.length &&
             this.searchRowData.page === totalPage &&
             this.searchRowData.page !== 1
           ) {
@@ -2672,10 +2682,6 @@ export default {
           this.tableDataSelected = [];
           this.getTableData();
         })
-        .catch((err) => {
-          console.log(err);
-          this.loading = false;
-        });
     },
     // 设置编辑商品的图片列表
     setDefaultUploadList(res) {
@@ -2692,21 +2698,21 @@ export default {
       this.resetFields();
       this.tempModalType = this.modalType.view;
       this.teambuyDetail = _.cloneDeep(params.row);
-      this.showStoreName = this.relationStore();
+      this.relationStoreList = this.relationStore();
       this.modalView = true;
     },
     relationStore() {
+      const list = [];
       if (!this.teambuyDetail.storeIds) {
-        return '全部门店';
+        return list;
       }
       const ids = this.teambuyDetail.storeIds.substring(1, this.teambuyDetail.storeIds.length - 1).split('][');
-      let str = '';
       ids.forEach((id) => {
         const item = this.allStoreList.find(item => item.storeId == id);
         if (!item) { return; }
-        str += item.storeName + ',';
+        list.push(item.storeName);
       });
-      return str.substring(0, str.length - 1);
+      return list;
     },
     handleEdit(params) {
       this.step = 'firstStep';
@@ -2754,7 +2760,7 @@ export default {
         const firstStoreId = this.storeIds[0];
         // 编辑时从返回的第一个storeId单独查询下cityCode来反选城市
         const storeObj = this.allStoreList.find(item => item.storeId === firstStoreId);
-        this.teambuyDetail.cityCode = storeObj.cityCode;
+        this.cityCode = storeObj.cityCode;
         this.getStore(true);
       } else {
         this.showStoreList = false;
@@ -2811,12 +2817,8 @@ export default {
         .then((res) => {
           this.tableData = res.rows;
           this.total = res.total;
-          this.loading = false;
-          this.searchLoading = false;
-          this.clearSearchLoading = false;
         })
-        .catch((error) => {
-          console.log(error);
+        .finally(() => {
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
@@ -2899,7 +2901,7 @@ export default {
       } else if (options.value === 'PART') {
         this.teambuyDetail.relationStoreType = 'PART';
         // 新增时默认反选长沙市
-        if (this.isCreate) { this.teambuyDetail.cityCode = '0731'; }
+        if (this.isCreate) { this.cityCode = '0731'; }
         this.storeCheckRest();
         this.getStore();
         this.showStoreList = true;
@@ -2936,6 +2938,38 @@ export default {
     },
     handleCheckAll(value) {
       const _this = this;
+      // 全选反选当前地级市所有门店
+      if (value === -1) {
+        const allIds = [];
+        const beforeIds = [];
+        this.checkAllStore = !this.checkAllStore;
+        if (this.checkAllStore) {
+          if (this.storeIds != null) {
+            for (const val of this.storeIds) {
+              allIds.push(val);
+            }
+          }
+          this.storeListData.forEach((item) => {
+            item.forEach(x => {
+              allIds.push(x.storeId);
+            })
+          });
+          this.storeIds = allIds;
+          this.teambuyDetail.storeIds = '[' + allIds.join('][') + ']';
+        } else {
+          this.storeListData.forEach((item) => {
+            item.forEach(x => {
+              beforeIds.push(x.storeId);
+            })
+          });
+          const newArray = _this.storeIds.filter(function(item) {
+            return beforeIds.indexOf(item) == -1;
+          });
+          this.storeIds = newArray;
+          this.teambuyDetail.storeIds = '[' + newArray.join('][') + ']';
+        }
+      }
+
       if (value === 0) {
         const allIds = [];
         const beforeIds = [];

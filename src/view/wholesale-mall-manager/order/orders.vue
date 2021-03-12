@@ -644,7 +644,6 @@ import {
 } from '@/api/wholesale';
 import getLodop from '@/assets/lodop/lodopFuncs.js';
 import tableMixin from '@/mixins/tableMixin.js';
-import searchMixin from '@/mixins/searchMixin.js';
 import city from '@/assets/city/city.js';
 import { fenToYuanDot2, fenToYuanDot2Number } from '@/libs/util';
 import {
@@ -1133,7 +1132,7 @@ export default {
   components: {
     Tables
   },
-  mixins: [tableMixin, searchMixin],
+  mixins: [tableMixin],
   data() {
     return {
       amount: 0,

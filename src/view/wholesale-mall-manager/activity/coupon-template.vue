@@ -191,9 +191,7 @@ import {
   editCouponTemplate,
   createCouponTemplate
 } from '@/api/wholesale';
-import deleteMixin from '@/mixins/deleteMixin.js';
 import tableMixin from '@/mixins/tableMixin.js';
-import searchMixin from '@/mixins/searchMixin.js';
 import {
   activityTypeEnum,
   couponTemplateTypeEnum,
@@ -238,7 +236,7 @@ export default {
   components: {
     Tables
   },
-  mixins: [deleteMixin, tableMixin, searchMixin],
+  mixins: [tableMixin],
   data() {
     return {
       activityTypeEnum,

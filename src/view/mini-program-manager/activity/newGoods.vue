@@ -242,8 +242,11 @@
               <i-col span="6">
                 关联门店:
               </i-col>
-              <i-col span="16">
-                {{ showStoreName }}
+              <i-col v-if="relationStoreList.length > 0" span="16">
+                <Tag v-for="(item,index) in relationStoreList" :key="index" color="gold">{{ item }}</Tag>
+              </i-col>
+              <i-col v-else span="16">
+                全部门店
               </i-col>
             </Row>
           </i-col>
@@ -486,7 +489,7 @@
                 prop="cityCode"
               >
                 <Select
-                  v-model="activityNewProducts.cityCode"
+                  v-model="cityCode"
                   style="width: 220px"
                   @on-change="handleCitySwitch"
                 >
@@ -504,6 +507,21 @@
             </i-col>
           </Row>
           <Row v-show="showStoreList">
+            <i-col v-if="storeData.length>0" span="24">
+              <FormItem>
+                <div class="bottom-line">
+                  <div style="margin-left: -54px; margin-right: 18px">
+                    地级市全部门店
+                  </div>
+                  <Checkbox
+                    :value="checkAllStore"
+                    @click.prevent.native="handleCheckAll(-1)"
+                  >
+                    全选/反选
+                  </Checkbox>
+                </div>
+              </FormItem>
+            </i-col>
             <i-col v-if="storeData.length>0" span="24">
               <FormItem>
                 <div
@@ -721,28 +739,6 @@
                 </CheckboxGroup>
               </FormItem>
             </i-col>
-            <!-- <i-col span="24">
-              <FormItem>
-                <div
-                  class="bottom-line"
-                >
-                  <div style="margin-left:-54px;margin-right:18px">{{storeNameList[7]}}</div>
-                  <Checkbox
-                    :indeterminate="indeterminate7"
-                    :value="checkAll7"
-                    @click.prevent.native="handleCheckAll(7)"
-                  >全选/反选</Checkbox>
-                </div>
-                <CheckboxGroup v-model="storeIds" @on-change="checkAllGroupChange7">
-                  <Checkbox
-                    v-for="item in storeData7"
-                    ref="checkBox"
-                    :key="item.storeId"
-                    :label="item.storeId"
-                  >{{ item.storeName }}</Checkbox>
-                </CheckboxGroup>
-              </FormItem>
-            </i-col> -->
           </Row>
         </Form>
       </div>
@@ -1550,15 +1546,12 @@ import {
   getAreaStorePages
 } from '@/api/mini-program';
 import tableMixin from '@/mixins/tableMixin.js';
-import searchMixin from '@/mixins/searchMixin.js';
-import deleteMixin from '@/mixins/deleteMixin.js';
 import uploadMixin from '@/mixins/uploadMixin.js';
 import relationStoreMixin from '@/mixins/relationStoreMixin.js';
 import { taskTypeEnum } from '@/libs/enumerate';
 import {
   couponStatusConvert,
   couponTypeConvert,
-  couponScopeConvert,
   imageStatusConvert,
   teamBuyStatusConvert
 } from '@/libs/converStatus';
@@ -1591,7 +1584,6 @@ const activityNewProducts = {
   shareText: '',
   status: '',
   title: '',
-  cityCode: '0731',
   storeIds: null,
   relationStoreType: 'ALL'
 };
@@ -1874,19 +1866,19 @@ const teambuyColumns = [
     minWidth: 100,
     render: (h, params) => {
       const { row } = params;
-      if (row.status == 'on') {
+      if (row.status === 'on') {
         return (
           <div>
             <tag color='success'>{teamBuyStatusConvert(row.status).label}</tag>
           </div>
         );
-      } else if (row.status == 'off') {
+      } else if (row.status === 'off') {
         return (
           <div>
             <tag color='error'>{teamBuyStatusConvert(row.status).label}</tag>
           </div>
         );
-      } else if (row.status == 'expire') {
+      } else if (row.status === 'expire') {
         return (
           <div>
             <tag color='warning'>{teamBuyStatusConvert(row.status).label}</tag>
@@ -2083,13 +2075,13 @@ const PresellColumns = [
     minWidth: 100,
     render: (h, params) => {
       const { row } = params;
-      if (row.status == 'VALID') {
+      if (row.status === 'VALID') {
         return (
           <div>
             <tag color='success'>{'上架'}</tag>
           </div>
         );
-      } else if (row.status == 'INVALID') {
+      } else if (row.status === 'INVALID') {
         return (
           <div>
             <tag color='error'>{'下架'}</tag>
@@ -2340,10 +2332,11 @@ export default {
     Tables,
     IViewUpload
   },
-  mixins: [tableMixin, searchMixin, deleteMixin, uploadMixin, relationStoreMixin],
+  mixins: [tableMixin, uploadMixin, relationStoreMixin],
   data() {
     return {
       ids: [],
+      relationStoreList: [],
       defaultListMain: [],
       uploadListMain: [],
       defaultListBanner: [],
@@ -2370,7 +2363,6 @@ export default {
       showValidDate: true,
       activityId: null,
       sameGoodsStatus: true,
-      modalEditLoading: false,
       modalRelevance: false,
       modalAddCoupun: false,
       modalAddproduct: false,
@@ -2651,7 +2643,7 @@ export default {
           render: (h, params, vm) => {
             const { row } = params;
             if (
-              row.couponConfigManage.source == 'SMALL' &&
+              row.couponConfigManage.source === 'SMALL' &&
               row.couponConfigManage.validDateType === 'FIXED_DATE'
             ) {
               if (!compareCouponData(row.couponConfigManage.effectiveEndTime)) {
@@ -2664,11 +2656,11 @@ export default {
                 return <div>{row.couponConfigManage.effectiveEndTime}</div>;
               }
             } else if (
-              row.couponConfigManage.source == 'SMALL' &&
+              row.couponConfigManage.source === 'SMALL' &&
               row.couponConfigManage.validDateType === 'UN_FIXED_DATE'
             ) {
               return <div>{row.couponConfigManage.endDay}</div>;
-            } else if (row.couponConfigManage.source == 'HD') {
+            } else if (row.couponConfigManage.source === 'HD') {
               if (!compareCouponData(row.couponConfigManage.effectiveEndTime)) {
                 return (
                   <div style='color:red'>
@@ -2979,10 +2971,8 @@ export default {
       }
     };
   },
-  created() {
-    this.getTableData();
-  },
   mounted() {
+    this.getTableData();
     this.getStore();
   },
   methods: {
@@ -3003,14 +2993,12 @@ export default {
     getNewProductsRelevance(id) {
       getNewProductsRelevance(id)
         .then((res) => {
-          (this.activityPreSaleRelations = res.activityPreSaleRelations),
-          (this.activitySeckillRelations = res.activitySeckillRelations),
-          (this.activityTeambuyRelations = res.activityTeambuyRelations),
-          (this.productStandardRelations = res.productStandardRelations),
-          (this.couponConfigManageRelations =
-              res.couponConfigManageRelations);
+          this.activityPreSaleRelations = res.activityPreSaleRelations;
+          this.activitySeckillRelations = res.activitySeckillRelations;
+          this.activityTeambuyRelations = res.activityTeambuyRelations;
+          this.productStandardRelations = res.productStandardRelations;
+          this.couponConfigManageRelations = res.couponConfigManageRelations;
         })
-        .finally(() => {});
     },
     // 修改活动关联
     updateNewProductsRelevance(data) {
@@ -3067,7 +3055,7 @@ export default {
         const firstStoreId = this.storeIds[0];
         // 编辑时从返回的第一个storeId单独查询下cityCode来反选城市
         const storeObj = this.allStoreList.find(item => item.storeId === firstStoreId);
-        this.activityNewProducts.cityCode = storeObj.cityCode;
+        this.cityCode = storeObj.cityCode;
         this.getStore(true);
       } else {
         this.showStoreList = false;
@@ -3098,7 +3086,7 @@ export default {
       } else if (options.value === 'PART') {
         this.activityNewProducts.relationStoreType = 'PART';
         // 新增时默认反选长沙市
-        if (this.isCreate) { this.activityNewProducts.cityCode = '0731'; }
+        if (this.isCreate) { this.cityCode = '0731'; }
         this.storeCheckRest();
         this.getStore();
         this.showStoreList = true;
@@ -3125,7 +3113,7 @@ export default {
       this.activityNewProducts.storeIds = '';
     },
     getStore(isCheck) {
-      getAreaStorePages(this.activityNewProducts.cityCode)
+      getAreaStorePages(this.cityCode)
         .then((res) => {
           this.storeList = res.array;
           this.storeData = res.array[0] && res.array[0].storeList || [];
@@ -3149,6 +3137,38 @@ export default {
     },
     handleCheckAll(value) {
       const _this = this;
+      // 全选反选当前地级市所有门店
+      if (value === -1) {
+        const allIds = [];
+        const beforeIds = [];
+        this.checkAllStore = !this.checkAllStore;
+        if (this.checkAllStore) {
+          if (this.storeIds != null) {
+            for (const val of this.storeIds) {
+              allIds.push(val);
+            }
+          }
+          this.storeListData.forEach((item) => {
+            item.forEach(x => {
+              allIds.push(x.storeId);
+            })
+          });
+          this.storeIds = allIds;
+          this.activityNewProducts.storeIds = '[' + allIds.join('][') + ']';
+        } else {
+          this.storeListData.forEach((item) => {
+            item.forEach(x => {
+              beforeIds.push(x.storeId);
+            })
+          });
+          const newArray = _this.storeIds.filter(function(item) {
+            return beforeIds.indexOf(item) == -1;
+          });
+          this.storeIds = newArray;
+          this.activityNewProducts.storeIds = '[' + newArray.join('][') + ']';
+        }
+      }
+
       if (value === 0) {
         const allIds = [];
         const beforeIds = [];
@@ -3568,7 +3588,6 @@ export default {
         });
     },
     deleteTable(ids) {
-      this.loading = true;
       deleteNewProducts({
         ids
       })
@@ -3585,9 +3604,6 @@ export default {
           this.$Message.success('删除成功!');
           this.getTableData();
         })
-        .finally(() => {
-          this.loading = false;
-        });
     },
     // 设置编辑商品的图片列表
     setDefaultUploadList(res) {
@@ -3751,21 +3767,21 @@ export default {
       this.resetFields();
       this.tempModalType = this.modalType.view;
       this.activityNewProducts = _.cloneDeep(params.row);
-      this.showStoreName = this.relationStore();
+      this.relationStoreList = this.relationStore();
       this.modalView = true;
     },
     relationStore() {
+      const list = [];
       if (!this.activityNewProducts.storeIds) {
-        return '全部门店';
+        return list;
       }
       const ids = this.activityNewProducts.storeIds.substring(1, this.activityNewProducts.storeIds.length - 1).split('][');
-      let str = '';
       ids.forEach((id) => {
         const item = this.allStoreList.find(item => item.storeId == id);
         if (!item) { return; }
-        str += item.storeName + ',';
+        list.push(item.storeName);
       });
-      return str.substring(0, str.length - 1);
+      return list;
     },
     handleSetting(params) {
       this.activityId = params.row.id;

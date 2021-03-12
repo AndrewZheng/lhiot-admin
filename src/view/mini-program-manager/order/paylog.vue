@@ -49,12 +49,11 @@
             >
               <Option
                 v-for="(item, index) in appTypeEnum"
-                :value="item.value"
                 :key="index"
+                :value="item.value"
                 class="ptb2-5"
                 style="padding-left: 5px"
-                >{{ item.label }}</Option
-              >
+              >{{ item.label }}</Option>
             </Select>
             <Select
               v-model="searchRowData.payType"
@@ -64,12 +63,11 @@
             >
               <Option
                 v-for="(item, index) in payTypeEnum"
-                :value="item.value"
                 :key="index"
+                :value="item.value"
                 class="ptb2-5"
                 style="padding-left: 5px"
-                >{{ item.label }}</Option
-              >
+              >{{ item.label }}</Option>
             </Select>
             <Select
               v-model="searchRowData.payStep"
@@ -79,12 +77,11 @@
             >
               <Option
                 v-for="(item, index) in payStepEnum"
-                :value="item.value"
                 :key="index"
+                :value="item.value"
                 class="ptb2-5"
                 style="padding-left: 5px"
-                >{{ item.label }}</Option
-              >
+              >{{ item.label }}</Option>
             </Select>
             <Select
               v-model="searchRowData.sourceType"
@@ -94,12 +91,11 @@
             >
               <Option
                 v-for="(item, index) in sourceTypeEnum"
-                :value="item.value"
                 :key="index"
+                :value="item.value"
                 class="ptb2-5"
                 style="padding-left: 5px"
-                >{{ item.label }}</Option
-              >
+              >{{ item.label }}</Option>
             </Select>
             <Button
               :loading="searchLoading"
@@ -223,46 +219,44 @@
 </template>
 
 <script type="text/ecmascript-6">
-import Tables from "_c/tables";
-import CountTo from "_c/count-to";
-import _ from "lodash";
-import { getPaymentLogPages, getPaymentLogSum } from "@/api/mini-program";
-import tableMixin from "@/mixins/tableMixin.js";
-import searchMixin from "@/mixins/searchMixin.js";
-import { fenToYuanDot2, fenToYuanDot2Number } from "@/libs/util";
+import Tables from '_c/tables';
+import CountTo from '_c/count-to';
+import { getPaymentLogPages, getPaymentLogSum } from '@/api/mini-program';
+import tableMixin from '@/mixins/tableMixin.js';
+import { fenToYuanDot2, fenToYuanDot2Number } from '@/libs/util';
 import {
   appTypeConvert,
   payTypeConvert,
   payStepConvert,
   sourceTypeConvert,
-  bankTypeConvert,
-} from "@/libs/converStatus";
+  bankTypeConvert
+} from '@/libs/converStatus';
 import {
   appTypeEnum,
   payTypeEnum,
   payStepEnum,
-  sourceTypeEnum,
-} from "@/libs/enumerate";
+  sourceTypeEnum
+} from '@/libs/enumerate';
 
 const paymentLogDetail = {
   id: 0,
-  orderId: "",
+  orderId: '',
   userId: 0,
   app_type: null,
   sourceType: null,
   payType: null,
   payStep: null,
   payFee: 0,
-  tradeId: "",
+  tradeId: '',
   rechargeAmount: 0,
   signAt: null,
   payAt: null,
   bankType: null,
-  deleted: "",
-  orderCode: "",
+  deleted: '',
+  orderCode: '',
   startTime: null,
   endTime: null,
-  nickName: "",
+  nickName: ''
 };
 
 const roleRowData = {
@@ -275,111 +269,116 @@ const roleRowData = {
   page: 1,
   rows: 10,
   sum: null,
-  sidx: "signAt",
-  sort: "desc",
+  sidx: 'signAt',
+  sort: 'desc'
 };
 
 export default {
   components: {
     Tables,
-    CountTo,
+    CountTo
   },
-  mixins: [tableMixin, searchMixin],
+  mixins: [tableMixin],
   data() {
     return {
+      sum: 0,
+      appTypeEnum,
+      payTypeEnum,
+      payStepEnum,
+      sourceTypeEnum,
       columns: [
         {
-          title: "订单ID",
-          key: "orderId",
+          title: '订单ID',
+          key: 'orderId',
           width: 190,
-          align: "center",
-          fixed: "left",
+          align: 'center',
+          fixed: 'left'
         },
         {
-          title: "用户ID",
-          key: "userId",
-          align: "center",
-          width: 90,
+          title: '用户ID',
+          key: 'userId',
+          align: 'center',
+          width: 90
         },
         {
-          title: "应用类型",
-          key: "app_type",
-          align: "center",
+          title: '应用类型',
+          key: 'app_type',
+          align: 'center',
           width: 120,
           render: (h, params, vm) => {
             const { row } = params;
-            if (row.app_type === "WXSMALL_SHOP") {
+            if (row.app_type === 'WXSMALL_SHOP') {
               return (
                 <div>
-                  <tag color="green">{appTypeConvert(row.app_type).label}</tag>
+                  <tag color='green'>{appTypeConvert(row.app_type).label}</tag>
                 </div>
               );
-            } else if (row.app_type === "S_MALL") {
+            } else if (row.app_type === 'S_MALL') {
               return (
                 <div>
-                  <tag color="gold">{appTypeConvert(row.app_type).label}</tag>
+                  <tag color='gold'>{appTypeConvert(row.app_type).label}</tag>
                 </div>
               );
             } else {
               return <div>{row.app_type}</div>;
             }
-          },
+          }
         },
         {
-          title: "支付类型",
+          title: '支付类型',
           width: 110,
-          key: "payType",
-          align: "center",
+          key: 'payType',
+          align: 'center',
           render: (h, params, vm) => {
             const { row } = params;
-            if (row.payType === "weixin") {
+            if (row.payType === 'weixin') {
               return (
                 <div>
-                  <tag color="green">{payTypeConvert(row.payType).label}</tag>
+                  <tag color='green'>{payTypeConvert(row.payType).label}</tag>
                 </div>
               );
-            } else if (row.payType === "balance") {
+            } else if (row.payType === 'balance') {
               return (
                 <div>
-                  <tag color="gold">{payTypeConvert(row.payType).label}</tag>
+                  <tag color='gold'>{payTypeConvert(row.payType).label}</tag>
                 </div>
               );
-            } else if (row.payType === "points") {
+            } else if (row.payType === 'points') {
               return (
                 <div>
-                  <tag color="pink">{payTypeConvert(row.payType).label}</tag>
+                  <tag color='pink'>{payTypeConvert(row.payType).label}</tag>
                 </div>
               );
-            } else if (row.payType === "haiding") {
+            } else if (row.payType === 'haiding') {
               return (
                 <div>
-                  <tag color="warning">{payTypeConvert(row.payType).label}</tag>
+                  <tag color='warning'>{payTypeConvert(row.payType).label}</tag>
                 </div>
               );
             } else {
               return <div>{row.payType}</div>;
             }
-          },
+          }
         },
         {
-          title: "支付来源",
+          title: '支付来源',
           width: 100,
-          align: "center",
-          key: "sourceType",
+          align: 'center',
+          key: 'sourceType',
           render: (h, params, vm) => {
             const { row } = params;
-            if (row.sourceType === "recharge") {
+            if (row.sourceType === 'recharge') {
               return (
                 <div>
-                  <tag color="green">
+                  <tag color='green'>
                     {sourceTypeConvert(row.sourceType).label}
                   </tag>
                 </div>
               );
-            } else if (row.sourceType === "order") {
+            } else if (row.sourceType === 'order') {
               return (
                 <div>
-                  <tag color="gold">
+                  <tag color='gold'>
                     {sourceTypeConvert(row.sourceType).label}
                   </tag>
                 </div>
@@ -387,100 +386,93 @@ export default {
             } else {
               return <div>{row.sourceType}</div>;
             }
-          },
+          }
         },
         {
-          title: "第三方支付金额",
+          title: '第三方支付金额',
           width: 100,
-          key: "payFee",
-          align: "center",
+          key: 'payFee',
+          align: 'center',
           render(h, params, vm) {
             const amount = fenToYuanDot2(params.row.payFee);
             return <div>{amount}</div>;
-          },
+          }
         },
         {
-          title: "实际到账金额",
+          title: '实际到账金额',
           width: 100,
-          key: "rechargeAmount",
-          align: "center",
+          key: 'rechargeAmount',
+          align: 'center',
           render(h, params, vm) {
-            if (params.row.sourceType === "recharge") {
+            if (params.row.sourceType === 'recharge') {
               const amount = fenToYuanDot2(params.row.rechargeAmount);
               return <div>{amount}</div>;
             } else {
-              return <div>{"N/A"}</div>;
+              return <div>{'N/A'}</div>;
             }
-          },
+          }
         },
         {
-          title: "第三方单号",
-          key: "tradeId",
-          align: "center",
-          width: 190,
+          title: '第三方单号',
+          key: 'tradeId',
+          align: 'center',
+          width: 190
         },
         {
-          title: "支付步骤",
+          title: '支付步骤',
           width: 100,
-          align: "center",
-          key: "payStep",
+          align: 'center',
+          key: 'payStep',
           render: (h, params, vm) => {
             const { row } = params;
-            if (row.payStep === "paid") {
+            if (row.payStep === 'paid') {
               return (
                 <div>
-                  <tag color="green">{payStepConvert(row.payStep).label}</tag>
+                  <tag color='green'>{payStepConvert(row.payStep).label}</tag>
                 </div>
               );
-            } else if (row.payStep === "sign") {
+            } else if (row.payStep === 'sign') {
               return (
                 <div>
-                  <tag color="gold">{payStepConvert(row.payStep).label}</tag>
+                  <tag color='gold'>{payStepConvert(row.payStep).label}</tag>
                 </div>
               );
             } else {
               return <div>{row.payStep}</div>;
             }
-          },
+          }
         },
         {
-          title: "签名时间",
-          key: "signAt",
-          align: "center",
-          width: 120,
+          title: '签名时间',
+          key: 'signAt',
+          align: 'center',
+          width: 120
         },
         {
-          title: "支付时间",
-          align: "center",
-          key: "payAt",
-          width: 120,
+          title: '支付时间',
+          align: 'center',
+          key: 'payAt',
+          width: 120
         },
         {
-          title: "银行类型",
-          key: "bankType",
-          align: "center",
+          title: '银行类型',
+          key: 'bankType',
+          align: 'center',
           width: 140,
           render: (h, params, vm) => {
             const { row } = params;
             return <div>{bankTypeConvert(row.bankType).label}</div>;
-          },
+          }
         },
         {
-          title: "用户昵称",
-          align: "center",
-          key: "nickName",
-          width: 140,
-        },
+          title: '用户昵称',
+          align: 'center',
+          key: 'nickName',
+          width: 140
+        }
       ],
-      createLoading: false,
-      modalViewLoading: false,
       searchRowData: _.cloneDeep(roleRowData),
-      paymentLogDetail: _.cloneDeep(paymentLogDetail),
-      appTypeEnum,
-      payTypeEnum,
-      payStepEnum,
-      sourceTypeEnum,
-      sum: 0,
+      paymentLogDetail: _.cloneDeep(paymentLogDetail)
     };
   },
   mounted() {
@@ -489,41 +481,9 @@ export default {
   },
   created() {},
   methods: {
-    // 导出
-    handleDownload() {
-      // 导出不分页 按条件查出多少条导出多少条 限制每次最多5000条
-      this.searchRowData.rows = this.total > 5000 ? 5000 : this.total;
-      let pageSize = this.searchRowData.page;
-      this.searchRowData.page = 1;
-      getPaymentLogPages(this.searchRowData).then((res) => {
-        const tableData = res.rows;
-        // 恢复正常页数
-        this.searchRowData.rows = 10;
-        this.searchRowData.page = pageSize;
-        // 表格数据导出字段翻译
-        const _this = this;
-        tableData.forEach((item) => {
-          item["app_type"] = appTypeConvert(item["app_type"]).label;
-          item["payType"] = payTypeConvert(item["payType"]).label;
-          item["sourceType"] = sourceTypeConvert(item["app_type"]).label;
-          item["payFee"] = (item["payFee"] / 100.0).toFixed(2);
-          item["payStep"] = payStepConvert(item["app_type"]).label;
-          item["bankType"] = bankTypeConvert(item["bankType"]).label;
-        });
-        _this.$refs.tables.handleDownload({
-          filename: `鲜果币流水信息-${new Date().valueOf()}`,
-          data: tableData,
-        });
-      });
-    },
     resetSearchRowData() {
       this.searchRowData = _.cloneDeep(roleRowData);
       this.getTableData();
-    },
-    handleView(params) {
-      this.tempModalType = this.modalType.view;
-      this.paymentLogDetail = _.cloneDeep(params.row);
-      this.modalView = true;
     },
     getTableData() {
       const _this = this;
@@ -542,9 +502,14 @@ export default {
           this.clearSearchLoading = false;
         });
       // 金额统计
-      getPaymentLogSum(this.searchRowData).then(function (result) {
+      getPaymentLogSum(this.searchRowData).then(function(result) {
         _this.sum = `金额总计: ¥${fenToYuanDot2Number(result)} 元`;
       });
+    },
+    handleView(params) {
+      this.tempModalType = this.modalType.view;
+      this.paymentLogDetail = _.cloneDeep(params.row);
+      this.modalView = true;
     },
     startTimeChange(value, date) {
       this.paymentLogDetail.startTime = value;
@@ -554,7 +519,34 @@ export default {
       this.paymentLogDetail.endTime = value;
       this.searchRowData.endTime = value;
     },
-  },
+    // 导出
+    handleDownload() {
+      // 导出不分页 按条件查出多少条导出多少条 限制每次最多5000条
+      this.searchRowData.rows = this.total > 5000 ? 5000 : this.total;
+      const pageSize = this.searchRowData.page;
+      this.searchRowData.page = 1;
+      getPaymentLogPages(this.searchRowData).then((res) => {
+        const tableData = res.rows;
+        // 恢复正常页数
+        this.searchRowData.rows = 10;
+        this.searchRowData.page = pageSize;
+        // 表格数据导出字段翻译
+        const _this = this;
+        tableData.forEach((item) => {
+          item['app_type'] = appTypeConvert(item['app_type']).label;
+          item['payType'] = payTypeConvert(item['payType']).label;
+          item['sourceType'] = sourceTypeConvert(item['app_type']).label;
+          item['payFee'] = (item['payFee'] / 100.0).toFixed(2);
+          item['payStep'] = payStepConvert(item['app_type']).label;
+          item['bankType'] = bankTypeConvert(item['bankType']).label;
+        });
+        _this.$refs.tables.handleDownload({
+          filename: `鲜果币流水信息-${new Date().valueOf()}`,
+          data: tableData
+        });
+      });
+    }
+  }
 };
 </script>
 

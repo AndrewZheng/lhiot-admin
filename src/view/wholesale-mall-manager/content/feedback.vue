@@ -39,8 +39,8 @@
           >
             <Option
               v-for="item in feedbackStatus"
-              :value="item.value"
               :key="item.value"
+              :value="item.value"
               class="ml15 mt10"
             >{{ item.label }}</Option>
           </Select>
@@ -161,7 +161,7 @@
           </Row>
         </Row>
         <Form
-          v-if="tempModalType === modalType.edit"
+          v-if="isEdit"
           ref="modalEdit"
           :model="feedbackDetail"
           :rules="ruleInline"
@@ -172,7 +172,7 @@
           </FormItem>
         </Form>
       </div>
-      <div v-if="tempModalType === modalType.edit" slot="footer">
+      <div v-if="isEdit" slot="footer">
         <Button :loading="feedbackLoading" type="primary" @click="handleEditOk('modalEdit')">确认</Button>
       </div>
       <!--
@@ -184,132 +184,131 @@
 </template>
 
 <script type="text/ecmascript-6">
-import Tables from "_c/tables";
-import _ from "lodash";
-import { getFeedbackPages, editFeedback } from "@/api/mini-program";
-import tableMixin from "@/mixins/tableMixin.js";
-import searchMixin from "@/mixins/searchMixin.js";
-import { appTypeConvert } from "@/libs/converStatus";
+import Tables from '_c/tables';
+import _ from 'lodash';
+import { getFeedbackPages, editFeedback } from '@/api/mini-program';
+import tableMixin from '@/mixins/tableMixin.js';
+import { appTypeConvert } from '@/libs/converStatus';
 
 const feedbackDetail = {
   id: 0,
-  title: "",
-  content: "",
-  backMessage: "",
+  title: '',
+  content: '',
+  backMessage: '',
   createTime: null,
   feedbackTime: null,
-  userId: "",
+  userId: '',
   applicationType: null,
-  backEditor: "",
+  backEditor: '',
   status: null
 };
 
 const roleRowData = {
   applicationType: null,
-  content: "",
+  content: '',
   page: 1,
   rows: 10,
   status: null,
-  title: "",
-  sidx: "create_time",
-  sort: "desc"
+  title: '',
+  sidx: 'create_time',
+  sort: 'desc'
 };
 
 export default {
   components: {
     Tables
   },
-  mixins: [tableMixin, searchMixin],
+  mixins: [tableMixin],
   data() {
     return {
       ruleInline: {
-        backMessage: [{ required: true, message: "回复内容不能为空" }]
+        backMessage: [{ required: true, message: '回复内容不能为空' }]
       },
       columns: [
         {
-          title: "ID",
-          align: "center",
-          key: "id",
+          title: 'ID',
+          align: 'center',
+          key: 'id',
           minWidth: 50
         },
         {
-          title: "标题",
-          align: "center",
+          title: '标题',
+          align: 'center',
           width: 150,
-          key: "title",
+          key: 'title',
           tooltip: true
         },
         {
-          title: "内容",
-          align: "center",
+          title: '内容',
+          align: 'center',
           width: 300,
-          key: "content",
+          key: 'content',
           tooltip: true
         },
         {
-          title: "反馈用户",
-          align: "center",
+          title: '反馈用户',
+          align: 'center',
           width: 185,
-          key: "userId"
+          key: 'userId'
         },
         {
-          title: "创建时间",
-          align: "center",
+          title: '创建时间',
+          align: 'center',
           width: 185,
-          key: "createTime",
+          key: 'createTime',
           sortable: true
         },
         {
-          title: "反馈状态",
-          align: "center",
+          title: '反馈状态',
+          align: 'center',
           width: 120,
-          key: "status",
+          key: 'status',
           render: (h, params, vm) => {
             const { row } = params;
-            if (row.status === "UNREPLY") {
-              return <tag color="warning">{"未回复"}</tag>;
-            } else if (row.status === "REPLY") {
-              return <tag color="primary">{"已回复"}</tag>;
-            } else if (row.status === "READED") {
-              return <tag color="success">{"已读"}</tag>;
+            if (row.status === 'UNREPLY') {
+              return <tag color='warning'>{'未回复'}</tag>;
+            } else if (row.status === 'REPLY') {
+              return <tag color='primary'>{'已回复'}</tag>;
+            } else if (row.status === 'READED') {
+              return <tag color='success'>{'已读'}</tag>;
             } else {
               return row.status;
             }
           }
         },
         {
-          title: "回复人",
-          align: "center",
+          title: '回复人',
+          align: 'center',
           width: 100,
-          key: "backEditor",
+          key: 'backEditor',
           tooltip: true
         },
         {
-          title: "回复内容",
-          align: "center",
+          title: '回复内容',
+          align: 'center',
           width: 170,
-          key: "backMessage",
+          key: 'backMessage',
           tooltip: true
         },
         {
-          title: "应用类型",
-          align: "center",
+          title: '应用类型',
+          align: 'center',
           width: 160,
-          key: "applicationType",
+          key: 'applicationType',
           render: (h, params, vm) => {
             const { row } = params;
-            if (row.applicationType === "WXSMALL_SHOP") {
+            if (row.applicationType === 'WXSMALL_SHOP') {
               return (
                 <div>
-                  <tag color="green">
+                  <tag color='green'>
                     {appTypeConvert(row.applicationType).label}
                   </tag>
                 </div>
               );
-            } else if (row.applicationType === "S_MALL") {
+            } else if (row.applicationType === 'S_MALL') {
               return (
                 <div>
-                  <tag color="gold">
+                  <tag color='gold'>
                     {appTypeConvert(row.applicationType).label}
                   </tag>
                 </div>
@@ -320,11 +319,11 @@ export default {
           }
         },
         {
-          title: "操作",
-          align: "center",
+          title: '操作',
+          align: 'center',
           minWidth: 150,
-          key: "handle",
-          options: ["view", "feedback"]
+          key: 'handle',
+          options: ['view', 'feedback']
         }
       ],
       feedbackDetail: _.cloneDeep(feedbackDetail),
@@ -333,16 +332,16 @@ export default {
       // 反馈状态（UNREPLY-未回复，REPLY-已回复且用户未读，READED-已读）
       feedbackStatus: [
         {
-          label: "未回复",
-          value: "UNREPLY"
+          label: '未回复',
+          value: 'UNREPLY'
         },
         {
-          label: "已回复",
-          value: "REPLY"
+          label: '已回复',
+          value: 'REPLY'
         },
         {
-          label: "已读",
-          value: "READED"
+          label: '已读',
+          value: 'READED'
         }
       ]
     };
@@ -369,7 +368,7 @@ export default {
         backMessage: this.feedbackDetail.backMessage
       })
         .then(res => {
-          this.$Message.success("回复成功!");
+          this.$Message.success('回复成功!');
           this.getTableData();
         })
         .finally(res => {

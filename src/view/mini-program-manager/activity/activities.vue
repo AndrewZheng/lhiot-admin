@@ -15,7 +15,7 @@
         @on-view="handleView"
         @on-delete="handleDelete"
         @on-edit="handleEdit"
-        @on-sale="onOff"
+        @on-sale="handleSwitch"
         @on-select-all="onSelectionAll"
         @on-selection-change="onSelectionChange"
       >
@@ -103,7 +103,7 @@
                 活动ID:
               </i-col>
               <i-col span="18">
-                {{ activitiesDetail.id }}
+                {{ activityDetail.id }}
               </i-col>
             </Row>
           </i-col>
@@ -115,7 +115,7 @@
                 活动编码:
               </i-col>
               <i-col span="18">
-                {{ activitiesDetail.activityCode }}
+                {{ activityDetail.activityCode }}
               </i-col>
             </Row>
           </i-col>
@@ -127,7 +127,7 @@
                 活动名称:
               </i-col>
               <i-col span="18">
-                {{ activitiesDetail.activityName }}
+                {{ activityDetail.activityName }}
               </i-col>
             </Row>
           </i-col>
@@ -138,12 +138,12 @@
               <i-col span="6">
                 活动状态:
               </i-col>
-              <i-col v-if="activitiesDetail.onOff === 'ON'" span="18">
+              <i-col v-if="activityDetail.onOff === 'ON'" span="18">
                 <tag color="success">
                   {{ "开启" | imageStatusFilter }}
                 </tag>
               </i-col>
-              <i-col v-else-if="activitiesDetail.onOff === 'OFF'" span="18">
+              <i-col v-else-if="activityDetail.onOff === 'OFF'" span="18">
                 <tag color="error">
                   {{ "关闭" | imageStatusFilter }}
                 </tag>
@@ -158,7 +158,7 @@
                 活动链接:
               </i-col>
               <i-col span="18">
-                {{ activitiesDetail.activityUrl }}
+                {{ activityDetail.activityUrl }}
               </i-col>
             </Row>
           </i-col>
@@ -176,25 +176,25 @@
         <i-col>{{ tempModalType===modalType.edit?'修改活动':'创建活动' }}</i-col>
       </p>
       <div class="modal-content">
-        <Form ref="modalEdit" :model="activitiesDetail" :rules="ruleInline" :label-width="100">
+        <Form ref="editForm" :model="activityDetail" :rules="ruleInline" :label-width="100">
           <Row>
             <Col span="18">
             <FormItem label="活动编码:" prop="activityCode">
-              <Input v-model="activitiesDetail.activityCode"></Input>
+              <Input v-model="activityDetail.activityCode"></Input>
             </FormItem>
             </Col>
           </Row>
           <Row>
             <Col span="18">
             <FormItem label="活动名称:" prop="activityName">
-              <Input v-model="activitiesDetail.activityName"></Input>
+              <Input v-model="activityDetail.activityName"></Input>
             </FormItem>
             </Col>
           </Row>
           <Row>
             <Col span="18">
             <FormItem label="活动状态:" prop="onOff">
-              <Select v-model="activitiesDetail.onOff" clearable>
+              <Select v-model="activityDetail.onOff" clearable>
                 <Option
                   v-for="(item,index) in imageStatusEnum"
                   :key="index"
@@ -211,7 +211,7 @@
           <Row>
             <Col span="18">
             <FormItem label="活动详情链接:" prop="activityUrl">
-              <Input v-model="activitiesDetail.activityUrl"></Input>
+              <Input v-model="activityDetail.activityUrl"></Input>
             </FormItem>
             </Col>
           </Row>
@@ -221,7 +221,7 @@
         <Button @click="handleEditClose">
           关闭
         </Button>
-        <Button :loading="modalViewLoading" type="primary" @click="handleSubmit('modalEdit')">
+        <Button :loading="modalEditLoading" type="primary" @click="handleSubmit">
           确定
         </Button>
       </div>
@@ -231,20 +231,17 @@
 
 <script type="text/ecmascript-6">
 import Tables from '_c/tables';
-import _ from 'lodash';
 import {
   deleteActivities,
   getActivitiesPages,
   editActivities,
   createActivities
 } from '@/api/mini-program';
-import deleteMixin from '@/mixins/deleteMixin.js';
 import tableMixin from '@/mixins/tableMixin.js';
-import searchMixin from '@/mixins/searchMixin.js';
 import { imageStatusConvert } from '@/libs/converStatus';
 import { imageStatusEnum } from '@/libs/enumerate';
 
-const activitiesDetail = {
+const activityDetail = {
   id: 0,
   activityCode: '',
   activityName: '',
@@ -252,7 +249,7 @@ const activitiesDetail = {
   activityUrl: ''
 };
 
-const roleRowData = {
+const rowData = {
   activityCode: null,
   activityName: null,
   page: 1,
@@ -263,14 +260,9 @@ export default {
   components: {
     Tables
   },
-  mixins: [deleteMixin, tableMixin, searchMixin],
+  mixins: [tableMixin],
   data() {
     return {
-      ruleInline: {
-        activityCode: [{ required: true, message: '请输入活动编码' }],
-        activityName: [{ required: true, message: '请输入活动名称' }],
-        onOff: [{ required: true, message: '请选择活动状态' }]
-      },
       defaultListMain: [],
       uploadListMain: [],
       areaList: [],
@@ -340,36 +332,65 @@ export default {
           options: ['onSale', 'view', 'edit', 'delete']
         }
       ],
-      createLoading: false,
-      modalViewLoading: false,
-      searchRowData: _.cloneDeep(roleRowData),
-      activitiesDetail: _.cloneDeep(activitiesDetail)
+      ruleInline: {
+        activityCode: [{ required: true, message: '请输入活动编码' }],
+        activityName: [{ required: true, message: '请输入活动名称' }],
+        onOff: [{ required: true, message: '请选择活动状态' }]
+      },
+      searchRowData: _.cloneDeep(rowData),
+      activityDetail: _.cloneDeep(activityDetail)
     };
   },
   mounted() {
-    this.searchRowData = _.cloneDeep(roleRowData);
     this.getTableData();
   },
   created() {},
   methods: {
     resetSearchRowData() {
-      this.searchRowData = _.cloneDeep(roleRowData);
+      this.searchRowData = _.cloneDeep(rowData);
       this.getTableData();
     },
     resetFields() {
-      this.$refs.modalEdit.resetFields();
-      // this.$refs.uploadMain.clearFileList();
+      this.$refs.editForm.resetFields();
       this.uploadListMain = [];
-      this.activitiesDetail.storeImage = null;
+      this.activityDetail.storeImage = null;
     },
-    handleSubmit(name) {
-      this.$refs[name].validate(valid => {
+    getTableData() {
+      this.loading = true;
+      getActivitiesPages(this.searchRowData)
+        .then(res => {
+          this.tableData = res.rows;
+          this.total = res.total;
+        })
+        .finally(() => {
+          this.loading = false;
+          this.searchLoading = false;
+          this.clearSearchLoading = false;
+        });
+    },
+    handleSwitch(params) {
+      this.activityDetail = this._.cloneDeep(params.row);
+      this.activityDetail.onOff = params.row.onOff === 'ON' ? 'OFF' : 'ON';
+      this.editActivities();
+    },
+    handleView(params) {
+      this.resetFields();
+      this.tempModalType = this.modalType.view;
+      this.activityDetail = _.cloneDeep(params.row);
+      this.modalView = true;
+    },
+    handleEdit(params) {
+      this.resetFields();
+      this.tempModalType = this.modalType.edit;
+      this.activityDetail = _.cloneDeep(params.row);
+      this.modalEdit = true;
+    },
+    handleSubmit() {
+      this.$refs.editForm.validate(valid => {
         if (valid) {
-          if (this.tempModalType === this.modalType.create) {
-            // 添加状态
+          if (this.isCreate) {
             this.createActivities();
-          } else if (this.tempModalType === this.modalType.edit) {
-            // 编辑状态
+          } else if (this.isEdit) {
             this.editActivities();
           }
         } else {
@@ -378,55 +399,43 @@ export default {
       });
     },
     createActivities() {
-      this.modalViewLoading = true;
-      createActivities(this.activitiesDetail)
+      this.modalEditLoading = true;
+      createActivities(this.activityDetail)
         .then(res => {
-          this.modalViewLoading = false;
           this.modalEdit = false;
           this.$Message.success('创建成功!');
           this.getTableData();
         })
-        .catch(() => {
-          this.modalViewLoading = false;
+        .finally(() => {
+          this.modalEditLoading = false;
         });
     },
     editActivities() {
-      this.modalViewLoading = true;
-      editActivities(this.activitiesDetail)
+      this.modalEditLoading = true;
+      editActivities(this.activityDetail)
         .then(res => {
           this.modalEdit = false;
-          this.modalViewLoading = false;
+          this.$Message.success('操作成功!');
           this.getTableData();
         })
-        .catch(() => {
-          this.modalEdit = false;
-          this.modalViewLoading = false;
+        .finally(() => {
+          this.modalEditLoading = false;
         });
     },
     addActivities() {
       this.resetFields();
-      if (this.tempModalType !== this.modalType.create) {
-        this.tempModalType = this.modalType.create;
-        this.activitiesDetail = _.cloneDeep(activitiesDetail);
-      }
-
+      this.tempModalType = this.modalType.create;
+      this.activityDetail = _.cloneDeep(activityDetail);
       this.modalEdit = true;
     },
-    // 删除
-    handleDelete(params) {
-      this.tableDataSelected = [];
-      this.tableDataSelected.push(params.row);
-      this.deleteTable(params.row.id);
-    },
     deleteTable(ids) {
-      this.loading = true;
       deleteActivities({
         ids
       })
         .then(res => {
           const totalPage = Math.ceil(this.total / this.searchRowData.pageSize);
           if (
-            this.tableData.length == this.tableDataSelected.length &&
+            this.tableData.length === this.tableDataSelected.length &&
             this.searchRowData.page === totalPage &&
             this.searchRowData.page !== 1
           ) {
@@ -434,49 +443,7 @@ export default {
           }
           this.tableDataSelected = [];
           this.getTableData();
-        })
-        .catch(err => {
-          console.log(err);
-          this.loading = false;
         });
-    },
-    handleView(params) {
-      this.resetFields();
-      this.tempModalType = this.modalType.view;
-      this.activitiesDetail = _.cloneDeep(params.row);
-      this.modalView = true;
-    },
-    handleEdit(params) {
-      this.resetFields();
-      this.tempModalType = this.modalType.edit;
-      this.activitiesDetail = _.cloneDeep(params.row);
-      this.modalEdit = true;
-    },
-    getTableData() {
-      getActivitiesPages(this.searchRowData)
-        .then(res => {
-          this.tableData = res.rows;
-          this.total = res.total;
-          this.loading = false;
-          this.searchLoading = false;
-          this.clearSearchLoading = false;
-        })
-        .catch(error => {
-          console.log(error);
-          this.loading = false;
-          this.searchLoading = false;
-          this.clearSearchLoading = false;
-        });
-    },
-    onOff(params) {
-      this.activitiesDetail = this._.cloneDeep(params.row);
-      if (params.row.onOff === 'ON') {
-        this.activitiesDetail.onOff = 'OFF';
-      } else {
-        this.activitiesDetail.onOff = 'ON';
-      }
-      this.loading = true;
-      this.editActivities();
     }
   }
 };

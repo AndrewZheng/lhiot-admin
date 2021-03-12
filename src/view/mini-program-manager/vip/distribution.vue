@@ -89,6 +89,7 @@
         </Row>
       </div>
     </Card>
+
     <!-- 查看优惠券详情 -->
     <Modal v-model="modalView" :width="800" draggable scrollable :mask-closable="false">
       <p slot="header">
@@ -293,6 +294,7 @@
         </Button>
       </div>
     </Modal>
+
     <!-- 添加免运费券 -->
     <Modal
       v-model="modalAdd"
@@ -550,6 +552,7 @@
         </Button>
       </div>
     </Modal>
+
     <!-- 修改优惠券 -->
     <Modal v-model="modalEdit" :mask-closable="false" :width="1000" draggable>
       <p slot="header">
@@ -740,7 +743,6 @@
 <script type="text/ecmascript-6">
 import Tables from '_c/tables';
 import IViewUpload from '_c/iview-upload';
-import _ from 'lodash';
 import {
   getSvipGift,
   getSvipGiftPages,
@@ -750,16 +752,13 @@ import {
   getCouponTemplatePages
 } from '@/api/mini-program';
 import uploadMixin from '@/mixins/uploadMixin';
-import deleteMixin from '@/mixins/deleteMixin.js';
 import tableMixin from '@/mixins/tableMixin.js';
-import searchMixin from '@/mixins/searchMixin.js';
 import {
   couponStatusConvert,
   couponTypeConvert,
   couponScopeConvert,
   couponUseLimitConvert,
-  vipTypeConvert,
-  giftTypeConvert
+  vipTypeConvert
 } from '@/libs/converStatus';
 import {
   couponTypeEnum,
@@ -772,7 +771,6 @@ import {
 } from '@/libs/enumerate';
 import {
   compareData,
-  getSmallCouponActivity,
   fenToYuanDot2,
   fenToYuanDot2Number,
   yuanToFenNumber,
@@ -803,21 +801,6 @@ const relationDetail = {
   points: 0,
   realPoints: 0,
   giftType: 'FREIGHT_COUPON'
-};
-
-const couponTemplateDetail = {
-  id: 0,
-  couponName: '',
-  couponType: null,
-  couponFee: 0,
-  minBuyFee: 0,
-  couponStatus: null,
-  couponImage: '',
-  createUser: '',
-  createTime: null,
-  couponRules: '',
-  couponScope: null,
-  svipLevel: null
 };
 
 const roleRowData = {
@@ -1167,9 +1150,29 @@ export default {
     Tables,
     IViewUpload
   },
-  mixins: [deleteMixin, tableMixin, searchMixin, uploadMixin],
+  mixins: [tableMixin, uploadMixin],
   data() {
     return {
+      defaultListMain: [],
+      uploadListMain: [],
+      areaList: [],
+      addRelationList: [],
+      couponTemplateData: [],
+      templatePageOpts: [5, 10],
+      addTempDataLoading: false,
+      tempTableLoading: false,
+      couponTemplateTotal: 0,
+      yetgrant: '',
+      issued: '',
+      vipStatusEnum,
+      couponTypeEnum,
+      couponScopeEnum,
+      couponStatusEnum,
+      couponUseLimitEnum,
+      validDateTypeEnum,
+      giftTypeEnum,
+      dataColumns: dataColumns,
+      templateColumns: templateColumns,
       distributionRuleInline: {
         effectiveStartTime: [{ required: false, message: '请选择生效时间' }],
         effectiveEndTime: [{ required: false, message: '请选择失效时间' }],
@@ -1265,33 +1268,10 @@ export default {
           }
         ]
       },
-      defaultListMain: [],
-      uploadListMain: [],
-      areaList: [],
-      vipStatusEnum,
-      couponTypeEnum,
-      couponScopeEnum,
-      couponStatusEnum,
-      couponUseLimitEnum,
-      validDateTypeEnum,
-      giftTypeEnum,
-      dataColumns: dataColumns,
-      templatePageOpts: [5, 10],
-      templateColumns: templateColumns,
-      addTempDataLoading: false,
-      tempTableLoading: false,
-      createLoading: false,
-      modalViewLoading: false,
       searchRowData: _.cloneDeep(roleRowData),
       searchTemplateRowData: _.cloneDeep(templateRowData),
       relationDetail: _.cloneDeep(relationDetail),
-      addRelationDetail: _.cloneDeep(relationDetail),
-      addRelationList: [],
-      couponTemplateData: [],
-      couponTemplateTotal: 0,
-      modalAdd: false,
-      yetgrant: '',
-      issued: ''
+      addRelationDetail: _.cloneDeep(relationDetail)
     };
   },
   computed: {
@@ -1301,13 +1281,13 @@ export default {
     systemCouponFixDate() {
       return (
         this.tempModalType === 'addTemplate' &&
-        this.addRelationDetail.validDateType == 'FIXED_DATE'
+        this.addRelationDetail.validDateType === 'FIXED_DATE'
       );
     },
     systemCouponUnFixDate() {
       return (
         this.tempModalType === 'addTemplate' &&
-        this.addRelationDetail.validDateType == 'UN_FIXED_DATE'
+        this.addRelationDetail.validDateType === 'UN_FIXED_DATE'
       );
     }
   },
@@ -1325,11 +1305,42 @@ export default {
       }
       this.editSvipGift();
     },
+    getTableData() {
+      this.loading = true;
+      getSvipGiftPages(this.searchRowData)
+        .then(res => {
+          this.tableData = res.rows;
+          this.total = res.total;
+        })
+        .finally(() => {
+          this.loading = false;
+          this.searchLoading = false;
+          this.clearSearchLoading = false;
+        });
+    },
+    getTemplateTableData() {
+      getCouponTemplatePages(this.searchTemplateRowData)
+        .then(res => {
+          this.couponTemplateData = res.rows;
+          this.couponTemplateTotal = res.total;
+        })
+        .finally(() => {
+          this.loading = false;
+          this.searchLoading = false;
+          this.clearSearchLoading = false;
+        });
+    },
+    handleEdit(params) {
+      this.tempModalType = this.modalType.edit;
+      this.addRelationDetail = _.cloneDeep(params.row);
+      this.replaceTextByTab();
+      this.modalEdit = true;
+    },
     handleModalAdd(isShow) {
       // 先清除对象
       this.resetFields();
       // 当展示的是添加系统优惠券
-      if (isShow && this.tempModalType == 'addTemplate') {
+      if (isShow && this.tempModalType === 'addTemplate') {
         this.addRelationDetail.couponScope = 'SMALL';
         this.addRelationDetail.useLimitType = 'SMALL_ALL';
         this.addRelationDetail.couponType = 'FREIGHT_COUPON';
@@ -1344,44 +1355,6 @@ export default {
       this.addRelationDetail = _.cloneDeep(relationDetail);
       // this.$refs.uploadMain.clearFileList();
       // this.uploadListMain = [];
-    },
-    handleEdit(params) {
-      this.tempModalType = this.modalType.edit;
-      this.addRelationDetail = _.cloneDeep(params.row);
-      this.replaceTextByTab();
-      this.modalEdit = true;
-    },
-    getTableData() {
-      getSvipGiftPages(this.searchRowData)
-        .then(res => {
-          this.tableData = res.rows;
-          this.total = res.total;
-          this.loading = false;
-          this.searchLoading = false;
-          this.clearSearchLoading = false;
-        })
-        .catch(error => {
-          console.log(error);
-          this.loading = false;
-          this.searchLoading = false;
-          this.clearSearchLoading = false;
-        });
-    },
-    getTemplateTableData() {
-      getCouponTemplatePages(this.searchTemplateRowData)
-        .then(res => {
-          this.couponTemplateData = res.rows;
-          this.couponTemplateTotal = res.total;
-          this.loading = false;
-          this.searchLoading = false;
-          this.clearSearchLoading = false;
-        })
-        .catch(error => {
-          console.log(error);
-          this.loading = false;
-          this.searchLoading = false;
-          this.clearSearchLoading = false;
-        });
     },
     changeProductPage(page) {
       this.searchTemplateRowData.page = page;
@@ -1403,7 +1376,6 @@ export default {
       this.handleTemplateSearch();
     },
     editSvipGift() {
-      // 编辑状态
       this.tempTableLoading = true;
       editSvipGift(this.addRelationDetail)
         .then(res => {
@@ -1478,7 +1450,7 @@ export default {
     },
     handleTemplateEdit() {
       const _this = this;
-      if (this.addRelationDetail.couponName == '') {
+      if (this.addRelationDetail.couponName === '') {
         this.$Message.error('请先关联一张优惠券模板!');
         return false;
       }
@@ -1486,7 +1458,7 @@ export default {
         if (valid) {
           _this.extraValidator();
           _this.replaceTextByTag();
-          if (this.tempModalType === this.modalType.edit) {
+          if (this.isEdit) {
             _this.editSvipGift();
           }
         } else {
@@ -1496,7 +1468,7 @@ export default {
     },
     handleTemplateAdd() {
       const _this = this;
-      if (this.addRelationDetail.couponName == '') {
+      if (this.addRelationDetail.couponName === '') {
         this.$Message.error('请先关联一张优惠券模板!');
         return false;
       }
@@ -1532,12 +1504,11 @@ export default {
       this.addRelationDetail.source = 'SMALL';
       createSvipGift(this.addRelationDetail)
         .then(res => {
-          this.modalViewLoading = false;
           this.modalAdd = false;
           this.$Message.success('创建成功!');
           this.getTableData();
         })
-        .catch(() => {
+        .finally(() => {
           this.modalViewLoading = false;
         });
     },
@@ -1545,17 +1516,14 @@ export default {
       this.modalViewLoading = true;
       createSvipGift(this.addRelationDetail)
         .then(res => {
-          this.modalViewLoading = false;
           this.modalEdit = false;
           this.$Message.success('创建成功!');
           this.getTableData();
         })
-        .catch(() => {
+        .finally(() => {
           this.modalViewLoading = false;
-          this.modalEdit = false;
         });
     },
-
     addCouponTemplate() {
       this.getTemplateTableData();
       this.tempModalType = 'addTemplate';
@@ -1582,7 +1550,7 @@ export default {
         .then(res => {
           const totalPage = Math.ceil(this.total / this.searchRowData.pageSize);
           if (
-            this.tableData.length == this.tableDataSelected.length &&
+            this.tableData.length === this.tableDataSelected.length &&
             this.searchRowData.page === totalPage &&
             this.searchRowData.page !== 1
           ) {

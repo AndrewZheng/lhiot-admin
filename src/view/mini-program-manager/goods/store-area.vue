@@ -136,7 +136,7 @@
         <Button @click="handleEditClose">
           关闭
         </Button>
-        <Button :loading="modalViewLoading" type="primary" @click="handleSubmit('editForm')">
+        <Button :loading="modalEditLoading" type="primary" @click="handleSubmit">
           确定
         </Button>
       </div>
@@ -156,9 +156,7 @@ import {
   createStoreArea
 } from '@/api/mini-program';
 import uploadMixin from '@/mixins/uploadMixin';
-import deleteMixin from '@/mixins/deleteMixin.js';
 import tableMixin from '@/mixins/tableMixin.js';
-import searchMixin from '@/mixins/searchMixin.js';
 
 const storeArea = {
   cityCode: '', // 默认长沙
@@ -192,15 +190,10 @@ export default {
     Tables,
     IViewUpload
   },
-  mixins: [uploadMixin, deleteMixin, tableMixin, searchMixin],
+  mixins: [uploadMixin, tableMixin],
   data() {
     return {
-      createLoading: false,
-      modalViewLoading: false,
       cityList: [],
-      searchCityRowData: _.cloneDeep(cityRowData),
-      searchRowData: _.cloneDeep(rowData),
-      storeArea: _.cloneDeep(storeArea),
       columns: [
         {
           type: 'selection',
@@ -270,7 +263,10 @@ export default {
         ],
         cityCode: [{ required: true, message: '请选择所属城市' }],
         areaName: [{ required: true, message: '请输入区域名称' }]
-      }
+      },
+      searchCityRowData: _.cloneDeep(cityRowData),
+      searchRowData: _.cloneDeep(rowData),
+      storeArea: _.cloneDeep(storeArea)
     };
   },
   mounted() {
@@ -317,14 +313,12 @@ export default {
       this.storeArea = _.cloneDeep(params.row);
       this.modalEdit = true;
     },
-    handleSubmit(name) {
-      this.$refs[name].validate((valid) => {
+    handleSubmit() {
+      this.$refs.editForm.validate((valid) => {
         if (valid) {
-          if (this.tempModalType === this.modalType.create) {
-            // 添加状态
+          if (this.isCreate) {
             this.createStoreArea();
-          } else if (this.tempModalType === this.modalType.edit) {
-            // 编辑状态
+          } else if (this.isEdit) {
             this.editStoreArea();
           }
         } else {
@@ -333,27 +327,27 @@ export default {
       });
     },
     createStoreArea() {
-      this.modalViewLoading = true;
+      this.modalEditLoading = true;
       createStoreArea(this.storeArea)
         .then((res) => {
+          this.modalEdit = false;
           this.$Message.success('创建成功!');
           this.getTableData();
         })
         .finally(() => {
-          this.modalViewLoading = false;
-          this.modalEdit = false;
+          this.modalEditLoading = false;
         });
     },
     editStoreArea() {
-      this.modalViewLoading = true;
+      this.modalEditLoading = true;
       editStoreArea(this.storeArea)
         .then((res) => {
+          this.modalEdit = false;
           this.$Message.success('修改成功!');
           this.getTableData();
         })
         .finally(() => {
-          this.modalEdit = false;
-          this.modalViewLoading = false;
+          this.modalEditLoading = false;
         });
     },
     addStoreArea() {
@@ -364,19 +358,17 @@ export default {
       }
       this.modalEdit = true;
     },
-    // 删除
     handleDelete(params) {
       this.deleteTable(params.row.id);
     },
     deleteTable(ids) {
-      this.loading = true;
       deleteStoreArea({
         ids
       })
         .then((res) => {
           const totalPage = Math.ceil(this.total / this.searchRowData.pageSize);
           if (
-            this.tableData.length == this.tableDataSelected.length &&
+            this.tableData.length === this.tableDataSelected.length &&
             this.searchRowData.page === totalPage &&
             this.searchRowData.page !== 1
           ) {
@@ -385,10 +377,6 @@ export default {
           this.tableDataSelected = [];
           this.$Message.success('删除成功!');
           this.getTableData();
-        })
-        .catch((err) => {
-          console.log(err);
-          this.loading = false;
         });
     }
   }

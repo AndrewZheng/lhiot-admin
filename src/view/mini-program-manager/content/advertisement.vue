@@ -14,7 +14,7 @@
         search-place="top"
         @on-view="handleView"
         @on-edit="handleEdit"
-        @custom-on-sale="onOff"
+        @custom-on-sale="handleSwitch"
         @on-delete="handleDelete"
         @on-select-all="onSelectionAll"
         @on-selection-change="onSelectionChange"
@@ -37,7 +37,7 @@
           >
             <Option
               v-for="(item,index) in advertisementList"
-              :key="`search-col-${index}`"
+              :key="`adv-${index}`"
               :value="item.id"
               class="pt5 pb5 pl15"
             >
@@ -53,7 +53,7 @@
           >
             <Option
               v-for="(item,index) in status"
-              :key="`search-col-${index}`"
+              :key="`status-${index}`"
               :value="item.value"
               class="pt5 pb5 pl15"
             >
@@ -79,7 +79,7 @@
           </Button>
         </div>
         <div slot="operations">
-          <Button v-waves type="success" class="mr5" @click="addChildren">
+          <Button v-waves type="success" class="mr5" @click="handleCreate">
             <Icon type="md-add" />添加
           </Button>
           <Poptip
@@ -256,12 +256,12 @@
     <Modal v-model="modalEdit" :width="750" :mask-closable="false">
       <p slot="header">
         <span>{{
-          tempModalType === modalType.edit ? "修改广告" : "创建广告"
+          isEdit ? "修改广告" : "创建广告"
         }}</span>
       </p>
       <div class="modal-content">
         <Form
-          ref="modalEdit"
+          ref="editForm"
           :model="advertisementDetail"
           :rules="ruleInline"
           :label-width="100"
@@ -276,7 +276,7 @@
                 >
                   <Option
                     v-for="(item,index) in advertisementList"
-                    :key="`search-col-${index}`"
+                    :key="`modal-adv-${index}`"
                     :value="item.id"
                     class="pt5 pb5 pl15"
                   >
@@ -393,7 +393,7 @@
                 <Select
                   v-model="advertisementDetail.status"
                   style="width: 200px"
-                  @on-change="advertisementDetailStatusChange"
+                  @on-change="advDetailStatusChange"
                 >
                   <Option
                     v-for="(item, index) in status"
@@ -424,7 +424,7 @@
                 <Select
                   v-model="advertisementDetail.linkType"
                   style="width: 200px"
-                  @on-change="advertiseLinkTypeChange"
+                  @on-change="advLinkTypeChange"
                 >
                   <Option
                     v-for="(item, index) in linkType"
@@ -524,7 +524,7 @@
         <Button
           :loading="modalViewLoading"
           type="primary"
-          @click="handleSubmit('modalEdit')"
+          @click="handleSubmit"
         >
           确定
         </Button>
@@ -608,7 +608,6 @@
 
 <script type="text/ecmascript-6">
 import Tables from '_c/tables';
-import _ from 'lodash';
 import {
   getAdvertisementPositionPages,
   createAdvertisement,
@@ -616,12 +615,9 @@ import {
   editAdvertisement,
   getAdvertisementPages,
   getAdvertisement,
-  getProductStandardsPages,
-  deletePicture
+  getProductStandardsPages
 } from '@/api/mini-program';
-import deleteMixin from '@/mixins/deleteMixin.js';
 import tableMixin from '@/mixins/tableMixin.js';
-import searchMixin from '@/mixins/searchMixin.js';
 import uploadMixin from '@/mixins/uploadMixin';
 import IViewUpload from '_c/iview-upload';
 import { compareData } from '@/libs/util';
@@ -653,6 +649,7 @@ const advertisementDetail = {
   validityPeriod: '',
   advertisementRelationText: ''
 };
+
 const roleRowData = {
   applicationType: null,
   advertisementName: null,
@@ -677,35 +674,24 @@ export default {
     Tables,
     IViewUpload
   },
-  mixins: [deleteMixin, tableMixin, searchMixin, uploadMixin],
+  mixins: [tableMixin, uploadMixin],
   data() {
     return {
-      modalViewLoading: false,
+      oldPicture: [],
+      newPicture: [],
+      save: [],
+      defaultListMain: [],
+      uploadListMain: [],
+      advertisementList: [],
+      tempColumns: [],
+      tempModalTableData: [],
+      relationTypeKeys: [],
       searchModalTableLoading: false,
       relationTargetShow: false,
       selectDisable: true,
-      advertisementList: [],
-      ruleInline: {
-        advertisementName: [{ required: true, message: '请输入广告名称' }],
-        contentDesc: [{ required: true, message: '请填写广告内容描述' }],
-        advertiseType: [{ required: true, message: '请选择广告类型' }],
-        status: [{ required: true, message: '请选择广告状态' }],
-        linkType: [{ required: true, message: '请选择链接类型' }],
-        advertisementRelation: [{ required: true, message: '请填写链接目标' }],
-        positionId: [{ required: true, message: '请选择广告位置' }],
-        rankNo: [
-          { required: true, message: '请输入序号' },
-          {
-            validator(rule, value, callback, source, options) {
-              const errors = [];
-              if (!/^[0-9]\d*$/.test(value)) {
-                errors.push(new Error('必须为整数'));
-              }
-              callback(errors);
-            }
-          }
-        ]
-      },
+      relationTotal: 0,
+      tempContent: null,
+      tempImage: null,
       advertiseType: [
         { value: 'IMAGE', label: '图片广告' },
         { value: 'TEXT', label: '文字广告' }
@@ -739,15 +725,33 @@ export default {
         { value: linkType.INTERNALLINK, label: '内部链接' },
         { value: linkType.TABLINK, label: '底部导航' }
       ],
-      tempColumns: [],
       linkTypeEnum,
-      tempModalTableData: [],
-      relationTypeKeys: [],
       status: [
         { label: '有效', value: 'VALID' },
         { label: '无效', value: 'INVALID' }
       ],
       validityTimeList: [{ label: '定时生效', value: 'OFF' }],
+      ruleInline: {
+        advertisementName: [{ required: true, message: '请输入广告名称' }],
+        contentDesc: [{ required: true, message: '请填写广告内容描述' }],
+        advertiseType: [{ required: true, message: '请选择广告类型' }],
+        status: [{ required: true, message: '请选择广告状态' }],
+        linkType: [{ required: true, message: '请选择链接类型' }],
+        advertisementRelation: [{ required: true, message: '请填写链接目标' }],
+        positionId: [{ required: true, message: '请选择广告位置' }],
+        rankNo: [
+          { required: true, message: '请输入序号' },
+          {
+            validator(rule, value, callback, source, options) {
+              const errors = [];
+              if (!/^[0-9]\d*$/.test(value)) {
+                errors.push(new Error('必须为整数'));
+              }
+              callback(errors);
+            }
+          }
+        ]
+      },
       columns: [
         {
           title: 'ID',
@@ -875,17 +879,9 @@ export default {
           options: ['customOnSale', 'view', 'edit', 'delete']
         }
       ],
-      defaultListMain: [],
-      uploadListMain: [],
       searchRowData: _.cloneDeep(roleRowData),
       advertisementDetail: _.cloneDeep(advertisementDetail),
-      searchRelationRowData: _.cloneDeep(relationRowData),
-      tempContent: null,
-      tempImage: null,
-      relationTotal: 0,
-      oldPicture: [],
-      newPicture: [],
-      save: []
+      searchRelationRowData: _.cloneDeep(relationRowData)
     };
   },
   computed: {
@@ -928,76 +924,106 @@ export default {
     }
   },
   created() {
-    getAdvertisementPositionPages({
-      page: 0,
-      rows: 0
-    }).then((res) => {
-      this.selectDisable = false;
-      this.advertisementList = res.rows;
-      this.getTableData();
-    });
+    this.getAdvPositionPages();
   },
   methods: {
-    advertiseTypeChange(value) {
-      if (value === 'TEXT') {
-        if (this.$refs.uploadMain) {
-          this.$refs.uploadMain.clearFileList();
-        }
-        this.uploadListMain = [];
-      } else if (value === 'IMAGE') {
-        if (this.tempImage != null) {
-          const map = { status: 'finished', url: 'url' };
-          const mainImgArr = [];
-          map.url = this.tempImage;
-          mainImgArr.push(map);
-          if (this.$refs.uploadMain) {
-            this.$refs.uploadMain.setDefaultFileList(mainImgArr);
-          }
-          this.uploadListMain = mainImgArr;
-        } else {
-          if (this.$refs.uploadMain) {
-            this.$refs.uploadMain.clearFileList();
-          }
-          this.uploadListMain = [];
-        }
-        this.advertisementDetail.content = this.tempImage;
+    resetFields() {
+      this.tempImage = null;
+      this.$refs.editForm.resetFields();
+      if (this.$refs.uploadMain) { this.$refs.uploadMain.clearFileList(); }
+      this.uploadListMain = [];
+      this.advertisementDetail = _.cloneDeep(advertisementDetail);
+    },
+    resetSearchRowData() {
+      this.searchRowData = _.cloneDeep(roleRowData);
+    },
+    getAdvPositionPages() {
+      getAdvertisementPositionPages({
+        page: 0,
+        rows: 0
+      }).then((res) => {
+        this.selectDisable = false;
+        this.advertisementList = res.rows;
+        this.getTableData();
+      });
+    },
+    getTableData() {
+      this.loading = true;
+      this.searchRowData.applicationType = this.applicationType;
+      getAdvertisementPages(this.searchRowData)
+        .then((res) => {
+          this.tableData = res.rows;
+          this.total = res.total;
+        }).finally(() => {
+          this.loading = false;
+          this.searchLoading = false;
+          this.clearSearchLoading = false;
+        });
+    },
+    getRelationTable() {
+      this.searchModalTableLoading = true;
+      const tempObj = this.linkType.find((item) => {
+        return item.value === this.advertisementDetail.linkType;
+      });
+      if (tempObj) {
+        this.tempColumns = tempObj.columns;
+        tempObj.api(this.searchRelationRowData).then((res) => {
+          this.searchModalTableLoading = false;
+          this.relationTargetShow = true;
+          this.tempModalTableData = res.rows;
+          this.relationTotal = res.total;
+        });
       }
     },
-    deleteTable(ids) {
+    handleSwitch(params) {
+      this.advertisementDetail = _.cloneDeep(params.row);
+      this.advertisementDetail.status = params.row.status === 'VALID' ? 'INVALID' : 'VALID';
+      this.editTableRow();
+    },
+    handleView(params) {
+      this.tempModalType = this.modalType.view;
+      this.advertisementDetail = params.row;
+      this.modalView = true;
+    },
+    handleCreate() {
+      this.resetFields();
+      this.tempModalType = this.modalType.create;
+      this.modalEdit = true;
+    },
+    handleEdit(params) {
+      this.save = [];
+      this.save.push(params.row.imageUrl);
+      this.$refs.editForm.resetFields();
+      this.tempImage = null;
       this.loading = true;
-      deleteAdvertisement({
-        ids
-      })
+      getAdvertisement({ id: params.row.id, flag: 'yes' })
         .then((res) => {
-          const totalPage = Math.ceil(this.total / this.searchRowData.pageSize);
+          this.advertisementDetail = res;
+          this.setDefaultUploadList(this.advertisementDetail);
           if (
-            this.tableData.length === this.tableDataSelected.length &&
-            this.searchRowData.page === totalPage &&
-            this.searchRowData.page !== 1
+            !this.advertisementDetail.invalidTime &&
+            !this.advertisementDetail.validTime
           ) {
-            this.searchRowData.page -= 1;
+            this.advertisementDetail.isPermanent = 'ON';
+          } else {
+            this.advertisementDetail.isPermanent = 'OFF';
           }
-          this.tableDataSelected = [];
-          this.getTableData();
+          this.advertisementDetail.advertiseType = 'IMAGE';
+          this.loading = false;
+          this.tempModalType = this.modalType.edit;
+          this.modalEdit = true;
         })
         .catch(() => {
           this.loading = false;
         });
     },
-    startTimeChange(value, date) {
-      this.advertisementDetail.validTime = value;
+    handleEditClose() {
+      this.oldPicture = [];
+      this.newPicture = [];
+      this.modalEdit = false;
     },
-    endTimeChange(value, date) {
-      this.advertisementDetail.invalidTime = value;
-    },
-    handleSubmit(name) {
-      // if (this.oldPicture.length > 0) {
-      //   const urls = {
-      //     urls: this.oldPicture
-      //   };
-      //   this.deletePicture(urls);
-      // }
-      this.$refs[name].validate((valid) => {
+    handleSubmit() {
+      this.$refs.editForm.validate((valid) => {
         if (valid) {
           if (this.advertisementDetail.isPermanent === 'OFF') {
             if (this.advertisementDetail.validTime === '') {
@@ -1025,9 +1051,9 @@ export default {
               return;
             }
           }
-          if (this.tempModalType === this.modalType.create) {
+          if (this.isCreate) {
             this.createTableRow();
-          } else if (this.tempModalType === this.modalType.edit) {
+          } else if (this.isEdit) {
             this.editTableRow();
           }
         } else {
@@ -1035,44 +1061,75 @@ export default {
         }
       });
     },
-    handleEditClose() {
-      // if (this.newPicture.length > 0) {
-      //   const urls = {
-      //     urls: this.newPicture
-      //   };
-      //   this.deletePicture(urls);
-      // }
-      this.oldPicture = [];
-      this.newPicture = [];
-      this.modalEdit = false;
-    },
-    // deletePicture(urls) {
-    //   deletePicture({
-    //     urls
-    //   })
-    //     .then(res => {})
-    //     .catch(() => {});
-    // },
-    editTableRow() {
-      this.modalViewLoading = true;
-      editAdvertisement({
-        ...this.advertisementDetail
-      }).then((res) => {
-        this.resetFields();
-        this.modalEdit = false;
-        this.modalViewLoading = false;
-        this.getTableData();
-      });
-    },
     createTableRow() {
       this.modalViewLoading = true;
-      createAdvertisement(this.advertisementDetail).then((res) => {
-        this.modalViewLoading = false;
-        this.modalEdit = false;
-        this.$Message.success('创建成功!');
-        this.resetFields();
-        this.getTableData();
-      });
+      createAdvertisement(this.advertisementDetail)
+        .then((res) => {
+          this.modalEdit = false;
+          this.$Message.success('创建成功!');
+          this.getTableData();
+        }).finally(() => {
+          this.modalViewLoading = false;
+        });
+    },
+    editTableRow() {
+      this.modalViewLoading = true;
+      editAdvertisement(this.advertisementDetail)
+        .then((res) => {
+          this.modalEdit = false;
+          this.$Message.success('操作成功!');
+          this.getTableData();
+        }).finally(() => {
+          this.modalViewLoading = false;
+        });
+    },
+    deleteTable(ids) {
+      deleteAdvertisement({
+        ids
+      })
+        .then((res) => {
+          const totalPage = Math.ceil(this.total / this.searchRowData.pageSize);
+          if (
+            this.tableData.length === this.tableDataSelected.length &&
+            this.searchRowData.page === totalPage &&
+            this.searchRowData.page !== 1
+          ) {
+            this.searchRowData.page -= 1;
+          }
+          this.tableDataSelected = [];
+          this.getTableData();
+        })
+    },
+    advertiseTypeChange(value) {
+      if (value === 'TEXT') {
+        if (this.$refs.uploadMain) {
+          this.$refs.uploadMain.clearFileList();
+        }
+        this.uploadListMain = [];
+      } else if (value === 'IMAGE') {
+        if (this.tempImage != null) {
+          const map = { status: 'finished', url: 'url' };
+          const mainImgArr = [];
+          map.url = this.tempImage;
+          mainImgArr.push(map);
+          if (this.$refs.uploadMain) {
+            this.$refs.uploadMain.setDefaultFileList(mainImgArr);
+          }
+          this.uploadListMain = mainImgArr;
+        } else {
+          if (this.$refs.uploadMain) {
+            this.$refs.uploadMain.clearFileList();
+          }
+          this.uploadListMain = [];
+        }
+        this.advertisementDetail.content = this.tempImage;
+      }
+    },
+    startTimeChange(value, date) {
+      this.advertisementDetail.validTime = value;
+    },
+    endTimeChange(value, date) {
+      this.advertisementDetail.invalidTime = value;
     },
     searchAdvertisementRelation() {
       if (
@@ -1084,35 +1141,6 @@ export default {
       }
       this.getRelationTable();
     },
-    getRelationTable() {
-      this.searchModalTableLoading = true;
-      const tempObj = this.linkType.find((item) => {
-        return item.value === this.advertisementDetail.linkType;
-      });
-      if (tempObj) {
-        this.tempColumns = tempObj.columns;
-        tempObj.api(this.searchRelationRowData).then((res) => {
-          this.searchModalTableLoading = false;
-          this.relationTargetShow = true;
-          this.tempModalTableData = res.rows;
-          this.relationTotal = res.total;
-        });
-      }
-    },
-    handleRemoveMain(file) {
-      this.$refs.uploadMain.deleteFile(file);
-      this.uploadListMain = [];
-      this.advertisementDetail.imageUrl = null;
-    },
-    resetFields() {
-      this.tempImage = null;
-      this.$refs.modalEdit.resetFields();
-      if (this.$refs.uploadMain) {
-        this.$refs.uploadMain.clearFileList();
-      }
-      this.uploadListMain = [];
-      this.advertisementDetail = _.cloneDeep(advertisementDetail);
-    },
     handleSuccessMain(response, file, fileList) {
       this.uploadListMain = fileList;
       this.advertisementDetail.imageUrl = null;
@@ -1121,48 +1149,10 @@ export default {
       this.newPicture.push(fileList[0].url);
       this.oldPicture = this.save;
     },
-    addChildren() {
-      if (this.tempModalType !== this.modalType.create) {
-        this.resetFields();
-        this.tempModalType = this.modalType.create;
-      }
-      this.tempModalType = this.modalType.create;
-      this.modalEdit = true;
-    },
-    resetSearchRowData() {
-      this.searchRowData = _.cloneDeep(roleRowData);
-    },
-    handleView(params) {
-      this.tempModalType = this.modalType.view;
-      this.advertisementDetail = params.row;
-      this.modalView = true;
-    },
-    handleEdit(params) {
-      this.save = [];
-      this.save.push(params.row.imageUrl);
-      this.$refs.modalEdit.resetFields();
-      this.tempImage = null;
-      this.loading = true;
-      getAdvertisement({ id: params.row.id, flag: 'yes' })
-        .then((res) => {
-          this.advertisementDetail = res;
-          this.setDefaultUploadList(this.advertisementDetail);
-          if (
-            !this.advertisementDetail.invalidTime &&
-            !this.advertisementDetail.validTime
-          ) {
-            this.advertisementDetail.isPermanent = 'ON';
-          } else {
-            this.advertisementDetail.isPermanent = 'OFF';
-          }
-          this.advertisementDetail.advertiseType = 'IMAGE';
-          this.loading = false;
-          this.tempModalType = this.modalType.edit;
-          this.modalEdit = true;
-        })
-        .catch(() => {
-          this.loading = false;
-        });
+    handleRemoveMain(file) {
+      this.$refs.uploadMain.deleteFile(file);
+      this.uploadListMain = [];
+      this.advertisementDetail.imageUrl = null;
     },
     setDefaultUploadList(res) {
       if (res.imageUrl != null) {
@@ -1177,23 +1167,13 @@ export default {
     advertisementChange(value) {
       this.advertisementDetail.positionId = value;
     },
-    advertiseLinkTypeChange(value) {
+    advLinkTypeChange(value) {
       this.advertisementDetail.linkType = value;
     },
-    advertisementDetailStatusChange(value) {
+    advDetailStatusChange(value) {
       this.advertisementDetail.status = value;
     },
     advertiseTimeChange() {},
-    getTableData() {
-      this.searchRowData.applicationType = this.applicationType;
-      getAdvertisementPages(this.searchRowData).then((res) => {
-        this.tableData = res.rows;
-        this.total = res.total;
-        this.loading = false;
-        this.searchLoading = false;
-        this.clearSearchLoading = false;
-      });
-    },
     onRowClick(row, index) {
       if (this.advertisementDetail.linkType === linkType.GOODSINFO) {
         this.advertisementDetail.advertisementRelationText = row.productName;
@@ -1218,22 +1198,11 @@ export default {
       this.getRelationTable();
     },
     handleProductClear() {
-      // 重置数据
       this.resetSearchRowData();
       this.page = 1;
       this.pageSize = 10;
       this.clearSearchLoading = true;
       this.handleRelationSearch();
-    },
-    onOff(params) {
-      this.advertisementDetail = this._.cloneDeep(params.row);
-      if (params.row.status === 'VALID') {
-        this.advertisementDetail.status = 'INVALID';
-      } else {
-        this.advertisementDetail.status = 'VALID';
-      }
-      this.loading = true;
-      this.editTableRow();
     },
     relationTextChange(event) {
       this.advertisementDetail.advertisementRelation = event;

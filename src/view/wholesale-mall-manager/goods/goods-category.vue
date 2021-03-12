@@ -40,7 +40,7 @@
                   clearable
                 ></Input>
                 <Button
-                  :searchLoading="searchLoading"
+                  :search-loading="searchLoading"
                   class="search-btn mr5"
                   type="primary"
                   @click="handleSearch"
@@ -117,7 +117,7 @@
     <Modal v-model="modalEdit" :mask-closable="false">
       <p slot="header">
         <i-col>{{
-          tempModalType === modalType.edit ? "修改商品分类" : "创建商品分类"
+          isEdit ? "修改商品分类" : "创建商品分类"
         }}</i-col>
       </p>
       <div class="modal-content">
@@ -164,7 +164,7 @@
             >
               <template v-if="item.status === 'finished'">
                 <div>
-                  <img :src="item.url" />
+                  <img :src="item.url">
                   <div class="demo-upload-list-cover">
                     <Icon
                       type="ios-eye-outline"
@@ -207,58 +207,54 @@
           :loading="modalEditLoading"
           type="primary"
           @click="handleSubmit('editForm')"
-          >确定</Button
-        >
+        >确定</Button>
       </div>
     </Modal>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
-import Tables from "_c/tables";
-import CommonIcon from "_c/common-icon";
-import IViewUpload from "_c/iview-upload";
+import Tables from '_c/tables';
+import CommonIcon from '_c/common-icon';
+import IViewUpload from '_c/iview-upload';
 
 import {
   createProductCategories,
   delProductCategories,
   getProductCategoriesPages,
   getProductCategoriesTree,
-  editProductCategories,
-} from "@/api/wholesale";
-import { buildMenu, convertTree } from "@/libs/util";
-
-import uploadMixin from "@/mixins/uploadMixin";
-import tableMixin from "@/mixins/tableMixin.js";
-import searchMixin from "@/mixins/searchMixin.js";
-import deleteMixin from "@/mixins/deleteMixin.js";
+  editProductCategories
+} from '@/api/wholesale';
+import { buildMenu, convertTree } from '@/libs/util';
+import uploadMixin from '@/mixins/uploadMixin';
+import tableMixin from '@/mixins/tableMixin.js';
 
 const currentCategory = {
   id: 0,
   parentId: 0,
-  categoryCode: "",
-  categoryName: "",
-  image: "",
+  categoryCode: '',
+  categoryName: '',
+  image: '',
   levels: 0,
-  parentCategoryCode: "",
-  parentCategoryName: "",
-  rank: 0,
+  parentCategoryCode: '',
+  parentCategoryName: '',
+  rank: 0
 };
 
 const roleRowData = {
   parentId: 0,
-  categoryName: "",
+  categoryName: '',
   page: 1,
-  rows: 20,
+  rows: 20
 };
 
 export default {
   components: {
     Tables,
     IViewUpload,
-    CommonIcon,
+    CommonIcon
   },
-  mixins: [tableMixin, searchMixin, deleteMixin, uploadMixin],
+  mixins: [tableMixin, uploadMixin],
   data() {
     return {
       menuData: [],
@@ -270,50 +266,50 @@ export default {
       modalViewLoading: false,
       modalEditLoading: false,
       clearSearchLoading: false,
-      currentParentName: "",
+      currentParentName: '',
       currentParentId: 0,
       currentCategory: _.cloneDeep(currentCategory),
       parentCategory: _.cloneDeep(currentCategory),
       searchRowData: _.cloneDeep(roleRowData),
       ruleInline: {
-        categoryName: { required: true, message: "请填写单位名称" },
+        categoryName: { required: true, message: '请填写单位名称' }
       },
       columns: [
         {
-          type: "selection",
-          key: "",
+          type: 'selection',
+          key: '',
           width: 60,
-          align: "center",
+          align: 'center'
         },
         {
-          title: "商品分类ID",
-          key: "id",
+          title: '商品分类ID',
+          key: 'id',
           sortable: true,
-          align: "center",
-          minWidth: 150,
+          align: 'center',
+          minWidth: 150
         },
         {
-          title: "分类名",
-          key: "categoryName",
+          title: '分类名',
+          key: 'categoryName',
           sortable: true,
-          align: "center",
-          minWidth: 150,
+          align: 'center',
+          minWidth: 150
         },
         {
-          title: "排序",
-          key: "rank",
+          title: '排序',
+          key: 'rank',
           sortable: true,
-          align: "center",
-          minWidth: 40,
+          align: 'center',
+          minWidth: 40
         },
         {
-          title: "操作",
-          align: "center",
-          key: "handle",
+          title: '操作',
+          align: 'center',
+          key: 'handle',
           minWidth: 150,
-          options: ["edit", "delete"],
-        },
-      ],
+          options: ['edit', 'delete']
+        }
+      ]
     };
   },
   created() {
@@ -326,8 +322,8 @@ export default {
         if (res && res.length > 0) {
           const menuList = buildMenu(res);
           const map = {
-            title: "title",
-            children: "children",
+            title: 'title',
+            children: 'children'
           };
           this.menuData = convertTree(menuList, map, true);
           if (this.menuData.length > 0) {
@@ -351,7 +347,7 @@ export default {
     createSonRow() {
       this.addSon = true;
       if (!this.parentCategory.id) {
-        this.$Message.warning("请从左侧选择一个父分类");
+        this.$Message.warning('请从左侧选择一个父分类');
         return;
       }
       this.resetRowData();
@@ -370,8 +366,8 @@ export default {
         this.currentCategory = _.cloneDeep(currentCategory);
       }
       this.currentCategory.parentId = 0;
-      this.currentCategory.parentCategoryName = "父级分类";
-      this.parentCategory.categoryName = "父级分类";
+      this.currentCategory.parentCategoryName = '父级分类';
+      this.parentCategory.categoryName = '父级分类';
       this.tempModalType = this.modalType.create;
       this.modalEdit = true;
     },
@@ -402,7 +398,7 @@ export default {
             this.editProductCategories();
           }
         } else {
-          this.$Message.error("请完善信息!");
+          this.$Message.error('请完善信息!');
         }
       });
     },
@@ -428,7 +424,7 @@ export default {
     },
     handleBack() {
       this.parentCategory.id = 0;
-      this.parentCategory.categoryName = "父级分类";
+      this.parentCategory.categoryName = '父级分类';
       this.clearSearchLoading = true;
       this.searchRowData = _.cloneDeep(roleRowData);
       this.initMenuList();
@@ -437,7 +433,7 @@ export default {
     deleteTable(ids) {
       this.loading = true;
       delProductCategories({
-        ids,
+        ids
       })
         .then((res) => {
           const totalPage = Math.ceil(this.total / this.pageSize);
@@ -458,7 +454,7 @@ export default {
     // 设置编辑商品的图片列表
     setDefaultUploadList(res) {
       if (res.image != null) {
-        const map = { status: "finished", url: "url" };
+        const map = { status: 'finished', url: 'url' };
         const mainImgArr = [];
         map.url = res.image;
         mainImgArr.push(map);
@@ -468,27 +464,27 @@ export default {
     },
     handleRemoveMain(file) {
       this.$refs.uploadMain.deleteFile(file);
-      this.currentCategory.image = "";
+      this.currentCategory.image = '';
     },
     // 商品主图
     handleSuccessMain(response, file, fileList) {
       this.uploadListMain = fileList;
-      this.currentCategory.image = "";
+      this.currentCategory.image = '';
       this.currentCategory.image = fileList[0].url;
     },
     renderContent(h, { root, node, data }) {
-      if (data.type == "PARENT") {
+      if (data.type == 'PARENT') {
         return (
           <div
             style={{
-              display: "inline-block",
-              width: "100%",
-              fontSize: "14px",
-              cursor: "pointer",
+              display: 'inline-block',
+              width: '100%',
+              fontSize: '14px',
+              cursor: 'pointer'
             }}
           >
             <span>
-              <CommonIcon type="ios-folder" class="mr10" />
+              <CommonIcon type='ios-folder' class='mr10' />
             </span>
             <span onClick={() => this.handleClick({ root, node, data })}>
               {data.title}
@@ -499,14 +495,14 @@ export default {
         return (
           <div
             style={{
-              display: "inline-block",
-              width: "100%",
-              fontSize: "14px",
-              cursor: "pointer",
+              display: 'inline-block',
+              width: '100%',
+              fontSize: '14px',
+              cursor: 'pointer'
             }}
           >
             <span>
-              <CommonIcon type="ios-paper" class="mr10" />
+              <CommonIcon type='ios-paper' class='mr10' />
             </span>
             <span>{data.title}</span>
           </div>
@@ -516,17 +512,17 @@ export default {
     handleClick({ root, node, data }) {
       this.loading = true;
       // 递归展开当前节点
-      if (typeof data.expand === "undefined") {
-        this.$set(data, "expend", false);
+      if (typeof data.expand === 'undefined') {
+        this.$set(data, 'expend', false);
         if (data.children) {
           this.expandChildren(data.children);
         }
       }
 
-      if (typeof data.selected === "undefined") {
-        this.$set(data, "selected", true);
+      if (typeof data.selected === 'undefined') {
+        this.$set(data, 'selected', true);
       } else {
-        this.$set(data, "selected", !data.selected);
+        this.$set(data, 'selected', !data.selected);
       }
       this.parentCategory.id = data.id;
       this.parentCategory.categoryName = data.title;
@@ -534,8 +530,8 @@ export default {
       this.searchRowData.parentId = data.id;
       // 获取新数据
       this.getTableData();
-    },
-  },
+    }
+  }
 };
 </script>
 

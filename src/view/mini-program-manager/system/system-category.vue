@@ -30,8 +30,8 @@
             >
               <Option
                 v-for="item in parentInfoList"
-                :value="item.id"
                 :key="`search-col-${item.value}`"
+                :value="item.id"
                 class="ptb2-5"
               >{{ item.categoriesName }}</Option>
             </Select>
@@ -135,31 +135,31 @@
         <Form ref="modalEdit" :model="systemCategoryDetail" :rules="ruleInline" :label-width="80">
           <Row>
             <Col span="12">
-              <FormItem label="父级分类:" prop="parentId">
-                <Select v-model="systemCategoryDetail.parentId" clearable>
-                  <Option
-                    v-for="(item,index) in parentInfoList"
-                    :value="item.id"
-                    :key="index"
-                    class="ptb2-5"
-                    style="padding-left: 5px;width: 100%"
-                  >{{ item.categoriesName }}</Option>
-                </Select>
-              </FormItem>
+            <FormItem label="父级分类:" prop="parentId">
+              <Select v-model="systemCategoryDetail.parentId" clearable>
+                <Option
+                  v-for="(item,index) in parentInfoList"
+                  :key="index"
+                  :value="item.id"
+                  class="ptb2-5"
+                  style="padding-left: 5px;width: 100%"
+                >{{ item.categoriesName }}</Option>
+              </Select>
+            </FormItem>
             </Col>
           </Row>
           <Row>
             <Col span="12">
-              <FormItem label="分类名称:" prop="categoriesName">
-                <Input v-model="systemCategoryDetail.categoriesName" placeholder="分类名称"></Input>
-              </FormItem>
+            <FormItem label="分类名称:" prop="categoriesName">
+              <Input v-model="systemCategoryDetail.categoriesName" placeholder="分类名称"></Input>
+            </FormItem>
             </Col>
           </Row>
           <Row>
             <Col span="12">
-              <FormItem label="分类code:" prop="categoriesCode">
-                <Input v-model="systemCategoryDetail.categoriesCode" placeholder="分类code"></Input>
-              </FormItem>
+            <FormItem label="分类code:" prop="categoriesCode">
+              <Input v-model="systemCategoryDetail.categoriesCode" placeholder="分类code"></Input>
+            </FormItem>
             </Col>
           </Row>
         </Form>
@@ -173,8 +173,7 @@
 </template>
 
 <script type="text/ecmascript-6">
-import Tables from "_c/tables";
-import _ from "lodash";
+import Tables from '_c/tables';
 import {
   deleteSystemSettingCategory,
   getSystemSettingCategoryPages,
@@ -182,94 +181,89 @@ import {
   createSystemSettingCategory,
   getSystemSettingCategoryTree,
   getParentInfos
-} from "@/api/mini-program";
-import uploadMixin from "@/mixins/uploadMixin";
-import deleteMixin from "@/mixins/deleteMixin.js";
-import tableMixin from "@/mixins/tableMixin.js";
-import searchMixin from "@/mixins/searchMixin.js";
+} from '@/api/mini-program';
+import uploadMixin from '@/mixins/uploadMixin';
+import tableMixin from '@/mixins/tableMixin.js';
 import {
   buildMenu,
   convertTreeCategory,
-  convertTree,
   setSmallGoodsStandard
-} from "@/libs/util";
+} from '@/libs/util';
 
 const systemCategoryDetail = {
   id: 0,
   parentId: 0,
-  categoriesName: ""
+  categoriesName: ''
 };
 
 const roleRowData = {
   page: 1,
   rows: 10,
   parentId: 2,
-  categoriesName: ""
+  categoriesName: ''
 };
 
 export default {
   components: {
     Tables
   },
-  mixins: [uploadMixin, deleteMixin, tableMixin, searchMixin],
+  mixins: [uploadMixin, tableMixin],
   data() {
     return {
-      ruleInline: {
-        // parentId: [
-        //   { required: true, message: '输入父级分类id' }
-        // ],
-        categoriesName: [{ required: true, message: "请输入分类名称" }],
-        categoriesCode: [{ required: false, message: "请输入分类名code" }]
-      },
-      columns: [
-        {
-          type: "selection",
-          width: 60,
-          align: "center",
-          fixed: "left"
-        },
-        {
-          title: "ID",
-          align: "center",
-          key: "id"
-        },
-        {
-          title: "分类code",
-          align: "center",
-          key: "categoriesCode"
-        },
-        {
-          title: "分类名称",
-          align: "center",
-          key: "categoriesName"
-        },
-        {
-          title: "父级分类名称",
-          align: "center",
-          key: "parentId",
-          render: (h, params, vm) => {
-            const { row } = params;
-            if (row.parentId === 1) {
-              return <div>{"系统级参数"}</div>;
-            } else if (row.parentId === 2) {
-              return <div>{"业务级参数"}</div>;
-            }
-            return <div>{"N/A"}</div>;
-          }
-        },
-        {
-          title: "操作",
-          align: "center",
-          key: "handle",
-          options: ["view", "edit", "delete", "settings"]
-        }
-      ],
       systemCategoryData: [],
       defaultSystemCategoryData: [41],
       systemCategoriesTreeList: [],
       parentInfoList: [],
-      createLoading: false,
-      modalViewLoading: false,
+      ruleInline: {
+        // parentId: [
+        //   { required: true, message: '输入父级分类id' }
+        // ],
+        categoriesName: [{ required: true, message: '请输入分类名称' }],
+        categoriesCode: [{ required: false, message: '请输入分类名code' }]
+      },
+      columns: [
+        {
+          type: 'selection',
+          width: 60,
+          align: 'center',
+          fixed: 'left'
+        },
+        {
+          title: 'ID',
+          align: 'center',
+          key: 'id'
+        },
+        {
+          title: '分类code',
+          align: 'center',
+          key: 'categoriesCode'
+        },
+        {
+          title: '分类名称',
+          align: 'center',
+          key: 'categoriesName'
+        },
+        {
+          title: '父级分类名称',
+          align: 'center',
+          key: 'parentId',
+          render: (h, params, vm) => {
+            const { row } = params;
+            if (row.parentId === 1) {
+              return <div>{'系统级参数'}</div>;
+            } else if (row.parentId === 2) {
+              return <div>{'业务级参数'}</div>;
+            }
+            return <div>{'N/A'}</div>;
+          }
+        },
+        {
+          title: '操作',
+          align: 'center',
+          key: 'handle',
+          options: ['view', 'edit', 'delete', 'settings']
+        }
+      ],
       searchRowData: _.cloneDeep(roleRowData),
       systemCategoryDetail: _.cloneDeep(systemCategoryDetail)
     };
@@ -289,18 +283,84 @@ export default {
     resetFields() {
       this.$refs.modalEdit.resetFields();
     },
+    getTableData() {
+      getSystemSettingCategoryPages(this.searchRowData)
+        .then(res => {
+          this.tableData = res.rows;
+          this.total = res.total;
+        })
+        .finally(() => {
+          this.loading = false;
+          this.searchLoading = false;
+          this.clearSearchLoading = false;
+        });
+    },
+    getSystemSettingCategoryTree() {
+      getSystemSettingCategoryTree()
+        .then(res => {
+          if (res && res.array.length > 0) {
+            this.systemCategoriesTreeList = res.array;
+            const menuList = buildMenu(res.array);
+            const map = {
+              id: 'id',
+              title: 'title',
+              children: 'children'
+            };
+            this.systemCategoryData = convertTreeCategory(menuList, map, true);
+            this.createLoading = false;
+          }
+        })
+        .catch(() => {
+          this.createLoading = false;
+        });
+    },
+    getParentInfos() {
+      getParentInfos()
+        .then(res => {
+          this.parentInfoList = res;
+        })
+    },
+    addStore() {
+      this.resetFields();
+      this.tempModalType = this.modalType.create;
+      this.systemCategoryDetail = _.cloneDeep(systemCategoryDetail);
+      this.modalEdit = true;
+    },
+    handleView(params) {
+      this.resetFields();
+      this.tempModalType = this.modalType.view;
+      this.systemCategoryDetail = _.cloneDeep(params.row);
+      this.modalView = true;
+    },
+    handleEdit(params) {
+      this.resetFields();
+      this.tempModalType = this.modalType.edit;
+      this.systemCategoryDetail = _.cloneDeep(params.row);
+      this.modalEdit = true;
+    },
+    handleSetting(params) {
+      var rows = params.row;
+      setSmallGoodsStandard(rows);
+      this.turnToPage({
+        name: 'small-relation-system',
+        params: {
+          parentName: rows.parentName,
+          parentId: rows.parentId,
+          categoriesName: rows.categoriesName,
+          id: rows.id
+        }
+      });
+    },
     handleSubmit(name) {
       this.$refs[name].validate(valid => {
         if (valid) {
-          if (this.tempModalType === this.modalType.create) {
-            // 添加状态
+          if (this.isCreate) {
             this.createStore();
-          } else if (this.tempModalType === this.modalType.edit) {
-            // 编辑状态
+          } else if (this.isEdit) {
             this.editStore();
           }
         } else {
-          this.$Message.error("请完善信息!");
+          this.$Message.error('请完善信息!');
         }
       });
     },
@@ -310,7 +370,7 @@ export default {
         .then(res => {
           this.modalViewLoading = false;
           this.modalEdit = false;
-          this.$Message.success("创建成功!");
+          this.$Message.success('创建成功!');
           this.getTableData();
         })
         .catch(() => {
@@ -331,29 +391,14 @@ export default {
           this.modalViewLoading = false;
         });
     },
-    addStore() {
-      this.resetFields();
-      if (this.tempModalType !== this.modalType.create) {
-        this.tempModalType = this.modalType.create;
-        this.systemCategoryDetail = _.cloneDeep(systemCategoryDetail);
-      }
-      this.modalEdit = true;
-    },
-    // 删除
-    handleDelete(params) {
-      this.tableDataSelected = [];
-      this.tableDataSelected.push(params.row);
-      this.deleteTable(params.row.id);
-    },
     deleteTable(ids) {
-      this.loading = true;
       deleteSystemSettingCategory({
         ids
       })
         .then(res => {
           const totalPage = Math.ceil(this.total / this.searchRowData.pageSize);
           if (
-            this.tableData.length == this.tableDataSelected.length &&
+            this.tableData.length === this.tableDataSelected.length &&
             this.searchRowData.page === totalPage &&
             this.searchRowData.page !== 1
           ) {
@@ -361,71 +406,12 @@ export default {
           }
           this.tableDataSelected = [];
           this.getTableData();
-        })
-        .catch(err => {
-          console.log(err);
-          this.loading = false;
         });
-    },
-    handleView(params) {
-      this.resetFields();
-      this.tempModalType = this.modalType.view;
-      this.systemCategoryDetail = _.cloneDeep(params.row);
-      this.modalView = true;
-    },
-    handleEdit(params) {
-      this.resetFields();
-      this.tempModalType = this.modalType.edit;
-      this.systemCategoryDetail = _.cloneDeep(params.row);
-      this.modalEdit = true;
-    },
-    getTableData() {
-      getSystemSettingCategoryPages(this.searchRowData)
-        .then(res => {
-          this.tableData = res.rows;
-          this.total = res.total;
-          this.loading = false;
-          this.searchLoading = false;
-          this.clearSearchLoading = false;
-        })
-        .catch(error => {
-          console.log(error);
-          this.loading = false;
-          this.searchLoading = false;
-          this.clearSearchLoading = false;
-        });
-    },
-    getSystemSettingCategoryTree() {
-      getSystemSettingCategoryTree()
-        .then(res => {
-          if (res && res.array.length > 0) {
-            this.systemCategoriesTreeList = res.array;
-            const menuList = buildMenu(res.array);
-            const map = {
-              id: "id",
-              title: "title",
-              children: "children"
-            };
-            this.systemCategoryData = convertTreeCategory(menuList, map, true);
-            this.createLoading = false;
-          }
-        })
-        .catch(() => {
-          this.createLoading = false;
-        });
-    },
-    //
-    getParentInfos() {
-      getParentInfos()
-        .then(res => {
-          this.parentInfoList = res;
-        })
-        .catch(() => {});
     },
     // 设置编辑商品的图片列表
     setDefaultUploadList(res) {
       if (res.description != null) {
-        const map = { status: "finished", url: "url" };
+        const map = { status: 'finished', url: 'url' };
         const mainImgArr = [];
         map.url = res.description;
         mainImgArr.push(map);
@@ -451,19 +437,6 @@ export default {
       if (obj && obj.parentid !== 0) {
         this.findGroupId(obj.parentid);
       }
-    },
-    handleSetting(params) {
-      var rows = params.row;
-      setSmallGoodsStandard(rows);
-      this.turnToPage({
-        name: "small-relation-system",
-        params: {
-          parentName: rows.parentName,
-          parentId: rows.parentId,
-          categoriesName: rows.categoriesName,
-          id: rows.id
-        }
-      });
     }
   }
 };

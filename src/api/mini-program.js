@@ -3264,3 +3264,10 @@ export const getWechatRewardPage = (data) => {
     }
   });
 };
+//购券重发
+export const retryCoupon = (data) => {
+  return $http.request({
+    url: `/minapp/orders/buy-coupon/retry?orderId=${data}`,
+    method: 'post'
+  });
+};

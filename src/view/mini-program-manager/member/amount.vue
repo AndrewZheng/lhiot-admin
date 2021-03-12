@@ -27,7 +27,7 @@
                 <Radio label="最近30天"></Radio>
                 <Radio label="自定义时间"></Radio>
               </RadioGroup>
-              <div class="mark" v-show="mark === true">
+              <div v-show="mark === true" class="mark">
                 <DatePicker
                   v-model="searchRowData1.beginDate"
                   format="yyyy-MM-dd"
@@ -49,10 +49,10 @@
                 />
               </div>
               <Button
+                v-show="mark === true"
                 class="search-btn mr5"
                 type="primary"
                 @click="handleSearch1"
-                v-show="mark === true"
               >
                 <Icon type="md-search" />&nbsp;搜索
               </Button>
@@ -103,12 +103,11 @@
               >
                 <Option
                   v-for="(item, index) in rankType"
-                  :value="item.value"
                   :key="index"
+                  :value="item.value"
                   class="ptb2-5"
                   style="padding-left: 5px; width: 120px"
-                  >{{ item.label }}</Option
-                >
+                >{{ item.label }}</Option>
               </Select>
               <Button
                 :loading="searchLoading"
@@ -155,22 +154,16 @@
 </template>
 
 <script type="text/ecmascript-6">
-import Tables from "_c/tables";
-import _ from "lodash";
+import Tables from '_c/tables';
 import {
   userDataStatistics,
-  dataStatistics,
-  basicsDataStatistics,
-} from "@/api/mini-program";
-import uploadMixin from "@/mixins/uploadMixin";
-import deleteMixin from "@/mixins/deleteMixin.js";
-import tableMixin from "@/mixins/tableMixin.js";
-import searchMixin from "@/mixins/searchMixin.js";
+  basicsDataStatistics
+} from '@/api/mini-program';
+import uploadMixin from '@/mixins/uploadMixin';
+import tableMixin from '@/mixins/tableMixin.js';
 import {
-  fenToYuanDot2,
-  fenToYuanDot2Number,
-  yuanToFenNumber,
-} from "@/libs/util";
+  fenToYuanDot2
+} from '@/libs/util';
 
 const couponTemplateDetail = {
   //   id: 0,
@@ -187,156 +180,154 @@ const couponTemplateDetail = {
 };
 
 const roleRowData = {
-  nickName: "",
-  phone: "",
+  nickName: '',
+  phone: '',
   page: 1,
   rows: 10,
-  sidx: "all_amount",
-  sort: "desc",
+  sidx: 'all_amount',
+  sort: 'desc'
 };
 
-// 第一个tables
 const roleRowData1 = {
   beginDate: null,
-  endDate: null,
+  endDate: null
   //   dateGroup: false
 };
 
 export default {
   components: {
-    Tables,
+    Tables
   },
-  mixins: [uploadMixin, deleteMixin, tableMixin, searchMixin],
+  mixins: [uploadMixin, tableMixin],
   data() {
     return {
       mark: false,
-      button: "今日",
+      button: '今日',
       inviteData: [],
       rankType: [
         {
-          label: "奖励总金额",
-          value: "all_amount",
+          label: '奖励总金额',
+          value: 'all_amount'
         },
         {
-          label: "邀请人数",
-          value: "invite_count",
+          label: '邀请人数',
+          value: 'invite_count'
         },
         {
-          label: "待入账金额",
-          value: "wait_amount",
+          label: '待入账金额',
+          value: 'wait_amount'
         },
         {
-          label: "可提现金额",
-          value: "can_out_amount",
+          label: '可提现金额',
+          value: 'can_out_amount'
         },
         {
-          label: "已提现金额",
-          value: "all_out_amount",
-        },
+          label: '已提现金额',
+          value: 'all_out_amount'
+        }
       ],
-      // 袁木
       columns: [
         {
-          title: "用户昵称",
-          align: "center",
-          key: "nickName",
+          title: '用户昵称',
+          align: 'center',
+          key: 'nickName'
         },
         {
-          title: "手机号",
-          align: "center",
-          key: "phone",
-          width: 180,
+          title: '手机号',
+          align: 'center',
+          key: 'phone',
+          width: 180
         },
         {
-          title: "奖励总金额",
-          align: "center",
-          key: "allAmount",
+          title: '奖励总金额',
+          align: 'center',
+          key: 'allAmount',
           width: 150,
           render(h, params) {
             return <div>{fenToYuanDot2(params.row.allAmount)}</div>;
-          },
+          }
         },
         {
-          title: "邀请人数",
-          align: "center",
-          key: "inviteCount",
-          width: 150,
+          title: '邀请人数',
+          align: 'center',
+          key: 'inviteCount',
+          width: 150
         },
         {
-          title: "待入账金额",
-          align: "center",
+          title: '待入账金额',
+          align: 'center',
           width: 150,
-          key: "waitAmount",
+          key: 'waitAmount',
           render(h, params) {
             return <div>{fenToYuanDot2(params.row.waitAmount)}</div>;
-          },
+          }
         },
         {
-          title: "可提现金额",
-          align: "center",
-          key: "canOutAmount",
+          title: '可提现金额',
+          align: 'center',
+          key: 'canOutAmount',
           width: 150,
           render(h, params) {
             return <div>{fenToYuanDot2(params.row.canOutAmount)}</div>;
-          },
+          }
         },
         {
-          title: "已提现金额",
-          align: "center",
+          title: '已提现金额',
+          align: 'center',
           width: 150,
-          key: "allOutAmount",
+          key: 'allOutAmount',
           render(h, params) {
             return <div>{fenToYuanDot2(params.row.allOutAmount)}</div>;
-          },
-        },
+          }
+        }
       ],
       dataColumns: [
         {
-          title: "奖励总金额",
-          key: "allAmount",
-          align: "center",
+          title: '奖励总金额',
+          key: 'allAmount',
+          align: 'center',
           render(h, params) {
             return <div>{fenToYuanDot2(params.row.allAmount)}</div>;
-          },
+          }
         },
         {
-          title: "已提现总金额",
-          key: "outAmount",
-          align: "center",
+          title: '已提现总金额',
+          key: 'outAmount',
+          align: 'center',
           render(h, params) {
             return <div>{fenToYuanDot2(params.row.outAmount)}</div>;
-          },
+          }
         },
         {
-          title: "可提现总金额",
-          key: "canOutAmount",
-          align: "center",
+          title: '可提现总金额',
+          key: 'canOutAmount',
+          align: 'center',
           render(h, params) {
             return <div>{fenToYuanDot2(params.row.canOutAmount)}</div>;
-          },
+          }
         },
         {
-          title: "待入账总金额",
-          align: "center",
-          key: "waitAmount",
+          title: '待入账总金额',
+          align: 'center',
+          key: 'waitAmount',
           render(h, params) {
             return <div>{fenToYuanDot2(params.row.waitAmount)}</div>;
-          },
+          }
         },
         {
-          title: "参与总人数",
-          align: "center",
-          key: "joinUser",
+          title: '参与总人数',
+          align: 'center',
+          key: 'joinUser'
         },
         {
-          title: "邀请总人数",
-          align: "center",
-          key: "inviteUser",
-        },
+          title: '邀请总人数',
+          align: 'center',
+          key: 'inviteUser'
+        }
       ],
       searchRowData: _.cloneDeep(roleRowData),
       searchRowData1: _.cloneDeep(roleRowData1),
-      couponTemplateDetail: _.cloneDeep(couponTemplateDetail),
+      couponTemplateDetail: _.cloneDeep(couponTemplateDetail)
     };
   },
   computed: {},
@@ -345,7 +336,6 @@ export default {
     this.searchRowData1 = _.cloneDeep(roleRowData1);
     this.getTableData();
     this.getTableData1();
-    // this.handleSearch();
   },
   created() {},
   methods: {
@@ -354,77 +344,42 @@ export default {
       this.getTableData();
     },
     getTableData() {
+      this.loading = true;
       userDataStatistics(this.searchRowData)
         .then((res) => {
           this.tableData = res.rows;
           this.total = res.total;
-          this.loading = false;
-          this.searchLoading = false;
-          this.clearSearchLoading = false;
         })
-        .catch((error) => {
-          console.log(error);
+        .finally(() => {
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
         });
     },
     getTableData1(value) {
-      let date = new Date();
-      date.setDate(date.getDate());
-      var year = date.getFullYear();
-      var month = date.getMonth() + 1;
-      var day = date.getDate();
-      var today = `${year}-${month}-${day}`;
-      if (value === "昨日") {
-        let date = new Date();
-        date.setDate(date.getDate() - 1);
-        var year = date.getFullYear();
-        var month = date.getMonth() + 1;
-        var day = date.getDate();
-        var yesterday = `${year}-${month}-${day}`;
+      const today = this.getDateByParam(0);
+      if (value === '昨日') {
+        const yesterday = this.getDateByParam(-1);
         this.searchRowData1.beginDate = yesterday;
         this.searchRowData1.endDate = yesterday;
-      }
-      if (value === "今日") {
-        let date = new Date();
-        date.setDate(date.getDate());
-        var year = date.getFullYear();
-        var month = date.getMonth() + 1;
-        var day = date.getDate();
-        var today = `${year}-${month}-${day}`;
+      } else if (value === '今日') {
         this.searchRowData1.beginDate = today;
         this.searchRowData1.endDate = today;
-      }
-      if (value === "最近7天") {
-        let date = new Date();
-        date.setDate(date.getDate() - 7);
-        var year = date.getFullYear();
-        var month = date.getMonth() + 1;
-        var day = date.getDate();
-        var sevenDay = `${year}-${month}-${day}`;
+      } else if (value === '最近7天') {
+        const sevenDay = this.getDateByParam(-7);
         this.searchRowData1.beginDate = sevenDay;
         this.searchRowData1.endDate = today;
-      }
-      if (value === "最近30天") {
-        let date = new Date();
-        date.setDate(date.getDate() - 30);
-        var year = date.getFullYear();
-        var month = date.getMonth() + 1;
-        var day = date.getDate();
-        var toMonth = `${year}-${month}-${day}`;
+      } else if (value === '最近30天') {
+        const toMonth = this.getDateByParam(-30);
         this.searchRowData1.beginDate = toMonth;
         this.searchRowData1.endDate = today;
       }
+      this.loading = true;
       basicsDataStatistics(this.searchRowData1)
         .then((res) => {
           this.inviteData.push(res);
-          // this.total = res.total;
-          this.loading = false;
-          this.searchLoading = false;
-          this.clearSearchLoading = false;
         })
-        .catch((error) => {
+        .finally(() => {
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
@@ -436,46 +391,41 @@ export default {
       this.getTableData1();
     },
     timeChange(value) {
-      if (value === "今日") {
+      if (value === '今日') {
         this.getTableData1(value);
         this.inviteData = [];
         this.mark = false;
-      } else if (value === "昨日") {
+      } else if (value === '昨日') {
         this.mark = false;
         this.inviteData = [];
         this.getTableData1(value);
-      } else if (value === "最近7天") {
+      } else if (value === '最近7天') {
         this.mark = false;
         this.inviteData = [];
         this.getTableData1(value);
-      } else if (value === "最近30天") {
+      } else if (value === '最近30天') {
         this.mark = false;
         this.inviteData = [];
         this.getTableData1(value);
-      } else if (value === "自定义时间") {
+      } else if (value === '自定义时间') {
         this.mark = true;
-        this.searchRowData1.beginDate = "";
-        this.searchRowData1.endDate = "";
+        this.searchRowData1.beginDate = '';
+        this.searchRowData1.endDate = '';
       }
     },
     startTimeChange(value, date) {
-      this.button = "自定义时间";
+      this.button = '自定义时间';
       this.searchRowData1.beginDate = value;
     },
     endTimeChange(value, date) {
-      this.button = "自定义时间";
+      this.button = '自定义时间';
       this.searchRowData1.endDate = value;
-    },
-    handleSearch() {
-      this.searchRowData.page = 1;
-      this.searchLoading = true;
-      this.getTableData();
     },
     // 导出数据
     handleDownload() {
       // 导出不分页 按条件查出多少条导出多少条 限制每次最多5000条
       this.searchRowData.rows = this.total > 5000 ? 5000 : this.total;
-      let pageSize = this.searchRowData.page;
+      const pageSize = this.searchRowData.page;
       this.searchRowData.page = 1;
       userDataStatistics(this.searchRowData).then((res) => {
         const tableData = res.rows;
@@ -483,25 +433,24 @@ export default {
         this.searchRowData.rows = 10;
         this.searchRowData.page = pageSize;
         // 表格数据导出字段翻译
-        let _this = this;
         tableData.forEach((item) => {
           // const obj = _this.storeList.find(x => item.storeId === x.storeId);
-          item["nickName"] = item["nickName"] + "";
-          item["phone"] = item["phone"] + "";
-          item["allAmount"] = (item["allAmount"] / 100.0).toFixed(2);
-          item["inviteCount"] = item["inviteCount"] + "";
-          item["waitAmount"] = (item["waitAmount"] / 100.0).toFixed(2);
-          item["canOutAmount"] = (item["canOutAmount"] / 100.0).toFixed(2);
-          item["allOutAmount"] = (item["allOutAmount"] / 100.0).toFixed(2);
+          item['nickName'] = item['nickName'] + '';
+          item['phone'] = item['phone'] + '';
+          item['allAmount'] = (item['allAmount'] / 100.0).toFixed(2);
+          item['inviteCount'] = item['inviteCount'] + '';
+          item['waitAmount'] = (item['waitAmount'] / 100.0).toFixed(2);
+          item['canOutAmount'] = (item['canOutAmount'] / 100.0).toFixed(2);
+          item['allOutAmount'] = (item['allOutAmount'] / 100.0).toFixed(2);
         });
-        const date = this.$moment(new Date()).format("YYYYMMDDHHmmss");
+        const date = this.$moment(new Date()).format('YYYYMMDDHHmmss');
         this.$refs.tables.handleDownload({
           filename: `邀请有礼数据统计-${date}`,
-          data: tableData,
+          data: tableData
         });
       });
-    },
-  },
+    }
+  }
 };
 </script>
 <style lang="scss" scoped>

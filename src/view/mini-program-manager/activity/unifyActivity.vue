@@ -14,7 +14,7 @@
         search-place="top"
         @on-view="handleView"
         @on-edit="handleEdit"
-        @on-sale="onOff"
+        @on-sale="handleSwitch"
         @on-relevance="handleSetting"
         @on-select-all="onSelectionAll"
         @on-selection-change="onSelectionChange"
@@ -531,18 +531,10 @@ import {
   updateWollectWordRelevance
 } from '@/api/mini-program';
 import uploadMixin from '@/mixins/uploadMixin';
-import deleteMixin from '@/mixins/deleteMixin.js';
 import tableMixin from '@/mixins/tableMixin.js';
-import searchMixin from '@/mixins/searchMixin.js';
 import {
   couponStatusConvert,
-  couponTypeConvert,
-  couponScopeConvert,
-  couponUseLimitConvert,
-  userScopeConvert,
-  customPlanStatusConvert,
-  imageStatusConvert,
-  teamBuyStatusConvert
+  couponTypeConvert
 } from '@/libs/converStatus';
 import {
   couponStatusEnum,
@@ -557,16 +549,8 @@ import {
   relationStoreTypeEnum
 } from '@/libs/enumerate';
 import {
-  compareData,
-  getSmallCouponActivity,
   fenToYuanDot2,
-  fenToYuanDot2Number,
-  yuanToFenNumber,
-  replaceByTag,
-  replaceByTab,
-  HdDiscount,
-  compareCouponData,
-  secondsToDate
+  compareCouponData
 } from '@/libs/util';
 
 const activitiesDetail = {
@@ -748,32 +732,22 @@ export default {
     Tables,
     IViewUpload
   },
-  mixins: [deleteMixin, tableMixin, searchMixin, uploadMixin],
+  mixins: [tableMixin, uploadMixin],
   data() {
     return {
-      ruleInline: {
-        activityName: [{ required: true, message: '请输入活动名称' }],
-        status: [{ required: true, message: '请选择活动状态' }],
-        // banner: [{ required: true, message: "请添加活动图片" }],
-        status: [{ required: true, message: '请选择活动状态' }],
-        content: [{ required: true, message: '请输入活动规则' }],
-        startTime: [{ required: true, message: '请选择活动开始时间' }],
-        endTime: [{ required: true, message: '请选择活动结束时间' }],
-        defaultCount: [{ required: true, message: '请选输入默认次数' }],
-        shareCount: [{ required: true, message: '请选输入分享次数' }]
-      },
-      collectWordRuleInline: {
-        wordKeyName: [{ required: true, message: '请输入集字名称' }],
-        wordKeyScale: [{ required: true, message: '请输入集字发放比例' }],
-        rank: [{ required: true, message: '请添加排序' }]
-      },
       defaultListMain: [],
       uploadListMain: [],
       couponConfigManageRelations: [],
       collectWordSetting: [],
       couponTemplateData: [],
+      modalRelevance: false,
+      modalAddCoupun: false,
+      modalAddCollection: false,
+      modalRelevanceLoading: false,
+      isCreateStatus: true,
       couponTemplateTotal: 0,
-      couponStatusEnum,
+      activitySettingId: null,
+      activityIsValid: null,
       couponStatusEnum,
       couponTypeEnum,
       couponScopeEnum,
@@ -785,6 +759,21 @@ export default {
       rewardActivitySettingEnum,
       relationStoreTypeEnum,
       templateColumns: templateColumns,
+      ruleInline: {
+        activityName: [{ required: true, message: '请输入活动名称' }],
+        status: [{ required: true, message: '请选择活动状态' }],
+        // banner: [{ required: true, message: "请添加活动图片" }],
+        content: [{ required: true, message: '请输入活动规则' }],
+        startTime: [{ required: true, message: '请选择活动开始时间' }],
+        endTime: [{ required: true, message: '请选择活动结束时间' }],
+        defaultCount: [{ required: true, message: '请选输入默认次数' }],
+        shareCount: [{ required: true, message: '请选输入分享次数' }]
+      },
+      collectWordRuleInline: {
+        wordKeyName: [{ required: true, message: '请输入集字名称' }],
+        wordKeyScale: [{ required: true, message: '请输入集字发放比例' }],
+        rank: [{ required: true, message: '请添加排序' }]
+      },
       columns: [
         {
           title: '活动ID',
@@ -1094,24 +1083,14 @@ export default {
           options: ['edit', 'delete']
         }
       ],
-      createLoading: false,
-      modalViewLoading: false,
-      modalRelevance: false,
-      modalAddCoupun: false,
-      modalAddCollection: false,
-      activitySettingId: null,
-      activityIsValid: null,
-      modalRelevanceLoading: false,
-      isCreateStatus: true,
       searchRowData: _.cloneDeep(roleRowData),
       activitiesDetail: _.cloneDeep(activitiesDetail),
       searchTemplateRowData: _.cloneDeep(templateRowData),
-      activitySettingRelation: this._.cloneDeep(activitySettingRelation),
-      collectWordSettingRelation: this._.cloneDeep(collectWordSettingRelation)
+      activitySettingRelation: _.cloneDeep(activitySettingRelation),
+      collectWordSettingRelation: _.cloneDeep(collectWordSettingRelation)
     };
   },
   mounted() {
-    this.searchRowData = _.cloneDeep(roleRowData);
     this.getTableData();
   },
   created() {},
@@ -1136,10 +1115,10 @@ export default {
           extendedData.defaultCount = this.activitiesDetail.defaultCount;
           extendedData.shareCount = this.activitiesDetail.shareCount;
           this.activitiesDetail.extendedJsonStr = JSON.stringify(extendedData);
-          if (this.tempModalType === this.modalType.create) {
+          if (this.isCreate) {
             // 添加状态
             this.createUnifyActivity();
-          } else if (this.tempModalType === this.modalType.edit) {
+          } else if (this.isEdit) {
             // 编辑状态
             this.updateUnifyActivity();
           }
@@ -1152,12 +1131,11 @@ export default {
       this.modalViewLoading = true;
       createUnifyActivity(this.activitiesDetail)
         .then((res) => {
-          this.modalViewLoading = false;
           this.modalEdit = false;
           this.$Message.success('创建成功!');
           this.getTableData();
         })
-        .catch(() => {
+        .finally(() => {
           this.modalViewLoading = false;
         });
     },
@@ -1166,22 +1144,17 @@ export default {
       updateUnifyActivity(this.activitiesDetail)
         .then((res) => {
           this.modalEdit = false;
-          this.modalViewLoading = false;
           this.$Message.success('修改成功!');
           this.getTableData();
         })
-        .catch(() => {
-          this.modalEdit = false;
+        .finally(() => {
           this.modalViewLoading = false;
         });
     },
     addActivities() {
       this.resetFields();
-      if (this.tempModalType !== this.modalType.create) {
-        this.tempModalType = this.modalType.create;
-        this.activitiesDetail = _.cloneDeep(activitiesDetail);
-      }
-
+      this.tempModalType = this.modalType.create;
+      this.activitiesDetail = _.cloneDeep(activitiesDetail);
       this.modalEdit = true;
     },
     handleView(params) {
@@ -1194,10 +1167,7 @@ export default {
       this.activitiesDetail.shareCount = JSON.parse(
         params.row.extendedJsonStr
       ).shareCount;
-      this.activitiesDetail.content = this.activitiesDetail.content.replace(
-        /&/g,
-        '\n'
-      );
+      this.activitiesDetail.content = this.activitiesDetail.content.replace(/&/g, '\n');
       this.modalView = true;
     },
     handleEdit(params) {
@@ -1210,10 +1180,7 @@ export default {
       this.activitiesDetail.shareCount = JSON.parse(
         params.row.extendedJsonStr
       ).shareCount;
-      this.activitiesDetail.content = this.activitiesDetail.content.replace(
-        /&/g,
-        '\n'
-      );
+      this.activitiesDetail.content = this.activitiesDetail.content.replace(/&/g, '\n');
       this.modalEdit = true;
     },
     getTableData() {
@@ -1221,12 +1188,8 @@ export default {
         .then((res) => {
           this.tableData = res.rows;
           this.total = res.total;
-          this.loading = false;
-          this.searchLoading = false;
-          this.clearSearchLoading = false;
         })
-        .catch((error) => {
-          console.log(error);
+        .finally(() => {
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
@@ -1238,9 +1201,6 @@ export default {
         .then((res) => {
           this.couponTemplateData = res.rows;
           this.couponTemplateTotal = res.total;
-        })
-        .catch((error) => {
-          console.log(error);
         });
     },
     // 查看活动关联
@@ -1250,16 +1210,10 @@ export default {
           this.couponConfigManageRelations = res.activitySettingRelations;
           this.collectWordSetting = res.collectWordSettings;
         })
-        .finally(() => {});
     },
-    onOff(params) {
+    handleSwitch(params) {
       this.activitiesDetail = this._.cloneDeep(params.row);
-      if (params.row.status === 'VALID') {
-        this.activitiesDetail.status = 'INVALID';
-      } else {
-        this.activitiesDetail.status = 'VALID';
-      }
-      this.loading = true;
+      this.activitiesDetail.status = params.row.status === 'VALID' ? 'INVALID' : 'VALID';
       this.updateUnifyActivity();
     },
     startTimeChange(value, date) {

@@ -18,7 +18,7 @@
       >
         <div slot="searchCondition">
           <Button v-waves class="search-btn ml5 mr5" type="primary" @click="handleCreateView">
-            <Icon type="md-add"/>&nbsp;创建
+            <Icon type="md-add" />&nbsp;创建
           </Button>
           <Poptip
             confirm
@@ -28,7 +28,7 @@
             @on-ok="poptipOk"
           >
             <Button type="error" class="mr5">
-              <Icon type="md-trash"/>删除
+              <Icon type="md-trash" />删除
             </Button>
           </Poptip>
         </div>
@@ -128,8 +128,8 @@
                 <Select v-model="productStandardDetail.packagingUnit" @on-change="uniteChange">
                   <Option
                     v-for="(item,index) in unitsList"
-                    :value="item.value"
                     :key="index"
+                    :value="item.value"
                     class="ptb2-5"
                     style="padding-left: 5px"
                   >
@@ -155,8 +155,8 @@
                 >
                   <Option
                     v-for="(item,index) in useAble"
-                    :value="item.value"
                     :key="index"
+                    :value="item.value"
                     class="ptb2-5"
                     style="padding-left: 5px"
                   >
@@ -184,17 +184,17 @@
 </template>
 
 <script type="text/ecmascript-6">
-import Tables from "_c/tables";
-import _ from "lodash";
+import Tables from '_c/tables';
+import _ from 'lodash';
 import {
   createProductSpecification,
   deleteProductSpecification,
   getProductSpecificationsPages,
   editProductSpecification,
   productSpecificationsUnits
-} from "@/api/fruitermaster";
-import deleteMixin from "@/mixins/deleteMixin.js";
-import { getGoodsStandard } from "../../../libs/util";
+} from '@/api/fruitermaster';
+import tableMixin from '@/mixins/tableMixin.js';
+import { getGoodsStandard } from '../../../libs/util';
 
 const productStandardDetail = {
   id: 0,
@@ -205,7 +205,7 @@ const productStandardDetail = {
   specificationQty: 0,
   limitInventory: 0,
   productId: 0,
-  inventorySpecification: "NO",
+  inventorySpecification: 'NO',
   availableStatus: null,
   createAt: null,
   specification: null
@@ -220,44 +220,44 @@ export default {
   components: {
     Tables
   },
+  mixins: [tableMixin],
   data() {
     return {
-      mixins: [deleteMixin],
       unitsList: [],
       ruleInline: {
-        availableStatus: [{ required: true, message: "请选择商品分类" }],
-        packagingUnit: [{ required: true, message: "请选择规格单位" }],
+        availableStatus: [{ required: true, message: '请选择商品分类' }],
+        packagingUnit: [{ required: true, message: '请选择规格单位' }],
         barcode: [
-          { required: true, message: "请输入规格条码" },
+          { required: true, message: '请输入规格条码' },
           {
             validator(rule, value, callback, source, options) {
               const errors = [];
               if (!/^[0-9]\d*$/.test(value)) {
-                errors.push(new Error("必须为整数"));
+                errors.push(new Error('必须为整数'));
               }
               callback(errors);
             }
           }
         ],
         specificationQty: [
-          { required: true, message: "请输入安全库存" },
+          { required: true, message: '请输入安全库存' },
           {
             validator(rule, value, callback, source, options) {
               const errors = [];
               if (!/^[1-9]\d*$/.test(value)) {
-                errors.push(new Error("必须为非零整数"));
+                errors.push(new Error('必须为非零整数'));
               }
               callback(errors);
             }
           }
         ],
         weight: [
-          { required: true, message: "请输入重量" },
+          { required: true, message: '请输入重量' },
           {
             validator(rule, value, callback, source, options) {
               const errors = [];
               if (!/^(?!(0[0-9]{0,}$))[0-9]{1,}[.]{0,}[0-9]{0,}$/.test(value)) {
-                errors.push(new Error("必须为大于0的数字"));
+                errors.push(new Error('必须为大于0的数字'));
               }
               callback(errors);
             }
@@ -265,85 +265,71 @@ export default {
         ]
       },
       useAble: [
-        { label: "是", value: "ENABLE" },
-        { label: "否", value: "DISABLE" }
+        { label: '是', value: 'ENABLE' },
+        { label: '否', value: 'DISABLE' }
       ],
       columns: [
         {
-          type: "selection",
-          key: "",
+          type: 'selection',
+          key: '',
           width: 60,
-          align: "center",
-          fixed: "left"
+          align: 'center',
+          fixed: 'left'
         },
         {
-          title: "商品名称",
-          key: "productName",
+          title: '商品名称',
+          key: 'productName',
           minWidth: 180,
           render(h, params) {
             return <div>{params.row.product.name}</div>;
           }
         },
         {
-          title: "规格条码",
-          key: "barcode",
+          title: '规格条码',
+          key: 'barcode',
           minWidth: 100
         },
         {
-          title: "规格单位",
+          title: '规格单位',
           width: 100,
-          key: "packagingUnit"
+          key: 'packagingUnit'
         },
         {
-          title: "是否基础规格",
+          title: '是否基础规格',
           width: 120,
-          key: "inventorySpecification"
+          key: 'inventorySpecification'
         },
         {
-          title: "规格",
+          title: '规格',
           minWidth: 130,
-          key: "specificationInfo"
+          key: 'specificationInfo'
         },
         {
-          title: "重量(kg)",
+          title: '重量(kg)',
           width: 120,
-          key: "weight"
+          key: 'weight'
         },
         {
-          title: "安全库存",
+          title: '安全库存',
           width: 120,
-          key: "limitInventory"
+          key: 'limitInventory'
         },
         {
-          title: "操作",
+          title: '操作',
           minWidth: 150,
-          key: "handle",
-          options: ["view", "edit", "delete"]
+          key: 'handle',
+          options: ['view', 'edit', 'delete']
         }
       ],
-      modalType: {
-        view: "view",
-        edit: "edit",
-        create: "create"
-      },
-      tempModalType: "create",
-      tableData: [],
-      total: 0,
-      loading: true,
-      modalViewLoading: false,
-      modalView: false,
-      modalEdit: false,
       searchRowData: _.cloneDeep(roleRowData),
-      productStandardDetail: _.cloneDeep(productStandardDetail),
-      // 选中的行
-      tableDataSelected: []
+      productStandardDetail: _.cloneDeep(productStandardDetail)
     };
   },
   created() {
     // this.unitsList = this.$route.params.unitsList;
     productSpecificationsUnits().then(res => {
       res.forEach(value => {
-        const map = { label: "label", value: "value" };
+        const map = { label: 'label', value: 'value' };
         map.value = value;
         map.label = value;
         this.unitsList.push(map);
@@ -360,14 +346,14 @@ export default {
     },
     poptipOk() {
       if (this.tableDataSelected.length < 1) {
-        this.$Message.warning("请选中要删除的行");
+        this.$Message.warning('请选中要删除的行');
         return;
       }
       const tempDeleteList = [];
       this.tableDataSelected.filter(value => {
         tempDeleteList.push(value.id);
       });
-      const strTempDelete = tempDeleteList.join(",");
+      const strTempDelete = tempDeleteList.join(',');
       this.deleteTable(strTempDelete);
     },
     // 删除
@@ -440,7 +426,7 @@ export default {
         .then(res => {
           this.modalViewLoading = false;
           this.modalEdit = false;
-          this.$Message.success("创建成功!");
+          this.$Message.success('创建成功!');
           this.getTableData();
         })
         .catch(() => {
@@ -451,15 +437,15 @@ export default {
     handleSubmit(name) {
       this.$refs[name].validate(valid => {
         if (valid) {
-          if (this.tempModalType === this.modalType.create) {
+          if (this.isCreate) {
             // 添加状态
             this.createStandard();
-          } else if (this.tempModalType === this.modalType.edit) {
+          } else if (this.isEdit) {
             // 编辑状态
             this.editProductSpecification();
           }
         } else {
-          this.$Message.error("请完善信息!");
+          this.$Message.error('请完善信息!');
         }
       });
     },

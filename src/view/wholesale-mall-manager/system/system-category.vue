@@ -138,9 +138,7 @@ import {
   getSystemSettingCategoryTree
 } from '@/api/wholesale';
 import uploadMixin from '@/mixins/uploadMixin';
-import deleteMixin from '@/mixins/deleteMixin.js';
 import tableMixin from '@/mixins/tableMixin.js';
-import searchMixin from '@/mixins/searchMixin.js';
 import { buildMenu, convertTreeCategory, convertTree } from '@/libs/util';
 
 const systemCategoryDetail = {
@@ -158,7 +156,7 @@ export default {
   components: {
     Tables
   },
-  mixins: [uploadMixin, deleteMixin, tableMixin, searchMixin],
+  mixins: [uploadMixin, tableMixin],
   data() {
     return {
       ruleInline: {

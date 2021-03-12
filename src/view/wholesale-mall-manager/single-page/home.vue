@@ -83,7 +83,7 @@
           ></Input>
           <Button
             v-waves
-            :searchLoading="searchLoading"
+            :search-loading="searchLoading"
             class="search-btn mr5"
             type="primary"
             @click="handleSearch"
@@ -143,8 +143,6 @@ import CountTo from '_c/count-to';
 import config from '@/config';
 import { getAnalysisDatas } from '@/api/wholesale';
 import tableMixin from '@/mixins/tableMixin.js';
-import searchMixin from '@/mixins/searchMixin.js';
-import deleteMixin from '@/mixins/deleteMixin.js';
 import {
   fenToYuanDot2,
   fenToYuanDot2Number,
@@ -211,7 +209,7 @@ export default {
     InforCard,
     CountTo
   },
-  mixins: [tableMixin, searchMixin, deleteMixin],
+  mixins: [tableMixin],
   data() {
     return {
       brandType: config.brandType,

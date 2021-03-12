@@ -48,8 +48,8 @@
             >
               <Option
                 v-for="item in deliveryAtTypeList"
-                :value="item.value"
                 :key="`search-col-${item.value}`"
+                :value="item.value"
                 class="ptb2-5"
               >{{ item.label }}</Option>
             </Select>
@@ -143,9 +143,9 @@
               <RadioGroup v-model="postageDetail.deliveryTime" :disabled="modalTypeComputed">
                 <Radio
                   v-for="item in minDeliveryAtTypeEnum"
+                  :key="item.value"
                   :label="item.value"
                   :disabled="modalTypeComputed"
-                  :key="item.value"
                 >
                   <span>{{ item.label }}</span>
                 </Radio>
@@ -155,15 +155,15 @@
           <Row>
             <FormItem prop="deliveryRules">
               <tables
-                :columns="tableColumnComputed"
                 v-model="postageDetail.deliveryRules"
+                :columns="tableColumnComputed"
                 border
                 @on-delete="postageRuleTableHandleDelete"
               ></tables>
             </FormItem>
           </Row>
           <Row
-            v-if="tempModalType === modalType.create || tempModalType === modalType.edit"
+            v-if="isCreate || isEdit"
             class="mt15"
           >
             <Button v-waves type="success" class="mr5" @click="addPostageRuleTableColumns">
@@ -173,7 +173,7 @@
         </Form>
       </div>
       <div
-        v-if="tempModalType === modalType.create || tempModalType === modalType.edit"
+        v-if="isCreate || isEdit"
         slot="footer"
       >
         <Button @click="handleEditClose">关闭</Button>
@@ -196,8 +196,6 @@ import {
   editDeliveryFeeConfigRule
 } from '@/api/wholesale';
 import tableMixin from '@/mixins/tableMixin.js';
-import searchMixin from '@/mixins/searchMixin.js';
-import deleteMixin from '@/mixins/deleteMixin.js';
 import { deliveryAtTypeConvert } from '@/libs/converStatus';
 import {
   deliveryAtTypeEnum,
@@ -268,7 +266,7 @@ export default {
   components: {
     Tables
   },
-  mixins: [tableMixin, searchMixin, deleteMixin],
+  mixins: [tableMixin],
   data() {
     return {
       ruleInline: {

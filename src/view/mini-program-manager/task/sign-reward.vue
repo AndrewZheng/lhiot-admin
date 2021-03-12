@@ -34,14 +34,14 @@
           >
             <Option
               v-for="(item,index) in rewardTypeEnum"
-              :value="item.value"
               :key="index"
+              :value="item.value"
               class="ptb2-5"
             >{{ item.label }}</Option>
           </Select>
           <Button
             v-waves
-            :searchLoading="searchLoading"
+            :search-loading="searchLoading"
             class="search-btn mr5"
             type="primary"
             @click="handleSearch"
@@ -138,8 +138,8 @@
               >
                 <Option
                   v-for="item in rewardTypeEnum"
-                  :value="item.value"
                   :key="item.value"
+                  :value="item.value"
                   class="ptb2-5"
                 >{{ item.label }}</Option>
               </Select>
@@ -164,8 +164,6 @@ import {
   createSignReward
 } from '@/api/mini-program';
 import tableMixin from '@/mixins/tableMixin.js';
-import searchMixin from '@/mixins/searchMixin.js';
-import deleteMixin from '@/mixins/deleteMixin.js';
 import uploadMixin from '@/mixins/uploadMixin.js';
 import { rewardTypeEnum } from '@/libs/enumerate';
 import { rewardTypeConvert } from '@/libs/converStatus';
@@ -188,14 +186,11 @@ export default {
   components: {
     Tables
   },
-  mixins: [tableMixin, searchMixin, deleteMixin, uploadMixin],
+  mixins: [tableMixin, uploadMixin],
   data() {
     return {
-      rewardTypeEnum,
       ids: [],
-      modalEditLoading: false,
-      searchRowData: _.cloneDeep(searchRowData),
-      signRewardDetail: _.cloneDeep(signRewardDetail),
+      rewardTypeEnum,
       columns: [
         {
           type: 'selection',
@@ -252,7 +247,9 @@ export default {
         getIntegral: { required: true, message: '请填写任务积分' },
         giftPackType: { required: false, message: '请选择礼包类型' },
         rewardType: { required: true, message: '请选择奖励类型' }
-      }
+      },
+      searchRowData: _.cloneDeep(searchRowData),
+      signRewardDetail: _.cloneDeep(signRewardDetail)
     };
   },
   computed: {
@@ -287,17 +284,17 @@ export default {
     handleConfig() {
       this.turnToPage({
         name: 'small-hand-coupon',
-        params: { couponBusinessType: 'ACTIVITY_SIGN_COUPON',pageStatus:"signReward" }
+        params: { couponBusinessType: 'ACTIVITY_SIGN_COUPON', pageStatus: 'signReward' }
       })
     },
     handleCreate() {
-      this.$refs.editForm.resetFields();
+      this.resetFields();
       this.tempModalType = this.modalType.create;
-      this.signRewardDetail = signRewardDetail;
+      this.signRewardDetail = _.cloneDeep(signRewardDetail);
       this.modalEdit = true;
     },
     handleEdit(params) {
-      this.$refs.editForm.resetFields();
+      this.resetFields();
       this.tempModalType = this.modalType.edit;
       this.signRewardDetail = _.cloneDeep(params.row);
       this.modalEdit = true;
@@ -343,7 +340,6 @@ export default {
       this.signRewardDetail.giftPackType = value === 'GIFTPACK' ? 'COUPON' : '';
     },
     deleteTable(ids) {
-      this.loading = true;
       deleteSignReward({
         ids
       })
@@ -358,9 +354,6 @@ export default {
           }
           this.tableDataSelected = [];
           this.getTableData();
-        })
-        .finally(() => {
-          this.loading = false;
         });
     }
   }

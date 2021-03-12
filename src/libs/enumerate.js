@@ -579,7 +579,6 @@ export const storeTypeEnum = [{
   label: '加盟店',
   value: storeType.JOIN_STORE
 }
-
 ];
 
 // GCJ02("高德坐标系/火星坐标系"),
@@ -2451,7 +2450,8 @@ export const miniOrderType = {
   SELF_BUYING: 'SELF_BUYING',
   TEAM_BUYING: 'TEAM_BUYING',
   PRESAL_ORDER: 'PRESAL_ORDER',
-  POINTS_BUYING: 'POINTS_BUYING'
+  POINTS_BUYING: 'POINTS_BUYING',
+  BUY_COUPON_ALL_ORDER: 'BUY_COUPON_ALL_ORDER'
 };
 
 export const miniOrderTypeEnum = [{
@@ -2469,6 +2469,10 @@ export const miniOrderTypeEnum = [{
 {
   label: '积分兑换订单',
   value: miniOrderType.POINTS_BUYING
+},
+{
+  label: '购券订单',
+  value: miniOrderType.BUY_COUPON_ALL_ORDER
 }
 ];
 

@@ -14,12 +14,11 @@
         search-place="top"
         @on-view="handleView"
         @on-edit="handleEdit"
-        @on-sale="onOff"
+        @on-sale="handleSwitch"
         @on-select-all="onSelectionAll"
         @on-selection-change="onSelectionChange"
         @on-relevance="onRelevance"
       >
-        <!--  @on-delete="handleDelete" -->
         <div slot="searchCondition">
           <Row>
             <Input
@@ -229,9 +228,9 @@
       <p slot="header">
         <i-col>
           {{
-            tempModalType == modalType.edit
+            isEdit
               ? "修改限时秒杀活动"
-              : tempModalType == modalType.create
+              : isCreate
                 ? "创建限时秒杀活动"
                 : "添加限时秒杀活动和商品关联"
           }}
@@ -240,7 +239,7 @@
       <div class="modal-content">
         <Row
           v-if="
-            tempModalType == modalType.edit || tempModalType == modalType.create
+            isEdit || isCreate
           "
         >
           <Form
@@ -507,7 +506,7 @@
         </Button>
         <Button
           v-if="
-            tempModalType == modalType.edit || tempModalType == modalType.create
+            isEdit || isCreate
           "
           :loading="modalViewLoading"
           type="primary"
@@ -522,7 +521,6 @@
 
 <script type="text/ecmascript-6">
 import Tables from '_c/tables';
-import _ from 'lodash';
 import {
   deleteFlashsale,
   getSeckillPages,
@@ -534,22 +532,17 @@ import {
   editSeckillProductRelation,
   getProductStandardsPages
 } from '@/api/mini-program';
-import deleteMixin from '@/mixins/deleteMixin.js';
 import tableMixin from '@/mixins/tableMixin.js';
-import searchMixin from '@/mixins/searchMixin.js';
 import {
   imageStatusConvert,
-  expandTypeConvert,
-  onSaleStatusConvert
+  expandTypeConvert
 } from '@/libs/converStatus';
 import { imageStatusEnum, onSaleStatusEnum } from '@/libs/enumerate';
 import {
   fenToYuanDot2,
-  fenToYuanDot2Number,
   yuanToFenNumber,
   compareCouponData
 } from '@/libs/util';
-import { customPlanStatusConvert, appTypeConvert } from '@/libs/converStatus';
 
 const activitySeckillDetail = {
   beginTime: null,
@@ -928,7 +921,7 @@ const productColumns = [
     render: (h, params, vm) => {
       const { row } = params;
       if (row.productStandardExpand != null) {
-        if (row.productStandardExpand.expandType == 'DISCOUNT_PRODUCT') {
+        if (row.productStandardExpand.expandType === 'DISCOUNT_PRODUCT') {
           return (
             <div>
               <tag color='magenta'>
@@ -936,7 +929,7 @@ const productColumns = [
               </tag>
             </div>
           );
-        } else if (row.productStandardExpand.expandType == 'PULL_NEW_PRODUCT') {
+        } else if (row.productStandardExpand.expandType === 'PULL_NEW_PRODUCT') {
           return (
             <div>
               <tag color='orange'>
@@ -944,7 +937,7 @@ const productColumns = [
               </tag>
             </div>
           );
-        } else if (row.productStandardExpand.expandType == 'SECKILL_PRODUCT') {
+        } else if (row.productStandardExpand.expandType === 'SECKILL_PRODUCT') {
           return (
             <div>
               <tag color='blue'>
@@ -952,7 +945,7 @@ const productColumns = [
               </tag>
             </div>
           );
-        } else if (row.productStandardExpand.expandType == 'NEW_TRY_PRODUCT') {
+        } else if (row.productStandardExpand.expandType === 'NEW_TRY_PRODUCT') {
           return (
             <div>
               <tag color='blue'>
@@ -960,7 +953,7 @@ const productColumns = [
               </tag>
             </div>
           );
-        } else if (row.productStandardExpand.expandType == 'ASSIST_PRODUCT') {
+        } else if (row.productStandardExpand.expandType === 'ASSIST_PRODUCT') {
           return (
             <div>
               <tag color='green'>
@@ -984,9 +977,22 @@ export default {
   components: {
     Tables
   },
-  mixins: [deleteMixin, tableMixin, searchMixin],
+  mixins: [tableMixin],
   data() {
     return {
+      defaultListMain: [],
+      uploadListMain: [],
+      areaList: [],
+      relationProducts: [],
+      products: [],
+      templatePageOpts: [5, 10],
+      productTotal: 0,
+      addTempDataLoading: false,
+      tempTableLoading: false,
+      editStatus: false,
+      proFlag: true,
+      imageStatusEnum,
+      onSaleStatusEnum,
       ruleInline: {
         beginTime: [{ required: true, message: '请选择活动开始时间' }],
         endTime: [{ required: true, message: '请选择活动结束时间' }],
@@ -1034,12 +1040,6 @@ export default {
           }
         ]
       },
-      defaultListMain: [],
-      uploadListMain: [],
-      areaList: [],
-      templatePageOpts: [5, 10],
-      imageStatusEnum,
-      onSaleStatusEnum,
       columns: [
         {
           title: '活动ID',
@@ -1141,26 +1141,16 @@ export default {
         }
       ],
       productColumns: _.cloneDeep(productColumns),
-      addTempDataLoading: false,
-      tempTableLoading: false,
-      createLoading: false,
-      editStatus: false,
-      modalViewLoading: false,
       searchRowData: _.cloneDeep(roleRowData),
       searchRelationRowData: _.cloneDeep(relationRowData),
       searchProductRowData: _.cloneDeep(productRowData),
       activitySeckillDetail: _.cloneDeep(activitySeckillDetail),
-      relationProducts: [],
       addRelationDetail: _.cloneDeep(relationDetail),
-      productDetail: _.cloneDeep(productDetail),
-      products: [],
-      productTotal: 0,
-      proFlag: true
+      productDetail: _.cloneDeep(productDetail)
     };
   },
   computed: {},
   mounted() {
-    this.searchRowData = _.cloneDeep(roleRowData);
     this.getTableData();
   },
   created() {},
@@ -1200,10 +1190,9 @@ export default {
               this.activitySeckillDetail.endTime
             ).format('YYYY-MM-DD HH:mm:ss');
           }
-          if (this.tempModalType === this.modalType.create) {
-            // 添加状态
+          if (this.isCreate) {
             this.createSeckill();
-          } else if (this.tempModalType === this.modalType.edit) {
+          } else if (this.isEdit) {
             this.editSeckill();
           }
         } else {
@@ -1215,14 +1204,12 @@ export default {
       this.modalViewLoading = true;
       createSeckill(this.activitySeckillDetail)
         .then((res) => {
-          this.modalViewLoading = false;
           this.modalEdit = false;
           this.$Message.success('创建成功!');
           this.getTableData();
         })
-        .catch(() => {
+        .finally(() => {
           this.modalViewLoading = false;
-          this.modalEdit = false;
         });
     },
     editSeckill() {
@@ -1233,15 +1220,13 @@ export default {
       this.activitySeckillDetail.endTime = this.$moment(
         this.activitySeckillDetail.endTime
       ).format('YYYY-MM-DD HH:mm:ss');
-
       editSeckill(this.activitySeckillDetail)
         .then((res) => {
           this.modalEdit = false;
-          this.modalViewLoading = false;
+          this.$Message.success('操作成功!');
           this.getTableData();
         })
-        .catch(() => {
-          this.modalEdit = false;
+        .finally(() => {
           this.modalViewLoading = false;
         });
     },
@@ -1252,21 +1237,14 @@ export default {
       this.activitySeckillDetail = _.cloneDeep(activitySeckillDetail);
       this.modalEdit = true;
     },
-    // 删除
-    // handleDelete(params) {
-    //   this.tableDataSelected = [];
-    //   this.tableDataSelected.push(params.row);
-    //   this.deleteTable(params.row.id);
-    // },
     deleteTable(ids) {
-      this.loading = true;
       deleteFlashsale({
         ids
       })
         .then((res) => {
           const totalPage = Math.ceil(this.total / this.searchRowData.pageSize);
           if (
-            this.tableData.length == this.tableDataSelected.length &&
+            this.tableData.length === this.tableDataSelected.length &&
             this.searchRowData.page === totalPage &&
             this.searchRowData.page !== 1
           ) {
@@ -1275,10 +1253,6 @@ export default {
           this.tableDataSelected = [];
           this.getTableData();
         })
-        .catch((err) => {
-          console.log(err);
-          this.loading = false;
-        });
     },
     handleView(params) {
       this.tempModalType = this.modalType.view;
@@ -1297,12 +1271,8 @@ export default {
         .then((res) => {
           this.tableData = res.rows;
           this.total = res.total;
-          this.loading = false;
-          this.searchLoading = false;
-          this.clearSearchLoading = false;
         })
-        .catch((error) => {
-          console.log(error);
+        .finally(() => {
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
@@ -1311,31 +1281,20 @@ export default {
     getRelationTableData() {
       getSeckillProductRelationPages(this.searchRelationRowData)
         .then((res) => {
-          // 设置行是否可编辑
-          // if (res && res.rows.length > 0) {
           res.rows.forEach((element) => {
             element.isEdit = false;
           });
           this.relationProducts = res.rows;
-          // }
-          this.loading = false;
-          this.searchLoading = false;
-          this.clearSearchLoading = false;
         })
-        .catch((error) => {
+        .finally(() => {
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
         });
     },
-    onOff(params) {
-      this.activitySeckillDetail = this._.cloneDeep(params.row);
-      if (params.row.status === 'ON') {
-        this.activitySeckillDetail.status = 'OFF';
-      } else {
-        this.activitySeckillDetail.status = 'ON';
-      }
-      this.loading = true;
+    handleSwitch(params) {
+      this.activitySeckillDetail = _.cloneDeep(params.row);
+      this.activitySeckillDetail.status = params.row.status === 'ON' ? 'OFF' : 'ON';
       this.editSeckill();
     },
     startTimeChange(value, date) {
@@ -1344,7 +1303,6 @@ export default {
     endTimeChange(value, date) {
       this.activitySeckillDetail.endTime = value;
     },
-    // ====
     edBeginTimeChange(value) {
       this.searchRowData.beginTime = value;
     },

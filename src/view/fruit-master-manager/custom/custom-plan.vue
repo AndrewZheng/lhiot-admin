@@ -24,16 +24,16 @@
           <Row>
             <Input v-model="searchRowData.name" placeholder="定制计划名称" class="search-input mr5" style="width: auto" clearable></Input>
             <Button v-waves :loading="searchLoading" class="search-btn mr5" type="primary" @click="handleSearch">
-              <Icon type="md-search"/>&nbsp;搜索
+              <Icon type="md-search" />&nbsp;搜索
             </Button>
             <Button v-waves :loading="clearSearchLoading" class="search-btn" type="info" @click="handleClear">
-              <Icon type="md-refresh"/>&nbsp;清除条件
+              <Icon type="md-refresh" />&nbsp;清除条件
             </Button>
           </Row>
         </div>
         <div slot="operations">
           <Button v-waves type="success" class="mr5" @click="handleAdd">
-            <Icon type="md-add"/>
+            <Icon type="md-add" />
             创建
           </Button>
           <Poptip
@@ -44,13 +44,13 @@
             @on-ok="poptipOk"
           >
             <Button type="error" class="mr5">
-              <Icon type="md-trash"/>
+              <Icon type="md-trash" />
               删除
             </Button>
           </Poptip>
           <!-- 多类型导出 -->
-          <BookTypeOption v-model="exportType" class="mr5"/>
-          <Button :loading="downloadLoading" class="search-btn mr5" type="primary" @click="handleDownload"><Icon type="md-download"/>导出</Button>
+          <BookTypeOption v-model="exportType" class="mr5" />
+          <Button :loading="downloadLoading" class="search-btn mr5" type="primary" @click="handleDownload"><Icon type="md-download" />导出</Button>
         </div>
       </tables>
       <div style="margin: 10px;overflow: hidden">
@@ -61,7 +61,8 @@
             show-sizer
             show-total
             @on-change="changePage"
-            @on-page-size-change="changePageSize"></Page>
+            @on-page-size-change="changePageSize"
+          ></Page>
         </Row>
       </div>
     </Card>
@@ -113,8 +114,8 @@
                   <CheckboxGroup v-if="rowData.customPlanSectionIds" v-model="rowData.customPlanSectionIds">
                     <Checkbox
                       ref="checkBox"
-                      :label="item.id"
                       :key="item.sectionName"
+                      :label="item.id"
                     >{{ item.sectionName }}
                     </Checkbox>
                   </CheckboxGroup>
@@ -133,8 +134,8 @@
             </Row>
             <Row v-if="period.products" class-name="mb10">
               <tables
-                :columns="tempColumnsView"
                 v-model="period.products"
+                :columns="tempColumnsView"
                 border
               ></tables>
             </Row>
@@ -197,19 +198,20 @@
             <Select
               v-model="rowData.status"
               class="search-col mr5"
-              style="width: 100px" >
-              <Option v-for="item in customPlanStatusEnum" :value="item.value" :key="`search-col-${item.value}`" class="ptb2-5">
+              style="width: 100px"
+            >
+              <Option v-for="item in customPlanStatusEnum" :key="`search-col-${item.value}`" :value="item.value" class="ptb2-5">
                 {{ item.label }}
               </Option>
             </Select>
           </FormItem>
-          <FormItem v-if="tempModalType === modalType.create" label="上架板块:" prop="customPlanSectionIds">
+          <FormItem v-if="isCreate" label="上架板块:" prop="customPlanSectionIds">
             <div v-for="item in customPlanSectionData" :key="item.id">
               <CheckboxGroup v-model="rowData.customPlanSectionIds">
                 <Checkbox
                   ref="checkBox"
-                  :label="item.id"
                   :key="item.sectionName"
+                  :label="item.id"
                 >{{ item.sectionName }}
                 </Checkbox>
               </CheckboxGroup>
@@ -225,24 +227,26 @@
                   class="search-input mr5"
                   placeholder="最多两位小数"
                   style="width: 90px"
-                  @on-change="priceOnChange(period.index, specification.index, $event)"/>
+                  @on-change="priceOnChange(period.index, specification.index, $event)"
+                />
               </FormItem>
               </Col>
               <Col v-for="product in period.products" :key="'addOrEdit' + period.index + '-' + product.index" span="11">
               <FormItem :label="'第'+ product.dayOfPeriod +'天:'">
                 <Select
                   v-model="product.productName"
-                  :remote-method ="remoteMethod"
+                  :remote-method="remoteMethod"
                   :loading="shelfSpecificationLoading"
                   filterable
                   style="width: 150px"
                   placeholder="输入上架商品名称"
                   remote
-                  transfer>
+                  transfer
+                >
                   <Option
                     v-for="(option, index) in optionsShelfSpecification"
-                    :value="option.name"
                     :key="'addOrEdit' + period.index + '-' + product.index + '-' + index"
+                    :value="option.name"
                     class="pb5 pt5 pl15"
                     @click.native="updateProduct(period.index, product.index, option.id, product.id)"
                   >
@@ -282,23 +286,25 @@
                     class="search-input mr5"
                     style="width: 90px"
                     placeholder="最多两位小数"
-                    @on-change="priceOnChange(period.index, specification.index, $event, specification.id)"/>
+                    @on-change="priceOnChange(period.index, specification.index, $event, specification.id)"
+                  />
                 </FormItem>
                 </Col>
-                <Col v-for="product in period.products" :key="'update' + period.index + '-' + product.index" span="11" >
+                <Col v-for="product in period.products" :key="'update' + period.index + '-' + product.index" span="11">
                 <FormItem :label="'第'+ product.dayOfPeriod +'天:'">
                   <Select
-                    :remote-method ="remoteMethod"
-                    :loading ="shelfSpecificationLoading"
-                    :placeholder = "product.productName === '' ? '输入上架商品名称' : product.productName"
+                    :remote-method="remoteMethod"
+                    :loading="shelfSpecificationLoading"
+                    :placeholder="product.productName === '' ? '输入上架商品名称' : product.productName"
                     style="width: 200px"
                     filterable
                     transfer
-                    remote>
+                    remote
+                  >
                     <Option
                       v-for="(option, index) in optionsShelfSpecification"
-                      :value="option.name"
                       :key="'update' + period.index + '-' + product.index + '-' + index"
+                      :value="option.name"
                       class="pb5 pt5 pl15"
                       @click.native="updateProduct(period.index, product.index, option.id, product.id)"
                     >
@@ -331,9 +337,7 @@ import { getCustomPlansPages,
   createCustomPlan,
   getProductShelvesPages, getCustomPlan, editCustomPlan, editCustomPlanStatus, editCustomPlanPeriod } from '@/api/fruitermaster';
 import IViewUpload from '_c/iview-upload';
-import deleteMixin from '@/mixins/deleteMixin.js';
 import tableMixin from '@/mixins/tableMixin.js';
-import searchMixin from '@/mixins/searchMixin.js';
 import uploadMixin from '@/mixins/uploadMixin';
 import { fenToYuanDot2, fenToYuanDot2Number, yuanToFenNumber } from '@/libs/util';
 import { customPlanStatusConvert } from '@/libs/converStatus';
@@ -412,7 +416,7 @@ export default {
     IViewUpload,
     BookTypeOption
   },
-  mixins: [deleteMixin, tableMixin, searchMixin, uploadMixin],
+  mixins: [tableMixin, uploadMixin],
   data() {
     return {
       shelfSpecificationLoadingDay1: false,
