@@ -258,7 +258,6 @@ const goodsSectionRelation = {
   weight: 0,
   rank: 0, // 先保留后续扩展
   baseProductName: '', // 先保留可扩展
-  goodsUnit: '',
   standardId: 0
 };
 
@@ -303,6 +302,13 @@ const productRowData = {
 };
 
 const relationColumns = [
+  {
+    type: 'selection',
+    key: '',
+    minWidth: 60,
+    align: 'center',
+    fixed: 'left'
+  },
   {
     title: '关联ID',
     align: 'center',
