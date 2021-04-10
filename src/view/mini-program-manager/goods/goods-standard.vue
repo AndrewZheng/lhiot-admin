@@ -16,7 +16,8 @@
         @on-view="handleView"
         @on-edit="handleEdit"
         @on-discount="handleDiscount"
-        @custom-on-sale="customOnSale"
+        @custom-on-sale="handleOnSale"
+        @on-publish="handlePublish"
         @on-current-change="onCurrentChange"
         @on-select-all="onSelectionAll"
         @on-selection-change="onSelectionChange"
@@ -561,10 +562,283 @@
             </Row>
           </i-col>
         </Row>
+        <Row class-name="mb20">
+          <i-col span="24">
+            <Row>
+              <i-col span="3">
+                上架门店:
+              </i-col>
+              <i-col v-if="publishStoreList.length > 0" span="18">
+                <Tag v-for="(item,index) in publishStoreList" :key="index" color="gold">{{ item }}</Tag>
+              </i-col>
+              <i-col v-else span="18">
+                全部门店
+              </i-col>
+            </Row>
+          </i-col>
+        </Row>
       </div>
       <div slot="footer">
         <Button type="primary" @click="modalView = false">
           关闭
+        </Button>
+      </div>
+    </Modal>
+
+    <!-- 选择部分门店上架 -->
+    <Modal v-model="modalPublish" :mask-closable="false" :width="1200">
+      <p slot="header">
+        <span>选择门店上架</span>
+      </p>
+      <div class="modal-content">
+        <Row class="mb10">
+          <i-col span="12">
+            <Select
+              v-model="cityCode"
+              style="width: 220px"
+              @on-change="handleCitySwitch"
+            >
+              <Option
+                v-for="(item, index) in cityList"
+                :key="index"
+                :value="item.cityCode"
+                class="ptb2-5"
+                style="padding-left: 5px"
+              >
+                {{ item.cityName }}
+              </Option>
+            </Select>
+          </i-col>
+        </Row>
+        <Row>
+          <i-col v-if="storeData.length>0" span="24" class="mt20 mb10">
+            <div class="bottom-line">
+              <div style="margin-right: 18px">
+                地级市全部门店
+              </div>
+              <Checkbox
+                :value="checkAllStore"
+                @click.prevent.native="handleCheckAll(-1)"
+              >
+                全选/反选
+              </Checkbox>
+            </div>
+          </i-col>
+          <i-col v-if="storeData.length>0" span="24" class="mt20 mb20">
+            <div
+              class="bottom-line"
+            >
+              <div style="margin-right: 18px">
+                {{ storeNameList[0] }}
+              </div>
+              <Checkbox
+                :indeterminate="indeterminate"
+                :value="checkAll"
+                @click.prevent.native="handleCheckAll(0)"
+              >
+                全选/反选
+              </Checkbox>
+            </div>
+            <CheckboxGroup
+              v-model="storeIds"
+              @on-change="checkAllGroupChange"
+            >
+              <Checkbox
+                v-for="item in storeData"
+                ref="checkBox"
+                :key="item.storeId"
+                :label="item.storeId"
+              >
+                {{ item.storeName }}
+              </Checkbox>
+            </CheckboxGroup>
+          </i-col>
+          <i-col v-if="storeData1.length>0" span="24" class="mt20 mb20">
+            <div
+              class="bottom-line"
+            >
+              <div style="margin-right: 18px">
+                {{ storeNameList[1] }}
+              </div>
+              <Checkbox
+                :indeterminate="indeterminate1"
+                :value="checkAll1"
+                @click.prevent.native="handleCheckAll(1)"
+              >
+                全选/反选
+              </Checkbox>
+            </div>
+            <CheckboxGroup
+              v-model="storeIds"
+              @on-change="checkAllGroupChange1"
+            >
+              <Checkbox
+                v-for="item in storeData1"
+                ref="checkBox"
+                :key="item.storeId"
+                :label="item.storeId"
+              >
+                {{ item.storeName }}
+              </Checkbox>
+            </CheckboxGroup>
+          </i-col>
+          <i-col v-if="storeData2.length>0" span="24" class="mt20 mb20">
+            <div
+              class="bottom-line"
+            >
+              <div style="margin-right: 18px">
+                {{ storeNameList[2] }}
+              </div>
+              <Checkbox
+                :indeterminate="indeterminate2"
+                :value="checkAll2"
+                @click.prevent.native="handleCheckAll(2)"
+              >
+                全选/反选
+              </Checkbox>
+            </div>
+            <CheckboxGroup
+              v-model="storeIds"
+              @on-change="checkAllGroupChange2"
+            >
+              <Checkbox
+                v-for="item in storeData2"
+                ref="checkBox"
+                :key="item.storeId"
+                :label="item.storeId"
+              >
+                {{ item.storeName }}
+              </Checkbox>
+            </CheckboxGroup>
+          </i-col>
+          <i-col v-if="storeData3.length>0" span="24" class="mt20 mb20">
+            <div
+              class="bottom-line"
+            >
+              <div style="margin-right: 18px">
+                {{ storeNameList[3] }}
+              </div>
+              <Checkbox
+                :indeterminate="indeterminate3"
+                :value="checkAll3"
+                @click.prevent.native="handleCheckAll(3)"
+              >
+                全选/反选
+              </Checkbox>
+            </div>
+            <CheckboxGroup
+              v-model="storeIds"
+              @on-change="checkAllGroupChange3"
+            >
+              <Checkbox
+                v-for="item in storeData3"
+                ref="checkBox"
+                :key="item.storeId"
+                :label="item.storeId"
+              >
+                {{ item.storeName }}
+              </Checkbox>
+            </CheckboxGroup>
+          </i-col>
+          <i-col v-if="storeData4.length>0" span="24" class="mt20 mb20">
+            <div
+              class="bottom-line"
+            >
+              <div style="margin-right: 18px">
+                {{ storeNameList[4] }}
+              </div>
+              <Checkbox
+                :indeterminate="indeterminate4"
+                :value="checkAll4"
+                @click.prevent.native="handleCheckAll(4)"
+              >
+                全选/反选
+              </Checkbox>
+            </div>
+            <CheckboxGroup
+              v-model="storeIds"
+              @on-change="checkAllGroupChange4"
+            >
+              <Checkbox
+                v-for="item in storeData4"
+                ref="checkBox"
+                :key="item.storeId"
+                :label="item.storeId"
+              >
+                {{ item.storeName }}
+              </Checkbox>
+            </CheckboxGroup>
+          </i-col>
+          <i-col v-if="storeData5.length>0" span="24" class="mt20 mb20">
+            <div
+              class="bottom-line"
+            >
+              <div style="margin-right: 18px">
+                {{ storeNameList[5] }}
+              </div>
+              <Checkbox
+                :indeterminate="indeterminate5"
+                :value="checkAll5"
+                @click.prevent.native="handleCheckAll(5)"
+              >
+                全选/反选
+              </Checkbox>
+            </div>
+            <CheckboxGroup
+              v-model="storeIds"
+              @on-change="checkAllGroupChange5"
+            >
+              <Checkbox
+                v-for="item in storeData5"
+                ref="checkBox"
+                :key="item.storeId"
+                :label="item.storeId"
+              >
+                {{ item.storeName }}
+              </Checkbox>
+            </CheckboxGroup>
+          </i-col>
+          <i-col v-if="storeData6.length>0" span="24" class="mt20 mb20">
+            <div
+              class="bottom-line"
+            >
+              <div style="margin-right: 18px">
+                {{ storeNameList[6] }}
+              </div>
+              <Checkbox
+                :indeterminate="indeterminate6"
+                :value="checkAll6"
+                @click.prevent.native="handleCheckAll(6)"
+              >
+                全选/反选
+              </Checkbox>
+            </div>
+            <CheckboxGroup
+              v-model="storeIds"
+              @on-change="checkAllGroupChange6"
+            >
+              <Checkbox
+                v-for="item in storeData6"
+                ref="checkBox"
+                :key="item.storeId"
+                :label="item.storeId"
+              >
+                {{ item.storeName }}
+              </Checkbox>
+            </CheckboxGroup>
+          </i-col>
+        </Row>
+      </div>
+      <div slot="footer">
+        <Button @click="modalPublish=false">
+          关闭
+        </Button>
+        <Button
+          :loading="modalViewLoading"
+          type="primary"
+          @click="handlePublishSubmit"
+        >
+          确定
         </Button>
       </div>
     </Modal>
@@ -2178,10 +2452,12 @@ export default {
       uploadListMultiple: [],
       uploadListMultiple_: [],
       relationStoreList: [],
+      publishStoreList: [],
       productTotal: 0,
       firstSuccess: true,
       showBack: false,
       isEnvironment: null,
+      modalPublish: false,
       modalDiscount: false,
       modalHdSvip: false,
       modalProduct: false,
@@ -2216,6 +2492,7 @@ export default {
       },
       step: 'firstStep',
       tempModalType: 'create',
+      actionName: '', // onsale-上下架 publish-发布
       isUseCoupon: [
         { label: '可用券', value: 'YES' },
         { label: '不可用券', value: 'NO' }
@@ -2628,10 +2905,10 @@ export default {
         {
           title: '操作',
           align: 'center',
-          minWidth: 180,
+          minWidth: 220,
           fixed: 'right',
           key: 'handle',
-          options: ['customOnSale', 'view', 'edit', 'discount']
+          options: ['customOnSale', 'publish', 'view', 'edit', 'discount']
         }
       ],
       productColumns: [
@@ -2754,6 +3031,7 @@ export default {
     this.getTableData();
   },
   mounted() {
+    this.actionName = '';
     this.getStore();
     this.getProductUnits();
   },
@@ -2923,7 +3201,19 @@ export default {
         );
       }
       this.relationStoreList = this.relationStore();
+      this.publishStoreList = this.publishedStore();
       this.modalView = true;
+    },
+    publishedStore() {
+      const list = [];
+      if (!this.productStandardDetail.partStoreIds) return list;
+      const ids = this.productStandardDetail.partStoreIds.substring(1, this.productStandardDetail.partStoreIds.length - 1).split('][');
+      ids.forEach((id) => {
+        const item = this.allStoreList.find(item => item.storeId == id);
+        if (!item) { return; }
+        list.push(item.storeName);
+      });
+      return list;
     },
     relationStore() {
       const list = [];
@@ -3509,24 +3799,93 @@ export default {
         this.productStandardDetail.rotationImage = '';
       }
     },
-    customOnSale(params) {
-      const rowData = this._.cloneDeep(params.row);
-      if (params.row.shelvesStatus === 'VALID') {
-        rowData.shelvesStatus = 'INVALID';
-      } else {
-        rowData.shelvesStatus = 'VALID';
+    handleOnSale(params) {
+      this.actionName = 'onsale';
+      this.productStandardDetail.partStoreIds = '';
+      this.storeIds = [];
+      this.productStandardDetail = this._.cloneDeep(params.row);
+      // 如果是普通商品规格且需上架-弹窗选择上架门店
+      if (this.productStandardDetail.productType === 'ORDINARY_PRODUCT' &&
+      this.productStandardDetail.shelvesStatus === 'INVALID') {
+        if (this.productStandardDetail.partStoreIds) {
+          const storeIds = this.productStandardDetail.partStoreIds.substring(1, this.productStandardDetail.partStoreIds.length - 1).split('][');
+          storeIds.forEach((element) => { this.storeIds.push(parseInt(element)); });
+          console.log('selected partStoreIds:', this.storeIds);
+          const firstStoreId = this.storeIds[0];
+          // 编辑时从返回的第一个storeId单独查询下cityCode来反选城市
+          const storeObj = this.allStoreList.find(item => item.storeId === firstStoreId);
+          this.cityCode = storeObj && storeObj.cityCode ? storeObj.cityCode : '0731';
+          this.getStore(true);
+        }
+        this.modalPublish = true;
+        return;
       }
+      this.productStandardDetail.shelvesStatus = 'INVALID';
       this.loading = true;
-      editProductStandard(rowData)
+      // 重构传递参数对象
+      editProductStandard(this.productStandardDetail)
         .then((res) => {
           this.$Message.success('修改成功!');
         })
         .finally((res) => {
+          this.getTableData();
           this.loading = false;
           this.modalViewLoading = false;
-          this.getTableData();
           this.modalEdit = false;
         });
+    },
+    handlePublish(params) {
+      this.actionName = 'publish';
+      this.productStandardDetail.partStoreIds = '';
+      this.storeIds = [];
+      this.productStandardDetail = this._.cloneDeep(params.row);
+      if (
+        this.productStandardDetail.partStoreIds !== null &&
+        this.productStandardDetail.partStoreIds !== ''
+      ) {
+        const storeIds = this.productStandardDetail.partStoreIds.substring(1, this.productStandardDetail.partStoreIds.length - 1).split('][');
+        storeIds.forEach((element) => { this.storeIds.push(parseInt(element)); });
+        console.log('selected partStoreIds:', this.storeIds);
+        const firstStoreId = this.storeIds[0];
+        // 编辑时从返回的第一个storeId单独查询下cityCode来反选城市
+        const storeObj = this.allStoreList.find(item => item.storeId === firstStoreId);
+        this.cityCode = storeObj && storeObj.cityCode ? storeObj.cityCode : '0731';
+        this.getStore(true);
+      }
+      this.modalPublish = true;
+    },
+    handlePublishSubmit() {
+      this.loading = true;
+      // 如果不选择则为全部门店发布
+      this.productStandardDetail.partStoreIds = !this.productStandardDetail.partStoreIds ? 'all' : this.productStandardDetail.partStoreIds;
+      if (this.actionName === 'publish') {
+        editProductStandard(this.productStandardDetail)
+          .then((res) => {
+            this.$Message.success('发布成功!');
+          })
+          .finally((res) => {
+            this.getTableData();
+            this.loading = false;
+            this.modalViewLoading = false;
+            this.modalPublish = false;
+          });
+      } else if (this.actionName === 'onsale') {
+        // 发布并上架
+        this.productStandardDetail.shelvesStatus = 'VALID';
+        this.loading = true;
+        // 重构传递参数对象
+        editProductStandard(this.productStandardDetail)
+          .then((res) => {
+            this.$Message.success('上架并发布成功!');
+          })
+          .finally((res) => {
+            this.getTableData();
+            this.loading = false;
+            this.modalViewLoading = false;
+            this.modalPublish = false;
+            this.modalEdit = false;
+          });
+      }
     },
     goBack() {
       this.turnToPage('small-goods-info');
@@ -3667,7 +4026,11 @@ export default {
             })
           });
           this.storeIds = allIds;
-          this.productStandardDetail.storeIds = '[' + allIds.join('][') + ']';
+          if (this.modalPublish) {
+            this.productStandardDetail.partStoreIds = '[' + allIds.join('][') + ']';
+          } else {
+            this.productStandardDetail.storeIds = '[' + allIds.join('][') + ']';
+          }
         } else {
           this.storeListData.forEach((item) => {
             item.forEach(x => {
@@ -3678,7 +4041,11 @@ export default {
             return beforeIds.indexOf(item) == -1;
           });
           this.storeIds = newArray;
-          this.productStandardDetail.storeIds = '[' + newArray.join('][') + ']';
+          if (this.modalPublish) {
+            this.productStandardDetail.partStoreIds = '[' + newArray.join('][') + ']';
+          } else {
+            this.productStandardDetail.storeIds = '[' + newArray.join('][') + ']';
+          }
         }
       }
 
@@ -3701,7 +4068,11 @@ export default {
             allIds.push(item.storeId);
           });
           this.storeIds = allIds;
-          this.productStandardDetail.storeIds = '[' + allIds.join('][') + ']';
+          if (this.modalPublish) {
+            this.productStandardDetail.partStoreIds = '[' + allIds.join('][') + ']';
+          } else {
+            this.productStandardDetail.storeIds = '[' + allIds.join('][') + ']';
+          }
         } else {
           this.storeList[value].storeList.forEach((item) => {
             beforeIds.push(item.storeId);
@@ -3710,7 +4081,11 @@ export default {
             return beforeIds.indexOf(item) == -1;
           });
           this.storeIds = newArray;
-          this.productStandardDetail.storeIds = '[' + newArray.join('][') + ']';
+          if (this.modalPublish) {
+            this.productStandardDetail.partStoreIds = '[' + newArray.join('][') + ']';
+          } else {
+            this.productStandardDetail.storeIds = '[' + newArray.join('][') + ']';
+          }
         }
       }
 
@@ -3734,7 +4109,11 @@ export default {
             beforeIds.push(item.storeId);
           });
           this.storeIds = allIds1;
-          this.productStandardDetail.storeIds = '[' + allIds1.join('][') + ']';
+          if (this.modalPublish) {
+            this.productStandardDetail.partStoreIds = '[' + allIds1.join('][') + ']';
+          } else {
+            this.productStandardDetail.storeIds = '[' + allIds1.join('][') + ']';
+          }
         } else {
           this.storeList[value].storeList.forEach((item) => {
             beforeIds.push(item.storeId);
@@ -3743,7 +4122,11 @@ export default {
             return beforeIds.indexOf(item) == -1;
           });
           this.storeIds = newArray;
-          this.productStandardDetail.storeIds = '[' + newArray.join('][') + ']';
+          if (this.modalPublish) {
+            this.productStandardDetail.partStoreIds = '[' + newArray.join('][') + ']';
+          } else {
+            this.productStandardDetail.storeIds = '[' + newArray.join('][') + ']';
+          }
         }
       }
 
@@ -3767,7 +4150,11 @@ export default {
             beforeIds.push(item.storeId);
           });
           this.storeIds = allIds2;
-          this.productStandardDetail.storeIds = '[' + allIds2.join('][') + ']';
+          if (this.modalPublish) {
+            this.productStandardDetail.partStoreIds = '[' + allIds2.join('][') + ']';
+          } else {
+            this.productStandardDetail.storeIds = '[' + allIds2.join('][') + ']';
+          }
         } else {
           this.storeList[value].storeList.forEach((item) => {
             beforeIds.push(item.storeId);
@@ -3776,7 +4163,11 @@ export default {
             return beforeIds.indexOf(item) == -1;
           });
           this.storeIds = newArray;
-          this.productStandardDetail.storeIds = '[' + newArray.join('][') + ']';
+          if (this.modalPublish) {
+            this.productStandardDetail.partStoreIds = '[' + newArray.join('][') + ']';
+          } else {
+            this.productStandardDetail.storeIds = '[' + newArray.join('][') + ']';
+          }
         }
       }
 
@@ -3800,7 +4191,11 @@ export default {
             beforeIds.push(item.storeId);
           });
           this.storeIds = allIds3;
-          this.productStandardDetail.storeIds = '[' + allIds3.join('][') + ']';
+          if (this.modalPublish) {
+            this.productStandardDetail.partStoreIds = '[' + allIds3.join('][') + ']';
+          } else {
+            this.productStandardDetail.storeIds = '[' + allIds3.join('][') + ']';
+          }
         } else {
           this.storeList[value].storeList.forEach((item) => {
             beforeIds.push(item.storeId);
@@ -3809,7 +4204,11 @@ export default {
             return beforeIds.indexOf(item) == -1;
           });
           this.storeIds = newArray;
-          this.productStandardDetail.storeIds = '[' + newArray.join('][') + ']';
+          if (this.modalPublish) {
+            this.productStandardDetail.partStoreIds = '[' + newArray.join('][') + ']';
+          } else {
+            this.productStandardDetail.storeIds = '[' + newArray.join('][') + ']';
+          }
         }
       }
 
@@ -3833,7 +4232,11 @@ export default {
             beforeIds.push(item.storeId);
           });
           this.storeIds = allIds4;
-          this.productStandardDetail.storeIds = '[' + allIds4.join('][') + ']';
+          if (this.modalPublish) {
+            this.productStandardDetail.partStoreIds = '[' + allIds4.join('][') + ']';
+          } else {
+            this.productStandardDetail.storeIds = '[' + allIds4.join('][') + ']';
+          }
         } else {
           this.storeList[value].storeList.forEach((item) => {
             beforeIds.push(item.storeId);
@@ -3842,7 +4245,11 @@ export default {
             return beforeIds.indexOf(item) == -1;
           });
           this.storeIds = newArray;
-          this.productStandardDetail.storeIds = '[' + newArray.join('][') + ']';
+          if (this.modalPublish) {
+            this.productStandardDetail.partStoreIds = '[' + newArray.join('][') + ']';
+          } else {
+            this.productStandardDetail.storeIds = '[' + newArray.join('][') + ']';
+          }
         }
       }
 
@@ -3866,7 +4273,11 @@ export default {
             beforeIds.push(item.storeId);
           });
           this.storeIds = allIds5;
-          this.productStandardDetail.storeIds = '[' + allIds5.join('][') + ']';
+          if (this.modalPublish) {
+            this.productStandardDetail.partStoreIds = '[' + allIds5.join('][') + ']';
+          } else {
+            this.productStandardDetail.storeIds = '[' + allIds5.join('][') + ']';
+          }
         } else {
           this.storeList[value].storeList.forEach((item) => {
             beforeIds.push(item.storeId);
@@ -3875,7 +4286,11 @@ export default {
             return beforeIds.indexOf(item) == -1;
           });
           this.storeIds = newArray;
-          this.productStandardDetail.storeIds = '[' + newArray.join('][') + ']';
+          if (this.modalPublish) {
+            this.productStandardDetail.partStoreIds = '[' + newArray.join('][') + ']';
+          } else {
+            this.productStandardDetail.storeIds = '[' + newArray.join('][') + ']';
+          }
         }
       }
 
@@ -3899,7 +4314,11 @@ export default {
             beforeIds.push(item.storeId);
           });
           this.storeIds = allIds6;
-          this.productStandardDetail.storeIds = '[' + allIds6.join('][') + ']';
+          if (this.modalPublish) {
+            this.productStandardDetail.partStoreIds = '[' + allIds6.join('][') + ']';
+          } else {
+            this.productStandardDetail.storeIds = '[' + allIds6.join('][') + ']';
+          }
         } else {
           this.storeList[value].storeList.forEach((item) => {
             beforeIds.push(item.storeId);
@@ -3908,7 +4327,11 @@ export default {
             return beforeIds.indexOf(item) == -1;
           });
           this.storeIds = newArray;
-          this.productStandardDetail.storeIds = '[' + newArray.join('][') + ']';
+          if (this.modalPublish) {
+            this.productStandardDetail.partStoreIds = '[' + newArray.join('][') + ']';
+          } else {
+            this.productStandardDetail.storeIds = '[' + newArray.join('][') + ']';
+          }
         }
       }
     },
@@ -3922,14 +4345,22 @@ export default {
       ) {
         this.indeterminate = false;
         this.checkAll = true;
-        this.productStandardDetail.storeIds = '[' + data.join('][') + ']';
+        if (this.modalPublish) {
+          this.productStandardDetail.partStoreIds = '[' + data.join('][') + ']';
+        } else {
+          this.productStandardDetail.storeIds = '[' + data.join('][') + ']';
+        }
       } else if (
         data.length > 0 &&
         sameArray.length < this.storeList[0].storeList.length
       ) {
         this.indeterminate = true;
         this.checkAll = false;
-        this.productStandardDetail.storeIds = '[' + data.join('][') + ']';
+        if (this.modalPublish) {
+          this.productStandardDetail.partStoreIds = '[' + data.join('][') + ']';
+        } else {
+          this.productStandardDetail.storeIds = '[' + data.join('][') + ']';
+        }
       }
       if (sameArray.length === 0) {
         this.indeterminate = false;
@@ -3946,14 +4377,22 @@ export default {
       ) {
         this.indeterminate1 = false;
         this.checkAll1 = true;
-        this.productStandardDetail.storeIds = '[' + data.join('][') + ']';
+        if (this.modalPublish) {
+          this.productStandardDetail.partStoreIds = '[' + data.join('][') + ']';
+        } else {
+          this.productStandardDetail.storeIds = '[' + data.join('][') + ']';
+        }
       } else if (
         data.length > 0 &&
         sameArray1.length < this.storeList[1].storeList.length
       ) {
         this.indeterminate1 = true;
         this.checkAll1 = false;
-        this.productStandardDetail.storeIds = '[' + data.join('][') + ']';
+        if (this.modalPublish) {
+          this.productStandardDetail.partStoreIds = '[' + data.join('][') + ']';
+        } else {
+          this.productStandardDetail.storeIds = '[' + data.join('][') + ']';
+        }
       }
       if (sameArray1.length === 0) {
         this.indeterminate1 = false;
@@ -3970,14 +4409,22 @@ export default {
       ) {
         this.indeterminate2 = false;
         this.checkAll2 = true;
-        this.productStandardDetail.storeIds = '[' + data.join('][') + ']';
+        if (this.modalPublish) {
+          this.productStandardDetail.partStoreIds = '[' + data.join('][') + ']';
+        } else {
+          this.productStandardDetail.storeIds = '[' + data.join('][') + ']';
+        }
       } else if (
         data.length > 0 &&
         sameArray2.length < this.storeList[2].storeList.length
       ) {
         this.indeterminate2 = true;
         this.checkAll2 = false;
-        this.productStandardDetail.storeIds = '[' + data.join('][') + ']';
+        if (this.modalPublish) {
+          this.productStandardDetail.partStoreIds = '[' + data.join('][') + ']';
+        } else {
+          this.productStandardDetail.storeIds = '[' + data.join('][') + ']';
+        }
       }
       if (sameArray2.length === 0) {
         this.indeterminate2 = false;
@@ -3995,15 +4442,22 @@ export default {
       ) {
         this.indeterminate3 = false;
         this.checkAll3 = true;
-        this.productStandardDetail.storeIds = '[' + data.join('][') + ']';
+        if (this.modalPublish) {
+          this.productStandardDetail.partStoreIds = '[' + data.join('][') + ']';
+        } else {
+          this.productStandardDetail.storeIds = '[' + data.join('][') + ']';
+        }
       } else if (
         data.length > 0 &&
         sameArray3.length < this.storeList[3].storeList.length
       ) {
         this.indeterminate3 = true;
         this.checkAll3 = false;
-        this.productStandardDetail.storeIds = '[' + data.join('][') + ']';
-        console.log(`selected storeids in obj:`, this.productStandardDetail.storeIds);
+        if (this.modalPublish) {
+          this.productStandardDetail.partStoreIds = '[' + data.join('][') + ']';
+        } else {
+          this.productStandardDetail.storeIds = '[' + data.join('][') + ']';
+        }
       }
       if (sameArray3.length === 0) {
         this.indeterminate3 = false;
@@ -4020,14 +4474,22 @@ export default {
       ) {
         this.indeterminate4 = false;
         this.checkAll4 = true;
-        this.productStandardDetail.storeIds = '[' + data.join('][') + ']';
+        if (this.modalPublish) {
+          this.productStandardDetail.partStoreIds = '[' + data.join('][') + ']';
+        } else {
+          this.productStandardDetail.storeIds = '[' + data.join('][') + ']';
+        }
       } else if (
         data.length > 0 &&
         sameArray4.length < this.storeList[4].storeList.length
       ) {
         this.indeterminate4 = true;
         this.checkAll4 = false;
-        this.productStandardDetail.storeIds = '[' + data.join('][') + ']';
+        if (this.modalPublish) {
+          this.productStandardDetail.partStoreIds = '[' + data.join('][') + ']';
+        } else {
+          this.productStandardDetail.storeIds = '[' + data.join('][') + ']';
+        }
       }
       if (sameArray4.length === 0) {
         this.indeterminate4 = false;
@@ -4044,14 +4506,22 @@ export default {
       ) {
         this.indeterminate5 = false;
         this.checkAll5 = true;
-        this.productStandardDetail.storeIds = '[' + data.join('][') + ']';
+        if (this.modalPublish) {
+          this.productStandardDetail.partStoreIds = '[' + data.join('][') + ']';
+        } else {
+          this.productStandardDetail.storeIds = '[' + data.join('][') + ']';
+        }
       } else if (
         data.length > 0 &&
         sameArray5.length < this.storeList[5].storeList.length
       ) {
         this.indeterminate5 = true;
         this.checkAll5 = false;
-        this.productStandardDetail.storeIds = '[' + data.join('][') + ']';
+        if (this.modalPublish) {
+          this.productStandardDetail.partStoreIds = '[' + data.join('][') + ']';
+        } else {
+          this.productStandardDetail.storeIds = '[' + data.join('][') + ']';
+        }
       }
       if (sameArray5.length === 0) {
         this.indeterminate5 = false;
@@ -4068,14 +4538,22 @@ export default {
       ) {
         this.indeterminate6 = false;
         this.checkAll6 = true;
-        this.productStandardDetail.storeIds = '[' + data.join('][') + ']';
+        if (this.modalPublish) {
+          this.productStandardDetail.partStoreIds = '[' + data.join('][') + ']';
+        } else {
+          this.productStandardDetail.storeIds = '[' + data.join('][') + ']';
+        }
       } else if (
         data.length > 0 &&
         sameArray6.length < this.storeList[6].storeList.length
       ) {
         this.indeterminate6 = true;
         this.checkAll6 = false;
-        this.productStandardDetail.storeIds = '[' + data.join('][') + ']';
+        if (this.modalPublish) {
+          this.productStandardDetail.partStoreIds = '[' + data.join('][') + ']';
+        } else {
+          this.productStandardDetail.storeIds = '[' + data.join('][') + ']';
+        }
       }
       if (sameArray6.length === 0) {
         this.indeterminate6 = false;

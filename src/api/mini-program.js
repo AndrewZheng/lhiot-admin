@@ -1413,6 +1413,18 @@ export const getUsersInfo = (data) => {
   });
 };
 
+// 查询当前会员的优惠券列表
+export const getUserCoupons = (data) => {
+  return $http.request({
+    url: `/minapp/user/coupons/${data.userId}?validStatus=${data.validStatus}`,
+    method: 'get',
+    headers: {
+      'page': data.page,
+      'rows': data.rows
+    }
+  });
+};
+
 // 根据条件分页查询优惠券列表
 export const getCouponPages = (data) => {
   return $http.request({
@@ -1937,6 +1949,14 @@ export const getOrderPages = (data) => {
       'page': data.page,
       'rows': data.rows
     }
+  });
+};
+
+export const editOrderDeliveryTime = (data) => {
+  return $http.request({
+    url: `/minapp/orders/update-delivery-time/${data.orderId}`,
+    data: data.deliverTime,
+    method: 'put'
   });
 };
 
@@ -3264,7 +3284,8 @@ export const getWechatRewardPage = (data) => {
     }
   });
 };
-//购券重发
+
+// 购券重发
 export const retryCoupon = (data) => {
   return $http.request({
     url: `/minapp/orders/buy-coupon/retry?orderId=${data}`,

@@ -88,6 +88,39 @@ const btns = {
       ])
     ]);
   },
+  orderEdit: (h, params, vm) => {
+    const { row } = params;
+    if (row.orderStatus === 'WAIT_SEND_OUT' && row.receivingWay === 'TO_THE_HOME') {
+      return h('Tooltip', {
+        props: { placement: 'top', transfer: true, content: '修改' }
+      }, [
+        h('Button', {
+          props: {
+            type: 'warning',
+            size: 'small'
+          },
+          style: {
+            marginRight: '5px'
+          },
+          on: {
+            click: () => {
+              vm.$emit('on-edit', params);
+            }
+          }
+        }, [
+          h('Icon', {
+            props: {
+              type: 'md-create',
+              size: 16,
+              color: '#fff'
+            }
+          })
+        ])
+      ]);
+    } else {
+      return '';
+    }
+  },
   operate: (h, params, vm) => {
     return h('Tooltip', {
       props: { placement: 'top', transfer: true, content: '查看 / 审核' }
@@ -640,6 +673,48 @@ const btns = {
           })
         ])
       ]);
+    }
+  },
+  // 商品规格选择部分门店-发布
+  publish: (h, params, vm) => {
+    const { row } = params;
+    if (row.productType === 'ORDINARY_PRODUCT' && row.shelvesStatus === 'VALID') {
+      return h('Tooltip', {
+        props: { placement: 'top', transfer: true, content: '发布' }
+      }, [
+        h('Poptip', {
+          props: {
+            confirm: true,
+            transfer: true,
+            title: '确认要发布吗?'
+          },
+          style: {
+            marginRight: '5px'
+          },
+          on: {
+            'on-ok': () => {
+              vm.$emit('on-publish', params);
+            }
+          }
+        }, [
+          h('Button', {
+            props: {
+              type: 'primary',
+              size: 'small'
+            }
+          }, [
+            h('Icon', {
+              props: {
+                type: 'ios-paper-plane',
+                size: 16,
+                color: '#fff'
+              }
+            })
+          ])
+        ])
+      ]);
+    } else {
+      return '';
     }
   },
   // 优惠券上下架操作
@@ -1798,6 +1873,35 @@ const btns = {
         ])
       ]);
     }
+  },
+  // 查询改用户当前券列表
+  searchCoupons: (h, params, vm) => {
+    return h('Tooltip', {
+      props: { placement: 'top', transfer: true, content: '查询券列表' }
+    }, [
+      h('Button', {
+        props: {
+          type: 'primary',
+          size: 'small'
+        },
+        style: {
+          marginRight: '5px'
+        },
+        on: {
+          click: () => {
+            vm.$emit('on-coupons', params);
+          }
+        }
+      }, [
+        h('Icon', {
+          props: {
+            type: 'md-pricetags',
+            size: 16,
+            color: '#fff'
+          }
+        })
+      ])
+    ]);
   },
   // 员工特权
   staff: (h, params, vm) => {
