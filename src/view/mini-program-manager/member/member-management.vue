@@ -54,6 +54,20 @@
               >{{ item.label }}</Option>
             </Select>
             <Select
+              v-model="searchRowData.userClass"
+              placeholder="是否白名单用户"
+              style="padding-right: 5px; width: 130px"
+              clearable
+            >
+              <Option
+                v-for="(item, index) in userClassEnum"
+                :key="index"
+                :value="item.value"
+                class="ptb2-5"
+                style="padding-left: 5px"
+              >{{ item.label }}</Option>
+            </Select>
+            <Select
               v-model="searchRowData.userType"
               placeholder="用户类型"
               style="padding-right: 5px; width: 100px"
@@ -210,6 +224,7 @@ import {
   couponScopeEnum,
   couponUseLimitEnum,
   validDateTypeEnum,
+  userClassEnum,
   userScopeEnum,
   relationStoreTypeEnum
 } from '@/libs/enumerate';
@@ -287,6 +302,7 @@ const couponRowData = {
 const roleRowData = {
   isCommunity: null,
   userType: null,
+  userClass: null,
   gender: null,
   nickName: null,
   phone: null,
@@ -498,56 +514,56 @@ const dataColumns = [
     title: '生效时间',
     key: 'effectiveStartTime',
     align: 'center',
-    minWidth: 120,
-    render: (h, params, vm) => {
-      const { row } = params;
-      if (row.source === 'SMALL' && row.validDateType === 'FIXED_DATE') {
-        return <div>{row.effectiveStartTime}</div>;
-      } else if (
-        row.source === 'SMALL' &&
-        row.validDateType === 'UN_FIXED_DATE'
-      ) {
-        return <div>{row.beginDay}</div>;
-      } else if (row.source === 'HD') {
-        return <div>{row.beginDay}</div>;
-      } else {
-        return <div>N/A</div>;
-      }
-    }
+    minWidth: 110
+    // render: (h, params, vm) => {
+    //   const { row } = params;
+    //   if (row.source === 'SMALL' && row.validDateType === 'FIXED_DATE') {
+    //     return <div>{row.effectiveStartTime}</div>;
+    //   } else if (
+    //     row.source === 'SMALL' &&
+    //     row.validDateType === 'UN_FIXED_DATE'
+    //   ) {
+    //     return <div>{row.beginDay}</div>;
+    //   } else if (row.source === 'HD') {
+    //     return <div>{row.beginDay}</div>;
+    //   } else {
+    //     return <div>N/A</div>;
+    //   }
+    // }
   },
   {
     title: '失效时间',
     key: 'effectiveEndTime',
     align: 'center',
-    minWidth: 180,
-    render: (h, params, vm) => {
-      const { row } = params;
-      if (row.source === 'SMALL' && row.validDateType === 'FIXED_DATE') {
-        if (!compareCouponData(row.effectiveEndTime)) {
-          return (
-            <div style='color:red'>
-              <p>{row.effectiveEndTime + '　已过期'}</p>
-            </div>
-          );
-        } else {
-          return <div>{row.effectiveEndTime}</div>;
-        }
-      } else if (
-        row.source === 'SMALL' &&
-        row.validDateType === 'UN_FIXED_DATE'
-      ) {
-        return <div>{row.endDay}</div>;
-      } else if (row.source === 'HD') {
-        return <div>{row.endDay}</div>;
-        // if (!compareCouponData(row.effectiveEndTime)) {
-        //   return <div style="color:red">{row.effectiveEndTime + "已过期"}</div>;
-        // } else {
-        //   return <div>{row.effectiveEndTime}</div>;
-        // }
-      } else {
-        return <div>N/A</div>;
-      }
-    }
+    minWidth: 110
+    // render: (h, params, vm) => {
+    //   const { row } = params;
+    //   if (row.source === 'SMALL' && row.validDateType === 'FIXED_DATE') {
+    //     if (!compareCouponData(row.effectiveEndTime)) {
+    //       return (
+    //         <div style='color:red'>
+    //           <p>{row.effectiveEndTime + '　已过期'}</p>
+    //         </div>
+    //       );
+    //     } else {
+    //       return <div>{row.effectiveEndTime}</div>;
+    //     }
+    //   } else if (
+    //     row.source === 'SMALL' &&
+    //     row.validDateType === 'UN_FIXED_DATE'
+    //   ) {
+    //     return <div>{row.endDay}</div>;
+    //   } else if (row.source === 'HD') {
+    //     return <div>{row.endDay}</div>;
+    //     // if (!compareCouponData(row.effectiveEndTime)) {
+    //     //   return <div style="color:red">{row.effectiveEndTime + "已过期"}</div>;
+    //     // } else {
+    //     //   return <div>{row.effectiveEndTime}</div>;
+    //     // }
+    //   } else {
+    //     return <div>N/A</div>;
+    //   }
+    // }
   }
 ];
 
@@ -657,6 +673,34 @@ export default {
           }
         },
         {
+          title: '白名单',
+          key: 'userClass',
+          align: 'center',
+          width: '120px',
+          render(h, params) {
+            const { row } = params;
+            if (row.userClass === 'EXTERIOR') {
+              return (
+                <div>
+                  <tag color='blue'>{'外部用户'}</tag>
+                </div>
+              );
+            } else if (row.userClass === 'INTERIOR') {
+              return (
+                <div>
+                  <tag color='gold'>{'内部用户'}</tag>
+                </div>
+              );
+            } else {
+              return (
+                <div>
+                  <tag color='blue'>{'N/A'}</tag>
+                </div>
+              );
+            }
+          }
+        },
+        {
           title: '注册时间',
           key: 'registrationAt',
           align: 'center'
@@ -670,6 +714,7 @@ export default {
         }
       ],
       dataColumns,
+      userClassEnum,
       couponStatusEnum,
       couponTypeEnum,
       couponScopeEnum,

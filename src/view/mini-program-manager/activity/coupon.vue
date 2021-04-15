@@ -1207,6 +1207,32 @@ export default {
         //   },
         // },
         {
+          title: '开始时间',
+          align: 'center',
+          key: 'beginTime',
+          width: 180
+        },
+        {
+          title: '结束时间',
+          align: 'center',
+          width: 230,
+          key: 'endTime',
+          render: (h, params, vm) => {
+            const { row } = params;
+            if (!compareCouponData(row.endTime)) {
+              return <div style='color:red'>{row.endTime + ' 已过期'}</div>;
+            } else {
+              return <div>{row.endTime}</div>;
+            }
+          }
+        },
+        {
+          title: '创建时间',
+          align: 'center',
+          key: 'createTime',
+          width: 180
+        },
+        {
           title: '活动状态',
           align: 'center',
           width: 100,
@@ -1237,32 +1263,6 @@ export default {
               );
             }
           }
-        },
-        {
-          title: '开始时间',
-          align: 'center',
-          key: 'beginTime',
-          width: 180
-        },
-        {
-          title: '结束时间',
-          align: 'center',
-          width: 230,
-          key: 'endTime',
-          render: (h, params, vm) => {
-            const { row } = params;
-            if (!compareCouponData(row.endTime)) {
-              return <div style='color:red'>{row.endTime + ' 已过期'}</div>;
-            } else {
-              return <div>{row.endTime}</div>;
-            }
-          }
-        },
-        {
-          title: '创建时间',
-          align: 'center',
-          key: 'createTime',
-          width: 180
         },
         {
           title: '操作',

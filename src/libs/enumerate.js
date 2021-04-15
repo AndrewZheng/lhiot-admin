@@ -2928,3 +2928,11 @@ export const serviceStatusEnum = [{
   value: 'FINISH'
 }]
 
+export const userClassEnum = [{
+  label: '外部用户',
+  value: 'EXTERIOR'
+},
+{
+  label: '内部用户',
+  value: 'INTERIOR'
+}]

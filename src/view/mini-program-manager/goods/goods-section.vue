@@ -32,7 +32,6 @@
             @on-select-all="onSelectionAll"
             @on-selection-change="onSelectionChange"
           >
-            <!-- @on-selection-change="onRelationSelectionChange" -->
             <div slot="searchCondition">
               <Row>
                 <!-- <Input
@@ -154,7 +153,7 @@
                 highlight-row
                 border
                 @on-select-all="onSelectionAll"
-                @on-selection-change="onSelectionChange"
+                @on-selection-change="handleSelectionChange"
               >
                 <div slot="searchCondition">
                   <Row>
@@ -1008,7 +1007,7 @@ export default {
     handleProductSearch() {
       this.getProductTableData();
     },
-    onSelectionChange(selection) {
+    handleSelectionChange(selection) {
       this.productStandardRelation.productStandardIds = selection
         .map((item) => item.id.toString())
         .join(',');

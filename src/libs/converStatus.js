@@ -66,6 +66,7 @@ import {
   receiveStatusEnum,
   serviceModeEnum,
   serviceStatusEnum,
+  userClassEnum,
   // 批发商城小程序
   userStatusEnum,
   userTypeEnum,
@@ -98,6 +99,10 @@ const convertFunction = (value, list) => {
     };
   }
 };
+
+export const userClassConvert = (value) => {
+  return convertFunction(value, userClassEnum);
+}
 
 export const receiveStatusConvert = (value) => {
   return convertFunction(value, receiveStatusEnum).label;
