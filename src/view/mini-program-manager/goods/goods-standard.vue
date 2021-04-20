@@ -3326,6 +3326,8 @@ export default {
       });
     },
     handleSubmitAll() {
+      // 如果是编辑提交则需置空partStoreIds
+      this.productStandardDetail.partStoreIds = null;
       this.$refs.editForm.validate((valid) => {
         if (valid) {
           if (!this.productStandardDetail.salePrice) {
@@ -3373,6 +3375,8 @@ export default {
       });
     },
     handleSubmit(name) {
+      // 如果是编辑提交则需置空partStoreIds
+      this.productStandardDetail.partStoreIds = null;
       this.$refs[name].validate((valid) => {
         if (valid) {
           if (
