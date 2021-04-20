@@ -16,6 +16,7 @@
         @on-view="handleView"
         @on-edit="handleEdit"
         @on-discount="handleRegin"
+        @on-analytics="handleAnalytics"
         @on-delete="handleDelete"
         @custom-on-sale="handlePublish"
         @on-inline-edit="modalHandleEdit"
@@ -804,6 +805,8 @@
         >确定</Button>
       </div>
     </Modal>
+
+    <!-- 排序-->
     <Modal v-model="modalSort" :mask-closable="false" title="图片排序">
       <p slot="header">
         <span>图片排序</span>
@@ -829,6 +832,7 @@
         <Button type="primary" @click="handleImgSort">确定</Button>
       </div>
     </Modal>
+
     <!-- 关联商品弹窗-->
     <Modal v-model="modalProduct" :width="1000" title="关联商品" footer-hide>
       <Card>
@@ -1034,6 +1038,106 @@
       </div>
     </Modal>
 
+    <!-- 商品规格分析弹窗-->
+    <Modal
+      v-model="modalPro"
+      :width="1200"
+      :z-index="1000"
+      title="商品规格分析"
+    >
+      <Card>
+        <tables
+          ref="proTables"
+          v-model="proTableData"
+          :columns="proColumns"
+          :loading="proLoading"
+          :search-area-column="24"
+          :operate-area-column="6"
+          editable
+          searchable
+          border
+          search-place="top"
+        >
+          <div slot="searchCondition">
+            <RadioGroup
+              v-model="searchProRowData.queryDays"
+              type="button"
+              class="mr5"
+              @on-change="handleChangePro"
+            >
+              <Radio label="0">
+                <span>今日</span>
+              </Radio>
+              <Radio label="1">
+                <span>昨日</span>
+              </Radio>
+              <Radio label="7">
+                <span>最近7天</span>
+              </Radio>
+              <Radio label="30">
+                <span>最近30天</span>
+              </Radio>
+              <Radio label="-1">
+                <span>自定义</span>
+              </Radio>
+            </RadioGroup>
+            <DatePicker
+              v-model="searchProRowData.startTime"
+              :disabled="searchProRowData.queryDays!='-1'"
+              format="yyyy-MM-dd HH:mm:ss"
+              type="datetime"
+              placeholder="大于等于"
+              class="mr5"
+              style="width: 150px"
+              @on-change="startTimeChangePro"
+            />
+            <i>-</i>
+            <DatePicker
+              v-model="searchProRowData.endTime"
+              :disabled="searchProRowData.queryDays!='-1'"
+              format="yyyy-MM-dd HH:mm:ss"
+              type="datetime"
+              placeholder="小于等于"
+              class="mr5"
+              style="width: 150px"
+              @on-change="endTimeChangePro"
+            />
+            <Button
+              v-waves
+              :search-loading="searchLoading"
+              class="search-btn mr5"
+              type="primary"
+              @click="handleSearchPro"
+            >
+              <Icon type="md-search" />&nbsp;搜索
+            </Button>
+            <Button
+              v-waves
+              :loading="clearSearchLoading"
+              class="search-btn"
+              type="info"
+              @click="handleClearPro"
+            >
+              <Icon type="md-refresh" />&nbsp;清除
+            </Button>
+          </div>
+        </tables>
+        <div style="margin: 10px;overflow: hidden">
+          <Row type="flex" justify="end">
+            <Page
+              :total="proTotal"
+              :current="searchProRowData.page"
+              :page-size="searchProRowData.rows"
+              show-sizer
+              show-total
+              @on-change="changePagePro"
+              @on-page-size-change="changePageSizePro"
+            ></Page>
+          </Row>
+        </div>
+      </Card>
+    </Modal>
+
     <Modal v-model="uploadVisible" title="图片预览">
       <img :src="imgUploadViewItem" style="width: 100%">
     </Modal>
@@ -1056,8 +1160,8 @@ import {
   editProductStandard,
   editGoodsPriceRegion,
   exporGoodsStandard,
-  deletePicture,
-  getProductCategoriesTree
+  getProductCategoriesTree,
+  getStandardAnalysisDatas
 } from '@/api/wholesale';
 import uploadMixin from '@/mixins/uploadMixin';
 import tableMixin from '@/mixins/tableMixin.js';
@@ -1127,6 +1231,20 @@ const roleRowData = {
   isHasPriceRegion: '',
   categoryName: '',
   categoryId: null
+};
+
+const proRowData = {
+  params: {
+    goodsName: '',
+    goodsStandardId: ''
+  },
+  queryDays: '0', // 1(昨日) 7(最近7天) 30(最近30天) -1(自定义)
+  startTime: null,
+  endTime: null,
+  page: 1,
+  rows: 10,
+  sidx: 'payNum',
+  sort: 'desc'
 };
 
 const productDetail = {
@@ -1368,19 +1486,19 @@ const standardColumns = [
     align: 'center',
     render: (h, params, vm) => {
       const { row } = params;
-      if (row.goodsType == 'NORMAL') {
+      if (row.goodsType === 'NORMAL') {
         return (
           <div>
             <tag color='cyan'>{pfExpandTypeConvert(row.goodsType).label}</tag>
           </div>
         );
-      } else if (row.goodsType == 'VIP') {
+      } else if (row.goodsType === 'VIP') {
         return (
           <div>
             <tag color='orange'>{pfExpandTypeConvert(row.goodsType).label}</tag>
           </div>
         );
-      } else if (row.goodsType == 'FLASHSALE') {
+      } else if (row.goodsType === 'FLASHSALE') {
         return (
           <div>
             <tag color='blue'>{pfExpandTypeConvert(row.goodsType).label}</tag>
@@ -1460,7 +1578,8 @@ const standardColumns = [
       'customOnSale',
       'view',
       'edit',
-      'discount'
+      'discount',
+      'proAnalytics'
     ]
   }
 ];
@@ -1561,6 +1680,53 @@ const goodsPriceRegionColumns = [
   }
 ];
 
+const proColumns = [
+  {
+    title: '商品名称',
+    align: 'center',
+    key: 'goodsName',
+    minWidth: 100
+  },
+  {
+    title: '点击数',
+    align: 'center',
+    key: 'clickNum',
+    minWidth: 80
+  },
+  {
+    title: '加购数',
+    align: 'center',
+    key: 'addCardNum',
+    minWidth: 80
+  },
+  {
+    title: '下单数',
+    align: 'center',
+    key: 'payNum',
+    minWidth: 80
+  },
+  {
+    title: '加购率',
+    align: 'center',
+    key: 'addCardRate',
+    minWidth: 80,
+    render: (h, params) => {
+      const { row } = params;
+      return <div>{(row.addCardRate * 100) + '%'}</div>;
+    }
+  },
+  {
+    title: '下单率',
+    align: 'center',
+    key: 'payRate',
+    minWidth: 80,
+    render: (h, params) => {
+      const { row } = params;
+      return <div>{(row.payRate * 100) + '%'}</div>;
+    }
+  }
+];
+
 export default {
   components: {
     Tables,
@@ -1570,14 +1736,8 @@ export default {
   mixins: [uploadMixin, tableMixin],
   data() {
     return {
-      templatePageOpts: [20, 50],
-      hasPriceRegionList: [
-        { label: '有', value: 'no' },
-        { label: '无', value: 'yes' }
-      ],
-      productTotal: 0,
-      downloadLoading: false,
-      regionTotal: 0,
+      productData: [],
+      proTableData: [],
       unitsList: [],
       productDetailsList: [],
       masterProductDetailsList: [],
@@ -1585,40 +1745,49 @@ export default {
       oldPicture: [],
       newPicture: [],
       save: [],
-      // ====
       uploadListMain: [],
       uploadListMultiple: [],
-      productData: [],
       defaultListMain: [],
       masterImage: '',
       priceRegionData: [],
       goodsImageList: [],
-      tableDataSelected: [],
       goodsCategoryData: [],
       regionTableDataSelected: [],
       uploadListMultiple_: [],
       defaultListMultiple_: [],
-      modalEditLoading: false,
+      templatePageOpts: [20, 50],
+      hasPriceRegionList: [
+        { label: '有', value: 'no' },
+        { label: '无', value: 'yes' }
+      ],
+      downloadLoading: false,
       modalDiscount: false,
       modalProduct: false,
+      modalPro: false,
       modalSort: false,
       modalRegion: false,
       openStatus: false,
       modalEditRegion: false,
+      proLoading: false,
       loadingProduct: false,
       loadingRegion: false,
       showBack: false,
+      productTotal: 0,
+      regionTotal: 0,
+      proTotal: 0,
       afterPurchasePrice: 0,
       afterPrice: 0,
       pfExpandTypeEnum,
       searchRowData: _.cloneDeep(roleRowData),
+      searchProRowData: _.cloneDeep(proRowData),
       priceRegionRowData: _.cloneDeep(priceRegionRowData),
       searchProductRowData: _.cloneDeep(productRowData),
       productStandardDetail: _.cloneDeep(productStandardDetail),
       productDetail: _.cloneDeep(productDetail),
       goodsPriceRegion: _.cloneDeep(goodsPriceRegion),
       columns: standardColumns,
-      productColumns: productColumns,
+      proColumns,
+      productColumns,
       regionColumns: goodsPriceRegionColumns,
       searchMinPrice: null,
       searchMaxPrice: null,
@@ -1816,6 +1985,41 @@ export default {
     unitChange(value) {
       this.productStandardDetail.goodsUnit = value;
     },
+    startTimeChangePro(value, date) {
+      this.searchProRowData.startTime = value;
+    },
+    endTimeChangePro(value, data) {
+      this.searchProRowData.endTime = value;
+    },
+    changePagePro(page) {
+      this.searchRowData.page = page;
+      this.getProTableData();
+    },
+    changePageSizePro(pageSize) {
+      this.searchProRowData.page = 1;
+      this.searchProRowData.rows = pageSize;
+      this.getProTableData();
+    },
+    handleSearchPro() {
+      this.searchProRowData.page = 1;
+      this.searchLoading = true;
+      this.getProTableData();
+    },
+    handleClearPro() {
+      this.button = '今日';
+      this.resetSearchProRowData();
+      this.page = 1;
+      this.pageSize = 10;
+      this.clearSearchLoading = true;
+      this.handleSearchPro();
+    },
+    handleChangePro(item) {
+      this.searchProRowData.startTime = null;
+      this.searchProRowData.endTime = null;
+      this.searchProRowData.queryDays = item;
+      if (item === '-1') return;
+      this.getProTableData();
+    },
     // 数据查询
     getTableData() {
       // 获取基础商品页面传过来的商品信息
@@ -1850,6 +2054,19 @@ export default {
         })
         .finally(() => {
           this.loading = false;
+          this.searchLoading = false;
+          this.clearSearchLoading = false;
+        });
+    },
+    getProTableData() {
+      this.proLoading = true;
+      getStandardAnalysisDatas(this.searchProRowData)
+        .then(res => {
+          this.proTableData = res.rows;
+          this.proTotal = res.total;
+        })
+        .finally(res => {
+          this.proLoading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
         });
@@ -2060,12 +2277,6 @@ export default {
     },
     handleSubmit() {
       this.defaultListMultiple_ = [];
-      // if (this.oldPicture.length > 0) {
-      //   const urls = {
-      //     urls: this.oldPicture
-      //   };
-      //   this.deletePicture(urls);
-      // }
       this.$refs.editForm.validate((valid) => {
         if (valid) {
           if (this.isCreate) {
@@ -2079,27 +2290,11 @@ export default {
       });
     },
     handleEditClose() {
-      // if (this.newPicture.length > 0) {
-      //   const urls = {
-      //     urls: this.newPicture
-      //   };
-      //   this.deletePicture(urls);
-      // }
       this.defaultListMultiple_ = [];
       this.modalEdit = false;
       this.oldPicture = [];
       this.newPicture = [];
     },
-    // deletePicture(urls) {
-    //   deletePicture({
-    //     urls
-    //   })
-    //     .then(res => {
-    //       this.newPicture = [];
-    //       this.oldPicture = [];
-    //     })
-    //     .catch(() => {});
-    // },
     handleSubmitRegin() {
       // 把规格ID赋值给goodsPriceRegion  goodsPriceRegion.maxQuantity minQuantity
       this.goodsPriceRegion.goodsStandardId = this.productStandardDetail.id;
@@ -2138,7 +2333,6 @@ export default {
         }
       });
     },
-    // v1.2.2
     modalHandleEdit(params) {
       if (!this.openStatus) {
         this.openStatus = true;
@@ -2197,6 +2391,12 @@ export default {
       const strTempDelete = tempDeleteList.join(',');
       this.deleteRegionTable(strTempDelete);
     },
+    handleAnalytics(params) {
+      const { row } = params;
+      this.searchProRowData.params.goodsStandardId = row.id;
+      this.getProTableData();
+      this.modalPro = true;
+    },
     handleRegin(params) {
       // 展示区间价格维护弹窗
       this.productStandardDetail = _.cloneDeep(params.row);
@@ -2220,6 +2420,9 @@ export default {
     resetSearchRowData() {
       this.searchRowData = _.cloneDeep(roleRowData);
       this.$refs.showClass.clearSelect();
+    },
+    resetSearchProRowData() {
+      this.searchProRowData = _.cloneDeep(proRowData);
     },
     resetSearchProductRowData() {
       this.searchProductRowData = _.cloneDeep(productRowData);
@@ -2450,7 +2653,6 @@ export default {
       this.$refs.uploadMain.deleteFile(file);
       this.productStandardDetail.goodsImage = null;
     },
-
     goodsAreaChange(value) {
       this.productStandardDetail.goodsArea = value;
     },

@@ -2303,7 +2303,35 @@ const btns = {
     } else {
       return 'N/A'
     }
-  }
+  },
+  proAnalytics: (h, params, vm) => {
+    return h('Tooltip', {
+      props: { placement: 'top', transfer: true, content: '商品分析' }
+    }, [
+      h('Button', {
+        props: {
+          type: 'primary',
+          size: 'small'
+        },
+        style: {
+          marginRight: '5px'
+        },
+        on: {
+          click: () => {
+            vm.$emit('on-analytics', params);
+          }
+        }
+      }, [
+        h('Icon', {
+          props: {
+            type: 'md-analytics',
+            size: 16,
+            color: '#fff'
+          }
+        })
+      ])
+    ]);
+  },
 };
 
 export default btns;
