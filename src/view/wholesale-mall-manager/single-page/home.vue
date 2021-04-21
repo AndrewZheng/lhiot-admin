@@ -515,7 +515,7 @@ export default {
       this.searchProRowData.endTime = value;
     },
     changePagePro(page) {
-      this.searchRowData.page = page;
+      this.searchProRowData.page = page;
       this.getProTableData();
     },
     changePageSizePro(pageSize) {
