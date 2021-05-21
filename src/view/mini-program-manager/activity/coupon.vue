@@ -207,6 +207,16 @@
             </Row>
           </i-col>
         </Row>
+        <Row v-show="selectActivityType ==='CONSUME_COUPON_ACTIVITY'" class-name="mb20">
+          <i-col span="24">
+            <Row>
+              <i-col span="6"> 消费送门槛: </i-col>
+              <i-col span="18">
+                {{ couponDetail.consumeThreshold | fenToYuanDot2Filterss }}
+              </i-col>
+            </Row>
+          </i-col>
+        </Row>
         <Row
           v-show="selectActivityType === 'BUY_COUPON_ACTIVITY'"
           class-name="mb20"
@@ -383,6 +393,23 @@
                     v-model="couponDetail.activityContent"
                     placeholder="活动内容"
                   ></Input>
+                </FormItem>
+              </i-col>
+            </Row>
+            <Row v-if="couponDetail.activityType==='CONSUME_COUPON_ACTIVITY'">
+              <i-col span="18">
+                <FormItem
+                  label="消费送券门槛:"
+                  prop="consumeThreshold"
+                  style="width: 280px"
+                >
+                  <InputNumber
+                    :min="0"
+                    :value="consumeThresholdComputed"
+                    placeholder="消费送券门槛"
+                    style="width: 200px"
+                    @on-change="consumeThresholdOnchange"
+                  ></InputNumber>
                 </FormItem>
               </i-col>
             </Row>
@@ -774,12 +801,14 @@ const couponDetail = {
   endTime: null,
   createUser: '',
   createTime: null,
+  extendedJsonStr: null,
   applicationType: null,
   activityImage: '',
   activityUrl: '',
   activityType: '',
   buyFirstAmount: 0,
-  buyAmount: 0
+  buyAmount: 0,
+  consumeThreshold: 0 // 消费送券门槛
 };
 
 const relationDetail = {
@@ -1295,6 +1324,9 @@ export default {
     };
   },
   computed: {
+    consumeThresholdComputed() {
+      return fenToYuanDot2Number(this.couponDetail.consumeThreshold);
+    },
     firstAmountComputed() {
       return fenToYuanDot2Number(this.couponDetail.buyFirstAmount);
     },
@@ -1308,6 +1340,9 @@ export default {
   },
   created() {},
   methods: {
+    consumeThresholdOnchange(value) {
+      this.couponDetail.consumeThreshold = yuanToFenNumber(value);
+    },
     firstAmountOnchange(value) {
       this.couponDetail.buyFirstAmount = yuanToFenNumber(value);
     },
@@ -1332,7 +1367,6 @@ export default {
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
-          console.log('1231231', this.selectActivityType);
           if (
             (this.selectActivityType === 'BUY_COUPON_ACTIVITY' ||
               this.selectActivityType === 'BUY_COUPON_ACTIVITY_ALL') &&
@@ -1361,13 +1395,11 @@ export default {
         });
     },
     handleView(params) {
-      this.modalView = true;
       this.tempModalType = this.modalType.view;
       this.couponDetail = _.cloneDeep(params.row);
-      this.couponDetail.activityRuel = this.couponDetail.activityRuel.replace(
-        /&/g,
-        '\n'
-      );
+      this.couponDetail.consumeThreshold = params.row.extendedJsonStr ? JSON.parse(params.row.extendedJsonStr).consumeThreshold : 0;
+      this.couponDetail.activityRuel = this.couponDetail.activityRuel.replace(/&/g, '\n');
+      this.modalView = true;
     },
     handleEdit(params) {
       // this.resetFields();
@@ -1376,10 +1408,9 @@ export default {
       this.save.push(params.row.activityImage);
       this.tempModalType = this.modalType.edit;
       this.couponDetail = _.cloneDeep(params.row);
-      this.couponDetail.activityRuel = this.couponDetail.activityRuel.replace(
-        /&/g,
-        '\n'
-      );
+      this.couponDetail.activityType = this.searchRowData.activityType;
+      this.couponDetail.consumeThreshold = params.row.extendedJsonStr ? JSON.parse(params.row.extendedJsonStr).consumeThreshold : 0;
+      this.couponDetail.activityRuel = this.couponDetail.activityRuel.replace(/&/g, '\n');
       this.setDefaultUploadList(params.row);
       this.modalEdit = true;
     },
@@ -1412,6 +1443,12 @@ export default {
             this.$Message.error('结束时间必须大于开始时间!');
             return;
           }
+          // 如果是消费送类型活动，转JSON字符串
+          if (this.couponDetail.activityType === 'CONSUME_COUPON_ACTIVITY') {
+            const extendedData = { consumeThreshold: this.couponDetail.consumeThreshold };
+            this.couponDetail.extendedJsonStr = JSON.stringify(extendedData);
+          }
+
           // 活动规则换行用“&”拼接
           if (
             this.couponDetail.activityRuel !== null ||
@@ -1475,6 +1512,7 @@ export default {
         this.tempModalType = this.modalType.create;
         this.couponDetail = _.cloneDeep(couponDetail);
       }
+      this.couponDetail.activityType = this.searchRowData.activityType;
       this.modalEdit = true;
     },
     deleteTable(ids) {

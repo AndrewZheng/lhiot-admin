@@ -228,11 +228,7 @@
       <p slot="header">
         <i-col>
           {{
-            isEdit
-              ? "修改限时秒杀活动"
-              : isCreate
-                ? "创建限时秒杀活动"
-                : "添加限时秒杀活动和商品关联"
+            isEdit? "修改限时秒杀活动" : isCreate? "创建限时秒杀活动": "添加限时秒杀活动和商品关联"
           }}
         </i-col>
       </p>
@@ -494,10 +490,22 @@
             border
             @on-sale="switchStatus"
             @on-delete="modalHandleDelete"
+            @on-link-generate="handleLinkGenerate"
             @on-inline-edit="modalHandleEdit"
             @on-inline-save="modalHandleSave"
             @on-abolish="modalHandleAbolish"
           ></tables>
+          <Row type="flex" justify="end" class="mt10">
+            <Page
+              :total="relationTotal"
+              :current="searchRelationRowData.page"
+              :page-size="searchRelationRowData.rows"
+              show-sizer
+              show-total
+              @on-change="changeRealtionPage"
+              @on-page-size-change="changeRelationPageSize"
+            ></Page>
+          </Row>
         </Row>
       </div>
       <div slot="footer">
@@ -513,6 +521,25 @@
           @click="handleSubmit('editForm')"
         >
           确定
+        </Button>
+      </div>
+    </Modal>
+
+    <!-- 生成链接弹窗 -->
+    <Modal v-model="modalLink" title="生成链接" :mask-closable="false">
+      <div class="modal-content">
+        <span>{{ linkUrl }}</span>
+      </div>
+      <div slot="footer">
+        <Button
+          v-clipboard:copy="linkUrl"
+          v-clipboard:success="clipboardSuccess"
+          type="info"
+        >
+          快速复制
+        </Button>
+        <Button type="primary" @click="modalLink=false">
+          关闭
         </Button>
       </div>
     </Modal>
@@ -987,10 +1014,13 @@ export default {
       products: [],
       templatePageOpts: [5, 10],
       productTotal: 0,
+      relationTotal: 0,
       addTempDataLoading: false,
       tempTableLoading: false,
       editStatus: false,
       proFlag: true,
+      modalLink: false,
+      linkUrl: '',
       imageStatusEnum,
       onSaleStatusEnum,
       ruleInline: {
@@ -1137,7 +1167,7 @@ export default {
           align: 'center',
           minWidth: 140,
           key: 'handle',
-          options: ['onSale', 'inlineEdit', 'abolish']
+          options: ['onSale', 'inlineEdit', 'abolish', 'linkGenerate']
         }
       ],
       productColumns: _.cloneDeep(productColumns),
@@ -1167,6 +1197,64 @@ export default {
       this.$refs.editForm.resetFields();
       //   this.uploadListMain = [];
       //   this.activitySeckillDetail.storeImage = null;
+    },
+    startTimeChange(value, date) {
+      this.activitySeckillDetail.beginTime = value;
+    },
+    endTimeChange(value, date) {
+      this.activitySeckillDetail.endTime = value;
+    },
+    edBeginTimeChange(value) {
+      this.searchRowData.beginTime = value;
+    },
+    edFinishTimeChange(value) {
+      this.searchRowData.endTime = value;
+    },
+    getTableData() {
+      getSeckillPages(this.searchRowData)
+        .then((res) => {
+          this.tableData = res.rows;
+          this.total = res.total;
+        })
+        .finally(() => {
+          this.loading = false;
+          this.searchLoading = false;
+          this.clearSearchLoading = false;
+        });
+    },
+    addFlashsale() {
+      // this.resetFields();
+      this.editStatus = false;
+      this.tempModalType = this.modalType.create;
+      this.activitySeckillDetail = _.cloneDeep(activitySeckillDetail);
+      this.modalEdit = true;
+    },
+    onRelevance(params) {
+      this.tempModalType = null;
+      // FIXME 查询商品规格分页信息（后期按钮触发，或者先存储，需要时再调用接口）
+      this.getProductTableData();
+      // 查询限时抢购关联商品
+      this.searchRelationRowData.activityId = params.row.id;
+      this.addRelationDetail.activityId = params.row.id;
+      this.getRelationTableData();
+      this.modalEdit = true;
+    },
+    handleSwitch(params) {
+      this.activitySeckillDetail = _.cloneDeep(params.row);
+      this.activitySeckillDetail.status = params.row.status === 'ON' ? 'OFF' : 'ON';
+      this.editSeckill();
+    },
+    handleView(params) {
+      this.tempModalType = this.modalType.view;
+      this.activitySeckillDetail = _.cloneDeep(params.row);
+      this.modalView = true;
+    },
+    handleEdit(params) {
+      // this.resetFields();
+      this.editStatus = !compareCouponData(params.row.beginTime);
+      this.tempModalType = this.modalType.edit;
+      this.activitySeckillDetail = _.cloneDeep(params.row);
+      this.modalEdit = true;
     },
     handleSubmit(name) {
       this.$refs[name].validate((valid) => {
@@ -1230,13 +1318,6 @@ export default {
           this.modalViewLoading = false;
         });
     },
-    addFlashsale() {
-      // this.resetFields();
-      this.editStatus = false;
-      this.tempModalType = this.modalType.create;
-      this.activitySeckillDetail = _.cloneDeep(activitySeckillDetail);
-      this.modalEdit = true;
-    },
     deleteTable(ids) {
       deleteFlashsale({
         ids
@@ -1254,30 +1335,6 @@ export default {
           this.getTableData();
         })
     },
-    handleView(params) {
-      this.tempModalType = this.modalType.view;
-      this.activitySeckillDetail = _.cloneDeep(params.row);
-      this.modalView = true;
-    },
-    handleEdit(params) {
-      // this.resetFields();
-      this.editStatus = !compareCouponData(params.row.beginTime);
-      this.tempModalType = this.modalType.edit;
-      this.activitySeckillDetail = _.cloneDeep(params.row);
-      this.modalEdit = true;
-    },
-    getTableData() {
-      getSeckillPages(this.searchRowData)
-        .then((res) => {
-          this.tableData = res.rows;
-          this.total = res.total;
-        })
-        .finally(() => {
-          this.loading = false;
-          this.searchLoading = false;
-          this.clearSearchLoading = false;
-        });
-    },
     getRelationTableData() {
       getSeckillProductRelationPages(this.searchRelationRowData)
         .then((res) => {
@@ -1285,6 +1342,7 @@ export default {
             element.isEdit = false;
           });
           this.relationProducts = res.rows;
+          this.relationTotal = res.total;
         })
         .finally(() => {
           this.loading = false;
@@ -1292,32 +1350,14 @@ export default {
           this.clearSearchLoading = false;
         });
     },
-    handleSwitch(params) {
-      this.activitySeckillDetail = _.cloneDeep(params.row);
-      this.activitySeckillDetail.status = params.row.status === 'ON' ? 'OFF' : 'ON';
-      this.editSeckill();
-    },
-    startTimeChange(value, date) {
-      this.activitySeckillDetail.beginTime = value;
-    },
-    endTimeChange(value, date) {
-      this.activitySeckillDetail.endTime = value;
-    },
-    edBeginTimeChange(value) {
-      this.searchRowData.beginTime = value;
-    },
-    edFinishTimeChange(value) {
-      this.searchRowData.endTime = value;
-    },
-    onRelevance(params) {
-      this.tempModalType = null;
-      // FIXME 查询商品规格分页信息（后期按钮触发，或者先存储，需要时再调用接口）
-      this.getProductTableData();
-      // 查询限时抢购关联商品
-      this.searchRelationRowData.activityId = params.row.id;
-      this.addRelationDetail.activityId = params.row.id;
+    changeRealtionPage(page) {
+      this.searchRelationRowData.page = page;
       this.getRelationTableData();
-      this.modalEdit = true;
+    },
+    changeRelationPageSize(pageSize) {
+      this.searchRelationRowData.page = 1;
+      this.searchRelationRowData.rows = pageSize;
+      this.getRelationTableData();
     },
     addTempData(name) {
       if (this.addRelationDetail.standardId === 0) {
@@ -1346,6 +1386,17 @@ export default {
         }
       });
       // this.createFlashsaleProductRelation(this.addRelationDetail)
+    },
+    clipboardSuccess() {
+      this.$Message.info('复制成功！');
+      this.modalLink = false;
+    },
+    handleLinkGenerate(params) {
+      const { row } = params;
+      // 生成跳转小程序详情的链接地址
+      const url = `/package/limit/pages/flashGoodsDetail?id=${row.standardId}&activityId=${row.activityId}`;
+      this.linkUrl = url;
+      this.modalLink = true;
     },
     modalHandleEdit(params) {
       this.$set(params.row, 'isEdit', true);

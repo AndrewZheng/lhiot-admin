@@ -1052,7 +1052,8 @@ export const payType = {
   weixin: 'weixin',
   balance: 'balance',
   points: 'points',
-  haiding: 'haiding'
+  haiding: 'haiding',
+  cmb: 'cmb'
 };
 
 export const payTypeEnum = [{
@@ -1070,6 +1071,10 @@ export const payTypeEnum = [{
 {
   label: '鼎付通',
   value: payType.haiding
+},
+{
+  label: '一网通支付',
+  value: payType.cmb
 }
 ];
 
@@ -2294,21 +2299,19 @@ export const advertisementPositionTypeEnum = [{
 ];
 
 // 小程序广告关联类别
-// GOODSINFO("商品详情"),STORELIVE("门店直播"),
-// AMUSEMENT("多娱"),EXTERNALLINK("外部链接"), INTERNALLINK('内部链接') TABLINK('底部导航')
-// GAME("游戏"),INVITEACTIVE("邀请有礼"),FLASHACTIVE("抢购商品"),RECHARGE("充值页面"),STOCK("仓库")
+// GOODSINFO("商品详情"),EXTERNALLINK("外部链接"),INTERNALLINK('内部链接'),TABLINK('底部导航')
+// INVITEACTIVE("邀请有礼"),FLASHACTIVE("抢购商品"),PRESALEACTIVE("预售商品"),
+// GROUPACTIVE("拼团商品"),SECKILLACTIVE("秒杀商品")
 export const linkType = {
   GOODSINFO: 'GOODSINFO',
-  STORELIVE: 'STORELIVE',
-  AMUSEMENT: 'AMUSEMENT',
   EXTERNALLINK: 'EXTERNALLINK',
-  GAME: 'GAME',
+  INTERNALLINK: 'INTERNALLINK',
+  TABLINK: 'TABLINK',
   INVITEACTIVE: 'INVITEACTIVE',
   FLASHACTIVE: 'FLASHACTIVE',
-  RECHARGE: 'RECHARGE',
-  STOCK: 'STOCK',
-  TABLINK: 'TABLINK',
-  INTERNALLINK: 'INTERNALLINK'
+  PRESALEACTIVE: 'PRESALEACTIVE',
+  GROUPACTIVE: 'GROUPACTIVE',
+  SECKILLACTIVE: 'SECKILLACTIVE'
 };
 
 export const linkTypeEnum = [{
@@ -2316,28 +2319,16 @@ export const linkTypeEnum = [{
   value: linkType.GOODSINFO
 },
 {
-  label: '门店直播',
-  value: linkType.STORELIVE
-},
-{
-  label: '多娱',
-  value: linkType.AMUSEMENT
-},
-{
-  label: '底部导航',
-  value: linkType.TABLINK
+  label: '外部链接',
+  value: linkType.EXTERNALLINK
 },
 {
   label: '内部链接',
   value: linkType.INTERNALLINK
 },
 {
-  label: '外部链接',
-  value: linkType.EXTERNALLINK
-},
-{
-  label: '游戏',
-  value: linkType.GAME
+  label: '底部导航',
+  value: linkType.TABLINK
 },
 {
   label: '邀请有礼',
@@ -2348,12 +2339,16 @@ export const linkTypeEnum = [{
   value: linkType.FLASHACTIVE
 },
 {
-  label: '充值页面',
-  value: linkType.RECHARGE
+  label: '预售商品',
+  value: linkType.PRESALEACTIVE
 },
 {
-  label: '仓库',
-  value: linkType.STOCK
+  label: '拼团商品',
+  value: linkType.GROUPACTIVE
+},
+{
+  label: '秒杀商品',
+  value: linkType.SECKILLACTIVE
 }
 ];
 

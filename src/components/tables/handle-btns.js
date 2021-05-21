@@ -2332,6 +2332,34 @@ const btns = {
       ])
     ]);
   },
+  linkGenerate: (h, params, vm) => {
+    return h('Tooltip', {
+      props: { placement: 'top', transfer: true, content: '生成链接' }
+    }, [
+      h('Button', {
+        props: {
+          type: 'primary',
+          size: 'small'
+        },
+        style: {
+          marginRight: '5px'
+        },
+        on: {
+          click: () => {
+            vm.$emit('on-link-generate', params);
+          }
+        }
+      }, [
+        h('Icon', {
+          props: {
+            type: 'ios-link',
+            size: 16,
+            color: '#fff'
+          }
+        })
+      ])
+    ]);
+  }
 };
 
 export default btns;

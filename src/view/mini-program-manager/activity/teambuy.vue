@@ -16,6 +16,7 @@
         @on-delete="handleDelete"
         @on-view="handleView"
         @on-edit="handleEdit"
+        @on-link-generate="handleLinkGenerate"
         @on-current-change="onCurrentChange"
         @on-select-all="onSelectionAll"
         @on-selection-change="onSelectionChange"
@@ -1661,6 +1662,25 @@
       </div>
     </Modal>
 
+    <!-- 生成链接弹窗 -->
+    <Modal v-model="modalLink" title="生成链接" :mask-closable="false">
+      <div class="modal-content">
+        <span>{{ linkUrl }}</span>
+      </div>
+      <div slot="footer">
+        <Button
+          v-clipboard:copy="linkUrl"
+          v-clipboard:success="clipboardSuccess"
+          type="info"
+        >
+          快速复制
+        </Button>
+        <Button type="primary" @click="modalLink=false">
+          关闭
+        </Button>
+      </div>
+    </Modal>
+
     <Modal v-model="uploadVisible" title="图片预览">
       <img :src="imgUploadViewItem" style="width: 100%">
     </Modal>
@@ -1845,6 +1865,7 @@ export default {
       uploadListMain: [],
       productTotal: 0,
       loading: true,
+      modalLink: false,
       modalProduct: false,
       createLoading: false,
       modalViewLoading: false,
@@ -1856,6 +1877,7 @@ export default {
       isEnvironment: null,
       currentTableRowSelected: null,
       groupStatus: '',
+      linkUrl: '',
       step: 'firstStep',
       activityStatus: [
         { label: '未开始', value: 'off' },
@@ -2106,11 +2128,11 @@ export default {
         },
         {
           title: '操作',
-          minWidth: 120,
+          minWidth: 150,
           align: 'center',
           fixed: 'right',
           key: 'handle',
-          options: ['view', 'edit']
+          options: ['view', 'edit', 'linkGenerate']
         }
       ],
       productColumns: [
@@ -2693,6 +2715,17 @@ export default {
         this.$refs.uploadMain.setDefaultFileList(mainImgArr);
         this.uploadListMain = mainImgArr;
       }
+    },
+    clipboardSuccess() {
+      this.$Message.info('复制成功！');
+      this.modalLink = false;
+    },
+    handleLinkGenerate(params) {
+      const { row } = params;
+      // 生成跳转小程序详情的链接地址
+      const url = `/package/groupBuying/pages/goodsDel?teamBuyType=${row.teamBuyType}&id=${row.id}&barcode=${row.productStandard && row.productStandard.barcode ? row.productStandard.barcode : ''}`;
+      this.linkUrl = url;
+      this.modalLink = true;
     },
     handleView(params) {
       this.resetFields();

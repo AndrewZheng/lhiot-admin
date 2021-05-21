@@ -16,6 +16,7 @@
         @on-delete="handleDelete"
         @on-view="handleView"
         @on-edit="handleEdit"
+        @on-link-generate="handleLinkGenerate"
         @coupon-status="statusChange"
         @on-current-change="onCurrentChange"
         @on-select-all="onSelectionAll"
@@ -1555,6 +1556,25 @@
         </Button>
       </div>
     </Modal>
+
+    <!-- 生成链接弹窗 -->
+    <Modal v-model="modalLink" title="生成链接" :mask-closable="false">
+      <div class="modal-content">
+        <span>{{ linkUrl }}</span>
+      </div>
+      <div slot="footer">
+        <Button
+          v-clipboard:copy="linkUrl"
+          v-clipboard:success="clipboardSuccess"
+          type="info"
+        >
+          快速复制
+        </Button>
+        <Button type="primary" @click="modalLink=false">
+          关闭
+        </Button>
+      </div>
+    </Modal>
   </div>
 </template>
 
@@ -1716,6 +1736,7 @@ export default {
       productTotal: 0,
       firstSuccess: true,
       loading: true,
+      modalLink: false,
       modalProduct: false,
       modalGoodsStandard: false,
       exportExcelLoading: false,
@@ -1723,6 +1744,7 @@ export default {
       isEnvironment: null,
       step: 'firstStep',
       groupStatus: '',
+      linkUrl: '',
       startedFlagStatus: [
         { label: '活动开始', value: 'true' },
         { label: '活动未开始', value: 'false' }
@@ -1956,11 +1978,11 @@ export default {
         },
         {
           title: '操作',
-          minWidth: 150,
+          minWidth: 200,
           align: 'center',
           fixed: 'right',
           key: 'handle',
-          options: ['couponStatus', 'view', 'edit']
+          options: ['couponStatus', 'view', 'edit', 'linkGenerate']
         }
       ],
       productColumns: [
@@ -2449,6 +2471,17 @@ export default {
         this.$refs.uploadMain.setDefaultFileList(mainImgArr);
         this.uploadListMain = mainImgArr;
       }
+    },
+    clipboardSuccess() {
+      this.$Message.info('复制成功！');
+      this.modalLink = false;
+    },
+    handleLinkGenerate(params) {
+      const { row } = params;
+      // 生成跳转小程序详情的链接地址
+      const url = `/package/presales/presellDel?id=${row.id}&barcode=${row.productStandard && row.productStandard.barcode ? row.productStandard.barcode : ''}`;
+      this.linkUrl = url;
+      this.modalLink = true;
     },
     handleView(params) {
       this.resetFields();

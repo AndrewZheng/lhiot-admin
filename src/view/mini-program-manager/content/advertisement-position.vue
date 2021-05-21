@@ -546,7 +546,7 @@ export default {
       this.modalEdit = true;
     },
     resetFields() {
-      this.$refs.modalEdit.resetFields();
+      this.$refs.editForm.resetFields();
       this.advPositionDetail = _.cloneDeep(advPositionDetail);
     },
     handleSubmit() {

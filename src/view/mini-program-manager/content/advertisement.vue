@@ -60,6 +60,22 @@
               {{ item.label }}
             </Option>
           </Select>
+          <Select
+            v-model="searchRowData.linkType"
+            class="search-col mr5"
+            placeholder="链接类型"
+            style="width: 100px"
+            clearable
+          >
+            <Option
+              v-for="(item,index) in linkTypeEnum"
+              :key="`status-${index}`"
+              :value="item.value"
+              class="pt5 pb5 pl15"
+            >
+              {{ item.label }}
+            </Option>
+          </Select>
           <Button
             v-waves
             class="search-btn mr5"
@@ -437,38 +453,37 @@
                 </Select>
               </FormItem>
             </i-col>
-            <i-col span="12">
-              <Row span="24" align="middle" type="flex">
-                <FormItem label="链接目标:" prop="advertisementRelation">
-                  <Row v-if="isTargetLink">
+          </Row>
+          <Row span="24" align="middle" type="flex">
+            <i-col span="24">
+              <FormItem label="链接目标:" prop="advertisementRelation">
+                <Row v-if="isTargetLink">
+                  <Input
+                    v-model="advertisementDetail.advertisementRelation"
+                  ></Input>
+                </Row>
+                <Row v-else>
+                  <i-col span="24">
                     <Input
-                      v-model="advertisementDetail.advertisementRelation"
-                      style="width: 200px"
-                    ></Input>
-                  </Row>
-                  <Row v-else>
-                    <i-col span="24">
-                      <Input
-                        v-model="advertisementDetail.advertisementRelationText"
-                        :disabled="
-                          advertisementDetail.linkType !== 'EXTERNALLINK'
-                        "
-                      >
-                      <Button
-                        slot="append"
-                        v-waves
-                        :loading="searchModalTableLoading"
-                        class="search-btn"
-                        type="primary"
-                        @click="searchAdvertisementRelation"
-                      >
-                        <Icon type="md-search" />&nbsp;搜索
-                      </Button>
-                      </Input>
-                    </i-col>
-                  </Row>
-                </FormItem>
-              </Row>
+                      v-model="advertisementDetail.advertisementRelationText"
+                      :disabled="
+                        advertisementDetail.linkType !== 'EXTERNALLINK'
+                      "
+                    >
+                    <Button
+                      slot="append"
+                      v-waves
+                      :loading="searchModalTableLoading"
+                      class="search-btn"
+                      type="primary"
+                      @click="searchAdvertisementRelation"
+                    >
+                      <Icon type="md-search" />&nbsp;搜索
+                    </Button>
+                    </Input>
+                  </i-col>
+                </Row>
+              </FormItem>
             </i-col>
           </Row>
           <Row>
@@ -655,6 +670,7 @@ const roleRowData = {
   advertisementName: null,
   positionId: null,
   status: null,
+  linkType: null,
   page: 1,
   rows: 10,
   sidx: 'createTime',
@@ -699,28 +715,31 @@ export default {
       linkType: [
         {
           value: linkType.GOODSINFO,
-          label: '商品详情',
+          label: '普通商品',
           api: getProductStandardsPages,
           columns: miniGoodsStandardColumns
         },
-        {
-          value: linkType.INVITEACTIVE,
-          label: '邀请有礼',
-          api: getProductStandardsPages,
-          columns: miniGoodsStandardColumns
-        },
-        {
-          value: linkType.FLASHACTIVE,
-          label: '抢购商品',
-          api: getProductStandardsPages,
-          columns: miniGoodsStandardColumns
-        },
-        {
-          value: linkType.RECHARGE,
-          label: '充值页面',
-          api: getProductStandardsPages,
-          columns: miniGoodsStandardColumns
-        },
+        { value: linkType.GROUPACTIVE, label: '拼团商品' },
+        { value: linkType.PRESALEACTIVE, label: '预售商品' },
+        { value: linkType.SECKILLACTIVE, label: '秒杀商品' },
+        // {
+        //   value: linkType.FLASHACTIVE,
+        //   label: '抢购商品',
+        //   api: getProductStandardsPages,
+        //   columns: miniGoodsStandardColumns
+        // },
+        // {
+        //   value: linkType.INVITEACTIVE,
+        //   label: '邀请有礼',
+        //   api: getProductStandardsPages,
+        //   columns: miniGoodsStandardColumns
+        // },
+        // {
+        //   value: linkType.RECHARGE,
+        //   label: '充值页面',
+        //   api: getProductStandardsPages,
+        //   columns: miniGoodsStandardColumns
+        // },
         { value: linkType.EXTERNALLINK, label: '外部链接' },
         { value: linkType.INTERNALLINK, label: '内部链接' },
         { value: linkType.TABLINK, label: '底部导航' }
@@ -889,7 +908,10 @@ export default {
       return (
         this.advertisementDetail.linkType === 'EXTERNALLINK' ||
         this.advertisementDetail.linkType === 'INTERNALLINK' ||
-        this.advertisementDetail.linkType === 'TABLINK'
+        this.advertisementDetail.linkType === 'TABLINK' ||
+        this.advertisementDetail.linkType === 'GROUPACTIVE' ||
+        this.advertisementDetail.linkType === 'PRESALEACTIVE' ||
+        this.advertisementDetail.linkType === 'SECKILLACTIVE'
       );
     },
     advertisementPositionComputed() {
