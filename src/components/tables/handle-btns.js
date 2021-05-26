@@ -509,32 +509,38 @@ const btns = {
     }
   },
   discount: (h, params, vm) => {
-    return h('Tooltip', {
-      props: { placement: 'top', transfer: true, content: '折扣' }
-    }, [
-      h('Button', {
-        props: {
-          type: 'primary',
-          size: 'small'
-        },
-        style: {
-          marginRight: '5px'
-        },
-        on: {
-          click: () => {
-            vm.$emit('on-discount', params);
-          }
-        }
+    const { row } = params;
+    if (row.productType === 'ORDINARY_PRODUCT' || row.productType === 'TEAM_BUY_PRODUCT' ||
+       row.productType === 'PRE_SALE_PRODUCT' || row.productType === 'SHARE_PRODUCT' || row.productType === 'POINTS_LOTTERY_PRODUCT') {
+      return '';
+    } else {
+      return h('Tooltip', {
+        props: { placement: 'top', transfer: true, content: '折扣' }
       }, [
-        h('Icon', {
+        h('Button', {
           props: {
-            type: 'md-pricetags',
-            size: 16,
-            color: '#fff'
+            type: 'primary',
+            size: 'small'
+          },
+          style: {
+            marginRight: '5px'
+          },
+          on: {
+            click: () => {
+              vm.$emit('on-discount', params);
+            }
           }
-        })
-      ])
-    ]);
+        }, [
+          h('Icon', {
+            props: {
+              type: 'md-pricetags',
+              size: 16,
+              color: '#fff'
+            }
+          })
+        ])
+      ]);
+    }
   },
   onSale: (h, params, vm) => {
     const {
