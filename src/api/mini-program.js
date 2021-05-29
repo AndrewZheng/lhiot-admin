@@ -3064,10 +3064,27 @@ export const getUnifyActivity = (id) => {
   });
 };
 
-// 更新统一活动关联
+// 根据id查询统一活动配置管理
+export const getActivitySettingRelation = (id) => {
+  return $http.request({
+    url: `/minapp/activity-setting-relation/${id}`,
+    method: 'get'
+  });
+};
+
+// 下架统一活动关联
 export const deleteUnifyActivityRelevance = (data) => {
   return $http.request({
     url: '/minapp/activity-setting-relation/update-status/' + data.id,
+    data,
+    method: 'put'
+  });
+};
+
+// 更新统一活动配置关联
+export const updateUnifyActivityRelevance = (data) => {
+  return $http.request({
+    url: '/minapp/activity-setting-relation/update/' + data.id,
     data,
     method: 'put'
   });
@@ -3099,6 +3116,7 @@ export const deleteWollectWordRelevance = (data) => {
     method: 'delete'
   });
 };
+
 // /minapp/collect-word-setting/update/{id}
 export const updateWollectWordRelevance = (data) => {
   return $http.request({
@@ -3143,6 +3161,41 @@ export const getCollectWordStatistics = () => {
   return $http.request({
     url: `/coupon/statistics/collect-word-activity`,
     method: 'get'
+  });
+};
+
+/* -------------------------
+ * 积分抽奖活动管理
+ * -------------------------
+ */
+// 获取小程序数据分析助手的PV和UV
+export const getActivityPUV = (data) => {
+  return $http.request({
+    url: `/minapp/activity-setting/get-pv-uv/${data.pvUvEnum}`,
+    data,
+    method: 'post'
+  });
+};
+
+// 积分抽奖数据统计
+export const getPointsLotteryStatistics = (data) => {
+  return $http.request({
+    url: '/minapp/manage/points-lottery/pages',
+    data,
+    method: 'post',
+    headers: {
+      'page': data.page,
+      'rows': data.rows
+    }
+  });
+};
+
+// 添加积分关联记录
+export const createActiviyRelation = (data) => {
+  return $http.request({
+    url: '/minapp/activity-setting-relation/create',
+    data,
+    method: 'post'
   });
 };
 

@@ -2607,7 +2607,7 @@ export default {
           align: 'center',
           render: (h, params, vm) => {
             const { row } = params;
-            if (row.productType == 'DISCOUNT_PRODUCT') {
+            if (row.productType === 'DISCOUNT_PRODUCT') {
               return (
                 <div>
                   <tag color='magenta'>
@@ -2615,7 +2615,7 @@ export default {
                   </tag>
                 </div>
               );
-            } else if (row.productType == 'PULL_NEW_PRODUCT') {
+            } else if (row.productType === 'PULL_NEW_PRODUCT') {
               return (
                 <div>
                   <tag color='orange'>
@@ -2623,7 +2623,7 @@ export default {
                   </tag>
                 </div>
               );
-            } else if (row.productType == 'SECKILL_PRODUCT') {
+            } else if (row.productType === 'SECKILL_PRODUCT') {
               return (
                 <div>
                   <tag color='blue'>
@@ -2631,7 +2631,7 @@ export default {
                   </tag>
                 </div>
               );
-            } else if (row.productType == 'NEW_TRY_PRODUCT') {
+            } else if (row.productType === 'NEW_TRY_PRODUCT') {
               return (
                 <div>
                   <tag color='blue'>
@@ -2639,7 +2639,7 @@ export default {
                   </tag>
                 </div>
               );
-            } else if (row.productType == 'ASSIST_PRODUCT') {
+            } else if (row.productType === 'ASSIST_PRODUCT') {
               return (
                 <div>
                   <tag color='green'>
@@ -2647,7 +2647,7 @@ export default {
                   </tag>
                 </div>
               );
-            } else if (row.productType == 'SHARE_PRODUCT') {
+            } else if (row.productType === 'SHARE_PRODUCT') {
               return (
                 <div>
                   <tag color='green'>
@@ -2655,7 +2655,7 @@ export default {
                   </tag>
                 </div>
               );
-            } else if (row.productType == 'TEAM_BUY_PRODUCT') {
+            } else if (row.productType === 'TEAM_BUY_PRODUCT') {
               return (
                 <div>
                   <tag color='green'>
@@ -2663,7 +2663,7 @@ export default {
                   </tag>
                 </div>
               );
-            } else if (row.productType == 'PRE_SALE_PRODUCT') {
+            } else if (row.productType === 'PRE_SALE_PRODUCT') {
               return (
                 <div>
                   <tag color='green'>
@@ -2671,7 +2671,7 @@ export default {
                   </tag>
                 </div>
               );
-            } else if (row.productType == 'ORDINARY_PRODUCT') {
+            } else if (row.productType === 'ORDINARY_PRODUCT') {
               return (
                 <div>
                   <tag color='cyan'>

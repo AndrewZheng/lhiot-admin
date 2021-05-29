@@ -1364,9 +1364,6 @@ export default {
         .then((res) => {
           this.tableData = res.rows;
           this.total = res.total;
-          this.loading = false;
-          this.searchLoading = false;
-          this.clearSearchLoading = false;
           if (
             (this.selectActivityType === 'BUY_COUPON_ACTIVITY' ||
               this.selectActivityType === 'BUY_COUPON_ACTIVITY_ALL') &&
@@ -1377,8 +1374,7 @@ export default {
             this.addStatus = false;
           }
         })
-        .catch((error) => {
-          console.log(error);
+        .finally(() => {
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
@@ -1390,9 +1386,6 @@ export default {
         .then((res) => {
           this.activityClassify = res.systemSettings;
         })
-        .catch((error) => {
-          console.log(error);
-        });
     },
     handleView(params) {
       this.tempModalType = this.modalType.view;

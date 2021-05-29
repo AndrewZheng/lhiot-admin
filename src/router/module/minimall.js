@@ -607,6 +607,15 @@ const miniMallRouter = [
         component: () => import('@/view/mini-program-manager/member/integral-statistics.vue')
       },
       {
+        path: '/small-lottery-statistics',
+        name: 'small-lottery-statistics',
+        meta: {
+          icon: 'ios-stats',
+          title: '积分抽奖数据统计'
+        },
+        component: () => import('@/view/mini-program-manager/member/lottery-statistics.vue')
+      },
+      {
         path: '/small-coupon-statistics',
         name: 'small-coupon-statistics',
         meta: {

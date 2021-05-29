@@ -577,7 +577,7 @@
                   </i-col>
                   <i-col span="5">
                     <Button
-                      v-show="this.proFlag === true"
+                      v-show="proFlag === true"
                       v-waves
                       :loading="addTempDataLoading"
                       span="4"

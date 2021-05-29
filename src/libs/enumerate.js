@@ -907,6 +907,10 @@ export const expandTypeEnum = [
   {
     label: '助力商品',
     value: 'ASSIST_PRODUCT'
+  },
+  {
+    label: '积分抽奖商品',
+    value: 'POINTS_LOTTERY_PRODUCT'
   }
 ];
 
@@ -2446,7 +2450,8 @@ export const miniOrderType = {
   TEAM_BUYING: 'TEAM_BUYING',
   PRESAL_ORDER: 'PRESAL_ORDER',
   POINTS_BUYING: 'POINTS_BUYING',
-  BUY_COUPON_ALL_ORDER: 'BUY_COUPON_ALL_ORDER'
+  BUY_COUPON_ALL_ORDER: 'BUY_COUPON_ALL_ORDER',
+  POINTS_LOTTERY: 'POINTS_LOTTERY'
 };
 
 export const miniOrderTypeEnum = [{
@@ -2464,6 +2469,10 @@ export const miniOrderTypeEnum = [{
 {
   label: '积分兑换订单',
   value: miniOrderType.POINTS_BUYING
+},
+{
+  label: '积分抽奖订单',
+  value: miniOrderType.POINTS_LOTTERY
 },
 {
   label: '购券订单',
@@ -2930,4 +2939,40 @@ export const userClassEnum = [{
 {
   label: '内部用户',
   value: 'INTERIOR'
+}]
+
+// PROD("商品");COUPON("券");PSEUDO("虚假的")
+export const prizeTypeEnum = [{
+  label: '商品',
+  value: 'PROD'
+},
+{
+  label: '优惠券',
+  value: 'COUPON'
+},
+{
+  label: '谢谢惠顾',
+  value: 'PSEUDO'
+}]
+
+// NO_REWARD("未中奖"), WAIT_RECEIVE("待领取"), EXPIRE("失效"), RECEIVE("已领取"), FAILED("领取失败");
+export const lotteryStatusEnum = [{
+  label: '未中奖',
+  value: 'NO_REWARD'
+},
+{
+  label: '待领取',
+  value: 'WAIT_RECEIVE'
+},
+{
+  label: '已领取',
+  value: 'RECEIVE'
+},
+{
+  label: '领取失败',
+  value: 'FAILED'
+},
+{
+  label: '已失效',
+  value: 'EXPIRE'
 }]
