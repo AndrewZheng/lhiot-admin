@@ -83,6 +83,7 @@
               <Select
                 v-model="searchRowData.searchObj.relationType"
                 placeholder="奖品类型"
+                clearable
                 style="width: 150px"
               >
                 <Option
@@ -95,6 +96,7 @@
               <Select
                 v-model="searchRowData.searchObj.lotteryStatus"
                 placeholder="奖品状态"
+                clearable
                 style="width: 150px"
               >
                 <Option
@@ -119,7 +121,7 @@
                   style="padding-left: 5px;width: 100px"
                 >{{ item.label }}</Option>
               </Select>
-              <Select
+              <!-- <Select
                 v-model="searchRowData.source"
                 placeholder="券来源"
                 :class="searchRowData.queryDays=='-1'?'mt10':''"
@@ -132,36 +134,36 @@
                   class="ptb2-5"
                 >{{ item.label }}</Option>
               </Select>
-            </Row>
-            <Row style="margin-top:10px;">
-              <div class="ml15 mt10" style="float:left">
-                <span class="mr10">PV:<i style="color:red">{{ pv }}</i></span>
-                <span>UV:<i style="color:red">{{ uv }}</i></span>
-              </div>
-              <div style="float:right">
-                <Button
-                  :loading="searchLoading"
-                  class="search-btn mr5"
-                  type="primary"
-                  @click="handleSearch"
-                >
-                  <Icon type="md-search" />&nbsp;搜索
-                </Button>
-                <Button
-                  v-waves
-                  :loading="clearSearchLoading"
-                  class="search-btn"
-                  type="info"
-                  @click="handleClear"
-                >
-                  <Icon type="md-refresh" />&nbsp;清除
-                </Button>
-                <Button class="search-btn mr2" type="warning" @click="handleDownload">
-                  <Icon type="md-download" />导出数据
-                </Button>
-              </div>
-            </Row>
-          </div>
+            </Row> -->
+              <Row style="margin-top:10px;">
+                <div class="ml15 mt10" style="float:left">
+                  <span class="mr10">该时间段内, PV:<i style="color:red">{{ pv }}次</i></span>
+                  <span>UV:<i style="color:red">{{ uv }}人</i></span>
+                </div>
+                <div style="float:right">
+                  <Button
+                    :loading="searchLoading"
+                    class="search-btn mr5"
+                    type="primary"
+                    @click="handleSearch"
+                  >
+                    <Icon type="md-search" />&nbsp;搜索
+                  </Button>
+                  <Button
+                    v-waves
+                    :loading="clearSearchLoading"
+                    class="search-btn"
+                    type="info"
+                    @click="handleClear"
+                  >
+                    <Icon type="md-refresh" />&nbsp;清除
+                  </Button>
+                  <Button class="search-btn mr2" type="warning" @click="handleDownload">
+                    <Icon type="md-download" />导出数据
+                  </Button>
+                </div>
+              </Row>
+            </row></div>
         </tables>
         <div style="margin: 10px;overflow: hidden">
           <Row type="flex" justify="end">
@@ -360,10 +362,30 @@ export default {
           }
         },
         {
-          title: '创建日期',
+          title: '抽奖日期',
           align: 'center',
           key: 'createTime',
           width: 200
+        },
+        {
+          title: '结束日期',
+          align: 'center',
+          key: 'receiveTime',
+          width: 200,
+          render(h, params, vm) {
+            const { row } = params;
+            if (row.lotteryStatus === 'RECEIVE') {
+              return <div>{row.receiveTime}</div>;
+            } else if (row.lotteryStatus === 'WAIT_RECEIVE') {
+              return <div></div>;
+            } else if (row.lotteryStatus === 'FAILED') {
+              return <div color='red'>{row.receiveTime}</div>
+            } else if (row.lotteryStatus === 'EXPIRE') {
+              return <div color='grey'>{row.receiveTime}</div>;
+            } else {
+              return <div>{row.receiveTime}</div>
+            }
+          }
         }
       ],
       searchRowData: _.cloneDeep(roleRowData),

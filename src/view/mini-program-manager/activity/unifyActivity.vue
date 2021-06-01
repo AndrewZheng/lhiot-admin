@@ -903,12 +903,12 @@
       <div slot="footer">
         <Button @click="handleLotteryClose">关闭
         </Button>
-        <Button
+        <!-- <Button
           type="primary"
           @click="handleRelevanceAdd('COLLECTION_SETTING')"
         >
           确定
-        </Button>
+        </Button> -->
       </div>
     </Modal>
 
@@ -1762,12 +1762,13 @@ const relationTempColumns = [
             <tag color='error'>{'下架'}</tag>
           </div>
         );
+      } else {
+        return (
+          <div>
+            <tag color='primary'>{row.status}</tag>
+          </div>
+        );
       }
-      return (
-        <div>
-          <tag color='primary'>{row.status}</tag>
-        </div>
-      );
     }
   }
 ];
@@ -2719,6 +2720,26 @@ export default {
           return;
         }
       }
+      // TODO: 新增抽奖比例不能大于100的校验 + 上架的奖品数量不能大于8，也不能小于8
+      if (this.relationProducts.length > 0) {
+        const onRelations = this.relationProducts.filter(item => item.status === 'ON');
+        if (onRelations.length === 8) {
+          this.$Message.error('请先下架一个奖品，才能完成新奖品的添加');
+          return;
+        }
+        let rewardScaleTotal = 0;
+        onRelations.forEach((item) => {
+          const { rewardScale } = JSON.parse(item.extendedJsonStr);
+          rewardScaleTotal += rewardScale;
+        });
+        console.log(`rewardScaleTotal: ${rewardScaleTotal}`);
+        // 如果已上架的奖品比例加上要添加的奖品比例大于100
+        if (rewardScaleTotal + this.addRelationDetail.rewardScale > 100) {
+          this.$Message.error('当前奖品比例大于100，请调整比例再添加');
+          return;
+        }
+      }
+
       this.$refs[name].validate((valid) => {
         if (valid) {
           this.createRelation();
@@ -2755,7 +2776,6 @@ export default {
           this.$Message.success('创建成功!');
           this.resetModalCreate();
           this.getRelationTableData();
-          this.modalEdit = false;
         })
         .finally(() => {
           this.modalViewLoading = false;
@@ -2788,6 +2808,21 @@ export default {
       this.$set(params.row, 'isEdit', false);
     },
     handleconfirmEdit() {
+      // TODO: 修改抽奖比例时不能大于100的校验
+      // if (this.relationProducts.length > 0) {
+      //   const onRelations = this.relationProducts.filter(item => item.status === 'ON');
+      //   let rewardScaleTotal = 0;
+      //   onRelations.forEach((item) => {
+      //     const { rewardScale } = JSON.parse(item.extendedJsonStr);
+      //     rewardScaleTotal += rewardScale;
+      //   });
+      //   console.log(`upadate rewardScaleTotal: ${rewardScaleTotal}`);
+      //   // 如果已上架的奖品比例加上要添加的奖品比例大于100
+      //   if (rewardScaleTotal + this.updateRelationDetail.rewardScale > 100) {
+      //     this.$Message.error('当前奖品比例大于100，请调整比例再修改');
+      //     return;
+      //   }
+      // }
       this.$refs.editRelevanceForm.validate((valid) => {
         if (valid) {
           this.updateRelation();
