@@ -456,6 +456,9 @@ export default {
           if (item['relationType'] === 'COUPON') {
             item['rewardType'] = couponTypeConvert(item['rewardType']).label;
           }
+          if (item['lotteryStatus'] === 'WAIT_RECEIVE') {
+            item['receiveTime'] = '';
+          }
           item['lotteryStatus'] = lotteryStatusConvert(item['lotteryStatus']);
           item['relationType'] = prizeTypeConvert(item['relationType']);
           if (item['source'] === 'SMALL') {

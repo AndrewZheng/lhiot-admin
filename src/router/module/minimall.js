@@ -22,6 +22,26 @@ const miniMallRouter = [
     }]
   },
   {
+    path: '/small-analysis',
+    name: 'small-analysis',
+    component: Main,
+    meta: {
+      hideInBread: true,
+      title: '数据统计汇总',
+      icon: 'ios-stats'
+    },
+    children: [{
+      path: '/small-analysis',
+      name: 'small-analysis',
+      meta: {
+        icon: 'ios-stats',
+        title: '数据统计汇总',
+        notCache: true
+      },
+      component: () => import('@/view/mini-program-manager/member/statistics.vue')
+    }]
+  },
+  {
     path: '/small-goods-manager',
     name: 'small-goods-manager',
     meta: {
