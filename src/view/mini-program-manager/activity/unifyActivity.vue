@@ -2644,12 +2644,12 @@ export default {
     },
     handleRelationRemoveMain(file) {
       this.$refs.uploadMainRelation.deleteFile(file);
-      this.updateRelation.rewardImg = null;
+      this.updateRelationDetail.rewardImg = null;
     },
     handleRelationSuccessMain(response, file, fileList) {
       this.uploadListMainRelation = fileList;
-      this.updateRelation.rewardImg = null;
-      this.updateRelation.rewardImg = fileList[0].url;
+      this.updateRelationDetail.rewardImg = null;
+      this.updateRelationDetail.rewardImg = fileList[0].url;
     },
     // 抽奖活动-关闭弹窗
     handleLotteryClose() {
