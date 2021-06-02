@@ -2314,6 +2314,7 @@ export default {
         this.getCouponTableData();
         this.getRelationTableData();
         this.topStatus = 'PROD';
+        this.addRelationDetail.type = 'PROD';
         this.modalLottery = true;
       }
     },
@@ -2734,10 +2735,10 @@ export default {
         });
         console.log(`rewardScaleTotal: ${rewardScaleTotal}`);
         // 如果已上架的奖品比例加上要添加的奖品比例大于100
-        if (rewardScaleTotal + this.addRelationDetail.rewardScale > 100) {
-          this.$Message.error('当前奖品比例大于100，请调整比例再添加');
-          return;
-        }
+        // if (rewardScaleTotal + this.addRelationDetail.rewardScale > 100) {
+        //   this.$Message.error('当前奖品比例大于100，请调整比例再添加');
+        //   return;
+        // }
       }
 
       this.$refs[name].validate((valid) => {
