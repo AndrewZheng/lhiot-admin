@@ -8,7 +8,7 @@
 
       <Card v-show="topStatus==='pro_detail'">
         <tables
-          ref="detailTables"
+          ref="tables1"
           v-model="tableData1"
           :columns="columns1"
           :loading="loading"
@@ -553,46 +553,48 @@ export default {
       this.searchRowData.rows = this.total > 5000 ? 5000 : this.total;
       const pageSize = this.searchRowData.page;
       this.searchRowData.page = 1;
-      getProAnalysisDatas(this.searchRowData).then((res) => {
-        const tableData = res.rows;
-        // 恢复正常页数
-        this.searchRowData.rows = 20;
-        this.searchRowData.page = pageSize;
-        // tableData.forEach((item) => {
-        // });
-        const { startTime, endTime } = tableData[0];
-        const date = this.$moment(new Date()).format('YYYYMMDD');
-        let dateStr = '';
-        // 导出今日的数据使用当前时间戳
-        if (this.searchRowData.queryDays === '0') {
-          dateStr = date;
-        } else {
-          dateStr = startTime + 'T' + endTime;
-        }
-        this.$refs.tables.handleDownload({
-          filename: `商品数据统计-${dateStr}`,
-          data: tableData
+      getProAnalysisDatas(this.searchRowData)
+        .then((res) => {
+          const tableData = res.rows;
+          // 恢复正常页数
+          this.searchRowData.rows = 20;
+          this.searchRowData.page = pageSize;
+          // tableData.forEach((item) => {
+          // });
+          const { startTime, endTime } = tableData[0];
+          const date = this.$moment(new Date()).format('YYYYMMDD');
+          let dateStr = '';
+          // 导出今日的数据使用当前时间戳
+          if (this.searchRowData.queryDays === '0') {
+            dateStr = date;
+          } else {
+            dateStr = startTime + 'T' + endTime;
+          }
+          this.$refs.tables.handleDownload({
+            filename: `商品数据统计-${dateStr}`,
+            data: tableData
+          });
         });
-      });
     },
     handleDownload1() {
       // 导出不分页 按条件查出多少条导出多少条 限制每次最多5000条
-      this.searchRowDetailData.rows = this.total > 5000 ? 5000 : this.total;
+      this.searchRowDetailData.rows = this.detailTotal > 5000 ? 5000 : this.detailTotal;
       const pageSize = this.searchRowDetailData.page;
       this.searchRowDetailData.page = 1;
-      getProDetailAnalysisDatas(this.searchRowDetailData).then((res) => {
-        const tableData = res.detailModelResult.rows;
-        // 恢复正常页数
-        this.searchRowDetailData.rows = 20;
-        this.searchRowDetailData.page = pageSize;
-        // tableData.forEach((item) => {
-        // });
-        const date = this.$moment(new Date()).format('YYYYMMDDHHmmss');
-        this.$refs.tables.handleDownload({
-          filename: `商品明细数据统计-${date}`,
-          data: tableData
+      getProDetailAnalysisDatas(this.searchRowDetailData)
+        .then((res) => {
+          const tableData1 = res.detailModelResult.rows;
+          // 恢复正常页数
+          this.searchRowDetailData.rows = 20;
+          this.searchRowDetailData.page = pageSize;
+          // tableData1.forEach((item) => {
+          // });
+          const date = this.$moment(new Date()).format('YYYYMMDDHHmmss');
+          this.$refs.tables1.handleDownload({
+            filename: `商品明细数据统计-${date}`,
+            data: tableData1
+          });
         });
-      });
     }
   }
 };
