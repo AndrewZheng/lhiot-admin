@@ -22,6 +22,7 @@
         @on-inline-edit="modalHandleEdit"
         @on-inline-save="modalHandleSave"
         @on-abolish="modalHandleAbolish"
+        @on-current-change="handleCurrentChange"
         @on-selection-change="handleSelectionChange"
       >
         <div slot="searchCondition">
@@ -162,9 +163,9 @@
             </Button>
           </Poptip>-->
           </Row>
-          <!-- <div class="ml15 mt10">
+          <div class="ml15 mt10">
             <i style="color:red">*</i> 选中单条数据再点击添加,可复制当前数据
-          </div>-->
+          </div>
         </div>
       </tables>
       <div style="margin: 10px; overflow: hidden">
@@ -1289,301 +1290,6 @@ const goodsPriceRegion = {
   standardDes: '' // 价格区间描述
 };
 
-const standardColumns = [
-  {
-    title: '规格ID',
-    align: 'center',
-    key: 'id',
-    fixed: 'left',
-    minWidth: 90
-  },
-  {
-    title: '商品条码',
-    align: 'center',
-    key: 'barCode',
-    fixed: 'left',
-    minWidth: 100
-  },
-  {
-    title: '商品名称',
-    align: 'center',
-    fixed: 'left',
-    key: 'standardGoodsName',
-    minWidth: 120
-  },
-  {
-    title: '商品图片',
-    key: 'goodsImage',
-    align: 'center',
-    minWidth: 100,
-    render: (h, params, vm) => {
-      const { row } = params;
-      const str = <img src={row.goodsImage} height='60' width='60' />;
-      return <div>{str}</div>;
-    }
-  },
-  {
-    title: '商品规格',
-    align: 'center',
-    key: 'standard',
-    minWidth: 120
-  },
-  {
-    title: '单位',
-    align: 'center',
-    minWidth: 80,
-    key: 'goodsUnit'
-  },
-  {
-    title: '商品价格',
-    align: 'center',
-    minWidth: 100,
-    key: 'price',
-    render(h, params, vm) {
-      const { row } = params;
-      if (row.isEdit) {
-        return h(
-          'Div',
-          {
-            style: {
-              display: 'flex',
-              flexDirection: 'column'
-            }
-          },
-          [
-            h(
-              'Span',
-              {
-                style: {
-                  lineHeight: '32px',
-                  marginLeft: '2px',
-                  overflow: 'hidden',
-                  textOverflow: 'ellipsis',
-                  whiteSpace: 'nowrap'
-                },
-                on: {}
-              },
-              fenToYuanDot2(row.afterPrice)
-            ),
-            h('Input', {
-              style: {
-                marginLeft: '4px',
-                width: '100%'
-              },
-              props: {
-                type: 'number',
-                value: '' // 使用key的键值
-              },
-              on: {
-                input: (event) => {
-                  row.price = event;
-                }
-              }
-            })
-          ]
-        );
-      } else {
-        return h('div', fenToYuanDot2(row.price));
-      }
-    }
-  },
-  {
-    title: '进货价',
-    align: 'center',
-    minWidth: 100,
-    key: 'purchasePrice',
-    render(h, params, vm) {
-      const { row } = params;
-      if (row.isEdit) {
-        return h(
-          'Div',
-          {
-            style: {
-              display: 'flex',
-              flexDirection: 'column'
-            }
-          },
-          [
-            h(
-              'Span',
-              {
-                style: {
-                  lineHeight: '32px',
-                  marginLeft: '2px',
-                  overflow: 'hidden',
-                  textOverflow: 'ellipsis',
-                  whiteSpace: 'nowrap'
-                },
-                on: {}
-              },
-              fenToYuanDot2(row.afterPurchasePrice)
-            ),
-            h('Input', {
-              style: {
-                marginLeft: '4px',
-                width: '100%'
-              },
-              props: {
-                type: 'number',
-                value: ''
-              },
-              on: {
-                input: (event) => {
-                  row.purchasePrice = event;
-                }
-              }
-            })
-          ]
-        );
-      } else {
-        return h('div', fenToYuanDot2(row.purchasePrice));
-      }
-    }
-  },
-  {
-    title: '库存',
-    align: 'center',
-    key: 'stockLimit',
-    minWidth: 90,
-    render(h, params, vm) {
-      const { row } = params;
-      if (row.isEdit) {
-        return h(
-          'Div',
-          {
-            style: {
-              display: 'flex',
-              flexDirection: 'column'
-            }
-          },
-          [
-            h('Input', {
-              style: {
-                marginLeft: '4px',
-                width: '100%'
-              },
-              props: {
-                type: 'number',
-                value: row.stockLimit // 使用key的键值
-              },
-              on: {
-                input: (event) => {
-                  row.stockLimit = event;
-                }
-              }
-            })
-          ]
-        );
-      } else {
-        return h('div', row.stockLimit);
-      }
-    }
-  },
-  {
-    title: '商品类型',
-    minWidth: 140,
-    key: 'goodsType',
-    align: 'center',
-    render: (h, params, vm) => {
-      const { row } = params;
-      if (row.goodsType === 'NORMAL') {
-        return (
-          <div>
-            <tag color='cyan'>{pfExpandTypeConvert(row.goodsType).label}</tag>
-          </div>
-        );
-      } else if (row.goodsType === 'VIP') {
-        return (
-          <div>
-            <tag color='orange'>{pfExpandTypeConvert(row.goodsType).label}</tag>
-          </div>
-        );
-      } else if (row.goodsType === 'FLASHSALE') {
-        return (
-          <div>
-            <tag color='blue'>{pfExpandTypeConvert(row.goodsType).label}</tag>
-          </div>
-        );
-      }
-      return (
-        <div>
-          <tag color='primary'>N/A</tag>
-        </div>
-      );
-    }
-  },
-  {
-    title: '状态',
-    minWidth: 80,
-    key: 'vaild',
-    align: 'center',
-    render: (h, params, vm) => {
-      const { row } = params;
-      if (row.vaild === 'yes') {
-        return (
-          <div>
-            <tag color='success'>上架</tag>
-          </div>
-        );
-      } else if (row.vaild === 'no') {
-        return (
-          <div>
-            <tag color='error'>下架</tag>
-          </div>
-        );
-      }
-      return (
-        <div>
-          <tag color='primary'>N/A</tag>
-        </div>
-      );
-    }
-  },
-  {
-    title: '区间价',
-    minWidth: 80,
-    key: 'isHasPriceRegion',
-    align: 'center',
-    render: (h, params, vm) => {
-      const { row } = params;
-      if (row.isHasPriceRegion === 'yes') {
-        return (
-          <div>
-            <tag color='success'>有</tag>
-          </div>
-        );
-      } else if (row.isHasPriceRegion === 'no') {
-        return (
-          <div>
-            <tag color='error'>无</tag>
-          </div>
-        );
-      }
-      return (
-        <div>
-          <tag color='primary'>N/A</tag>
-        </div>
-      );
-    }
-  },
-  {
-    title: '操作',
-    align: 'center',
-    fixed: 'right',
-    minWidth: 240,
-    key: 'handle',
-    options: [
-      'amendEdit',
-      'abolish',
-      'customOnSale',
-      'view',
-      'edit',
-      'discount',
-      'proAnalytics'
-    ]
-  }
-];
-
 const productColumns = [
   {
     title: '商品图片',
@@ -1785,7 +1491,300 @@ export default {
       productStandardDetail: _.cloneDeep(productStandardDetail),
       productDetail: _.cloneDeep(productDetail),
       goodsPriceRegion: _.cloneDeep(goodsPriceRegion),
-      columns: standardColumns,
+      columns: [
+        {
+          title: '规格ID',
+          align: 'center',
+          key: 'id',
+          fixed: 'left',
+          minWidth: 90
+        },
+        {
+          title: '商品条码',
+          align: 'center',
+          key: 'barCode',
+          fixed: 'left',
+          minWidth: 100
+        },
+        {
+          title: '商品名称',
+          align: 'center',
+          fixed: 'left',
+          key: 'standardGoodsName',
+          minWidth: 120
+        },
+        {
+          title: '商品图片',
+          key: 'goodsImage',
+          align: 'center',
+          minWidth: 100,
+          render: (h, params) => {
+            const { row } = params;
+            const str = <img src={row.goodsImage ? row.goodsImage : this.defaultImg } height='60' width='60' />;
+            return <div>{str}</div>;
+          }
+        },
+        {
+          title: '商品规格',
+          align: 'center',
+          key: 'standard',
+          minWidth: 120
+        },
+        {
+          title: '单位',
+          align: 'center',
+          minWidth: 80,
+          key: 'goodsUnit'
+        },
+        {
+          title: '商品价格',
+          align: 'center',
+          minWidth: 100,
+          key: 'price',
+          render(h, params, vm) {
+            const { row } = params;
+            if (row.isEdit) {
+              return h(
+                'Div',
+                {
+                  style: {
+                    display: 'flex',
+                    flexDirection: 'column'
+                  }
+                },
+                [
+                  h(
+                    'Span',
+                    {
+                      style: {
+                        lineHeight: '32px',
+                        marginLeft: '2px',
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        whiteSpace: 'nowrap'
+                      },
+                      on: {}
+                    },
+                    fenToYuanDot2(row.afterPrice)
+                  ),
+                  h('Input', {
+                    style: {
+                      marginLeft: '4px',
+                      width: '100%'
+                    },
+                    props: {
+                      type: 'number',
+                      value: '' // 使用key的键值
+                    },
+                    on: {
+                      input: (event) => {
+                        row.price = event;
+                      }
+                    }
+                  })
+                ]
+              );
+            } else {
+              return h('div', fenToYuanDot2(row.price));
+            }
+          }
+        },
+        {
+          title: '进货价',
+          align: 'center',
+          minWidth: 100,
+          key: 'purchasePrice',
+          render(h, params, vm) {
+            const { row } = params;
+            if (row.isEdit) {
+              return h(
+                'Div',
+                {
+                  style: {
+                    display: 'flex',
+                    flexDirection: 'column'
+                  }
+                },
+                [
+                  h(
+                    'Span',
+                    {
+                      style: {
+                        lineHeight: '32px',
+                        marginLeft: '2px',
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        whiteSpace: 'nowrap'
+                      },
+                      on: {}
+                    },
+                    fenToYuanDot2(row.afterPurchasePrice)
+                  ),
+                  h('Input', {
+                    style: {
+                      marginLeft: '4px',
+                      width: '100%'
+                    },
+                    props: {
+                      type: 'number',
+                      value: ''
+                    },
+                    on: {
+                      input: (event) => {
+                        row.purchasePrice = event;
+                      }
+                    }
+                  })
+                ]
+              );
+            } else {
+              return h('div', fenToYuanDot2(row.purchasePrice));
+            }
+          }
+        },
+        {
+          title: '库存',
+          align: 'center',
+          key: 'stockLimit',
+          minWidth: 90,
+          render(h, params, vm) {
+            const { row } = params;
+            if (row.isEdit) {
+              return h(
+                'Div',
+                {
+                  style: {
+                    display: 'flex',
+                    flexDirection: 'column'
+                  }
+                },
+                [
+                  h('Input', {
+                    style: {
+                      marginLeft: '4px',
+                      width: '100%'
+                    },
+                    props: {
+                      type: 'number',
+                      value: row.stockLimit // 使用key的键值
+                    },
+                    on: {
+                      input: (event) => {
+                        row.stockLimit = event;
+                      }
+                    }
+                  })
+                ]
+              );
+            } else {
+              return h('div', row.stockLimit);
+            }
+          }
+        },
+        {
+          title: '商品类型',
+          minWidth: 140,
+          key: 'goodsType',
+          align: 'center',
+          render: (h, params, vm) => {
+            const { row } = params;
+            if (row.goodsType === 'NORMAL') {
+              return (
+                <div>
+                  <tag color='cyan'>{pfExpandTypeConvert(row.goodsType).label}</tag>
+                </div>
+              );
+            } else if (row.goodsType === 'VIP') {
+              return (
+                <div>
+                  <tag color='orange'>{pfExpandTypeConvert(row.goodsType).label}</tag>
+                </div>
+              );
+            } else if (row.goodsType === 'FLASHSALE') {
+              return (
+                <div>
+                  <tag color='blue'>{pfExpandTypeConvert(row.goodsType).label}</tag>
+                </div>
+              );
+            }
+            return (
+              <div>
+                <tag color='primary'>N/A</tag>
+              </div>
+            );
+          }
+        },
+        {
+          title: '状态',
+          minWidth: 80,
+          key: 'vaild',
+          align: 'center',
+          render: (h, params, vm) => {
+            const { row } = params;
+            if (row.vaild === 'yes') {
+              return (
+                <div>
+                  <tag color='success'>上架</tag>
+                </div>
+              );
+            } else if (row.vaild === 'no') {
+              return (
+                <div>
+                  <tag color='error'>下架</tag>
+                </div>
+              );
+            }
+            return (
+              <div>
+                <tag color='primary'>N/A</tag>
+              </div>
+            );
+          }
+        },
+        {
+          title: '区间价',
+          minWidth: 80,
+          key: 'isHasPriceRegion',
+          align: 'center',
+          render: (h, params, vm) => {
+            const { row } = params;
+            if (row.isHasPriceRegion === 'yes') {
+              return (
+                <div>
+                  <tag color='success'>有</tag>
+                </div>
+              );
+            } else if (row.isHasPriceRegion === 'no') {
+              return (
+                <div>
+                  <tag color='error'>无</tag>
+                </div>
+              );
+            }
+            return (
+              <div>
+                <tag color='primary'>N/A</tag>
+              </div>
+            );
+          }
+        },
+        {
+          title: '操作',
+          align: 'center',
+          fixed: 'right',
+          minWidth: 240,
+          key: 'handle',
+          options: [
+            'amendEdit',
+            'abolish',
+            'customOnSale',
+            'view',
+            'edit',
+            'discount',
+            'proAnalytics'
+          ]
+        }
+      ],
       proColumns,
       productColumns,
       regionColumns: goodsPriceRegionColumns,
@@ -2259,9 +2258,12 @@ export default {
       }
       // 复制选中的数据
       if (this.currentTableRowSelected) {
+        this.currentTableRowSelected.id = null;
         this.productStandardDetail = _.cloneDeep(this.currentTableRowSelected);
+        console.log(`copy obj:`, this.productStandardDetail);
       }
       this.tempModalType = this.modalType.create;
+      this.setDefaultUploadList(this.productStandardDetail);
       this.modalEdit = true;
     },
     handleImgSort() {
@@ -2281,6 +2283,7 @@ export default {
         if (valid) {
           if (this.isCreate) {
             this.createProductStandard();
+            this.currentTableRowSelected = null;
           } else if (this.isEdit) {
             this.editProductStandard();
           }
@@ -2411,8 +2414,8 @@ export default {
     handleSelectionChange(selection) {
       this.tableDataSelected = selection;
     },
-    onCurrentChange(currentRow, oldCurrentRow) {
-      this.currentTableRowSelected = currentRow;
+    handleCurrentChange(currentRow, oldCurrentRow) {
+      this.currentTableRowSelected = _.cloneDeep(currentRow);
     },
     onSelectionAll(selection) {
       this.tableDataSelected = selection;
@@ -2687,6 +2690,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.m-role{
+  img {
+    vertical-align: middle;
+  }
+}
+
 .demo-upload-list {
   display: inline-block;
   width: 60px;
@@ -2726,7 +2735,5 @@ export default {
   font-size: 20px;
   cursor: pointer;
   margin: 0 2px;
-}
-</style>
 }
 </style>

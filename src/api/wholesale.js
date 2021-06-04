@@ -1577,3 +1577,29 @@ export const unlockSalesman = (data) => {
   });
 };
 
+// 销售报表-商品明细统计
+export const getProDetailAnalysisDatas = (data) => {
+  return $http.request({
+    url: `/wholesale-small/sale/sale-detail?goodsCode=${data.goodsCode ? data.goodsCode : ''}&goodsName=${data.goodsName ? data.goodsName : ''}`,
+    data,
+    method: 'post',
+    headers: {
+      'page': data.page,
+      'rows': data.rows
+    }
+  });
+};
+
+// 销售报表-商品统计
+export const getProAnalysisDatas = (data) => {
+  return $http.request({
+    url: `/wholesale-small/sale/sale-goods/total?goodsCode=${data.goodsCode ? data.goodsCode : ''}&goodsName=${data.goodsName ? data.goodsName : ''}`,
+    data,
+    method: 'post',
+    headers: {
+      'page': data.page,
+      'rows': data.rows
+    }
+  });
+};
+
