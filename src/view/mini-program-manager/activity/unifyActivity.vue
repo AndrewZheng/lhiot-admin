@@ -2219,7 +2219,7 @@ export default {
           align: 'center',
           minWidth: 120,
           key: 'handle',
-          options: ['onSale', 'edit']
+          options: ['onSale', 'edit', 'rewardAnalytics']
         }
       ],
       productColumns: _.cloneDeep(productColumns),
@@ -2947,5 +2947,13 @@ export default {
   display: inline-block;
   // color: red;
   background: rgb(245, 247, 249);
+}
+
+.ivu-tooltip-popper{
+  .ivu-tooltip-content{
+    .ivu-tooltip-inner{
+      white-space: normal;
+    }
+  }
 }
 </style>
