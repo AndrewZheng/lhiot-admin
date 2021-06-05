@@ -2365,6 +2365,39 @@ const btns = {
         })
       ])
     ]);
+  },
+  rewardAnalytics: (h, params, vm) => {
+    const { row } = params;
+    if (!row.dataTotalJsonStr) { return ''; }
+    const { NO_REWARD, WAIT_RECEIVE, EXPIRE, RECEIVE, FAILED } = JSON.parse(row.dataTotalJsonStr);
+    return h('Tooltip', {
+      props: {
+        placement: 'top',
+        wordWrap: true,
+        transfer: true,
+        content: `已领取-${RECEIVE} / 待领取-${WAIT_RECEIVE} / 未中奖-${NO_REWARD} / 领取失败-${FAILED} / 已过期-${EXPIRE}`,
+        trigger: 'hover',
+        width: 'auto'
+      }
+    }, [
+      h('Button', {
+        props: {
+          type: 'primary',
+          size: 'small'
+        },
+        style: {
+          marginRight: '5px'
+        }
+      }, [
+        h('Icon', {
+          props: {
+            type: 'md-analytics',
+            size: 16,
+            color: '#fff'
+          }
+        })
+      ])
+    ]);
   }
 };
 
