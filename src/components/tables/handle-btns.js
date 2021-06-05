@@ -2377,7 +2377,7 @@ const btns = {
         transfer: true,
         content: `已领取-${RECEIVE} / 待领取-${WAIT_RECEIVE} / 未中奖-${NO_REWARD} / 领取失败-${FAILED} / 已过期-${EXPIRE}`,
         trigger: 'hover',
-        width: 'auto'
+        maxWidth: '180px'
       }
     }, [
       h('Button', {

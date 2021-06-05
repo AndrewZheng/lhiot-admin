@@ -2948,12 +2948,4 @@ export default {
   // color: red;
   background: rgb(245, 247, 249);
 }
-
-.ivu-tooltip-popper{
-  .ivu-tooltip-content{
-    .ivu-tooltip-inner{
-      white-space: normal;
-    }
-  }
-}
 </style>
