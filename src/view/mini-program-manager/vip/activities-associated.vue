@@ -20,6 +20,12 @@
         @on-selection-change="onSelectionChange"
         @on-view="handleView"
       >
+        <div slot="searchCondition">
+          <div class="ml15 mt10">
+            <b style="color: red">*</b> 排序字段设置
+            <b style="color: red">-1</b>为社区入群券
+          </div>
+        </div>
         <div slot="operations">
           <Button
             v-show="showBack"
