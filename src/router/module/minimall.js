@@ -481,6 +481,15 @@ const miniMallRouter = [
       //   component: () => import('@/view/mini-program-manager/activity/flashsale.vue')
       // },
       {
+        path: '/small-live',
+        name: 'small-live',
+        meta: {
+          icon: 'logo-youtube',
+          title: '直播管理'
+        },
+        component: () => import('@/view/mini-program-manager/content/live.vue')
+      },
+      {
         path: '/small-feedback',
         name: 'small-feedback',
         meta: {

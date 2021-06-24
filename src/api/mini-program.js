@@ -3345,3 +3345,58 @@ export const retryCoupon = (data) => {
     method: 'post'
   });
 };
+
+/* -------------------------
+ * 动态表单-直播管理
+ * -------------------------
+ */
+// 分页查询
+export const getDynamicFormPages = (data) => {
+  return $http.request({
+    url: '/minapp/dynamic-form/pages',
+    data,
+    method: 'post',
+    headers: {
+      'page': data.page,
+      'rows': data.rows,
+      'sidx': data.sidx,
+      'sort': data.sort
+    }
+  });
+};
+
+// 查询
+export const getDynamicForm = (id) => {
+  return $http.request({
+    url: `/minapp/dynamic-form/${id}`,
+    method: 'get'
+  });
+};
+
+// 创建
+export const createDynamicForm = (data) => {
+  return $http.request({
+    url: `/minapp/dynamic-form/create`,
+    data,
+    method: 'post'
+  });
+};
+
+// 更新
+export const updateDynamicForm = (data) => {
+  return $http.request({
+    url: '/minapp/dynamic-form/update/' + data.id,
+    data,
+    method: 'put'
+  });
+};
+
+// 删除
+export const deleteDynamicForm = ({
+  ids
+}) => {
+  return $http.request({
+    url: '/minapp/dynamic-form/' + ids,
+    method: 'delete'
+  });
+};
