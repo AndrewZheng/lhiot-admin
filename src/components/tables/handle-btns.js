@@ -931,40 +931,45 @@ const btns = {
   },
   // 手动退款
   onHand: (h, params, vm) => {
-    return h('Poptip', {
-      props: {
-        confirm: true,
-        transfer: true,
-        title: '确认要退款?'
-      },
-      style: {
-        marginRight: '5px'
-      },
-      on: {
-        'on-ok': () => {
-          vm.$emit('on-hand', params);
-        }
-      }
-    }, [
-      h('Tooltip', {
-        props: { placement: 'top', transfer: true, content: '手动退款' }
-      }, [
-        h('Button', {
-          props: {
-            type: 'error',
-            size: 'small'
+    const { row } = params;
+    if (row.orderType !== 'POINTS_LOTTERY') {
+      return h('Poptip', {
+        props: {
+          confirm: true,
+          transfer: true,
+          title: '确认要退款?'
+        },
+        style: {
+          marginRight: '5px'
+        },
+        on: {
+          'on-ok': () => {
+            vm.$emit('on-hand', params);
           }
+        }
+      }, [
+        h('Tooltip', {
+          props: { placement: 'top', transfer: true, content: '手动退款' }
         }, [
-          h('Icon', {
+          h('Button', {
             props: {
-              type: 'logo-usd',
-              size: 16,
-              color: '#fff'
+              type: 'error',
+              size: 'small'
             }
-          })
+          }, [
+            h('Icon', {
+              props: {
+                type: 'logo-usd',
+                size: 16,
+                color: '#fff'
+              }
+            })
+          ])
         ])
-      ])
-    ]);
+      ]);
+    } else {
+      return '';
+    }
   },
   sendHd: (h, params, vm) => {
     return h('Poptip', {
