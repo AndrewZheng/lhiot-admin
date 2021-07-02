@@ -115,7 +115,7 @@
 
     <Modal v-model="modalView" :mask-closable="false">
       <p slot="header">
-        <span>新品上市活动详情</span>
+        <span>爆品集合活动详情</span>
       </p>
       <div class="modal-content">
         <Row class-name="mb20">
@@ -261,7 +261,7 @@
 
     <Modal v-model="modalEdit" :mask-closable="false" :width="800">
       <p slot="header">
-        <span>{{ isCreate ? "创建新品上市活动" : "编辑新品上市活动" }}</span>
+        <span>{{ isCreate ? "创建爆品集合活动" : "编辑爆品集合活动" }}</span>
       </p>
       <div class="modal-content" style="margin-top: 20px">
         <Form
@@ -759,7 +759,7 @@
     <!-- 活动关联 -->
     <Modal v-model="modalRelevance" :mask-closable="false" :width="1200">
       <p slot="header">
-        <span>{{ "添加新品上市活动关联" }}</span>
+        <span>添加爆品集合活动关联</span>
       </p>
       <div class="modal-content" style="margin-top: 20px">
         <!-- 券关联 -->
@@ -792,7 +792,7 @@
             </div>
           </tables>
         </Card>
-        <!-- 新品尝鲜关联 -->
+        <!-- 新品尝鲜关联
         <Card style="margin-bottom: 16px">
           <tables
             ref="tablesNewProduct"
@@ -821,7 +821,7 @@
               </Row>
             </div>
           </tables>
-        </Card>
+        </Card>-->
         <!-- 普通商品关联 -->
         <Card style="margin-bottom: 16px">
           <tables
@@ -852,7 +852,7 @@
             </div>
           </tables>
         </Card>
-        <!-- 拼团关联 -->
+        <!-- 拼团关联
         <Card style="margin-bottom: 16px">
           <tables
             ref="activityTeambuyProduct"
@@ -881,8 +881,8 @@
               </Row>
             </div>
           </tables>
-        </Card>
-        <!-- 预售关联 -->
+        </Card>-->
+        <!-- 预售关联
         <Card style="margin-bottom: 16px">
           <tables
             ref="activityPreProduct"
@@ -911,7 +911,7 @@
               </Row>
             </div>
           </tables>
-        </Card>
+        </Card>-->
       </div>
       <div slot="footer">
         <Button @click="handleRelevanceClose">
@@ -928,7 +928,7 @@
       :mask-closable="false"
     >
       <p slot="header">
-        <i-col>{{ "关联新品券" }}</i-col>
+        <i-col>{{ "关联爆品券" }}</i-col>
       </p>
       <div class="modal-content">
         <Row>
@@ -1496,7 +1496,7 @@
 
     <Modal v-model="modalEditRank" :mask-closable="false">
       <p slot="header">
-        <span>{{ "修改新品上市活动关联排序" }}</span>
+        <span>{{ "修改爆品集合活动关联排序" }}</span>
       </p>
       <Form :model="ActivityNewProductsRelation" :label-width="60">
         <Row>
@@ -1586,7 +1586,7 @@ const activityNewProducts = {
   title: '',
   storeIds: null,
   relationStoreType: 'ALL',
-  activityType: 'NEW_PRODUCTS_ACTIVITY' // NEW_PRODUCTS_ACTIVITY-新品上市活动,HOT_PRODUCTS_ACTIVITY-爆品集合活动
+  activityType: 'HOT_PRODUCTS_ACTIVITY' // NEW_PRODUCTS_ACTIVITY-新品上市活动,HOT_PRODUCTS_ACTIVITY-爆品集合活动
 };
 
 const ActivityNewProductsRelevance = {
@@ -1602,7 +1602,7 @@ const searchRowData = {
   endTime: '',
   status: '',
   title: '',
-  activityType: 'NEW_PRODUCTS_ACTIVITY',
+  activityType: 'HOT_PRODUCTS_ACTIVITY',
   page: 1,
   rows: 10,
   sidx: 'createTime',
@@ -1610,7 +1610,7 @@ const searchRowData = {
 };
 
 const templateRowData = {
-  couponBusinessType: 'ACTIVITY_NEW_SHELF_COUPON',
+  couponBusinessType: 'HOT_PRODUCTS_COUPON',
   page: 1,
   rows: 10,
   sidx: 'createTime',
@@ -2621,16 +2621,16 @@ export default {
           render: (h, params, vm) => {
             const { row } = params;
             if (
-              row.couponConfigManage.source == 'SMALL' &&
+              row.couponConfigManage.source === 'SMALL' &&
               row.couponConfigManage.validDateType === 'FIXED_DATE'
             ) {
               return <div>{row.couponConfigManage.effectiveStartTime}</div>;
             } else if (
-              row.couponConfigManage.source == 'SMALL' &&
+              row.couponConfigManage.source === 'SMALL' &&
               row.couponConfigManage.validDateType === 'UN_FIXED_DATE'
             ) {
               return <div>{row.couponConfigManage.beginDay}</div>;
-            } else if (row.couponConfigManage.source == 'HD') {
+            } else if (row.couponConfigManage.source === 'HD') {
               return <div>{row.couponConfigManage.effectiveStartTime}</div>;
             } else {
               return <div>N/A</div>;

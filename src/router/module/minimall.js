@@ -332,6 +332,15 @@ const miniMallRouter = [
       component: () => import('@/view/mini-program-manager/activity/newGoods.vue')
     },
     {
+      path: '/small-hot-goods',
+      name: 'small-hot-goods',
+      meta: {
+        icon: 'ios-nuclear',
+        title: '爆品集合活动管理'
+      },
+      component: () => import('@/view/mini-program-manager/activity/hot-goods.vue')
+    },
+    {
       path: '/small-activity-new-product',
       name: 'small-activity-new-product',
       meta: {
