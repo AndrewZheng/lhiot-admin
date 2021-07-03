@@ -103,7 +103,8 @@
           </Button>
           <Button
             v-if="
-              hdCouponType != '新品上市活动券' &&
+              hdCouponType !='爆品集合活动券' &&
+                hdCouponType != '新品上市活动券' &&
                 hdCouponType != '分享赚活动券' &&
                 hdCouponType != '新人注册首单立减券'
             "
@@ -817,11 +818,11 @@
                 </FormItem>
               </i-col>
             </Row>
-            <Divider v-if="hdCouponType === '新品上市活动券'">
+            <Divider v-if="hdCouponType === '新品上市活动券'|| hdCouponType === '爆品集合活动券'">
               关联活动单品
             </Divider>
             <Button
-              v-if="hdCouponType === '新品上市活动券'"
+              v-if="hdCouponType === '新品上市活动券' || hdCouponType === '爆品集合活动券'"
               v-waves
               :loading="createLoading"
               type="success"
@@ -832,7 +833,7 @@
             </Button>
             <!-- ymsb -->
             <Row
-              v-if="hdCouponType === '新品上市活动券'"
+              v-if="hdCouponType === '新品上市活动券' || hdCouponType === '爆品集合活动券'"
               style="margin-top: 15px"
             >
               <i-col span="28">
@@ -853,7 +854,7 @@
                 </FormItem>
               </i-col>
             </Row>
-            <Divider v-if="hdCouponType === '新品上市活动券'">
+            <Divider v-if="hdCouponType === '新品上市活动券' || hdCouponType === '爆品集合活动券'">
               关联门店
             </Divider>
             <Row>
@@ -1157,7 +1158,7 @@
             </Row>
           </Form>*Tips：请先选择要关联的优惠券，然后输入关联配置信息，不可关联多个优惠券模板！
           <span
-            v-if="hdCouponType === '新品上市活动券'"
+            v-if="hdCouponType === '新品上市活动券' || hdCouponType === '爆品集合活动券'"
             style="color: #ff3861"
           >关联活动商品可点击查看商品信息！</span>
         </Row>
@@ -1411,11 +1412,11 @@
               </FormItem>
             </i-col>
           </Row>
-          <Divider v-if="hdCouponType === '新品上市活动券'">
+          <Divider v-if="hdCouponType === '新品上市活动券' || hdCouponType === '爆品集合活动券'">
             关联活动单品
           </Divider>
           <Button
-            v-if="hdCouponType === '新品上市活动券'"
+            v-if="hdCouponType === '新品上市活动券' || hdCouponType === '爆品集合活动券'"
             v-waves
             :loading="createLoading"
             type="success"
@@ -1426,7 +1427,7 @@
           </Button>
           <!-- ymsb -->
           <Row
-            v-if="hdCouponType === '新品上市活动券'"
+            v-if="hdCouponType === '新品上市活动券' || hdCouponType === '爆品集合活动券'"
             style="margin-top: 15px"
           >
             <i-col span="28">
@@ -1447,7 +1448,7 @@
               </FormItem>
             </i-col>
           </Row>
-          <Divider v-if="hdCouponType === '新品上市活动券'">
+          <Divider v-if="hdCouponType === '新品上市活动券'|| hdCouponType === '爆品集合活动券'">
             关联门店
           </Divider>
           <Row>
@@ -1751,7 +1752,7 @@
           </Row>
         </Form>*Tips：请先选择要关联的优惠券，然后输入关联配置信息，不可关联多个优惠券模板！
         <span
-          v-if="hdCouponType === '新品上市活动券'"
+          v-if="hdCouponType === '新品上市活动券' || hdCouponType === '爆品集合活动券'"
           style="color: #ff3861"
         >关联活动商品可点击查看商品信息！</span>
       </div>
@@ -3372,8 +3373,7 @@ export default {
     },
     handCouponType(value) {
       const item = this.activityClassify.find((x) => value === x.indexName);
-      this.hdCouponType =
-        item && item.indexValue ? item.indexValue : '手动发券';
+      this.hdCouponType = item && item.indexValue ? item.indexValue : '手动发券';
       this.searchRowData.page = 1;
       this.searchLoading = true;
       this.getTableData();
@@ -3895,9 +3895,7 @@ export default {
     },
     affirmOk() {
       this.standardIdsArray.splice(this.goodsIndex, 1);
-      this.addRelationDetail.standardIds = this.standardIdsArray
-        .map((item) => item.value)
-        .join(',');
+      this.addRelationDetail.standardIds = this.standardIdsArray.map((item) => item.value).join(',');
       this.deleteAffirm = false;
     },
     affirmCancel() {
