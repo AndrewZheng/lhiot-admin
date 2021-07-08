@@ -506,8 +506,11 @@
               <i-col span="4">
                 关联门店:
               </i-col>
-              <i-col span="16">
-                {{ showStoreName }}
+              <i-col v-if="relationStoreList.length > 0" span="16">
+                <Tag v-for="(item,index) in relationStoreList" :key="index" color="gold">{{ item }}</Tag>
+              </i-col>
+              <i-col v-else span="16">
+                全部门店
               </i-col>
             </Row>
           </i-col>
@@ -975,10 +978,9 @@
                 <FormItem
                   :label-width="85"
                   label="所属城市:"
-                  prop="cityCode"
                 >
                   <Select
-                    v-model="addRelationDetail.cityCode"
+                    v-model="cityCode"
                     style="width: 220px"
                     @on-change="handleCitySwitch"
                   >
@@ -996,6 +998,21 @@
               </i-col>
             </Row>
             <Row v-show="showStoreList">
+              <i-col v-if="storeData.length>0" span="24">
+                <FormItem>
+                  <div class="bottom-line">
+                    <div style="margin-left: -54px; margin-right: 18px">
+                      地级市全部门店
+                    </div>
+                    <Checkbox
+                      :value="checkAllStore"
+                      @click.prevent.native="handleCheckAll(-1)"
+                    >
+                      全选/反选
+                    </Checkbox>
+                  </div>
+                </FormItem>
+              </i-col>
               <i-col v-if="storeData.length>0" span="24">
                 <FormItem>
                   <div
@@ -1580,10 +1597,9 @@
               <FormItem
                 :label-width="85"
                 label="所属城市:"
-                prop="cityCode"
               >
                 <Select
-                  v-model="addRelationDetail.cityCode"
+                  v-model="cityCode"
                   style="width: 220px"
                   @on-change="handleCitySwitch"
                 >
@@ -1601,6 +1617,21 @@
             </i-col>
           </Row>
           <Row v-show="showStoreList">
+            <i-col v-if="storeData.length>0" span="24">
+              <FormItem>
+                <div class="bottom-line">
+                  <div style="margin-left: -54px; margin-right: 18px">
+                    地级市全部门店
+                  </div>
+                  <Checkbox
+                    :value="checkAllStore"
+                    @click.prevent.native="handleCheckAll(-1)"
+                  >
+                    全选/反选
+                  </Checkbox>
+                </div>
+              </FormItem>
+            </i-col>
             <i-col v-if="storeData.length>0" span="24">
               <FormItem>
                 <div
@@ -1826,7 +1857,7 @@
           关闭
         </Button>
         <Button
-          :loading="modalViewLoading"
+          :loading="modalEditLoading"
           type="primary"
           @click="handleTemplateEdit"
         >
@@ -1847,16 +1878,13 @@ import IViewUpload from '_c/iview-upload';
 
 import {
   getCouponExchangePages,
-  deleteCouponExchange,
   createCouponExchange,
   editCouponExchange,
   getCouponTemplatePages,
   getHdCouponActivitiesPages
 } from '@/api/mini-program';
 import uploadMixin from '@/mixins/uploadMixin';
-import deleteMixin from '@/mixins/deleteMixin.js';
 import tableMixin from '@/mixins/tableMixin.js';
-import searchMixin from '@/mixins/searchMixin.js';
 import relationStoreMixin from '@/mixins/relationStoreMixin.js';
 import {
   couponStatusConvert,
@@ -1914,8 +1942,7 @@ const relationDetail = {
   endDay: 0,
   rank: 0, // 排序字段
   points: 0,
-  realPoints: 0,
-  cityCode: '0744'
+  realPoints: 0
 };
 
 const roleRowData = {
@@ -2133,14 +2160,14 @@ const dataColumns = [
     width: 120,
     render: (h, params, vm) => {
       const { row } = params;
-      if (row.source == 'SMALL' && row.validDateType === 'FIXED_DATE') {
+      if (row.source === 'SMALL' && row.validDateType === 'FIXED_DATE') {
         return <div>{row.effectiveStartTime}</div>;
       } else if (
-        row.source == 'SMALL' &&
+        row.source === 'SMALL' &&
         row.validDateType === 'UN_FIXED_DATE'
       ) {
         return <div>{row.beginDay}</div>;
-      } else if (row.source == 'HD') {
+      } else if (row.source === 'HD') {
         return <div>{row.effectiveStartTime}</div>;
       } else {
         return <div>N/A</div>;
@@ -2154,18 +2181,18 @@ const dataColumns = [
     width: 220,
     render: (h, params, vm) => {
       const { row } = params;
-      if (row.source == 'SMALL' && row.validDateType === 'FIXED_DATE') {
+      if (row.source === 'SMALL' && row.validDateType === 'FIXED_DATE') {
         if (!compareCouponData(row.effectiveEndTime)) {
           return <div style='color:red'>{row.effectiveEndTime + '已过期'}</div>;
         } else {
           return <div>{row.effectiveEndTime}</div>;
         }
       } else if (
-        row.source == 'SMALL' &&
+        row.source === 'SMALL' &&
         row.validDateType === 'UN_FIXED_DATE'
       ) {
         return <div>{row.endDay}</div>;
-      } else if (row.source == 'HD') {
+      } else if (row.source === 'HD') {
         if (!compareCouponData(row.effectiveEndTime)) {
           return <div style='color:red'>{row.effectiveEndTime + '已过期'}</div>;
         } else {
@@ -2455,9 +2482,10 @@ export default {
     Tables,
     IViewUpload
   },
-  mixins: [deleteMixin, tableMixin, searchMixin, uploadMixin, relationStoreMixin],
+  mixins: [tableMixin, uploadMixin, relationStoreMixin],
   data() {
     return {
+      relationStoreList: [],
       addRelationList: [],
       couponTemplateData: [],
       hdCouponTemplateData: [],
@@ -2468,9 +2496,6 @@ export default {
       templatePageOpts: [5, 10],
       addTempDataLoading: false,
       tempTableLoading: false,
-      createLoading: false,
-      modalViewLoading: false,
-      modalAdd: false,
       showValidDate: true,
       couponTemplateTotal: 0,
       couponHdTemplateTotal: 0,
@@ -2573,7 +2598,6 @@ export default {
     }
   },
   mounted() {
-    this.searchRowData = _.cloneDeep(roleRowData); // 刷新清除上次搜索结果
     this.getTableData();
   },
   methods: {
@@ -2590,7 +2614,7 @@ export default {
       // 先清除对象
       this.resetFields();
       // 当展示的是添加系统优惠券
-      if (isShow && this.tempModalType == 'addTemplate') {
+      if (isShow && this.tempModalType === 'addTemplate') {
         this.addRelationDetail.couponScope = 'SMALL';
         this.addRelationDetail.useLimitType = 'SMALL_ALL';
       }
@@ -2625,7 +2649,7 @@ export default {
         const firstStoreId = this.storeIds[0];
         // 编辑时从返回的第一个storeId单独查询下cityCode来反选城市
         const storeObj = this.allStoreList.find(item => item.storeId === firstStoreId);
-        this.addRelationDetail.cityCode = storeObj.cityCode;
+        this.cityCode = storeObj.cityCode;
         this.getStore(true);
       } else {
         this.showStoreList = false;
@@ -2687,7 +2711,7 @@ export default {
     },
     editCouponExchange() {
       // 编辑状态
-      this.tempTableLoading = true;
+      this.modalEditLoading = true;
       editCouponExchange(this.addRelationDetail)
         .then((res) => {
           this.modalEdit = false;
@@ -2695,7 +2719,7 @@ export default {
           this.getTableData();
         })
         .finally((res) => {
-          this.tempTableLoading = false;
+          this.modalEditLoading = false;
         });
     },
     replaceTextByTab() {
@@ -2752,7 +2776,7 @@ export default {
     },
     handleTemplateEdit() {
       const _this = this;
-      if (this.addRelationDetail.couponName == '') {
+      if (this.addRelationDetail.couponName === '') {
         this.$Message.error('请先关联一张优惠券模板!');
         return false;
       }
@@ -2760,7 +2784,7 @@ export default {
         if (valid) {
           _this.extraValidator();
           _this.replaceTextByTag();
-          if (this.tempModalType === this.modalType.edit) {
+          if (this.isEdit) {
             _this.editCouponExchange();
           }
         } else {
@@ -2842,12 +2866,11 @@ export default {
       this.addRelationDetail.source = 'HD';
       createCouponExchange(this.addRelationDetail)
         .then((res) => {
-          this.modalViewLoading = false;
           this.modalAdd = false;
           this.$Message.success('创建成功!');
           this.getTableData();
         })
-        .catch(() => {
+        .finally(() => {
           this.modalViewLoading = false;
         });
     },
@@ -2856,12 +2879,8 @@ export default {
         .then((res) => {
           this.hdCouponTemplateData = res.rows;
           this.couponHdTemplateTotal = res.total;
-          this.loading = false;
-          this.searchLoading = false;
-          this.clearSearchLoading = false;
         })
-        .catch((error) => {
-          console.log(error);
+        .finally(() => {
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
@@ -2886,21 +2905,21 @@ export default {
       this.tempModalType = this.modalType.view;
       this.addRelationDetail = _.cloneDeep(params.row);
       this.replaceTextByTab();
-      this.showStoreName = this.relationStore();
+      this.relationStoreList = this.relationStore();
       this.modalView = true;
     },
     relationStore() {
+      const list = [];
       if (!this.addRelationDetail.stores) {
-        return '全部门店';
+        return list;
       }
       const ids = this.addRelationDetail.stores.substring(1, this.addRelationDetail.stores.length - 1).split('][');
-      let str = '';
       ids.forEach((id) => {
         const item = this.allStoreList.find(item => item.storeId == id);
         if (!item) { return; }
-        str += item.storeName + ',';
+        list.push(item.storeName);
       });
-      return str.substring(0, str.length - 1);
+      return list;
     },
     handleAddClose() {
       this.modalAdd = false;

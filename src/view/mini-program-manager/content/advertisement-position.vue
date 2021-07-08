@@ -137,7 +137,7 @@
                 ID:
               </i-col>
               <i-col span="18">
-                {{ advertisementPositionDetail.id }}
+                {{ advPositionDetail.id }}
               </i-col>
             </Row>
           </i-col>
@@ -150,7 +150,7 @@
               </i-col>
               <i-col span="18">
                 {{
-                  advertisementPositionDetail.description
+                  advPositionDetail.description
                 }}
               </i-col>
             </Row>
@@ -164,7 +164,7 @@
               </i-col>
               <i-col span="18">
                 {{
-                  advertisementPositionDetail.postionName
+                  advPositionDetail.postionName
                 }}
               </i-col>
             </Row>
@@ -178,7 +178,7 @@
               </i-col>
               <i-col span="18">
                 {{
-                  advertisementPositionDetail.timeLimited | timeLimitedFilter
+                  advPositionDetail.timeLimited | timeLimitedFilter
                 }}
               </i-col>
             </Row>
@@ -192,7 +192,7 @@
               </i-col>
               <i-col span="18">
                 {{
-                  advertisementPositionDetail.applicationType | appTypeFilter
+                  advPositionDetail.applicationType | appTypeFilter
                 }}
               </i-col>
             </Row>
@@ -206,7 +206,7 @@
               </i-col>
               <i-col span="18">
                 {{
-                  advertisementPositionDetail.positionType
+                  advPositionDetail.positionType
                     | advertisementPositionTypeFilter
                 }}
               </i-col>
@@ -225,31 +225,31 @@
     <Modal v-model="modalEdit" :mask-closable="false">
       <p slot="header">
         <span>{{
-          tempModalType === modalType.edit ? "修改广告位" : "创建广告"
+          isEdit ? "修改广告位" : "创建广告"
         }}</span>
       </p>
       <div class="modal-content">
         <Form
-          ref="modalEdit"
+          ref="editForm"
           :label-width="120"
-          :model="advertisementPositionDetail"
+          :model="advPositionDetail"
           :rules="ruleInline"
         >
           <FormItem label="广告位描述:" prop="description">
             <Input
-              v-model="advertisementPositionDetail.description"
+              v-model="advPositionDetail.description"
               placeholder="标题"
             ></Input>
           </FormItem>
           <FormItem label="广告位英文名:" prop="postionName">
             <Input
-              v-model="advertisementPositionDetail.postionName"
+              v-model="advPositionDetail.postionName"
               placeholder="内容"
             ></Input>
           </FormItem>
           <FormItem label="时间限制:" prop="timeLimited">
             <Select
-              v-model="advertisementPositionDetail.timeLimited"
+              v-model="advPositionDetail.timeLimited"
               placeholder="时间限制"
               style="padding-right: 5px; width: 120px"
               clearable
@@ -267,7 +267,7 @@
           </FormItem>
           <FormItem label="应用类型:" prop="applicationType">
             <Select
-              v-model="advertisementPositionDetail.applicationType"
+              v-model="advPositionDetail.applicationType"
               placeholder="应用类型"
               style="padding-right: 5px; width: 120px"
               clearable
@@ -285,7 +285,7 @@
           </FormItem>
           <FormItem label="广告位类型:" prop="positionType">
             <Select
-              v-model="advertisementPositionDetail.positionType"
+              v-model="advPositionDetail.positionType"
               placeholder="广告位类型"
               style="padding-right: 5px; width: 120px"
               clearable
@@ -310,7 +310,7 @@
         <Button
           :loading="modalEditLoading"
           type="primary"
-          @click="handleSubmit('modalEdit')"
+          @click="handleSubmit"
         >
           确定
         </Button>
@@ -326,7 +326,6 @@
 <script type="text/ecmascript-6">
 import Tables from '_c/tables';
 import IViewUpload from '_c/iview-upload';
-import _ from 'lodash';
 import {
   getAdvertisementPosition,
   getAdvertisementPositionPages,
@@ -335,8 +334,6 @@ import {
   editAdvertisementPosition
 } from '@/api/mini-program';
 import tableMixin from '@/mixins/tableMixin.js';
-import searchMixin from '@/mixins/searchMixin.js';
-import deleteMixin from '@/mixins/deleteMixin.js';
 import uploadMixin from '@/mixins/uploadMixin';
 import {
   appTypesEnum,
@@ -349,7 +346,7 @@ import {
   advertisementPositionTypeConvert
 } from '@/libs/converStatus';
 
-const advertisementPositionDetail = {
+const advPositionDetail = {
   relationId: 0,
   id: 0,
   description: '',
@@ -374,9 +371,14 @@ export default {
     Tables,
     IViewUpload
   },
-  mixins: [tableMixin, searchMixin, deleteMixin, uploadMixin],
+  mixins: [tableMixin, uploadMixin],
   data() {
     return {
+      defaultListMain: [],
+      uploadListMain: [],
+      appTypesEnum,
+      timeLimitedEnum,
+      advertisementPositionTypeEnum,
       ruleInline: {
         description: [{ required: true, message: '请输入广告位描述' }],
         postionName: [{ required: true, message: '请输入广告位英文名' }],
@@ -384,9 +386,6 @@ export default {
         applicationType: [{ required: true, message: '请选择应用类型' }],
         positionType: [{ required: true, message: '请选择广告位类型' }]
       },
-      appTypesEnum,
-      timeLimitedEnum,
-      advertisementPositionTypeEnum,
       columns: [
         {
           title: 'ID',
@@ -500,12 +499,7 @@ export default {
         }
       ],
       searchRowData: _.cloneDeep(roleRowData),
-      advertisementPositionDetail: _.cloneDeep(advertisementPositionDetail),
-      createLoading: false,
-      modalViewLoading: false,
-      modalEditLoading: false,
-      defaultListMain: [],
-      uploadListMain: []
+      advPositionDetail: _.cloneDeep(advPositionDetail)
     };
   },
   created() {
@@ -516,38 +510,59 @@ export default {
     resetSearchRowData() {
       this.searchRowData = _.cloneDeep(roleRowData);
     },
-    handleView(params) {
-      this.loading = true;
-      getAdvertisementPosition({ id: params.row.id })
-        .then((res) => {
-          this.advertisementPositionDetail = res;
-          this.modalView = true;
-          this.loading = false;
-        })
-        .catch(() => {
-          this.modalView = true;
-          this.loading = false;
-        });
-    },
     getTableData() {
-      // this.searchRowData.applicationType = this.applicationType;
       getAdvertisementPositionPages(this.searchRowData)
         .then((res) => {
           this.tableData = res.rows;
           this.total = res.total;
-          this.loading = false;
-          this.clearSearchLoading = false;
-          this.searchLoading = false;
         })
-        .catch(() => {
+        .finally(() => {
           this.loading = false;
           this.clearSearchLoading = false;
           this.searchLoading = false;
         });
     },
-    // 删除
-    deleteTable(ids) {
+    handleView(params) {
       this.loading = true;
+      getAdvertisementPosition({ id: params.row.id })
+        .then((res) => {
+          this.advPositionDetail = res;
+        })
+        .finally(() => {
+          this.modalView = true;
+          this.loading = false;
+        });
+    },
+    handleEdit(params) {
+      this.$refs.editForm.resetFields();
+      this.tempModalType = this.modalType.edit;
+      this.advPositionDetail = _.cloneDeep(params.row);
+      this.modalEdit = true;
+    },
+    createTableRow() {
+      this.resetFields();
+      this.tempModalType = this.modalType.create;
+      this.advPositionDetail = _.cloneDeep(advPositionDetail);
+      this.modalEdit = true;
+    },
+    resetFields() {
+      this.$refs.editForm.resetFields();
+      this.advPositionDetail = _.cloneDeep(advPositionDetail);
+    },
+    handleSubmit() {
+      this.$refs.editForm.validate((valid) => {
+        if (valid) {
+          if (this.isCreate) {
+            this.createAdvertisementPosition();
+          } else if (this.isEdit) {
+            this.editAdvertisementPosition();
+          }
+        } else {
+          this.$Message.error('请完善广告位信息!');
+        }
+      });
+    },
+    deleteTable(ids) {
       deleteAdvertisementPosition({
         ids
       })
@@ -563,80 +578,30 @@ export default {
           this.tableDataSelected = [];
           this.getTableData();
         })
-        .catch(() => {
-          this.loading = false;
-        });
-    },
-    // 编辑分类
-    handleEdit(params) {
-      this.$refs.modalEdit.resetFields();
-      this.tempModalType = this.modalType.edit;
-      this.advertisementPositionDetail = _.cloneDeep(params.row);
-      this.modalEdit = true;
-    },
-    createTableRow() {
-      this.resetFields();
-      if (this.tempModalType !== this.modalType.create) {
-        this.tempModalType = this.modalType.create;
-        this.advertisementPositionDetail = _.cloneDeep(
-          advertisementPositionDetail
-        );
-      }
-      this.modalEdit = true;
-    },
-    resetFields() {
-      this.$refs.modalEdit.resetFields();
-      this.advertisementPositionDetail = _.cloneDeep(
-        advertisementPositionDetail
-      );
-    },
-    handleSubmit(name) {
-      this.$refs[name].validate((valid) => {
-        if (valid) {
-          if (this.tempModalType === this.modalType.create) {
-            // 添加状态
-            this.createAdvertisementPosition();
-          } else if (this.tempModalType === this.modalType.edit) {
-            // 编辑状态
-            this.editAdvertisementPosition();
-          }
-        } else {
-          this.$Message.error('请完善广告位信息!');
-        }
-      });
     },
     createAdvertisementPosition() {
       this.modalViewLoading = true;
-      createAdvertisementPosition(this.advertisementPositionDetail)
+      createAdvertisementPosition(this.advPositionDetail)
         .then((res) => {
-          this.modalViewLoading = false;
           this.modalEdit = false;
           this.$Message.success('创建成功!');
           this.getTableData();
         })
-        .catch(() => {
+        .finally(() => {
           this.modalViewLoading = false;
-          this.modalEdit = false;
         });
     },
     editAdvertisementPosition() {
       this.modalViewLoading = true;
-      editAdvertisementPosition(this.advertisementPositionDetail)
+      editAdvertisementPosition(this.advPositionDetail)
         .then((res) => {
           this.modalEdit = false;
-          this.modalViewLoading = false;
+          this.$Message.success('操作成功!');
           this.getTableData();
         })
-        .catch(() => {
-          this.modalEdit = false;
+        .finally(() => {
           this.modalViewLoading = false;
         });
-    },
-    // 商品主图
-    handleSuccessMain(response, file, fileList) {
-      this.uploadListMain = fileList;
-      this.storeDetail.storeImage = null;
-      this.storeDetail.storeImage = fileList[0].url;
     }
   }
 };

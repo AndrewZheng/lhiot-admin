@@ -221,7 +221,7 @@ export const getStorePages = (data) => {
 
 // 根据位置查询门店所有列表分区域
 export const getAreaStorePages = (cityCode) => {
-  const code = cityCode || '0744';// 默认长沙市
+  const code = cityCode || '0744';// 默认张家界市
   return $http.request({
     url: `/minapp/stores/area?cityCode=${code}`,
     method: 'get'
@@ -250,7 +250,7 @@ export const getStoreDetail = ({
 
 // 查询所有门店区域
 export const getStoreAreas = (cityCode) => {
-  const code = cityCode || '0744';// 默认长沙市
+  const code = cityCode || '0744';// 默认张家界市
   return $http.request({
     url: `/minapp/stores/store-areas?cityCode=${code}`,
     method: 'get'
@@ -1413,6 +1413,18 @@ export const getUsersInfo = (data) => {
   });
 };
 
+// 查询当前会员的优惠券列表
+export const getUserCoupons = (data) => {
+  return $http.request({
+    url: `/minapp/user/coupons/${data.userId}?validStatus=${data.validStatus}`,
+    method: 'get',
+    headers: {
+      'page': data.page,
+      'rows': data.rows
+    }
+  });
+};
+
 // 根据条件分页查询优惠券列表
 export const getCouponPages = (data) => {
   return $http.request({
@@ -1937,6 +1949,14 @@ export const getOrderPages = (data) => {
       'page': data.page,
       'rows': data.rows
     }
+  });
+};
+
+export const editOrderDeliveryTime = (data) => {
+  return $http.request({
+    url: `/minapp/orders/update-delivery-time/${data.orderId}`,
+    data: data.deliverTime,
+    method: 'put'
   });
 };
 
@@ -2937,6 +2957,10 @@ export const deleteShareSetting = ({
   });
 };
 
+/* -------------------------
+ * 新品上市活动管理
+ * -------------------------
+ */
 // 查询新品上市活动列表 /minapp/activity-new-products/pages
 export const getNewProductsPages = (data) => {
   return $http.request({
@@ -3003,6 +3027,77 @@ export const updateNewProductsRelevance = (data) => {
   });
 };
 
+/* -------------------------
+ * 爆品集合活动管理
+ * -------------------------
+ */
+// 查询爆品集合活动列表
+export const getHotProductsPages = (data) => {
+  return $http.request({
+    url: '/minapp/activity-new-products/pages',
+    data,
+    method: 'post',
+    headers: {
+      'page': data.page,
+      'rows': data.rows,
+      'sidx': data.sidx,
+      'sort': data.sort
+    }
+  });
+};
+// 添加爆品集合活动
+export const createHotProducts = (data) => {
+  return $http.request({
+    url: '/minapp/activity-new-products/create',
+    data,
+    method: 'post'
+  });
+};
+
+// 根据id 修改爆品集合活动
+export const updateHotProducts = (data) => {
+  return $http.request({
+    url: '/minapp/activity-new-products/update/' + data.id,
+    data,
+    method: 'put'
+  });
+};
+// 根据id 删除爆品集合活动
+export const deleteHotProducts = ({
+  ids
+}) => {
+  return $http.request({
+    url: '/minapp/activity-new-products/' + ids,
+    method: 'delete'
+  });
+};
+
+// 根据id查询爆品集合活动关联
+export const getHotProductsRelevance = (id) => {
+  return $http.request({
+    url: `/minapp/activity-new-products/${id}/relation`,
+    method: 'get'
+  });
+};
+
+// 添加爆品集合活动关联
+export const createHotProductsRelevance = (data) => {
+  return $http.request({
+    url: '/minapp/activity-new-products/create/relation',
+    data,
+    method: 'post'
+  });
+};
+
+// 更新爆品集合活动关联
+export const updateHotProductsRelevance = (data) => {
+  return $http.request({
+    url: '/minapp/activity-new-products/update/relation/' + data.id,
+    data,
+    method: 'put'
+  });
+};
+
 // 查询统一活动列表
 export const getUnifyActivityPages = (data) => {
   return $http.request({
@@ -3044,10 +3139,27 @@ export const getUnifyActivity = (id) => {
   });
 };
 
-// 更新统一活动关联
+// 根据id查询统一活动配置管理
+export const getActivitySettingRelation = (id) => {
+  return $http.request({
+    url: `/minapp/activity-setting-relation/${id}`,
+    method: 'get'
+  });
+};
+
+// 下架统一活动关联
 export const deleteUnifyActivityRelevance = (data) => {
   return $http.request({
     url: '/minapp/activity-setting-relation/update-status/' + data.id,
+    data,
+    method: 'put'
+  });
+};
+
+// 更新统一活动配置关联
+export const updateUnifyActivityRelevance = (data) => {
+  return $http.request({
+    url: '/minapp/activity-setting-relation/update/' + data.id,
     data,
     method: 'put'
   });
@@ -3079,6 +3191,7 @@ export const deleteWollectWordRelevance = (data) => {
     method: 'delete'
   });
 };
+
 // /minapp/collect-word-setting/update/{id}
 export const updateWollectWordRelevance = (data) => {
   return $http.request({
@@ -3123,6 +3236,41 @@ export const getCollectWordStatistics = () => {
   return $http.request({
     url: `/coupon/statistics/collect-word-activity`,
     method: 'get'
+  });
+};
+
+/* -------------------------
+ * 积分抽奖活动管理
+ * -------------------------
+ */
+// 获取小程序数据分析助手的PV和UV
+export const getActivityPUV = (data) => {
+  return $http.request({
+    url: `/minapp/activity-setting/get-pv-uv/${data.pvUvEnum}`,
+    data,
+    method: 'post'
+  });
+};
+
+// 积分抽奖数据统计
+export const getPointsLotteryStatistics = (data) => {
+  return $http.request({
+    url: '/minapp/manage/points-lottery/pages',
+    data,
+    method: 'post',
+    headers: {
+      'page': data.page,
+      'rows': data.rows
+    }
+  });
+};
+
+// 添加积分关联记录
+export const createActiviyRelation = (data) => {
+  return $http.request({
+    url: '/minapp/activity-setting-relation/create',
+    data,
+    method: 'post'
   });
 };
 
@@ -3262,5 +3410,68 @@ export const getWechatRewardPage = (data) => {
       'sidx': data.sidx,
       'sort': data.sort
     }
+  });
+};
+
+// 购券重发
+export const retryCoupon = (data) => {
+  return $http.request({
+    url: `/minapp/orders/buy-coupon/retry?orderId=${data}`,
+    method: 'post'
+  });
+};
+
+/* -------------------------
+ * 动态表单-直播管理
+ * -------------------------
+ */
+// 分页查询
+export const getDynamicFormPages = (data) => {
+  return $http.request({
+    url: '/minapp/dynamic-form/pages',
+    data,
+    method: 'post',
+    headers: {
+      'page': data.page,
+      'rows': data.rows,
+      'sidx': data.sidx,
+      'sort': data.sort
+    }
+  });
+};
+
+// 查询
+export const getDynamicForm = (id) => {
+  return $http.request({
+    url: `/minapp/dynamic-form/${id}`,
+    method: 'get'
+  });
+};
+
+// 创建
+export const createDynamicForm = (data) => {
+  return $http.request({
+    url: `/minapp/dynamic-form/create`,
+    data,
+    method: 'post'
+  });
+};
+
+// 更新
+export const updateDynamicForm = (data) => {
+  return $http.request({
+    url: '/minapp/dynamic-form/update/' + data.id,
+    data,
+    method: 'put'
+  });
+};
+
+// 删除
+export const deleteDynamicForm = ({
+  ids
+}) => {
+  return $http.request({
+    url: '/minapp/dynamic-form/' + ids,
+    method: 'delete'
   });
 };

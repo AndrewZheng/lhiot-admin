@@ -92,19 +92,7 @@
 import Tables from '_c/tables';
 import { getOrderCouponDetails } from '@/api/mini-program';
 import tableMixin from '@/mixins/tableMixin.js';
-import searchMixin from '@/mixins/searchMixin.js';
 import { fenToYuanDot2 } from '@/libs/util';
-import {
-  receivingWayEnum,
-  receivingWay,
-  orderStatusEnum,
-  miniOrderTypeEnum,
-  appTypeEnum,
-  miniOrderStatusEnum,
-  miniOrderStatus,
-  miniHdStatusEnum,
-  miniHdStatus
-} from '@/libs/enumerate';
 import {
   orderTypeConvert,
   thirdDeliverStatusConvert,
@@ -113,7 +101,7 @@ import {
   receivingWayConvert,
   appTypeConvert
 } from '@/libs/converStatus';
-import BookTypeOption from '_c/book-type-option';
+
 const orderDetail = {
   id: 0,
   amountPayable: '', // 应付金额
@@ -146,18 +134,18 @@ const roleRowData = {
 
 export default {
   components: {
-    Tables,
-    BookTypeOption
+    Tables
   },
-  mixins: [tableMixin, searchMixin],
+  mixins: [tableMixin],
   data() {
     return {
       deliverNoteList: [],
       haiDingStatus: [],
       storeList: [],
       transferModalView: false,
-      modalViewLoading: false,
       deliverOrderLoading: false,
+      downloadLoading: false,
+      currentTableRowSelected: null,
       columns: [
         {
           type: 'selection',
@@ -242,12 +230,8 @@ export default {
         //   options: ["view"]
         // }
       ],
-      currentTableRowSelected: null,
       searchRowData: _.cloneDeep(roleRowData),
-      orderDetail: _.cloneDeep(orderDetail),
-      exportType: 'xlsx',
-      downloadLoading: false,
-      tableDataSelected: []
+      orderDetail: _.cloneDeep(orderDetail)
     };
   },
   created() {
@@ -288,11 +272,8 @@ export default {
         .then(res => {
           this.tableData = res.rows;
           this.total = res.total;
-          this.loading = false;
-          this.clearSearchLoading = false;
-          this.searchLoading = false;
         })
-        .catch(() => {
+        .finally(() => {
           this.loading = false;
           this.clearSearchLoading = false;
           this.searchLoading = false;

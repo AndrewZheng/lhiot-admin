@@ -16,7 +16,8 @@
         @on-view="handleView"
         @on-edit="handleEdit"
         @on-discount="handleDiscount"
-        @custom-on-sale="customOnSale"
+        @custom-on-sale="handleOnSale"
+        @on-publish="handlePublish"
         @on-current-change="onCurrentChange"
         @on-select-all="onSelectionAll"
         @on-selection-change="onSelectionChange"
@@ -81,6 +82,38 @@
                 {{ item.label }}
               </Option>
             </Select>
+            <Select
+              v-model="searchRowData.isCanCoupon"
+              class="ml5"
+              placeholder="是否可用券"
+              style="width: 120px"
+              clearable
+            >
+              <Option
+                v-for="item in isUseCoupon"
+                :key="item.value"
+                :value="item.value"
+                class="ml15 mt10 mr15"
+              >
+                {{ item.label }}
+              </Option>
+            </Select>
+            <Select
+              v-model="searchRowData.whetherLockShelf"
+              placeholder="是否锁定上下架"
+              class="ml5"
+              style="width: 140px"
+              clearable
+            >
+              <Option
+                v-for="item in whetherLockShelfStatus"
+                :key="item.value"
+                :value="item.value"
+                class="ml15 mt10 mr15"
+              >
+                {{ item.label }}
+              </Option>
+            </Select>
             <InputNumber
               v-show="!showBack"
               v-model="searchMinPrice"
@@ -100,7 +133,6 @@
               @on-change="searchMaxPriceChange"
             ></InputNumber>
             <Button
-              v-show="!showBack"
               :search-loading="searchLoading"
               class="search-btn mr5"
               type="primary"
@@ -119,19 +151,10 @@
               <Icon type="md-refresh" />&nbsp;清除
             </Button>
             <Button
-              v-show="showBack"
-              v-waves
-              class="search-btn ml5 mr5"
-              type="primary"
-              @click="goBack"
-            >
-              <Icon type="ios-arrow-back" />&nbsp;返回
-            </Button>
-            <Button
               v-waves
               class="search-btn ml5 mr5"
               type="success"
-              @click="handleCreateView"
+              @click="handleCreate"
             >
               <Icon type="md-add" />&nbsp;添加
             </Button>
@@ -147,11 +170,21 @@
             </Button>
             </Poptip>-->
             <Button
-              class="search-btn mr2"
+              v-waves
+              class="search-btn mr5"
               type="warning"
               @click="handleDownload"
             >
               <Icon type="md-download" />导出
+            </Button>
+            <Button
+              v-show="showBack"
+              v-waves
+              class="search-btn mr5"
+              type="primary"
+              @click="goBack"
+            >
+              <Icon type="ios-arrow-back" />&nbsp;返回
             </Button>
           </Row>
           <div class="ml15 mt10">
@@ -181,9 +214,7 @@
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">
-                商品ID:
-              </i-col>
+              <i-col span="8"> 商品ID: </i-col>
               <i-col span="16">
                 {{ productStandardDetail.productId }}
               </i-col>
@@ -191,13 +222,9 @@
           </i-col>
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">
-                商品名称:
-              </i-col>
+              <i-col span="8"> 商品名称: </i-col>
               <i-col span="16">
-                {{
-                  productStandardDetail.baseProductName
-                }}
+                {{ productStandardDetail.baseProductName }}
               </i-col>
             </Row>
           </i-col>
@@ -205,9 +232,7 @@
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">
-                商品分类:
-              </i-col>
+              <i-col span="8"> 商品分类: </i-col>
               <i-col span="16">
                 {{ productStandardDetail.groupName }}
               </i-col>
@@ -215,9 +240,7 @@
           </i-col>
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">
-                基础单位:
-              </i-col>
+              <i-col span="8"> 基础单位: </i-col>
               <i-col span="16">
                 {{ productStandardDetail.baseUnit }}
               </i-col>
@@ -227,9 +250,7 @@
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">
-                商品编号:
-              </i-col>
+              <i-col span="8"> 商品编号: </i-col>
               <i-col span="16">
                 {{ productStandardDetail.productCode }}
               </i-col>
@@ -237,9 +258,7 @@
           </i-col>
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">
-                商品条码:
-              </i-col>
+              <i-col span="8"> 商品条码: </i-col>
               <i-col span="16">
                 {{ productStandardDetail.baseBarcode }}
               </i-col>
@@ -249,9 +268,7 @@
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">
-                商品主图:
-              </i-col>
+              <i-col span="8"> 商品主图: </i-col>
               <i-col span="16">
                 <img
                   :src="productStandardDetail.baseImage"
@@ -265,26 +282,18 @@
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">
-                商品描述:
-              </i-col>
+              <i-col span="8"> 商品描述: </i-col>
               <i-col span="16">
-                {{
-                  productStandardDetail.baseProductDescription
-                }}
+                {{ productStandardDetail.baseProductDescription }}
               </i-col>
             </Row>
           </i-col>
         </Row>
-        <Divider orientation="center">
-          商品规格
-        </Divider>
+        <Divider orientation="center"> 商品规格 </Divider>
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">
-                上架商品名称:
-              </i-col>
+              <i-col span="8"> 上架商品名称: </i-col>
               <i-col span="16">
                 {{ productStandardDetail.productName }}
               </i-col>
@@ -292,13 +301,9 @@
           </i-col>
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">
-                上架商品描述:
-              </i-col>
+              <i-col span="8"> 上架商品描述: </i-col>
               <i-col span="16">
-                {{
-                  productStandardDetail.productDescription
-                }}
+                {{ productStandardDetail.productDescription }}
               </i-col>
             </Row>
           </i-col>
@@ -306,9 +311,7 @@
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">
-                上架商品主图:
-              </i-col>
+              <i-col span="8"> 上架商品主图: </i-col>
               <i-col v-if="productStandardDetail.image" span="16">
                 <img
                   :src="productStandardDetail.image"
@@ -322,9 +325,7 @@
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">
-                商品条码:
-              </i-col>
+              <i-col span="8"> 商品条码: </i-col>
               <i-col span="16">
                 {{ productStandardDetail.barcode }}
               </i-col>
@@ -332,9 +333,7 @@
           </i-col>
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">
-                商品状态:
-              </i-col>
+              <i-col span="8"> 商品状态: </i-col>
               <i-col span="16">
                 {{
                   productStandardDetail.shelvesStatus | customPlanStatusFilters
@@ -346,9 +345,7 @@
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">
-                商品规格:
-              </i-col>
+              <i-col span="8"> 商品规格: </i-col>
               <i-col span="16">
                 {{ productStandardDetail.specification }}
               </i-col>
@@ -356,9 +353,7 @@
           </i-col>
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">
-                数量/重量:
-              </i-col>
+              <i-col span="8"> 数量/重量: </i-col>
               <i-col span="16">
                 {{ productStandardDetail.standardQty }}
               </i-col>
@@ -368,24 +363,37 @@
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">
-                商品原价:
-              </i-col>
+              <i-col span="8"> 商品原价: </i-col>
               <i-col span="16">
-                {{
-                  productStandardDetail.price | fenToYuanDot2Filters
-                }}
+                {{ productStandardDetail.price | fenToYuanDot2Filters }}
               </i-col>
             </Row>
           </i-col>
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">
-                售卖价格:
+              <i-col span="8"> 售卖价格: </i-col>
+              <i-col span="16">
+                {{ productStandardDetail.salePrice | fenToYuanDot2Filters }}
               </i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+          <i-col span="12">
+            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+              <i-col span="8"> 成本价: </i-col>
+              <i-col span="16">
+                {{ productStandardDetail.costPrice | fenToYuanDot2Filters }}
+              </i-col>
+            </Row>
+          </i-col>
+          <i-col span="12">
+            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+              <i-col span="8"> 商品毛利: </i-col>
               <i-col span="16">
                 {{
-                  productStandardDetail.salePrice | fenToYuanDot2Filters
+                  productStandardDetail.productProfitPrice
+                    | fenToYuanDot2Filters
                 }}
               </i-col>
             </Row>
@@ -394,47 +402,15 @@
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">
-                成本价:
-              </i-col>
+              <i-col span="8"> 佣金比例: </i-col>
               <i-col span="16">
-                {{
-                  productStandardDetail.costPrice | fenToYuanDot2Filters
-                }}
+                {{ productStandardDetail.commissionScale + "%" }}
               </i-col>
             </Row>
           </i-col>
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">
-                商品毛利:
-              </i-col>
-              <i-col span="16">
-                {{
-                  productStandardDetail.productProfitPrice | fenToYuanDot2Filters
-                }}
-              </i-col>
-            </Row>
-          </i-col>
-        </Row>
-        <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-          <i-col span="12">
-            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">
-                佣金比例:
-              </i-col>
-              <i-col span="16">
-                {{
-                  productStandardDetail.commissionScale + "%"
-                }}
-              </i-col>
-            </Row>
-          </i-col>
-          <i-col span="12">
-            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">
-                佣金金额:
-              </i-col>
+              <i-col span="8"> 佣金金额: </i-col>
               <i-col span="16">
                 {{
                   productStandardDetail.commissionPrice | fenToYuanDot2Filters
@@ -455,9 +431,7 @@
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">
-                商品单位:
-              </i-col>
+              <i-col span="8"> 商品单位: </i-col>
               <i-col span="16">
                 {{ productStandardDetail.productUnit }}
               </i-col>
@@ -465,9 +439,7 @@
           </i-col>
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">
-                商品排序:
-              </i-col>
+              <i-col span="8"> 商品排序: </i-col>
               <i-col span="16">
                 {{ productStandardDetail.rank }}
               </i-col>
@@ -477,9 +449,7 @@
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">
-                规格描述:
-              </i-col>
+              <i-col span="8"> 规格描述: </i-col>
               <i-col span="16">
                 <div
                   v-for="item in descriptionList"
@@ -502,9 +472,7 @@
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">
-                门店锁定上下架:
-              </i-col>
+              <i-col span="8"> 门店锁定上下架: </i-col>
               <i-col
                 v-if="productStandardDetail.whetherLockShelf === 'YES'"
                 span="16"
@@ -520,26 +488,262 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="3">
-                关联门店:
+              <i-col span="3"> 关联门店: </i-col>
+              <i-col v-if="relationStoreList.length > 0" span="18">
+                <Tag
+                  v-for="(item, index) in relationStoreList"
+                  :key="index"
+                  color="gold"
+                >{{ item }}</Tag>
               </i-col>
-              <i-col span="18">
-                {{ showStoreName }}
+              <i-col v-else span="18"> 全部门店 </i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row class-name="mb20">
+          <i-col span="24">
+            <Row>
+              <i-col span="3"> 上架门店: </i-col>
+              <i-col v-if="publishStoreList.length > 0" span="18">
+                <Tag
+                  v-for="(item, index) in publishStoreList"
+                  :key="index"
+                  color="gold"
+                >{{ item }}</Tag>
               </i-col>
+              <i-col v-else span="18"> 全部门店 </i-col>
             </Row>
           </i-col>
         </Row>
       </div>
       <div slot="footer">
-        <Button type="primary" @click="handleClose">
-          关闭
+        <Button type="primary" @click="modalView = false"> 关闭 </Button>
+      </div>
+    </Modal>
+
+    <!-- 选择部分门店上架 -->
+    <Modal v-model="modalPublish" :mask-closable="false" :width="1200">
+      <p slot="header">
+        <span>选择门店上架</span>
+      </p>
+      <div class="modal-content">
+        <Row class="mb10">
+          <i-col span="12">
+            <Select
+              v-model="cityCode"
+              style="width: 220px"
+              @on-change="handleCitySwitch"
+            >
+              <Option
+                v-for="(item, index) in cityList"
+                :key="index"
+                :value="item.cityCode"
+                class="ptb2-5"
+                style="padding-left: 5px"
+              >
+                {{ item.cityName }}
+              </Option>
+            </Select>
+          </i-col>
+        </Row>
+        <Row>
+          <i-col v-if="storeData.length > 0" span="24" class="mt20 mb10">
+            <div class="bottom-line">
+              <div style="margin-right: 18px">地级市全部门店</div>
+              <Checkbox
+                :value="checkAllStore"
+                @click.prevent.native="handleCheckAll(-1)"
+              >
+                全选/反选
+              </Checkbox>
+            </div>
+          </i-col>
+          <i-col v-if="storeData.length > 0" span="24" class="mt20 mb20">
+            <div class="bottom-line">
+              <div style="margin-right: 18px">
+                {{ storeNameList[0] }}
+              </div>
+              <Checkbox
+                :indeterminate="indeterminate"
+                :value="checkAll"
+                @click.prevent.native="handleCheckAll(0)"
+              >
+                全选/反选
+              </Checkbox>
+            </div>
+            <CheckboxGroup v-model="storeIds" @on-change="checkAllGroupChange">
+              <Checkbox
+                v-for="item in storeData"
+                ref="checkBox"
+                :key="item.storeId"
+                :label="item.storeId"
+              >
+                {{ item.storeName }}
+              </Checkbox>
+            </CheckboxGroup>
+          </i-col>
+          <i-col v-if="storeData1.length > 0" span="24" class="mt20 mb20">
+            <div class="bottom-line">
+              <div style="margin-right: 18px">
+                {{ storeNameList[1] }}
+              </div>
+              <Checkbox
+                :indeterminate="indeterminate1"
+                :value="checkAll1"
+                @click.prevent.native="handleCheckAll(1)"
+              >
+                全选/反选
+              </Checkbox>
+            </div>
+            <CheckboxGroup v-model="storeIds" @on-change="checkAllGroupChange1">
+              <Checkbox
+                v-for="item in storeData1"
+                ref="checkBox"
+                :key="item.storeId"
+                :label="item.storeId"
+              >
+                {{ item.storeName }}
+              </Checkbox>
+            </CheckboxGroup>
+          </i-col>
+          <i-col v-if="storeData2.length > 0" span="24" class="mt20 mb20">
+            <div class="bottom-line">
+              <div style="margin-right: 18px">
+                {{ storeNameList[2] }}
+              </div>
+              <Checkbox
+                :indeterminate="indeterminate2"
+                :value="checkAll2"
+                @click.prevent.native="handleCheckAll(2)"
+              >
+                全选/反选
+              </Checkbox>
+            </div>
+            <CheckboxGroup v-model="storeIds" @on-change="checkAllGroupChange2">
+              <Checkbox
+                v-for="item in storeData2"
+                ref="checkBox"
+                :key="item.storeId"
+                :label="item.storeId"
+              >
+                {{ item.storeName }}
+              </Checkbox>
+            </CheckboxGroup>
+          </i-col>
+          <i-col v-if="storeData3.length > 0" span="24" class="mt20 mb20">
+            <div class="bottom-line">
+              <div style="margin-right: 18px">
+                {{ storeNameList[3] }}
+              </div>
+              <Checkbox
+                :indeterminate="indeterminate3"
+                :value="checkAll3"
+                @click.prevent.native="handleCheckAll(3)"
+              >
+                全选/反选
+              </Checkbox>
+            </div>
+            <CheckboxGroup v-model="storeIds" @on-change="checkAllGroupChange3">
+              <Checkbox
+                v-for="item in storeData3"
+                ref="checkBox"
+                :key="item.storeId"
+                :label="item.storeId"
+              >
+                {{ item.storeName }}
+              </Checkbox>
+            </CheckboxGroup>
+          </i-col>
+          <i-col v-if="storeData4.length > 0" span="24" class="mt20 mb20">
+            <div class="bottom-line">
+              <div style="margin-right: 18px">
+                {{ storeNameList[4] }}
+              </div>
+              <Checkbox
+                :indeterminate="indeterminate4"
+                :value="checkAll4"
+                @click.prevent.native="handleCheckAll(4)"
+              >
+                全选/反选
+              </Checkbox>
+            </div>
+            <CheckboxGroup v-model="storeIds" @on-change="checkAllGroupChange4">
+              <Checkbox
+                v-for="item in storeData4"
+                ref="checkBox"
+                :key="item.storeId"
+                :label="item.storeId"
+              >
+                {{ item.storeName }}
+              </Checkbox>
+            </CheckboxGroup>
+          </i-col>
+          <i-col v-if="storeData5.length > 0" span="24" class="mt20 mb20">
+            <div class="bottom-line">
+              <div style="margin-right: 18px">
+                {{ storeNameList[5] }}
+              </div>
+              <Checkbox
+                :indeterminate="indeterminate5"
+                :value="checkAll5"
+                @click.prevent.native="handleCheckAll(5)"
+              >
+                全选/反选
+              </Checkbox>
+            </div>
+            <CheckboxGroup v-model="storeIds" @on-change="checkAllGroupChange5">
+              <Checkbox
+                v-for="item in storeData5"
+                ref="checkBox"
+                :key="item.storeId"
+                :label="item.storeId"
+              >
+                {{ item.storeName }}
+              </Checkbox>
+            </CheckboxGroup>
+          </i-col>
+          <i-col v-if="storeData6.length > 0" span="24" class="mt20 mb20">
+            <div class="bottom-line">
+              <div style="margin-right: 18px">
+                {{ storeNameList[6] }}
+              </div>
+              <Checkbox
+                :indeterminate="indeterminate6"
+                :value="checkAll6"
+                @click.prevent.native="handleCheckAll(6)"
+              >
+                全选/反选
+              </Checkbox>
+            </div>
+            <CheckboxGroup v-model="storeIds" @on-change="checkAllGroupChange6">
+              <Checkbox
+                v-for="item in storeData6"
+                ref="checkBox"
+                :key="item.storeId"
+                :label="item.storeId"
+              >
+                {{ item.storeName }}
+              </Checkbox>
+            </CheckboxGroup>
+          </i-col>
+        </Row>
+      </div>
+      <div slot="footer">
+        <Button @click="modalPublish = false"> 关闭 </Button>
+        <Button
+          :loading="modalViewLoading"
+          type="primary"
+          @click="handlePublishSubmit"
+        >
+          确定
         </Button>
       </div>
     </Modal>
+
     <!-- 添加 -->
     <Modal v-model="modalEdit" :mask-closable="false" :width="900">
       <p slot="header">
-        <span>{{ clickFlag == false ? "编辑商品规格" : "创建商品规格" }}</span>
+        <span>{{ isEdit ? "编辑商品规格" : "创建商品规格" }}</span>
       </p>
       <div class="modal-content">
         <Tabs v-model="step" size="small">
@@ -553,10 +757,7 @@
               <Row>
                 <i-col span="12">
                   <FormItem label="商品ID:" prop="productId">
-                    <Input
-                      v-model="productStandardDetail.productId"
-                      readonly="readonly"
-                    >
+                    <Input v-model="productStandardDetail.productId">
                     <Button
                       slot="append"
                       icon="ios-search"
@@ -567,41 +768,31 @@
                 </i-col>
                 <i-col span="12">
                   <FormItem label="商品名称:">
-                    {{
-                      productStandardDetail.baseProductName
-                    }}
+                    {{ productStandardDetail.baseProductName }}
                   </FormItem>
                 </i-col>
               </Row>
               <Row>
                 <i-col span="12">
                   <FormItem label="商品分类:">
-                    {{
-                      productStandardDetail.groupName
-                    }}
+                    {{ productStandardDetail.groupName }}
                   </FormItem>
                 </i-col>
                 <i-col span="12">
                   <FormItem label="基础单位:">
-                    {{
-                      productStandardDetail.baseUnit
-                    }}
+                    {{ productStandardDetail.baseUnit }}
                   </FormItem>
                 </i-col>
               </Row>
               <Row>
                 <i-col span="12">
                   <FormItem label="商品编号:">
-                    {{
-                      productStandardDetail.productCode
-                    }}
+                    {{ productStandardDetail.productCode }}
                   </FormItem>
                 </i-col>
                 <i-col span="12">
                   <FormItem label="商品条码:">
-                    {{
-                      productStandardDetail.baseBarcode
-                    }}
+                    {{ productStandardDetail.baseBarcode }}
                   </FormItem>
                 </i-col>
               </Row>
@@ -620,15 +811,11 @@
                 </i-col>
                 <i-col span="12">
                   <FormItem label="商品描述:">
-                    {{
-                      productStandardDetail.baseProductDescription
-                    }}
+                    {{ productStandardDetail.baseProductDescription }}
                   </FormItem>
                 </i-col>
               </Row>
-              <Divider orientation="center">
-                规格信息
-              </Divider>
+              <Divider orientation="center"> 规格信息 </Divider>
               <Row>
                 <i-col span="24">
                   <FormItem label="上架商品名称:" prop="productName">
@@ -704,43 +891,43 @@
                   </FormItem>
                 </i-col>
                 <!-- <i-col span="12">
-              <FormItem label="上架商品详情图:建议尺寸;690x340(单位:px)" prop="detailImage">
-                <Input
-                  v-show="false"
-                  v-model="productStandardDetail.detailImage"
-                  style="width: auto"
-                ></Input>
-                <div
-                  v-for="item in uploadListDetail"
-                  :key="item.url"
-                  :v-show="productStandardDetail.detailImage"
-                  class="demo-upload-list"
-                >
-                  <template v-if="item.status === 'finished'">
-                    <div>
-                      <img :src="item.url" />
-                      <div class="demo-upload-list-cover">
-                        <Icon type="ios-eye-outline" @click.native="handleUploadView(item)"></Icon>
-                        <Icon type="ios-trash-outline" @click.native="handleRemoveDetail(item)"></Icon>
-                      </div>
+                  <FormItem label="上架商品详情图:建议尺寸;690x340(单位:px)" prop="detailImage">
+                    <Input
+                      v-show="false"
+                      v-model="productStandardDetail.detailImage"
+                      style="width: auto"
+                    ></Input>
+                    <div
+                      v-for="item in uploadListDetail"
+                      :key="item.url"
+                      :v-show="productStandardDetail.detailImage"
+                      class="demo-upload-list"
+                    >
+                      <template v-if="item.status === 'finished'">
+                        <div>
+                          <img :src="item.url" />
+                          <div class="demo-upload-list-cover">
+                            <Icon type="ios-eye-outline" @click.native="handleUploadView(item)"></Icon>
+                            <Icon type="ios-trash-outline" @click.native="handleRemoveDetail(item)"></Icon>
+                          </div>
+                        </div>
+                      </template>
+                      <template v-else>
+                        <Progress v-if="item.showProgress" :percent="item.percentage" hide-info></Progress>
+                      </template>
                     </div>
-                  </template>
-                  <template v-else>
-                    <Progress v-if="item.showProgress" :percent="item.percentage" hide-info></Progress>
-                  </template>
-                </div>
-                <IViewUpload
-                  ref="uploadDetail"
-                  :default-list="defaultListDetail"
-                  :image-size="imageSize"
-                  :max-num="1"
-                  @on-success="handleSuccessDetail"
-                >
-                  <div slot="content" style="width:58px;height:58px;line-height:58px">
-                    <Icon type="ios-camera" size="20"></Icon>
-                  </div>
-                </IViewUpload>
-              </FormItem>
+                    <IViewUpload
+                      ref="uploadDetail"
+                      :default-list="defaultListDetail"
+                      :image-size="imageSize"
+                      :max-num="1"
+                      @on-success="handleSuccessDetail"
+                    >
+                      <div slot="content" style="width:58px;height:58px;line-height:58px">
+                        <Icon type="ios-camera" size="20"></Icon>
+                      </div>
+                    </IViewUpload>
+                  </FormItem>
                 </i-col>-->
                 <!-- 轮播图 -->
                 <i-col span="12">
@@ -936,9 +1123,7 @@
                     label="佣金金额:"
                     prop="commissionPrice"
                   >
-                    {{
-                      "¥" + productStandardDetail.commissionPrice / 100
-                    }}
+                    {{ "¥" + productStandardDetail.commissionPrice / 100 }}
                   </FormItem>
                 </i-col>
               </Row>
@@ -960,7 +1145,7 @@
                         v-for="(item, index) in expandTypeEnum"
                         :key="index"
                         :value="item.value"
-                        :disabled="clickFlag == false"
+                        :disabled="isEdit"
                         class="ptb2-5"
                         style="padding-left: 5px; width: 100px"
                       >
@@ -1029,11 +1214,7 @@
                   span="12"
                   style="float: right; margin-bottom: 15px; margin-right: -30px"
                 >
-                  <Button
-                    v-waves
-                    type="warning"
-                    @click="handleHdSvipPrice"
-                  >
+                  <Button v-waves type="warning" @click="handleHdSvipPrice">
                     海鼎价格参考
                   </Button>
                 </i-col>
@@ -1101,11 +1282,7 @@
                   span="12"
                   style="float: right; margin-bottom: 15px; margin-right: -30px"
                 >
-                  <Button
-                    v-waves
-                    type="info"
-                    @click="handleImageSort"
-                  >
+                  <Button v-waves type="info" @click="handleImageSort">
                     规格描述排序
                   </Button>
                 </i-col>
@@ -1221,13 +1398,9 @@
                   </FormItem>
                 </i-col>
                 <i-col v-show="showStoreList" span="12">
-                  <FormItem
-                    :label-width="85"
-                    label="所属城市:"
-                    prop="cityCode"
-                  >
+                  <FormItem :label-width="85" label="所属城市:">
                     <Select
-                      v-model="productStandardDetail.cityCode"
+                      v-model="cityCode"
                       style="width: 220px"
                       @on-change="handleCitySwitch"
                     >
@@ -1245,11 +1418,24 @@
                 </i-col>
               </Row>
               <Row v-show="showStoreList">
-                <i-col v-if="storeData.length>0" span="24">
+                <i-col v-if="storeData.length > 0" span="24">
                   <FormItem>
-                    <div
-                      class="bottom-line"
-                    >
+                    <div class="bottom-line">
+                      <div style="margin-left: -54px; margin-right: 18px">
+                        地级市全部门店
+                      </div>
+                      <Checkbox
+                        :value="checkAllStore"
+                        @click.prevent.native="handleCheckAll(-1)"
+                      >
+                        全选/反选
+                      </Checkbox>
+                    </div>
+                  </FormItem>
+                </i-col>
+                <i-col v-if="storeData.length > 0" span="24">
+                  <FormItem>
+                    <div class="bottom-line">
                       <div style="margin-left: -54px; margin-right: 18px">
                         {{ storeNameList[0] }}
                       </div>
@@ -1276,11 +1462,9 @@
                     </CheckboxGroup>
                   </FormItem>
                 </i-col>
-                <i-col v-if="storeData1.length>0" span="24">
+                <i-col v-if="storeData1.length > 0" span="24">
                   <FormItem>
-                    <div
-                      class="bottom-line"
-                    >
+                    <div class="bottom-line">
                       <div style="margin-left: -54px; margin-right: 18px">
                         {{ storeNameList[1] }}
                       </div>
@@ -1307,11 +1491,9 @@
                     </CheckboxGroup>
                   </FormItem>
                 </i-col>
-                <i-col v-if="storeData2.length>0" span="24">
+                <i-col v-if="storeData2.length > 0" span="24">
                   <FormItem>
-                    <div
-                      class="bottom-line"
-                    >
+                    <div class="bottom-line">
                       <div style="margin-left: -54px; margin-right: 18px">
                         {{ storeNameList[2] }}
                       </div>
@@ -1338,11 +1520,9 @@
                     </CheckboxGroup>
                   </FormItem>
                 </i-col>
-                <i-col v-if="storeData3.length>0" span="24">
+                <i-col v-if="storeData3.length > 0" span="24">
                   <FormItem>
-                    <div
-                      class="bottom-line"
-                    >
+                    <div class="bottom-line">
                       <div style="margin-left: -54px; margin-right: 18px">
                         {{ storeNameList[3] }}
                       </div>
@@ -1369,11 +1549,9 @@
                     </CheckboxGroup>
                   </FormItem>
                 </i-col>
-                <i-col v-if="storeData4.length>0" span="24">
+                <i-col v-if="storeData4.length > 0" span="24">
                   <FormItem>
-                    <div
-                      class="bottom-line"
-                    >
+                    <div class="bottom-line">
                       <div style="margin-left: -54px; margin-right: 18px">
                         {{ storeNameList[4] }}
                       </div>
@@ -1400,11 +1578,9 @@
                     </CheckboxGroup>
                   </FormItem>
                 </i-col>
-                <i-col v-if="storeData5.length>0" span="24">
+                <i-col v-if="storeData5.length > 0" span="24">
                   <FormItem>
-                    <div
-                      class="bottom-line"
-                    >
+                    <div class="bottom-line">
                       <div style="margin-left: -54px; margin-right: 18px">
                         {{ storeNameList[5] }}
                       </div>
@@ -1431,11 +1607,9 @@
                     </CheckboxGroup>
                   </FormItem>
                 </i-col>
-                <i-col v-if="storeData6.length>0" span="24">
+                <i-col v-if="storeData6.length > 0" span="24">
                   <FormItem>
-                    <div
-                      class="bottom-line"
-                    >
+                    <div class="bottom-line">
                       <div style="margin-left: -54px; margin-right: 18px">
                         {{ storeNameList[6] }}
                       </div>
@@ -1468,27 +1642,37 @@
         </Tabs>
       </div>
       <div slot="footer">
-        <Button @click="handleEditClose">
-          关闭
-        </Button>
-        <Button
-          v-if="step == 'firstStep'"
-          :loading="modalViewLoading"
-          type="primary"
-          @click="handlefirstStep('editForm')"
-        >
-          下一步
-        </Button>
-        <Button
-          v-else
-          :loading="modalViewLoading"
-          type="primary"
-          @click="handleSubmit('editFormSecond')"
-        >
-          确定
-        </Button>
+        <Button @click="handleEditClose"> 关闭 </Button>
+        <template v-if="productStandardDetail.shelvesStatus==='INVALID'">
+          <Button
+            :loading="modalViewLoading"
+            type="primary"
+            @click="handleSubmitAll"
+          >
+            确定
+          </Button>
+        </template>
+        <template v-else>
+          <Button
+            v-if="step == 'firstStep'"
+            :loading="modalViewLoading"
+            type="primary"
+            @click="handlefirstStep('editForm')"
+          >
+            下一步
+          </Button>
+          <Button
+            v-else
+            :loading="modalViewLoading"
+            type="primary"
+            @click="handleSubmit('editFormSecond')"
+          >
+            确定
+          </Button>
+        </template>
       </div>
     </Modal>
+
     <!-- 折扣配置 -->
     <Modal
       v-model="modalDiscount"
@@ -1545,9 +1729,7 @@
           <Row>
             <i-col span="12">
               <Row style="margin-left: 36px">
-                <i-col span="5">
-                  商品类型:
-                </i-col>
+                <i-col span="5"> 商品类型: </i-col>
                 <i-col
                   v-if="
                     productStandardDetail.productType === 'DISCOUNT_PRODUCT'
@@ -1687,9 +1869,7 @@
         </Form>
       </div>
       <div slot="footer">
-        <Button @click="handleDiscountClose">
-          关闭
-        </Button>
+        <Button @click="handleDiscountClose"> 关闭 </Button>
         <Button
           :loading="modalViewLoading"
           type="primary"
@@ -1790,14 +1970,11 @@
         </drag-list>
       </div>
       <div slot="footer">
-        <Button @click="modalSort = false">
-          关闭
-        </Button>
-        <Button type="primary" @click="handleImgSort">
-          确定
-        </Button>
+        <Button @click="modalSort = false"> 关闭 </Button>
+        <Button type="primary" @click="handleImgSort"> 确定 </Button>
       </div>
     </Modal>
+
     <!-- 海鼎会员价 -->
     <Modal
       v-model="modalHdSvip"
@@ -1813,9 +1990,7 @@
         <Row class-name="mb20">
           <i-col span="12">
             <Row>
-              <i-col span="8">
-                商品名称:
-              </i-col>
+              <i-col span="8"> 商品名称: </i-col>
               <i-col span="16">
                 {{ HdSvipInfo.gname }}
               </i-col>
@@ -1823,9 +1998,7 @@
           </i-col>
           <i-col span="12">
             <Row>
-              <i-col span="8">
-                商品状态:
-              </i-col>
+              <i-col span="8"> 商品状态: </i-col>
               <i-col span="16">
                 {{ HdSvipInfo.busname }}
               </i-col>
@@ -1835,9 +2008,7 @@
         <Row class-name="mb20">
           <i-col span="12">
             <Row>
-              <i-col span="8">
-                商品编码:
-              </i-col>
+              <i-col span="8"> 商品编码: </i-col>
               <i-col span="16">
                 {{ HdSvipInfo.code }}
               </i-col>
@@ -1845,9 +2016,7 @@
           </i-col>
           <i-col span="12">
             <Row>
-              <i-col span="8">
-                条码:
-              </i-col>
+              <i-col span="8"> 条码: </i-col>
               <i-col span="16">
                 {{ HdSvipInfo.code2 }}
               </i-col>
@@ -1857,9 +2026,7 @@
         <Row class-name="mb20">
           <i-col span="12">
             <Row>
-              <i-col span="8">
-                商品描述:
-              </i-col>
+              <i-col span="8"> 商品描述: </i-col>
               <i-col span="16">
                 {{ HdSvipInfo.description }}
               </i-col>
@@ -1867,9 +2034,7 @@
           </i-col>
           <i-col span="12">
             <Row>
-              <i-col span="8">
-                商品分类:
-              </i-col>
+              <i-col span="8"> 商品分类: </i-col>
               <i-col span="16">
                 {{ HdSvipInfo.sortcode }}
               </i-col>
@@ -1879,9 +2044,7 @@
         <Row class-name="mb20">
           <i-col span="12">
             <Row>
-              <i-col span="8">
-                基础单位:
-              </i-col>
+              <i-col span="8"> 基础单位: </i-col>
               <i-col span="16">
                 {{ HdSvipInfo.munit }}
               </i-col>
@@ -1889,9 +2052,7 @@
           </i-col>
           <i-col span="12">
             <Row>
-              <i-col span="8">
-                规格:
-              </i-col>
+              <i-col span="8"> 规格: </i-col>
               <i-col span="16">
                 {{ HdSvipInfo.qpcstr }}
               </i-col>
@@ -1901,9 +2062,7 @@
         <Row class-name="mb20">
           <i-col span="12">
             <Row>
-              <i-col span="8">
-                海鼎售价:
-              </i-col>
+              <i-col span="8"> 海鼎售价: </i-col>
               <i-col span="16">
                 {{ HdSvipInfo.rtlprc }}
               </i-col>
@@ -1911,9 +2070,7 @@
           </i-col>
           <i-col span="12">
             <Row>
-              <i-col span="8">
-                海鼎会员价:
-              </i-col>
+              <i-col span="8"> 海鼎会员价: </i-col>
               <i-col span="16">
                 {{ HdSvipInfo.mbrprc }}
               </i-col>
@@ -1923,9 +2080,7 @@
         <Row class-name="mb20">
           <i-col span="12">
             <Row>
-              <i-col span="8">
-                SVIP价格:
-              </i-col>
+              <i-col span="8"> SVIP价格: </i-col>
               <i-col span="16">
                 {{ HdSvipInfo.svipprc }}
               </i-col>
@@ -1933,9 +2088,7 @@
           </i-col>
           <i-col span="12">
             <Row>
-              <i-col span="8">
-                SVIP折扣:
-              </i-col>
+              <i-col span="8"> SVIP折扣: </i-col>
               <i-col span="16">
                 {{ HdSvipInfo.svipzk }}
               </i-col>
@@ -1944,9 +2097,7 @@
         </Row>
       </div>
       <div slot="footer">
-        <Button type="primary" @click="handleHdSvipClose">
-          关闭
-        </Button>
+        <Button type="primary" @click="handleHdSvipClose"> 关闭 </Button>
       </div>
     </Modal>
   </div>
@@ -1957,7 +2108,6 @@ import Tables from '_c/tables';
 import config from '@/config';
 import DragList from '_c/drag-list';
 import IViewUpload from '_c/iview-upload';
-
 import {
   createProductStandard,
   deleteProductStandard,
@@ -1968,13 +2118,10 @@ import {
   getProductUnits,
   getProductPages,
   getHdProductInfo,
-  deletePicture,
   getAreaStorePages
 } from '@/api/mini-program';
 import uploadMixin from '@/mixins/uploadMixin';
-import deleteMixin from '@/mixins/deleteMixin.js';
 import tableMixin from '@/mixins/tableMixin.js';
-import searchMixin from '@/mixins/searchMixin.js';
 import relationStoreMixin from '@/mixins/relationStoreMixin.js';
 import {
   getSmallGoodsStandard,
@@ -2044,8 +2191,7 @@ const productStandardDetail = {
   dbId: null,
   svipPrice: null,
   shareImage: null,
-  isCanCoupon: 'YES',
-  cityCode: '0744'
+  isCanCoupon: 'YES'
 };
 
 const roleRowData = {
@@ -2055,6 +2201,8 @@ const roleRowData = {
   productType: '',
   productName: '',
   shelvesStatus: null,
+  isCanCoupon: '',
+  whetherLockShelf: '',
   minPrice: '',
   maxPrice: '',
   page: 1,
@@ -2113,7 +2261,8 @@ export default {
     IViewUpload,
     DragList
   },
-  mixins: [uploadMixin, deleteMixin, searchMixin, tableMixin, relationStoreMixin],
+  inject: ['reload'],
+  mixins: [uploadMixin, tableMixin, relationStoreMixin],
   data() {
     return {
       productData: [],
@@ -2131,21 +2280,19 @@ export default {
       shareUploadListMultiple: [],
       uploadListMultiple: [],
       uploadListMultiple_: [],
+      relationStoreList: [],
+      publishStoreList: [],
       productTotal: 0,
       firstSuccess: true,
       showBack: false,
       isEnvironment: null,
-      loading: true,
-      modalViewLoading: false,
-      modalView: false,
-      modalEdit: false,
+      modalPublish: false,
       modalDiscount: false,
       modalHdSvip: false,
       modalProduct: false,
       modalSort: false,
       searchMinPrice: null,
       searchMaxPrice: null,
-      clickFlag: '',
       HdSvipInfo: '',
       shelvesStatus: [
         {
@@ -2173,6 +2320,7 @@ export default {
       },
       step: 'firstStep',
       tempModalType: 'create',
+      actionName: '', // onsale-上下架 publish-发布
       isUseCoupon: [
         { label: '可用券', value: 'YES' },
         { label: '不可用券', value: 'NO' }
@@ -2346,7 +2494,7 @@ export default {
           align: 'center',
           minWidth: 100,
           key: 'price',
-          render(h, params, vm) {
+          render(h, params) {
             const amount = fenToYuanDot2(params.row.price);
             return <div>{amount}</div>;
           }
@@ -2356,7 +2504,7 @@ export default {
           align: 'center',
           minWidth: 100,
           key: 'salePrice',
-          render(h, params, vm) {
+          render(h, params) {
             const amount = fenToYuanDot2(params.row.salePrice);
             return <div>{amount}</div>;
           }
@@ -2406,9 +2554,31 @@ export default {
           minWidth: 100,
           key: 'whetherLockShelf',
           align: 'center',
-          render: (h, params, vm) => {
+          render: (h, params) => {
             const { row } = params;
             if (row.whetherLockShelf === 'YES') {
+              return (
+                <div>
+                  <tag color='green'>{'是'}</tag>
+                </div>
+              );
+            } else {
+              return (
+                <div>
+                  <tag color='orange'>{'否'}</tag>
+                </div>
+              );
+            }
+          }
+        },
+        {
+          title: '是否可用券',
+          minWidth: 120,
+          key: 'isCanCoupon',
+          align: 'center',
+          render: (h, params) => {
+            const { row } = params;
+            if (row.isCanCoupon === 'YES') {
               return (
                 <div>
                   <tag color='green'>{'是'}</tag>
@@ -2440,7 +2610,7 @@ export default {
           align: 'center',
           render: (h, params, vm) => {
             const { row } = params;
-            if (row.productType == 'DISCOUNT_PRODUCT') {
+            if (row.productType === 'DISCOUNT_PRODUCT') {
               return (
                 <div>
                   <tag color='magenta'>
@@ -2448,7 +2618,7 @@ export default {
                   </tag>
                 </div>
               );
-            } else if (row.productType == 'PULL_NEW_PRODUCT') {
+            } else if (row.productType === 'PULL_NEW_PRODUCT') {
               return (
                 <div>
                   <tag color='orange'>
@@ -2456,7 +2626,7 @@ export default {
                   </tag>
                 </div>
               );
-            } else if (row.productType == 'SECKILL_PRODUCT') {
+            } else if (row.productType === 'SECKILL_PRODUCT') {
               return (
                 <div>
                   <tag color='blue'>
@@ -2464,7 +2634,7 @@ export default {
                   </tag>
                 </div>
               );
-            } else if (row.productType == 'NEW_TRY_PRODUCT') {
+            } else if (row.productType === 'NEW_TRY_PRODUCT') {
               return (
                 <div>
                   <tag color='blue'>
@@ -2472,7 +2642,7 @@ export default {
                   </tag>
                 </div>
               );
-            } else if (row.productType == 'ASSIST_PRODUCT') {
+            } else if (row.productType === 'ASSIST_PRODUCT') {
               return (
                 <div>
                   <tag color='green'>
@@ -2480,7 +2650,7 @@ export default {
                   </tag>
                 </div>
               );
-            } else if (row.productType == 'SHARE_PRODUCT') {
+            } else if (row.productType === 'SHARE_PRODUCT') {
               return (
                 <div>
                   <tag color='green'>
@@ -2488,7 +2658,7 @@ export default {
                   </tag>
                 </div>
               );
-            } else if (row.productType == 'TEAM_BUY_PRODUCT') {
+            } else if (row.productType === 'TEAM_BUY_PRODUCT') {
               return (
                 <div>
                   <tag color='green'>
@@ -2496,7 +2666,7 @@ export default {
                   </tag>
                 </div>
               );
-            } else if (row.productType == 'PRE_SALE_PRODUCT') {
+            } else if (row.productType === 'PRE_SALE_PRODUCT') {
               return (
                 <div>
                   <tag color='green'>
@@ -2504,7 +2674,7 @@ export default {
                   </tag>
                 </div>
               );
-            } else if (row.productType == 'ORDINARY_PRODUCT') {
+            } else if (row.productType === 'ORDINARY_PRODUCT') {
               return (
                 <div>
                   <tag color='cyan'>
@@ -2563,10 +2733,10 @@ export default {
         {
           title: '操作',
           align: 'center',
-          minWidth: 180,
+          minWidth: 220,
           fixed: 'right',
           key: 'handle',
-          options: ['customOnSale', 'view', 'edit', 'discount']
+          options: ['customOnSale', 'publish', 'view', 'edit', 'discount']
         }
       ],
       productColumns: [
@@ -2675,12 +2845,21 @@ export default {
       return fenToYuanDot2Number(this.proStandardExpand.discountPrice);
     }
   },
+  watch: {
+    $route: function(to, from) {
+      if (to.path === '/small-goods-standard') {
+        this.reload();
+      }
+    }
+  },
   created() {
     this.isEnvironment = config.isEnvironment;
-    this.showBack = this.$route.name === 'small-goods-relation-standard';
+    this.showBack = this.$route.path === '/small-goods-relation-standard';
+    this.resetSearchRowData();
     this.getTableData();
   },
   mounted() {
+    this.actionName = '';
     this.getStore();
     this.getProductUnits();
   },
@@ -2697,27 +2876,26 @@ export default {
       });
     },
     getStore(isCheck) {
-      getAreaStorePages(this.productStandardDetail.cityCode)
-        .then((res) => {
-          this.storeList = res.array;
-          this.storeData = res.array[0] && res.array[0].storeList || [];
-          this.storeData1 = res.array[1] && res.array[1].storeList || [];
-          this.storeData2 = res.array[2] && res.array[2].storeList || [];
-          this.storeData3 = res.array[3] && res.array[3].storeList || [];
-          this.storeData4 = res.array[4] && res.array[4].storeList || [];
-          this.storeData5 = res.array[5] && res.array[5].storeList || [];
-          this.storeData6 = res.array[6] && res.array[6].storeList || [];
-          const data = [];
-          this.storeNameList = [];
-          res.array.forEach(item => {
-            this.storeNameList.push(item.storeName);
-            data.push(item.storeList);
-          });
-          this.storeListData = data;
-          if (isCheck) {
-            this.handleCheckSelected();
-          }
+      getAreaStorePages(this.cityCode).then((res) => {
+        this.storeList = res.array;
+        this.storeData = (res.array[0] && res.array[0].storeList) || [];
+        this.storeData1 = (res.array[1] && res.array[1].storeList) || [];
+        this.storeData2 = (res.array[2] && res.array[2].storeList) || [];
+        this.storeData3 = (res.array[3] && res.array[3].storeList) || [];
+        this.storeData4 = (res.array[4] && res.array[4].storeList) || [];
+        this.storeData5 = (res.array[5] && res.array[5].storeList) || [];
+        this.storeData6 = (res.array[6] && res.array[6].storeList) || [];
+        const data = [];
+        this.storeNameList = [];
+        res.array.forEach((item) => {
+          this.storeNameList.push(item.storeName);
+          data.push(item.storeList);
         });
+        this.storeListData = data;
+        if (isCheck) {
+          this.handleCheckSelected();
+        }
+      });
     },
     priceInputNumberOnchange(value) {
       this.productStandardDetail.price = yuanToFenNumber(value);
@@ -2739,9 +2917,12 @@ export default {
         this.productStandardDetail.salePrice -
         this.productStandardDetail.costPrice;
       // 售卖价格变化后，佣金金额也得变化
-      if (!this.productStandardDetail.commissionScale) { return; }
+      if (!this.productStandardDetail.commissionScale) {
+        return;
+      }
       this.productStandardDetail.commissionPrice = Math.floor(
-        this.productStandardDetail.salePrice * (this.productStandardDetail.commissionScale / 100)
+        this.productStandardDetail.salePrice *
+          (this.productStandardDetail.commissionScale / 100)
       );
     },
     svipPriceInputNumberOnchange(value) {
@@ -2841,9 +3022,6 @@ export default {
       // 清楚掉表单数据
       this.$refs.modalDiscount.resetFields();
     },
-    handleClose() {
-      this.modalView = false;
-    },
     handleView(params) {
       this.tempModalType = this.modalType.view;
       this.productStandardDetail = this._.cloneDeep(params.row);
@@ -2852,21 +3030,41 @@ export default {
           ','
         );
       }
-      this.showStoreName = this.relationStore();
+      this.relationStoreList = this.relationStore();
+      this.publishStoreList = this.publishedStore();
       this.modalView = true;
     },
-    relationStore() {
-      if (!this.productStandardDetail.storeIds) {
-        return '全部门店';
-      }
-      const ids = this.productStandardDetail.storeIds.substring(1, this.productStandardDetail.storeIds.length - 1).split('][');
-      let str = '';
+    publishedStore() {
+      const list = [];
+      if (!this.productStandardDetail.partStoreIds) return list;
+      const ids = this.productStandardDetail.partStoreIds
+        .substring(1, this.productStandardDetail.partStoreIds.length - 1)
+        .split('][');
       ids.forEach((id) => {
-        const item = this.allStoreList.find(item => item.storeId == id);
-        if (!item) { return; }
-        str += item.storeName + ',';
+        const item = this.allStoreList.find((item) => item.storeId == id);
+        if (!item) {
+          return;
+        }
+        list.push(item.storeName);
       });
-      return str.substring(0, str.length - 1);
+      return list;
+    },
+    relationStore() {
+      const list = [];
+      if (!this.productStandardDetail.storeIds) {
+        return list;
+      }
+      const ids = this.productStandardDetail.storeIds
+        .substring(1, this.productStandardDetail.storeIds.length - 1)
+        .split('][');
+      ids.forEach((id) => {
+        const item = this.allStoreList.find((item) => item.storeId == id);
+        if (!item) {
+          return;
+        }
+        list.push(item.storeName);
+      });
+      return list;
     },
     handleEdit(params) {
       this.step = 'firstStep';
@@ -2878,7 +3076,6 @@ export default {
       this.productStandardDetail.shareImage = '';
       this.uploadListMultiple_ = [];
       this.shareUploadListMultiple = [];
-      this.clickFlag = false;
       this.tempModalType = this.modalType.edit;
       this.productStandardDetail = this._.cloneDeep(params.row);
       if (this.productStandardDetail.description != null) {
@@ -2903,12 +3100,16 @@ export default {
         const storeIds = this.productStandardDetail.storeIds
           .substring(1, this.productStandardDetail.storeIds.length - 1)
           .split('][');
-        storeIds.forEach((element) => { this.storeIds.push(parseInt(element)); });
+        storeIds.forEach((element) => {
+          this.storeIds.push(parseInt(element));
+        });
         console.log('selected storeIds:', this.storeIds);
         const firstStoreId = this.storeIds[0];
         // 编辑时从返回的第一个storeId单独查询下cityCode来反选城市
-        const storeObj = this.allStoreList.find(item => item.storeId === firstStoreId);
-        this.productStandardDetail.cityCode = storeObj.cityCode;
+        const storeObj = this.allStoreList.find(
+          (item) => item.storeId === firstStoreId
+        );
+        this.cityCode = storeObj.cityCode;
         this.getStore(true);
       } else {
         this.showStoreList = false;
@@ -2918,8 +3119,8 @@ export default {
     },
     handleDiscount(params) {
       if (
-        params.row.productType == 'ORDINARY_PRODUCT' ||
-        params.row.productType == 'SHARE_PRODUCT'
+        params.row.productType === 'ORDINARY_PRODUCT' ||
+        params.row.productType === 'SHARE_PRODUCT'
       ) {
         this.$Message.error('普通商品&分享赚商品不允许配置');
         return;
@@ -2973,8 +3174,7 @@ export default {
     onCurrentChange(currentRow, oldCurrentRow) {
       this.currentTableRowSelected = currentRow;
     },
-    handleCreateView() {
-      this.clickFlag = true;
+    handleCreate() {
       this.step = 'firstStep';
       this.firstSuccess = true;
       // this.resetFields();
@@ -3128,7 +3328,58 @@ export default {
         }
       });
     },
+    handleSubmitAll() {
+      // 如果是编辑提交则需置空partStoreIds
+      this.productStandardDetail.partStoreIds = null;
+      this.$refs.editForm.validate((valid) => {
+        if (valid) {
+          if (!this.productStandardDetail.salePrice) {
+            this.$Message.error('请输入售卖价格');
+            return;
+          }
+          if (this.productStandardDetail.salePrice < 0) {
+            this.$Message.error('售卖价格不能小于0');
+            return;
+          }
+          // if (this.productStandardDetail.svipPrice < 0) {
+          //   this.$Message.error("SVIP价格不能小于0");
+          //   return;
+          // }
+          if (
+            this.productStandardDetail.salePrice >
+            this.productStandardDetail.price
+          ) {
+            this.$Message.error('售卖价格不能大于原价');
+            return;
+          }
+          if (
+            this.productStandardDetail.costPrice >
+            this.productStandardDetail.salePrice
+          ) {
+            this.$Message.error('成本价不能大于售卖价格');
+            return;
+          }
+          // if (
+          //   this.productStandardDetail.svipPrice >
+          //   this.productStandardDetail.salePrice
+          // ) {
+          //   this.$Message.error("SVIP价格不能大于售卖价格");
+          //   return;
+          // }
+          if (this.isCreate) {
+            this.createStandard();
+            this.currentTableRowSelected = null;
+          } else if (this.isEdit) {
+            this.editProductStandard();
+          }
+        } else {
+          this.$Message.error('请完善信息!');
+        }
+      });
+    },
     handleSubmit(name) {
+      // 如果是编辑提交则需置空partStoreIds
+      this.productStandardDetail.partStoreIds = null;
       this.$refs[name].validate((valid) => {
         if (valid) {
           if (
@@ -3141,10 +3392,10 @@ export default {
           }
           this.defaultListMultiple_ = [];
           this.defaulSharetListMultiple = [];
-          if (this.tempModalType === this.modalType.create) {
+          if (this.isCreate) {
             this.createStandard();
             this.currentTableRowSelected = null;
-          } else if (this.tempModalType === this.modalType.edit) {
+          } else if (this.isEdit) {
             this.editProductStandard();
           }
         } else {
@@ -3185,7 +3436,7 @@ export default {
           }
           this.updateProStandardExpand();
         } else {
-          this.$Message.error('请完善信息!');
+          this.$Message.error('请完善商品规格信息!');
         }
       });
     },
@@ -3234,13 +3485,15 @@ export default {
       this.getTableData();
     },
     getTableData() {
+      this.loading = true;
       // 获取商品页面传过来的商品信息
-      if (this.$route.name === 'small-goods-relation-standard') {
+      if (this.showBack) {
         const goodsStandard = getSmallGoodsStandard();
-        if (goodsStandard != null && goodsStandard !== '') {
+        // console.log(`goodsStandard from cookie:`, goodsStandard);
+        if (goodsStandard) {
           // 给商品规格的商品和搜索条件赋值
           this.searchRowData.productId = goodsStandard.id;
-          this.productStandardDetail = this._.cloneDeep(goodsStandard);
+          this.productStandardDetail = _.cloneDeep(goodsStandard);
           this.productStandardDetail.productId = goodsStandard.id;
           this.productStandardDetail.baseUnit = goodsStandard.unitName;
           this.productStandardDetail.baseProductName =
@@ -3251,6 +3504,7 @@ export default {
             goodsStandard.description;
           this.productStandardDetail.productDescription =
             goodsStandard.description;
+          this.productStandardDetail.barcode = goodsStandard.baseBarcode;
           // this.unitsList = goodsStandard.unitsList;
         }
       } else {
@@ -3261,11 +3515,8 @@ export default {
         .then((res) => {
           this.tableData = res.rows;
           this.total = res.total;
-          this.loading = false;
-          this.searchLoading = false;
-          this.clearSearchLoading = false;
         })
-        .catch(() => {
+        .finally(() => {
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
@@ -3442,30 +3693,125 @@ export default {
         this.productStandardDetail.rotationImage = '';
       }
     },
-    customOnSale(params) {
-      const rowData = this._.cloneDeep(params.row);
-      if (params.row.shelvesStatus === 'VALID') {
-        rowData.shelvesStatus = 'INVALID';
-      } else {
-        rowData.shelvesStatus = 'VALID';
+    handleOnSale(params) {
+      this.actionName = 'onsale';
+      this.productStandardDetail.partStoreIds = '';
+      this.storeIds = [];
+      this.productStandardDetail = this._.cloneDeep(params.row);
+      // 如果是普通商品规格且需上架-弹窗选择上架门店
+      if (
+        this.productStandardDetail.productType === 'ORDINARY_PRODUCT' &&
+        this.productStandardDetail.shelvesStatus === 'INVALID'
+      ) {
+        if (this.productStandardDetail.partStoreIds) {
+          const storeIds = this.productStandardDetail.partStoreIds
+            .substring(1, this.productStandardDetail.partStoreIds.length - 1)
+            .split('][');
+          storeIds.forEach((element) => {
+            this.storeIds.push(parseInt(element));
+          });
+          console.log('selected partStoreIds:', this.storeIds);
+          const firstStoreId = this.storeIds[0];
+          // 编辑时从返回的第一个storeId单独查询下cityCode来反选城市
+          const storeObj = this.allStoreList.find(
+            (item) => item.storeId === firstStoreId
+          );
+          this.cityCode =
+            storeObj && storeObj.cityCode ? storeObj.cityCode : '0731';
+          this.getStore(true);
+        }
+        this.modalPublish = true;
+        return;
       }
+      this.productStandardDetail.shelvesStatus =
+        this.productStandardDetail.shelvesStatus === 'INVALID'
+          ? 'VALID'
+          : 'INVALID';
       this.loading = true;
-      editProductStandard(rowData)
+      // 重构传递参数对象
+      editProductStandard(this.productStandardDetail)
         .then((res) => {
           this.$Message.success('修改成功!');
         })
         .finally((res) => {
+          this.getTableData();
           this.loading = false;
           this.modalViewLoading = false;
-          this.getTableData();
           this.modalEdit = false;
         });
+    },
+    handlePublish(params) {
+      this.actionName = 'publish';
+      this.productStandardDetail.partStoreIds = '';
+      this.storeIds = [];
+      this.productStandardDetail = this._.cloneDeep(params.row);
+      if (
+        this.productStandardDetail.partStoreIds !== null &&
+        this.productStandardDetail.partStoreIds !== ''
+      ) {
+        const storeIds = this.productStandardDetail.partStoreIds
+          .substring(1, this.productStandardDetail.partStoreIds.length - 1)
+          .split('][');
+        storeIds.forEach((element) => {
+          this.storeIds.push(parseInt(element));
+        });
+        console.log('selected partStoreIds:', this.storeIds);
+        const firstStoreId = this.storeIds[0];
+        // 编辑时从返回的第一个storeId单独查询下cityCode来反选城市
+        const storeObj = this.allStoreList.find(
+          (item) => item.storeId === firstStoreId
+        );
+        this.cityCode =
+          storeObj && storeObj.cityCode ? storeObj.cityCode : '0731';
+        this.getStore(true);
+      }
+      this.modalPublish = true;
+    },
+    handlePublishSubmit() {
+      this.loading = true;
+      // 如果不选择则为全部门店发布
+      this.productStandardDetail.partStoreIds = !this.productStandardDetail
+        .partStoreIds
+        ? 'all'
+        : this.productStandardDetail.partStoreIds;
+      if (this.actionName === 'publish') {
+        editProductStandard(this.productStandardDetail)
+          .then((res) => {
+            this.$Message.success('发布成功!');
+          })
+          .finally((res) => {
+            this.getTableData();
+            this.loading = false;
+            this.modalViewLoading = false;
+            this.modalPublish = false;
+          });
+      } else if (this.actionName === 'onsale') {
+        // 发布并上架
+        this.productStandardDetail.shelvesStatus = 'VALID';
+        this.loading = true;
+        // 重构传递参数对象
+        editProductStandard(this.productStandardDetail)
+          .then((res) => {
+            this.$Message.success('上架并发布成功!');
+          })
+          .finally((res) => {
+            this.getTableData();
+            this.loading = false;
+            this.modalViewLoading = false;
+            this.modalPublish = false;
+            this.modalEdit = false;
+          });
+      }
     },
     goBack() {
       this.turnToPage('small-goods-info');
     },
     resetSearchRowData() {
       this.searchRowData = _.cloneDeep(roleRowData);
+      if (this.showBack) {
+        const goodsStandard = getSmallGoodsStandard();
+        this.searchRowData.productId = goodsStandard.id;
+      }
     },
     findUnit(unitId) {
       if (this.unitsList != null) {
@@ -3565,35 +3911,63 @@ export default {
         this.showStoreList = false;
       } else if (options.value === 'PART') {
         this.productStandardDetail.relationStoreType = 'PART';
-        // 新增时默认反选长沙市
-        if (this.isCreate) { this.productStandardDetail.cityCode = '0744'; }
+        // 默认反选长沙市
+        this.cityCode = '0731';
         this.storeCheckRest();
         this.getStore();
         this.showStoreList = true;
       }
     },
     storeCheckRest() {
-      this.indeterminate = false;
-      this.checkAll = false;
-      this.indeterminate1 = false;
-      this.checkAll1 = false;
-      this.indeterminate2 = false;
-      this.checkAll2 = false;
-      this.indeterminate3 = false;
-      this.checkAll3 = false;
-      this.indeterminate4 = false;
-      this.checkAll4 = false;
-      this.indeterminate5 = false;
-      this.checkAll5 = false;
-      this.indeterminate6 = false;
-      this.checkAll6 = false;
-      this.indeterminate7 = false;
-      this.checkAll7 = false;
+      this.checkBoxRest();
       this.storeIds = [];
       this.productStandardDetail.storeIds = '';
     },
     handleCheckAll(value) {
       const _this = this;
+      // 全选反选当前地级市所有门店
+      if (value === -1) {
+        const allIds = [];
+        const beforeIds = [];
+        this.checkAllStore = !this.checkAllStore;
+        if (this.checkAllStore) {
+          if (this.storeIds != null) {
+            for (const val of this.storeIds) {
+              allIds.push(val);
+            }
+          }
+          this.storeListData.forEach((item) => {
+            item.forEach((x) => {
+              allIds.push(x.storeId);
+            });
+          });
+          this.storeIds = allIds;
+          if (this.modalPublish) {
+            this.productStandardDetail.partStoreIds =
+              '[' + allIds.join('][') + ']';
+          } else {
+            this.productStandardDetail.storeIds = '[' + allIds.join('][') + ']';
+          }
+        } else {
+          this.storeListData.forEach((item) => {
+            item.forEach((x) => {
+              beforeIds.push(x.storeId);
+            });
+          });
+          const newArray = _this.storeIds.filter(function(item) {
+            return beforeIds.indexOf(item) == -1;
+          });
+          this.storeIds = newArray;
+          if (this.modalPublish) {
+            this.productStandardDetail.partStoreIds =
+              '[' + newArray.join('][') + ']';
+          } else {
+            this.productStandardDetail.storeIds =
+              '[' + newArray.join('][') + ']';
+          }
+        }
+      }
+
       if (value === 0) {
         const allIds = [];
         const beforeIds = [];
@@ -3613,7 +3987,12 @@ export default {
             allIds.push(item.storeId);
           });
           this.storeIds = allIds;
-          this.productStandardDetail.storeIds = '[' + allIds.join('][') + ']';
+          if (this.modalPublish) {
+            this.productStandardDetail.partStoreIds =
+              '[' + allIds.join('][') + ']';
+          } else {
+            this.productStandardDetail.storeIds = '[' + allIds.join('][') + ']';
+          }
         } else {
           this.storeList[value].storeList.forEach((item) => {
             beforeIds.push(item.storeId);
@@ -3622,9 +4001,16 @@ export default {
             return beforeIds.indexOf(item) == -1;
           });
           this.storeIds = newArray;
-          this.productStandardDetail.storeIds = '[' + newArray.join('][') + ']';
+          if (this.modalPublish) {
+            this.productStandardDetail.partStoreIds =
+              '[' + newArray.join('][') + ']';
+          } else {
+            this.productStandardDetail.storeIds =
+              '[' + newArray.join('][') + ']';
+          }
         }
       }
+
       if (value === 1) {
         const allIds1 = [];
         const beforeIds = [];
@@ -3645,7 +4031,13 @@ export default {
             beforeIds.push(item.storeId);
           });
           this.storeIds = allIds1;
-          this.productStandardDetail.storeIds = '[' + allIds1.join('][') + ']';
+          if (this.modalPublish) {
+            this.productStandardDetail.partStoreIds =
+              '[' + allIds1.join('][') + ']';
+          } else {
+            this.productStandardDetail.storeIds =
+              '[' + allIds1.join('][') + ']';
+          }
         } else {
           this.storeList[value].storeList.forEach((item) => {
             beforeIds.push(item.storeId);
@@ -3654,9 +4046,16 @@ export default {
             return beforeIds.indexOf(item) == -1;
           });
           this.storeIds = newArray;
-          this.productStandardDetail.storeIds = '[' + newArray.join('][') + ']';
+          if (this.modalPublish) {
+            this.productStandardDetail.partStoreIds =
+              '[' + newArray.join('][') + ']';
+          } else {
+            this.productStandardDetail.storeIds =
+              '[' + newArray.join('][') + ']';
+          }
         }
       }
+
       if (value === 2) {
         const allIds2 = [];
         const beforeIds = [];
@@ -3677,7 +4076,13 @@ export default {
             beforeIds.push(item.storeId);
           });
           this.storeIds = allIds2;
-          this.productStandardDetail.storeIds = '[' + allIds2.join('][') + ']';
+          if (this.modalPublish) {
+            this.productStandardDetail.partStoreIds =
+              '[' + allIds2.join('][') + ']';
+          } else {
+            this.productStandardDetail.storeIds =
+              '[' + allIds2.join('][') + ']';
+          }
         } else {
           this.storeList[value].storeList.forEach((item) => {
             beforeIds.push(item.storeId);
@@ -3686,9 +4091,16 @@ export default {
             return beforeIds.indexOf(item) == -1;
           });
           this.storeIds = newArray;
-          this.productStandardDetail.storeIds = '[' + newArray.join('][') + ']';
+          if (this.modalPublish) {
+            this.productStandardDetail.partStoreIds =
+              '[' + newArray.join('][') + ']';
+          } else {
+            this.productStandardDetail.storeIds =
+              '[' + newArray.join('][') + ']';
+          }
         }
       }
+
       if (value === 3) {
         const allIds3 = [];
         const beforeIds = [];
@@ -3709,7 +4121,13 @@ export default {
             beforeIds.push(item.storeId);
           });
           this.storeIds = allIds3;
-          this.productStandardDetail.storeIds = '[' + allIds3.join('][') + ']';
+          if (this.modalPublish) {
+            this.productStandardDetail.partStoreIds =
+              '[' + allIds3.join('][') + ']';
+          } else {
+            this.productStandardDetail.storeIds =
+              '[' + allIds3.join('][') + ']';
+          }
         } else {
           this.storeList[value].storeList.forEach((item) => {
             beforeIds.push(item.storeId);
@@ -3718,9 +4136,16 @@ export default {
             return beforeIds.indexOf(item) == -1;
           });
           this.storeIds = newArray;
-          this.productStandardDetail.storeIds = '[' + newArray.join('][') + ']';
+          if (this.modalPublish) {
+            this.productStandardDetail.partStoreIds =
+              '[' + newArray.join('][') + ']';
+          } else {
+            this.productStandardDetail.storeIds =
+              '[' + newArray.join('][') + ']';
+          }
         }
       }
+
       if (value === 4) {
         const allIds4 = [];
         const beforeIds = [];
@@ -3741,7 +4166,13 @@ export default {
             beforeIds.push(item.storeId);
           });
           this.storeIds = allIds4;
-          this.productStandardDetail.storeIds = '[' + allIds4.join('][') + ']';
+          if (this.modalPublish) {
+            this.productStandardDetail.partStoreIds =
+              '[' + allIds4.join('][') + ']';
+          } else {
+            this.productStandardDetail.storeIds =
+              '[' + allIds4.join('][') + ']';
+          }
         } else {
           this.storeList[value].storeList.forEach((item) => {
             beforeIds.push(item.storeId);
@@ -3750,9 +4181,16 @@ export default {
             return beforeIds.indexOf(item) == -1;
           });
           this.storeIds = newArray;
-          this.productStandardDetail.storeIds = '[' + newArray.join('][') + ']';
+          if (this.modalPublish) {
+            this.productStandardDetail.partStoreIds =
+              '[' + newArray.join('][') + ']';
+          } else {
+            this.productStandardDetail.storeIds =
+              '[' + newArray.join('][') + ']';
+          }
         }
       }
+
       if (value === 5) {
         const allIds5 = [];
         const beforeIds = [];
@@ -3773,7 +4211,13 @@ export default {
             beforeIds.push(item.storeId);
           });
           this.storeIds = allIds5;
-          this.productStandardDetail.storeIds = '[' + allIds5.join('][') + ']';
+          if (this.modalPublish) {
+            this.productStandardDetail.partStoreIds =
+              '[' + allIds5.join('][') + ']';
+          } else {
+            this.productStandardDetail.storeIds =
+              '[' + allIds5.join('][') + ']';
+          }
         } else {
           this.storeList[value].storeList.forEach((item) => {
             beforeIds.push(item.storeId);
@@ -3782,9 +4226,16 @@ export default {
             return beforeIds.indexOf(item) == -1;
           });
           this.storeIds = newArray;
-          this.productStandardDetail.storeIds = '[' + newArray.join('][') + ']';
+          if (this.modalPublish) {
+            this.productStandardDetail.partStoreIds =
+              '[' + newArray.join('][') + ']';
+          } else {
+            this.productStandardDetail.storeIds =
+              '[' + newArray.join('][') + ']';
+          }
         }
       }
+
       if (value === 6) {
         const allIds6 = [];
         const beforeIds = [];
@@ -3805,7 +4256,13 @@ export default {
             beforeIds.push(item.storeId);
           });
           this.storeIds = allIds6;
-          this.productStandardDetail.storeIds = '[' + allIds6.join('][') + ']';
+          if (this.modalPublish) {
+            this.productStandardDetail.partStoreIds =
+              '[' + allIds6.join('][') + ']';
+          } else {
+            this.productStandardDetail.storeIds =
+              '[' + allIds6.join('][') + ']';
+          }
         } else {
           this.storeList[value].storeList.forEach((item) => {
             beforeIds.push(item.storeId);
@@ -3814,7 +4271,13 @@ export default {
             return beforeIds.indexOf(item) == -1;
           });
           this.storeIds = newArray;
-          this.productStandardDetail.storeIds = '[' + newArray.join('][') + ']';
+          if (this.modalPublish) {
+            this.productStandardDetail.partStoreIds =
+              '[' + newArray.join('][') + ']';
+          } else {
+            this.productStandardDetail.storeIds =
+              '[' + newArray.join('][') + ']';
+          }
         }
       }
     },
@@ -3828,14 +4291,22 @@ export default {
       ) {
         this.indeterminate = false;
         this.checkAll = true;
-        this.productStandardDetail.storeIds = '[' + data.join('][') + ']';
+        if (this.modalPublish) {
+          this.productStandardDetail.partStoreIds = '[' + data.join('][') + ']';
+        } else {
+          this.productStandardDetail.storeIds = '[' + data.join('][') + ']';
+        }
       } else if (
         data.length > 0 &&
         sameArray.length < this.storeList[0].storeList.length
       ) {
         this.indeterminate = true;
         this.checkAll = false;
-        this.productStandardDetail.storeIds = '[' + data.join('][') + ']';
+        if (this.modalPublish) {
+          this.productStandardDetail.partStoreIds = '[' + data.join('][') + ']';
+        } else {
+          this.productStandardDetail.storeIds = '[' + data.join('][') + ']';
+        }
       }
       if (sameArray.length === 0) {
         this.indeterminate = false;
@@ -3852,16 +4323,24 @@ export default {
       ) {
         this.indeterminate1 = false;
         this.checkAll1 = true;
-        this.productStandardDetail.storeIds = '[' + data.join('][') + ']';
+        if (this.modalPublish) {
+          this.productStandardDetail.partStoreIds = '[' + data.join('][') + ']';
+        } else {
+          this.productStandardDetail.storeIds = '[' + data.join('][') + ']';
+        }
       } else if (
         data.length > 0 &&
         sameArray1.length < this.storeList[1].storeList.length
       ) {
         this.indeterminate1 = true;
         this.checkAll1 = false;
-        this.productStandardDetail.storeIds = '[' + data.join('][') + ']';
+        if (this.modalPublish) {
+          this.productStandardDetail.partStoreIds = '[' + data.join('][') + ']';
+        } else {
+          this.productStandardDetail.storeIds = '[' + data.join('][') + ']';
+        }
       }
-      if (sameArray1.length == 0) {
+      if (sameArray1.length === 0) {
         this.indeterminate1 = false;
         this.checkAll1 = false;
       }
@@ -3876,16 +4355,24 @@ export default {
       ) {
         this.indeterminate2 = false;
         this.checkAll2 = true;
-        this.productStandardDetail.storeIds = '[' + data.join('][') + ']';
+        if (this.modalPublish) {
+          this.productStandardDetail.partStoreIds = '[' + data.join('][') + ']';
+        } else {
+          this.productStandardDetail.storeIds = '[' + data.join('][') + ']';
+        }
       } else if (
         data.length > 0 &&
         sameArray2.length < this.storeList[2].storeList.length
       ) {
         this.indeterminate2 = true;
         this.checkAll2 = false;
-        this.productStandardDetail.storeIds = '[' + data.join('][') + ']';
+        if (this.modalPublish) {
+          this.productStandardDetail.partStoreIds = '[' + data.join('][') + ']';
+        } else {
+          this.productStandardDetail.storeIds = '[' + data.join('][') + ']';
+        }
       }
-      if (sameArray2.length == 0) {
+      if (sameArray2.length === 0) {
         this.indeterminate2 = false;
         this.checkAll2 = false;
       }
@@ -3901,15 +4388,22 @@ export default {
       ) {
         this.indeterminate3 = false;
         this.checkAll3 = true;
-        this.productStandardDetail.storeIds = '[' + data.join('][') + ']';
+        if (this.modalPublish) {
+          this.productStandardDetail.partStoreIds = '[' + data.join('][') + ']';
+        } else {
+          this.productStandardDetail.storeIds = '[' + data.join('][') + ']';
+        }
       } else if (
         data.length > 0 &&
         sameArray3.length < this.storeList[3].storeList.length
       ) {
         this.indeterminate3 = true;
         this.checkAll3 = false;
-        this.productStandardDetail.storeIds = '[' + data.join('][') + ']';
-        console.log(`selected storeids in obj:`, this.productStandardDetail.storeIds);
+        if (this.modalPublish) {
+          this.productStandardDetail.partStoreIds = '[' + data.join('][') + ']';
+        } else {
+          this.productStandardDetail.storeIds = '[' + data.join('][') + ']';
+        }
       }
       if (sameArray3.length === 0) {
         this.indeterminate3 = false;
@@ -3926,14 +4420,22 @@ export default {
       ) {
         this.indeterminate4 = false;
         this.checkAll4 = true;
-        this.productStandardDetail.storeIds = '[' + data.join('][') + ']';
+        if (this.modalPublish) {
+          this.productStandardDetail.partStoreIds = '[' + data.join('][') + ']';
+        } else {
+          this.productStandardDetail.storeIds = '[' + data.join('][') + ']';
+        }
       } else if (
         data.length > 0 &&
         sameArray4.length < this.storeList[4].storeList.length
       ) {
         this.indeterminate4 = true;
         this.checkAll4 = false;
-        this.productStandardDetail.storeIds = '[' + data.join('][') + ']';
+        if (this.modalPublish) {
+          this.productStandardDetail.partStoreIds = '[' + data.join('][') + ']';
+        } else {
+          this.productStandardDetail.storeIds = '[' + data.join('][') + ']';
+        }
       }
       if (sameArray4.length === 0) {
         this.indeterminate4 = false;
@@ -3950,14 +4452,22 @@ export default {
       ) {
         this.indeterminate5 = false;
         this.checkAll5 = true;
-        this.productStandardDetail.storeIds = '[' + data.join('][') + ']';
+        if (this.modalPublish) {
+          this.productStandardDetail.partStoreIds = '[' + data.join('][') + ']';
+        } else {
+          this.productStandardDetail.storeIds = '[' + data.join('][') + ']';
+        }
       } else if (
         data.length > 0 &&
         sameArray5.length < this.storeList[5].storeList.length
       ) {
         this.indeterminate5 = true;
         this.checkAll5 = false;
-        this.productStandardDetail.storeIds = '[' + data.join('][') + ']';
+        if (this.modalPublish) {
+          this.productStandardDetail.partStoreIds = '[' + data.join('][') + ']';
+        } else {
+          this.productStandardDetail.storeIds = '[' + data.join('][') + ']';
+        }
       }
       if (sameArray5.length === 0) {
         this.indeterminate5 = false;
@@ -3974,14 +4484,22 @@ export default {
       ) {
         this.indeterminate6 = false;
         this.checkAll6 = true;
-        this.productStandardDetail.storeIds = '[' + data.join('][') + ']';
+        if (this.modalPublish) {
+          this.productStandardDetail.partStoreIds = '[' + data.join('][') + ']';
+        } else {
+          this.productStandardDetail.storeIds = '[' + data.join('][') + ']';
+        }
       } else if (
         data.length > 0 &&
         sameArray6.length < this.storeList[6].storeList.length
       ) {
         this.indeterminate6 = true;
         this.checkAll6 = false;
-        this.productStandardDetail.storeIds = '[' + data.join('][') + ']';
+        if (this.modalPublish) {
+          this.productStandardDetail.partStoreIds = '[' + data.join('][') + ']';
+        } else {
+          this.productStandardDetail.storeIds = '[' + data.join('][') + ']';
+        }
       }
       if (sameArray6.length === 0) {
         this.indeterminate6 = false;

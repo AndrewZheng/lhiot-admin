@@ -630,7 +630,12 @@ import {
   editAdvertisement,
   getAdvertisementPages,
   getAdvertisement,
-  getProductStandardsPages
+  getProductStandardsPages,
+  getDynamicFormPages,
+  getDynamicForm,
+  createDynamicForm,
+  updateDynamicForm,
+  deleteDynamicForm
 } from '@/api/mini-program';
 import tableMixin from '@/mixins/tableMixin.js';
 import uploadMixin from '@/mixins/uploadMixin';

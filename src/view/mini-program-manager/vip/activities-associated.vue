@@ -20,6 +20,12 @@
         @on-selection-change="onSelectionChange"
         @on-view="handleView"
       >
+        <div slot="searchCondition">
+          <div class="ml15 mt10">
+            <b style="color: red">*</b> 排序字段设置
+            <b style="color: red">-1</b>为社区入群券
+          </div>
+        </div>
         <div slot="operations">
           <Button
             v-show="showBack"
@@ -74,6 +80,7 @@
         </Row>
       </div>
     </Card>
+
     <!-- 查看 -->
     <Modal
       v-model="modalView"
@@ -383,8 +390,11 @@
               <i-col span="4">
                 关联门店:
               </i-col>
-              <i-col span="16">
-                {{ showStoreName }}
+              <i-col v-if="relationStoreList.length > 0" span="16">
+                <Tag v-for="(item,index) in relationStoreList" :key="index" color="gold">{{ item }}</Tag>
+              </i-col>
+              <i-col v-else span="16">
+                全部门店
               </i-col>
             </Row>
           </i-col>
@@ -396,6 +406,7 @@
         </Button>
       </div>
     </Modal>
+
     <!-- 添加 -->
     <Modal
       v-model="modalAdd"
@@ -768,10 +779,9 @@
                 <FormItem
                   :label-width="85"
                   label="所属城市:"
-                  prop="cityCode"
                 >
                   <Select
-                    v-model="addRelationDetail.cityCode"
+                    v-model="cityCode"
                     style="width: 220px"
                     @on-change="handleCitySwitch"
                   >
@@ -789,6 +799,21 @@
               </i-col>
             </Row>
             <Row v-show="showStoreList">
+              <i-col v-if="storeData.length>0" span="24">
+                <FormItem>
+                  <div class="bottom-line">
+                    <div style="margin-left: -54px; margin-right: 18px">
+                      地级市全部门店
+                    </div>
+                    <Checkbox
+                      :value="checkAllStore"
+                      @click.prevent.native="handleCheckAll(-1)"
+                    >
+                      全选/反选
+                    </Checkbox>
+                  </div>
+                </FormItem>
+              </i-col>
               <i-col v-if="storeData.length>0" span="24">
                 <FormItem>
                   <div
@@ -1329,10 +1354,9 @@
               <FormItem
                 :label-width="85"
                 label="所属城市:"
-                prop="cityCode"
               >
                 <Select
-                  v-model="addRelationDetail.cityCode"
+                  v-model="cityCode"
                   style="width: 220px"
                   @on-change="handleCitySwitch"
                 >
@@ -1350,6 +1374,21 @@
             </i-col>
           </Row>
           <Row v-show="showStoreList">
+            <i-col v-if="storeData.length>0" span="24">
+              <FormItem>
+                <div class="bottom-line">
+                  <div style="margin-left: -54px; margin-right: 18px">
+                    地级市全部门店
+                  </div>
+                  <Checkbox
+                    :value="checkAllStore"
+                    @click.prevent.native="handleCheckAll(-1)"
+                  >
+                    全选/反选
+                  </Checkbox>
+                </div>
+              </FormItem>
+            </i-col>
             <i-col v-if="storeData.length>0" span="24">
               <FormItem>
                 <div
@@ -1595,16 +1634,13 @@ import Tables from '_c/tables';
 import IViewUpload from '_c/iview-upload';
 import {
   getRegisteredGiftPages,
-  deleteRegisterGift,
   createRegisterGift,
   editRegisterGift,
   getCouponTemplatePages,
   getHdCouponActivitiesPages
 } from '@/api/mini-program';
 import uploadMixin from '@/mixins/uploadMixin';
-import deleteMixin from '@/mixins/deleteMixin.js';
 import tableMixin from '@/mixins/tableMixin.js';
-import searchMixin from '@/mixins/searchMixin.js';
 import relationStoreMixin from '@/mixins/relationStoreMixin.js';
 import {
   couponStatusConvert,
@@ -1679,7 +1715,7 @@ const relationDetail = {
   endDay: 0,
   stores: null,
   relationStoreType: 'ALL',
-  cityCode: '0744'
+  cityCode: '0731'
 };
 
 const roleRowData = {
@@ -1880,14 +1916,14 @@ const dataColumns = [
     minWidth: 180,
     render: (h, params, vm) => {
       const { row } = params;
-      if (row.source == 'SMALL' && row.validDateType === 'FIXED_DATE') {
+      if (row.source === 'SMALL' && row.validDateType === 'FIXED_DATE') {
         return <div>{row.effectiveStartTime}</div>;
       } else if (
-        row.source == 'SMALL' &&
+        row.source === 'SMALL' &&
         row.validDateType === 'UN_FIXED_DATE'
       ) {
         return <div>{row.beginDay}</div>;
-      } else if (row.source == 'HD') {
+      } else if (row.source === 'HD') {
         return <div>{row.effectiveStartTime}</div>;
       } else {
         return <div>N/A</div>;
@@ -1901,7 +1937,7 @@ const dataColumns = [
     minWidth: 230,
     render: (h, params, vm) => {
       const { row } = params;
-      if (row.source == 'SMALL' && row.validDateType === 'FIXED_DATE') {
+      if (row.source === 'SMALL' && row.validDateType === 'FIXED_DATE') {
         if (!compareCouponData(row.effectiveEndTime)) {
           return (
             <div style='color:red'>{row.effectiveEndTime + ' 已过期'}</div>
@@ -1910,11 +1946,11 @@ const dataColumns = [
           return <div>{row.effectiveEndTime}</div>;
         }
       } else if (
-        row.source == 'SMALL' &&
+        row.source === 'SMALL' &&
         row.validDateType === 'UN_FIXED_DATE'
       ) {
         return <div>{row.endDay}</div>;
-      } else if (row.source == 'HD') {
+      } else if (row.source === 'HD') {
         if (!compareCouponData(row.effectiveEndTime)) {
           return <div style='color:red'>{row.effectiveEndTime + '已过期'}</div>;
         } else {
@@ -2215,10 +2251,11 @@ export default {
     Tables,
     IViewUpload
   },
-  mixins: [deleteMixin, tableMixin, searchMixin, uploadMixin, relationStoreMixin],
+  mixins: [tableMixin, uploadMixin, relationStoreMixin],
   data() {
     return {
       addRelationList: [],
+      relationStoreList: [],
       couponTemplateData: [],
       hdCouponTemplateData: [],
       defaultListMain: [],
@@ -2228,8 +2265,6 @@ export default {
       templatePageOpts: [5, 10],
       addTempDataLoading: false,
       tempTableLoading: false,
-      createLoading: false,
-      modalViewLoading: false,
       showValidDate: true,
       couponTemplateTotal: 0,
       couponHdTemplateTotal: 0,
@@ -2240,13 +2275,8 @@ export default {
       relationStoreTypeEnum,
       couponUseLimitEnum,
       dataColumns: dataColumns,
-      templateColumns: _.cloneDeep(templateColumns),
-      hdTemplateColumns: _.cloneDeep(hdTemplateColumns),
-      searchRowData: _.cloneDeep(roleRowData),
-      searchTemplateRowData: _.cloneDeep(templateRowData),
-      searchHdTemplateRowData: _.cloneDeep(hdTemplateRowData),
-      couponDetail: _.cloneDeep(couponDetail),
-      addRelationDetail: _.cloneDeep(relationDetail),
+      templateColumns: templateColumns,
+      hdTemplateColumns: hdTemplateColumns,
       ruleInline: {
         effectiveStartTime: [{ required: true, message: '请选择生效时间' }],
         effectiveEndTime: [{ required: true, message: '请选择失效时间' }],
@@ -2333,7 +2363,12 @@ export default {
             }
           }
         ]
-      }
+      },
+      searchRowData: _.cloneDeep(roleRowData),
+      searchTemplateRowData: _.cloneDeep(templateRowData),
+      searchHdTemplateRowData: _.cloneDeep(hdTemplateRowData),
+      couponDetail: _.cloneDeep(couponDetail),
+      addRelationDetail: _.cloneDeep(relationDetail)
     };
   },
   computed: {
@@ -2402,7 +2437,7 @@ export default {
         const firstStoreId = this.storeIds[0];
         // 编辑时从返回的第一个storeId单独查询下cityCode来反选城市
         const storeObj = this.allStoreList.find(item => item.storeId === firstStoreId);
-        this.addRelationDetail.cityCode = storeObj.cityCode;
+        this.cityCode = storeObj.cityCode;
         this.getStore(true);
       } else {
         this.showStoreList = false;
@@ -2427,6 +2462,7 @@ export default {
       this.getRelationTableData();
     },
     getRelationTableData() {
+      this.loading = true;
       getRegisteredGiftPages(this.searchRowData)
         .then((res) => {
           this.tableData = res.rows;
@@ -2582,12 +2618,8 @@ export default {
         .then((res) => {
           this.hdCouponTemplateData = res.rows;
           this.couponHdTemplateTotal = res.total;
-          this.loading = false;
-          this.searchLoading = false;
-          this.clearSearchLoading = false;
         })
-        .catch((error) => {
-          console.log(error);
+        .finally(() => {
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
@@ -2613,7 +2645,7 @@ export default {
             );
           }
 
-          if (this.tempModalType === this.modalType.edit) {
+          if (this.isEdit) {
             // 编辑状态
             this.tempTableLoading = true;
             editRegisterGift(this.addRelationDetail)
@@ -2669,21 +2701,21 @@ export default {
       this.tempModalType = this.modalType.view;
       this.addRelationDetail = _.cloneDeep(params.row);
       this.replaceTextByTab();
-      this.showStoreName = this.relationStore();
+      this.relationStoreList = this.relationStore();
       this.modalView = true;
     },
     relationStore() {
+      const list = [];
       if (!this.addRelationDetail.stores) {
-        return '全部门店';
+        return list;
       }
       const ids = this.addRelationDetail.stores.substring(1, this.addRelationDetail.stores.length - 1).split('][');
-      let str = '';
       ids.forEach((id) => {
         const item = this.allStoreList.find(item => item.storeId == id);
         if (!item) { return; }
-        str += item.storeName + ',';
+        list.push(item.storeName);
       });
-      return str.substring(0, str.length - 1);
+      return list;
     },
     replaceTextByTab() {
       // 编辑时处理下活动规则转换

@@ -203,8 +203,6 @@ import {
   createRoleRelation
 } from '@/api/system';
 import tableMixin from '@/mixins/tableMixin.js';
-import searchMixin from '@/mixins/searchMixin.js';
-import deleteMixin from '@/mixins/deleteMixin.js';
 import { buildMenu, convertTree } from '@/libs/util';
 
 const roleRowData = {
@@ -229,7 +227,7 @@ export default {
   components: {
     Tables
   },
-  mixins: [tableMixin, searchMixin, deleteMixin],
+  mixins: [tableMixin],
   data() {
     return {
       tableData: [],

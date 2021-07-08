@@ -41,7 +41,7 @@
               type="primary"
               @click="handleSearch"
             >
-              <Icon type="md-search"/>&nbsp;搜索
+              <Icon type="md-search" />&nbsp;搜索
             </Button>
             <Button
               v-waves
@@ -50,7 +50,7 @@
               type="info"
               @click="handleClear"
             >
-              <Icon type="md-refresh"/>&nbsp;清除
+              <Icon type="md-refresh" />&nbsp;清除
             </Button>
           </Row>
         </div>
@@ -62,7 +62,7 @@
             class="mr5"
             @click="addActivities"
           >
-            <Icon type="md-add"/> 添加
+            <Icon type="md-add" /> 添加
           </Button>
           <Poptip
             confirm
@@ -72,7 +72,7 @@
             @on-ok="poptipOk"
           >
             <Button type="error" class="mr5">
-              <Icon type="md-trash"/> 批量删除
+              <Icon type="md-trash" /> 批量删除
             </Button>
           </Poptip>
         </div>
@@ -150,38 +150,38 @@
         <Form ref="modalEdit" :model="activitiesDetail" :rules="ruleInline" :label-width="80">
           <Row>
             <Col span="18">
-              <FormItem label="活动编码:" prop="activityCode">
-                <Input v-model="activitiesDetail.activityCode"></Input>
-              </FormItem>
+            <FormItem label="活动编码:" prop="activityCode">
+              <Input v-model="activitiesDetail.activityCode"></Input>
+            </FormItem>
             </Col>
           </Row>
           <Row>
             <Col span="18">
-              <FormItem label="活动名称:" prop="activityName">
-                <Input v-model="activitiesDetail.activityName"></Input>
-              </FormItem>
+            <FormItem label="活动名称:" prop="activityName">
+              <Input v-model="activitiesDetail.activityName"></Input>
+            </FormItem>
             </Col>
           </Row>
           <Row>
             <Col span="18">
-              <FormItem label="活动状态:" prop="onOff">
-                <Select v-model="activitiesDetail.onOff" clearable>
-                  <Option
-                    v-for="(item,index) in imageStatusEnum"
-                    :value="item.value"
-                    :key="index"
-                    class="ptb2-5"
-                    style="padding-left: 5px;width: 100%"
-                  >{{ item.label }}</Option>
-                </Select>
-              </FormItem>
+            <FormItem label="活动状态:" prop="onOff">
+              <Select v-model="activitiesDetail.onOff" clearable>
+                <Option
+                  v-for="(item,index) in imageStatusEnum"
+                  :key="index"
+                  :value="item.value"
+                  class="ptb2-5"
+                  style="padding-left: 5px;width: 100%"
+                >{{ item.label }}</Option>
+              </Select>
+            </FormItem>
             </Col>
           </Row>
           <Row>
             <Col span="18">
-              <FormItem label="活动详情链接:" prop="activityUrl">
-                <Input v-model="activitiesDetail.activityUrl"></Input>
-              </FormItem>
+            <FormItem label="活动详情链接:" prop="activityUrl">
+              <Input v-model="activitiesDetail.activityUrl"></Input>
+            </FormItem>
             </Col>
           </Row>
         </Form>
@@ -195,26 +195,24 @@
 </template>
 
 <script type="text/ecmascript-6">
-import Tables from "_c/tables";
-import _ from "lodash";
+import Tables from '_c/tables';
+import _ from 'lodash';
 import {
   deleteActivities,
   getActivitiesPages,
   editActivities,
   createActivities
-} from "@/api/mini-program";
-import deleteMixin from "@/mixins/deleteMixin.js";
-import tableMixin from "@/mixins/tableMixin.js";
-import searchMixin from "@/mixins/searchMixin.js";
-import { imageStatusConvert } from "@/libs/converStatus";
-import { imageStatusEnum } from "@/libs/enumerate";
+} from '@/api/mini-program';
+import tableMixin from '@/mixins/tableMixin.js';
+import { imageStatusConvert } from '@/libs/converStatus';
+import { imageStatusEnum } from '@/libs/enumerate';
 
 const activitiesDetail = {
   id: 0,
-  activityCode: "",
-  activityName: "",
-  onOff: "",
-  activityUrl: ""
+  activityCode: '',
+  activityName: '',
+  onOff: '',
+  activityUrl: ''
 };
 
 const roleRowData = {
@@ -228,13 +226,13 @@ export default {
   components: {
     Tables
   },
-  mixins: [deleteMixin, tableMixin, searchMixin],
+  mixins: [tableMixin],
   data() {
     return {
       ruleInline: {
-        activityCode: [{ required: true, message: "请输入活动编码1" }],
-        activityName: [{ required: true, message: "请输入活动名称" }],
-        onOff: [{ required: true, message: "请选择活动状态" }]
+        activityCode: [{ required: true, message: '请输入活动编码1' }],
+        activityName: [{ required: true, message: '请输入活动名称' }],
+        onOff: [{ required: true, message: '请选择活动状态' }]
       },
       defaultListMain: [],
       uploadListMain: [],
@@ -242,58 +240,58 @@ export default {
       imageStatusEnum,
       columns: [
         {
-          type: "selection",
+          type: 'selection',
           width: 60,
-          align: "center"
+          align: 'center'
         },
         {
-          title: "活动ID",
-          key: "id"
+          title: '活动ID',
+          key: 'id'
         },
         {
-          title: "活动编码",
-          key: "activityCode"
+          title: '活动编码',
+          key: 'activityCode'
         },
         {
-          title: "活动名称",
-          key: "activityName"
+          title: '活动名称',
+          key: 'activityName'
         },
         {
-          title: "活动状态",
-          key: "onOff",
+          title: '活动状态',
+          key: 'onOff',
           render: (h, params, vm) => {
             const { row } = params;
-            if (row.onOff === "ON") {
+            if (row.onOff === 'ON') {
               return (
                 <div>
-                  <tag color="success">
+                  <tag color='success'>
                     {imageStatusConvert(row.onOff).label}
                   </tag>
                 </div>
               );
-            } else if (row.onOff === "OFF") {
+            } else if (row.onOff === 'OFF') {
               return (
                 <div>
-                  <tag color="error">{imageStatusConvert(row.onOff).label}</tag>
+                  <tag color='error'>{imageStatusConvert(row.onOff).label}</tag>
                 </div>
               );
             }
             return (
               <div>
-                <tag color="primary">{row.onOff}</tag>
+                <tag color='primary'>{row.onOff}</tag>
               </div>
             );
           }
         },
         {
-          title: "活动详情链接",
-          key: "activityUrl"
+          title: '活动详情链接',
+          key: 'activityUrl'
         },
         {
-          title: "操作",
+          title: '操作',
           minWidth: 80,
-          key: "handle",
-          options: ["onSale", "view", "edit", "delete"]
+          key: 'handle',
+          options: ['onSale', 'view', 'edit', 'delete']
         }
       ],
       createLoading: false,
@@ -301,70 +299,70 @@ export default {
       searchRowData: _.cloneDeep(roleRowData),
       activitiesDetail: _.cloneDeep(activitiesDetail)
     };
-  },
-//   mounted() {
-//     this.searchRowData = _.cloneDeep(roleRowData);
-//     this.getTableData();
-//   },
-//   created() {},
-//   methods: {
-//     resetSearchRowData() {
-//       this.searchRowData = _.cloneDeep(roleRowData);
-//       this.getTableData();
-//     },
-//     resetFields() {
-//       this.$refs.modalEdit.resetFields();
-//       // this.$refs.uploadMain.clearFileList();
-//       this.uploadListMain = [];
-//       this.activitiesDetail.storeImage = null;
-//     },
-//     handleSubmit(name) {
-//       this.$refs[name].validate(valid => {
-//         if (valid) {
-//           if (this.tempModalType === this.modalType.create) {
-//             // 添加状态
-//             this.createActivities();
-//           } else if (this.tempModalType === this.modalType.edit) {
-//             // 编辑状态
-//             this.editActivities();
-//           }
-//         } else {
-//           this.$Message.error("请完善信息!");
-//         }
-//       });
-//     },
-//     createActivities() {
-//       this.modalViewLoading = true;
-//       createActivities(this.activitiesDetail)
-//         .then(res => {
-//           this.modalViewLoading = false;
-//           this.modalEdit = false;
-//           this.$Message.success("创建成功!");
-//           this.getTableData();
-//         })
-//         .catch(() => {
-//           this.modalViewLoading = false;
-//         });
-//     },
-//     editActivities() {
-//       this.modalViewLoading = true;
-//       editActivities(this.activitiesDetail)
-//         .then(res => {
-//           this.modalEdit = false;
-//           this.modalViewLoading = false;
-//           this.getTableData();
-//         })
-//         .catch(() => {
-//           this.modalEdit = false;
-//           this.modalViewLoading = false;
-//         });
-//     },
-//     addActivities() {
-//       this.resetFields();
-//       if (this.tempModalType !== this.modalType.create) {
-//         this.tempModalType = this.modalType.create;
-//         this.activitiesDetail = _.cloneDeep(activitiesDetail);
-//       }
+  }
+  //   mounted() {
+  //     this.searchRowData = _.cloneDeep(roleRowData);
+  //     this.getTableData();
+  //   },
+  //   created() {},
+  //   methods: {
+  //     resetSearchRowData() {
+  //       this.searchRowData = _.cloneDeep(roleRowData);
+  //       this.getTableData();
+  //     },
+  //     resetFields() {
+  //       this.$refs.modalEdit.resetFields();
+  //       // this.$refs.uploadMain.clearFileList();
+  //       this.uploadListMain = [];
+  //       this.activitiesDetail.storeImage = null;
+  //     },
+  //     handleSubmit(name) {
+  //       this.$refs[name].validate(valid => {
+  //         if (valid) {
+  //           if (this.isCreate) {
+  //             // 添加状态
+  //             this.createActivities();
+  //           } else if (this.isEdit) {
+  //             // 编辑状态
+  //             this.editActivities();
+  //           }
+  //         } else {
+  //           this.$Message.error("请完善信息!");
+  //         }
+  //       });
+  //     },
+  //     createActivities() {
+  //       this.modalViewLoading = true;
+  //       createActivities(this.activitiesDetail)
+  //         .then(res => {
+  //           this.modalViewLoading = false;
+  //           this.modalEdit = false;
+  //           this.$Message.success("创建成功!");
+  //           this.getTableData();
+  //         })
+  //         .catch(() => {
+  //           this.modalViewLoading = false;
+  //         });
+  //     },
+  //     editActivities() {
+  //       this.modalViewLoading = true;
+  //       editActivities(this.activitiesDetail)
+  //         .then(res => {
+  //           this.modalEdit = false;
+  //           this.modalViewLoading = false;
+  //           this.getTableData();
+  //         })
+  //         .catch(() => {
+  //           this.modalEdit = false;
+  //           this.modalViewLoading = false;
+  //         });
+  //     },
+  //     addActivities() {
+  //       this.resetFields();
+  //       if (this.tempModalType !== this.modalType.create) {
+  //         this.tempModalType = this.modalType.create;
+  //         this.activitiesDetail = _.cloneDeep(activitiesDetail);
+  //       }
 
 //       this.modalEdit = true;
 //     },

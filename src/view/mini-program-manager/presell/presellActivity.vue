@@ -16,6 +16,7 @@
         @on-delete="handleDelete"
         @on-view="handleView"
         @on-edit="handleEdit"
+        @on-link-generate="handleLinkGenerate"
         @coupon-status="statusChange"
         @on-current-change="onCurrentChange"
         @on-select-all="onSelectionAll"
@@ -488,8 +489,11 @@
               <i-col span="3">
                 关联门店:
               </i-col>
-              <i-col span="21">
-                {{ showStoreName }}
+              <i-col v-if="relationStoreList.length > 0" span="21">
+                <Tag v-for="(item,index) in relationStoreList" :key="index" color="gold">{{ item }}</Tag>
+              </i-col>
+              <i-col v-else span="21">
+                全部门店
               </i-col>
             </Row>
           </i-col>
@@ -511,7 +515,7 @@
       <p slot="header">
         <i-col>
           {{
-            tempModalType === modalType.edit ? "修改预售活动" : "创建预售活动"
+            isEdit ? "修改预售活动" : "创建预售活动"
           }}
         </i-col>
       </p>
@@ -524,7 +528,7 @@
               :rules="ruleInline"
               :label-width="130"
             >
-              <Row v-show="tempModalType === modalType.edit">
+              <Row v-show="isEdit">
                 <i-col span="12">
                   <FormItem label="预售ID:" prop="id">
                     {{
@@ -541,7 +545,7 @@
                       style="width: 200px"
                       :readonly="
                         presellDetail.startedFlag === true &&
-                          tempModalType === modalType.edit
+                          isEdit
                       "
                     ></Input>
                   </FormItem>
@@ -570,7 +574,7 @@
                       style="width: 200px"
                       :readonly="
                         presellDetail.startedFlag === true &&
-                          tempModalType === modalType.edit
+                          isEdit
                       "
                     ></Input>
                   </FormItem>
@@ -642,7 +646,7 @@
                       placeholder="活动开始时间"
                       :readonly="
                         presellDetail.startedFlag === true &&
-                          tempModalType === modalType.edit
+                          isEdit
                       "
                       class="search-input"
                       style="width: 200px"
@@ -659,7 +663,7 @@
                       placeholder="活动结束时间"
                       :readonly="
                         presellDetail.startedFlag === true &&
-                          tempModalType === modalType.edit
+                          isEdit
                       "
                       class="search-input"
                       style="width: 200px"
@@ -677,7 +681,7 @@
                       style="padding-right: 5px; width: 200px"
                       :disabled="
                         presellDetail.startedFlag === true &&
-                          tempModalType === modalType.edit
+                          isEdit
                       "
                       @on-change="handleChange"
                     >
@@ -701,7 +705,7 @@
                         :min="0"
                         :readonly="
                           presellDetail.startedFlag === true &&
-                            tempModalType === modalType.edit
+                            isEdit
                         "
                         label="生效开始"
                         style="width: 60px"
@@ -721,7 +725,7 @@
                         type="date"
                         :readonly="
                           presellDetail.startedFlag === true &&
-                            tempModalType === modalType.edit
+                            isEdit
                         "
                         placeholder="提货开始时间"
                         style="width: 200px"
@@ -737,7 +741,7 @@
                         type="date"
                         :readonly="
                           presellDetail.startedFlag === true &&
-                            tempModalType === modalType.edit
+                            isEdit
                         "
                         placeholder="提货截止时间"
                         style="width: 200px"
@@ -779,7 +783,7 @@
                       placeholder="活动价"
                       :readonly="
                         presellDetail.startedFlag === true &&
-                          tempModalType === modalType.edit
+                          isEdit
                       "
                       style="width: 200px"
                       @on-change="activityPriceInputNumberOnchange"
@@ -829,7 +833,7 @@
                 </i-col>
               </Row>
               <Divider
-                v-show="tempModalType === modalType.edit"
+                v-show="isEdit"
               >
                 可修改部分
               </Divider>
@@ -939,10 +943,9 @@
                   <FormItem
                     :label-width="85"
                     label="所属城市:"
-                    prop="cityCode"
                   >
                     <Select
-                      v-model="presellDetail.cityCode"
+                      v-model="cityCode"
                       style="width: 220px"
                       @on-change="handleCitySwitch"
                     >
@@ -960,6 +963,21 @@
                 </i-col>
               </Row>
               <Row v-show="showStoreList">
+                <i-col v-if="storeData.length>0" span="24">
+                  <FormItem>
+                    <div class="bottom-line">
+                      <div style="margin-left: -54px; margin-right: 18px">
+                        地级市全部门店
+                      </div>
+                      <Checkbox
+                        :value="checkAllStore"
+                        @click.prevent.native="handleCheckAll(-1)"
+                      >
+                        全选/反选
+                      </Checkbox>
+                    </div>
+                  </FormItem>
+                </i-col>
                 <i-col v-if="storeData.length>0" span="24">
                   <FormItem>
                     <div
@@ -1538,6 +1556,25 @@
         </Button>
       </div>
     </Modal>
+
+    <!-- 生成链接弹窗 -->
+    <Modal v-model="modalLink" title="生成链接" :mask-closable="false">
+      <div class="modal-content">
+        <span>{{ linkUrl }}</span>
+      </div>
+      <div slot="footer">
+        <Button
+          v-clipboard:copy="linkUrl"
+          v-clipboard:success="clipboardSuccess"
+          type="info"
+        >
+          快速复制
+        </Button>
+        <Button type="primary" @click="modalLink=false">
+          关闭
+        </Button>
+      </div>
+    </Modal>
   </div>
 </template>
 
@@ -1545,7 +1582,6 @@
 import Tables from '_c/tables';
 import config from '@/config';
 import IViewUpload from '_c/iview-upload';
-import _ from 'lodash';
 import {
   deleteTeamBuy,
   getPresellPages,
@@ -1554,13 +1590,10 @@ import {
   getGoodsStandard,
   getAreaStorePages,
   getProductStandardsPages,
-  getTeamBuyPages,
-  deletePicture
+  getTeamBuyPages
 } from '@/api/mini-program';
 import uploadMixin from '@/mixins/uploadMixin';
-import deleteMixin from '@/mixins/deleteMixin.js';
 import tableMixin from '@/mixins/tableMixin.js';
-import searchMixin from '@/mixins/searchMixin.js';
 import relationStoreMixin from '@/mixins/relationStoreMixin.js';
 import {
   teamBuyStatusConvert,
@@ -1579,7 +1612,6 @@ import {
   fenToYuanDot2Number,
   yuanToFenNumber,
   compareData,
-  secondsToDate,
   compareCouponData
 } from '@/libs/util';
 
@@ -1610,8 +1642,7 @@ const preselldata = {
   status: '',
   storeIds: null,
   triesLimit: 999,
-  validDateType: 'UN_FIXED_DATE',
-  cityCode: '0744'
+  validDateType: 'UN_FIXED_DATE'
 };
 
 const roleRowData = {
@@ -1690,10 +1721,11 @@ export default {
     Tables,
     IViewUpload
   },
-  mixins: [uploadMixin, deleteMixin, tableMixin, searchMixin, relationStoreMixin],
+  mixins: [uploadMixin, tableMixin, relationStoreMixin],
   data() {
     return {
       flagShipList: [],
+      relationStoreList: [],
       oldPicture: [],
       newPicture: [],
       defaultListMain: [],
@@ -1704,15 +1736,15 @@ export default {
       productTotal: 0,
       firstSuccess: true,
       loading: true,
+      modalLink: false,
       modalProduct: false,
       modalGoodsStandard: false,
-      createLoading: false,
-      modalViewLoading: false,
       exportExcelLoading: false,
       currentTableRowSelected: null,
       isEnvironment: null,
       step: 'firstStep',
       groupStatus: '',
+      linkUrl: '',
       startedFlagStatus: [
         { label: '活动开始', value: 'true' },
         { label: '活动未开始', value: 'false' }
@@ -1946,11 +1978,11 @@ export default {
         },
         {
           title: '操作',
-          minWidth: 150,
+          minWidth: 200,
           align: 'center',
           fixed: 'right',
           key: 'handle',
-          options: ['couponStatus', 'view', 'edit']
+          options: ['couponStatus', 'view', 'edit', 'linkGenerate']
         }
       ],
       productColumns: [
@@ -2077,10 +2109,6 @@ export default {
           key: 'rank'
         }
       ],
-      searchRowData: _.cloneDeep(roleRowData),
-      searchProductRowData: _.cloneDeep(productRowData),
-      productDetail: _.cloneDeep(productStandardDetail),
-      presellDetail: _.cloneDeep(preselldata),
       ruleInline: {
         rank: [
           { required: true, message: '请输入排序序号' },
@@ -2183,7 +2211,11 @@ export default {
             }
           }
         ]
-      }
+      },
+      searchRowData: _.cloneDeep(roleRowData),
+      searchProductRowData: _.cloneDeep(productRowData),
+      productDetail: _.cloneDeep(productStandardDetail),
+      presellDetail: _.cloneDeep(preselldata)
     };
   },
   computed: {
@@ -2306,7 +2338,6 @@ export default {
     },
     handleSubmit(name) {
       const _this = this;
-      console.log('213131', _this.presellDetail.storeIds);
       if (
         _this.presellDetail.relationStoreType === 'PART' &&
         (_this.presellDetail.storeIds == null ||
@@ -2332,10 +2363,8 @@ export default {
           .format('YYYY-MM-DD HH:mm:ss');
       }
       if (_this.tempModalType === _this.modalType.create) {
-        // 添加状态
         _this.createStore();
       } else if (_this.tempModalType === _this.modalType.edit) {
-        // 编辑状态
         _this.editStore();
       }
     },
@@ -2349,28 +2378,23 @@ export default {
       this.presellDetail.id = null; // 新建时不需要传递id
       createPresell(this.presellDetail)
         .then((res) => {
-          this.modalViewLoading = false;
           this.modalEdit = false;
           this.$Message.success('创建成功!');
           this.getTableData();
         })
-        .catch(() => {
+        .finally(() => {
           this.modalViewLoading = false;
-          this.modalEdit = false;
-          this.getTableData();
         });
     },
     editStore() {
       this.modalViewLoading = true;
       editPresell(this.presellDetail)
         .then((res) => {
-          this.getTableData();
           this.modalEdit = false;
-          this.modalViewLoading = false;
+          this.$Message.success('操作成功!');
+          this.getTableData();
         })
-        .catch(() => {
-          this.modalEdit = false;
-          this.getTableData();
+        .finally(() => {
           this.modalViewLoading = false;
         });
     },
@@ -2415,21 +2439,19 @@ export default {
       this.getStore();
       this.modalEdit = true;
     },
-    // 删除
     handleDelete(params) {
       this.tableDataSelected = [];
       this.tableDataSelected.push(params.row);
       this.deleteTable(params.row.storeId);
     },
     deleteTable(ids) {
-      this.loading = true;
       deleteTeamBuy({
         ids
       })
         .then((res) => {
           const totalPage = Math.ceil(this.total / this.searchRowData.pageSize);
           if (
-            this.tableData.length == this.tableDataSelected.length &&
+            this.tableData.length === this.tableDataSelected.length &&
             this.searchRowData.page === totalPage &&
             this.searchRowData.page !== 1
           ) {
@@ -2437,10 +2459,6 @@ export default {
           }
           this.tableDataSelected = [];
           this.getTableData();
-        })
-        .catch((err) => {
-          console.log(err);
-          this.loading = false;
         });
     },
     // 设置编辑商品的图片列表
@@ -2454,25 +2472,36 @@ export default {
         this.uploadListMain = mainImgArr;
       }
     },
+    clipboardSuccess() {
+      this.$Message.info('复制成功！');
+      this.modalLink = false;
+    },
+    handleLinkGenerate(params) {
+      const { row } = params;
+      // 生成跳转小程序详情的链接地址
+      const url = `/package/presales/presellDel?id=${row.id}&barcode=${row.productStandard && row.productStandard.barcode ? row.productStandard.barcode : ''}`;
+      this.linkUrl = url;
+      this.modalLink = true;
+    },
     handleView(params) {
       this.resetFields();
       this.tempModalType = this.modalType.view;
       this.presellDetail = _.cloneDeep(params.row);
-      this.showStoreName = this.relationStore();
+      this.relationStoreList = this.relationStore();
       this.modalView = true;
     },
     relationStore() {
+      const list = [];
       if (!this.presellDetail.storeIds) {
-        return '全部门店';
+        return list;
       }
       const ids = this.presellDetail.storeIds.substring(1, this.presellDetail.storeIds.length - 1).split('][');
-      let str = '';
       ids.forEach((id) => {
         const item = this.allStoreList.find(item => item.storeId == id);
         if (!item) { return; }
-        str += item.storeName + ',';
+        list.push(item.storeName);
       });
-      return str.substring(0, str.length - 1);
+      return list;
     },
     handleEdit(params) {
       this.step = 'firstStep';
@@ -2498,7 +2527,7 @@ export default {
         const firstStoreId = this.storeIds[0];
         // 编辑时从返回的第一个storeId单独查询下cityCode来反选城市
         const storeObj = this.allStoreList.find(item => item.storeId === firstStoreId);
-        this.presellDetail.cityCode = storeObj.cityCode;
+        this.cityCode = storeObj.cityCode;
         this.getStore(true);
       } else {
         this.showStoreList = false;
@@ -2527,32 +2556,17 @@ export default {
       });
     },
     getTableData() {
+      this.loading = true;
       getPresellPages(this.searchRowData)
         .then((res) => {
           this.tableData = res.rows;
           this.total = res.total;
-          this.loading = false;
-          this.searchLoading = false;
-          this.clearSearchLoading = false;
         })
-        .catch((error) => {
-          console.log(error);
+        .finally(() => {
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
         });
-    },
-    handleRemoveMain(file) {
-      this.$refs.uploadMain.deleteFile(file);
-      this.presellDetail.storeImage = null;
-    },
-    // 商品主图
-    handleSuccessMain(response, file, fileList) {
-      this.uploadListMain = fileList;
-      this.presellDetail.banner = null;
-      this.presellDetail.banner = fileList[0].url;
-      this.newPicture.push(fileList[0].url);
-      this.oldPicture = this.save;
     },
     startTimeChange(value, date) {
       this.presellDetail.startTime = value;
@@ -2614,7 +2628,7 @@ export default {
       this.presellDetail.tourDiscount = yuanToFenNumber(value);
     },
     getStore(isCheck) {
-      getAreaStorePages(this.presellDetail.cityCode)
+      getAreaStorePages(this.cityCode)
         .then((res) => {
           this.storeList = res.array;
           this.storeData = res.array[0] && res.array[0].storeList || [];
@@ -2645,7 +2659,7 @@ export default {
         this.showStoreList = false;
       } else if (options.value === 'PART') {
         this.presellDetail.relationStoreType = 'PART';
-        if (this.isCreate) { this.presellDetail.cityCode = '0744'; }
+        if (this.isCreate) { this.cityCode = '0731'; }
         this.storeCheckRest();
         this.getStore();
         this.showStoreList = true;
@@ -2673,6 +2687,38 @@ export default {
     },
     handleCheckAll(value) {
       const _this = this;
+      // 全选反选当前地级市所有门店
+      if (value === -1) {
+        const allIds = [];
+        const beforeIds = [];
+        this.checkAllStore = !this.checkAllStore;
+        if (this.checkAllStore) {
+          if (this.storeIds != null) {
+            for (const val of this.storeIds) {
+              allIds.push(val);
+            }
+          }
+          this.storeListData.forEach((item) => {
+            item.forEach(x => {
+              allIds.push(x.storeId);
+            })
+          });
+          this.storeIds = allIds;
+          this.presellDetail.storeIds = '[' + allIds.join('][') + ']';
+        } else {
+          this.storeListData.forEach((item) => {
+            item.forEach(x => {
+              beforeIds.push(x.storeId);
+            })
+          });
+          const newArray = _this.storeIds.filter(function(item) {
+            return beforeIds.indexOf(item) == -1;
+          });
+          this.storeIds = newArray;
+          this.presellDetail.storeIds = '[' + newArray.join('][') + ']';
+        }
+      }
+
       if (value === 0) {
         const allIds = [];
         const beforeIds = [];
@@ -3113,12 +3159,8 @@ export default {
         .then((res) => {
           this.productData = res.rows;
           this.productTotal = res.total;
-          this.loading = false;
-          this.searchLoading = false;
-          this.clearSearchLoading = false;
         })
-        .catch((error) => {
-          console.log(error);
+        .finally(() => {
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
@@ -3143,7 +3185,6 @@ export default {
       this.getProductTableData();
     },
     handleProductClear() {
-      // 重置商品搜索数据
       this.resetSearchProductRowData();
       this.page = 1;
       this.pageSize = 10;
@@ -3168,12 +3209,7 @@ export default {
     },
     statusChange(params) {
       this.presellDetail = _.cloneDeep(params.row);
-      if (params.row.status === 'VALID') {
-        this.presellDetail.status = 'INVALID';
-      } else {
-        this.presellDetail.status = 'VALID';
-      }
-      this.loading = true;
+      this.presellDetail.status = params.row.status === 'VALID' ? 'INVALID' : 'VALID';
       this.editStore();
     },
     aboutGoods() {
@@ -3190,6 +3226,18 @@ export default {
       this.presellDetail.deliveryStartTime = '';
       this.presellDetail.deliveryEndTime = '';
       this.presellDetail.beginDay = 0;
+    },
+    handleRemoveMain(file) {
+      this.$refs.uploadMain.deleteFile(file);
+      this.presellDetail.storeImage = null;
+    },
+    // 商品主图
+    handleSuccessMain(response, file, fileList) {
+      this.uploadListMain = fileList;
+      this.presellDetail.banner = null;
+      this.presellDetail.banner = fileList[0].url;
+      this.newPicture.push(fileList[0].url);
+      this.oldPicture = this.save;
     }
   }
 };

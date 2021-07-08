@@ -382,7 +382,6 @@
 
 <script type="text/ecmascript-6">
 import Tables from '_c/tables';
-import _ from 'lodash';
 import {
   deleteSystemSetting,
   getSystemSettingPages,
@@ -391,9 +390,7 @@ import {
   getSystemSettingCategoryTree
 } from '@/api/mini-program';
 import uploadMixin from '@/mixins/uploadMixin';
-import deleteMixin from '@/mixins/deleteMixin.js';
 import tableMixin from '@/mixins/tableMixin.js';
-import searchMixin from '@/mixins/searchMixin.js';
 import { teamBuyTypeEnum } from '@/libs/enumerate';
 import { buildMenu, convertTreeCategory } from '@/libs/util';
 
@@ -401,7 +398,6 @@ const systemDetail = {
   id: 0,
   indexName: 'WXSMALL_PIN_TUAN',
   indexValue: '',
-  // indexValueTemp暂存indexValue的值
   indexValueTemp: {
     titleParams: [
       {
@@ -432,9 +428,12 @@ export default {
   components: {
     Tables
   },
-  mixins: [uploadMixin, deleteMixin, tableMixin, searchMixin],
+  mixins: [uploadMixin, tableMixin],
   data() {
     return {
+      systemCategoryData: [],
+      defaultSystemCategoryData: [],
+      systemCategoriesTreeList: [],
       teamBuyTypeEnum,
       ruleInline: {
         indexName: [{ required: true, message: '请输入键' }],
@@ -529,24 +528,18 @@ export default {
           options: ['view', 'edit', 'delete']
         }
       ],
-      systemCategoryData: [],
-      defaultSystemCategoryData: [41],
-      systemCategoriesTreeList: [],
-      createLoading: false,
-      modalViewLoading: false,
       searchRowData: _.cloneDeep(roleRowData),
       systemDetail: _.cloneDeep(systemDetail)
     };
   },
   computed: {
     modalTypeComputed() {
-      return this.tempModalType === this.modalType.edit;
+      return this.isEdit;
     }
   },
   mounted() {
-    this.searchRowData = _.cloneDeep(roleRowData);
     this.getTableData();
-    this.getSystemSettingCategoryTree();
+    this.getSysSettingTree();
   },
   created() {},
   methods: {
@@ -574,11 +567,9 @@ export default {
             this.$Message.error('左侧标题顺序必须大于右侧标题顺序');
             return;
           }
-          if (this.tempModalType === this.modalType.create) {
-            // 添加状态
+          if (this.isCreate) {
             this.createSystemSetting();
-          } else if (this.tempModalType === this.modalType.edit) {
-            // 编辑状态
+          } else if (this.isEdit) {
             this.editSystemSetting();
           }
         } else {
@@ -588,35 +579,27 @@ export default {
     },
     createSystemSetting() {
       this.modalViewLoading = true;
-      // 将暂存的indexValueTemp赋值给真实的indexValue
-      this.systemDetail.indexValue = JSON.stringify(
-        this.systemDetail.indexValueTemp
-      );
+      this.systemDetail.indexValue = JSON.stringify(this.systemDetail.indexValueTemp);
       createSystemSetting(this.systemDetail)
         .then(res => {
-          this.modalViewLoading = false;
           this.modalEdit = false;
           this.$Message.success('创建成功!');
           this.getTableData();
         })
-        .catch(() => {
+        .finally(() => {
           this.modalViewLoading = false;
         });
     },
     editSystemSetting() {
       this.modalViewLoading = true;
-      // 将暂存的indexValueTemp赋值给真实的indexValue
-      this.systemDetail.indexValue = JSON.stringify(
-        this.systemDetail.indexValueTemp
-      );
+      this.systemDetail.indexValue = JSON.stringify(this.systemDetail.indexValueTemp);
       editSystemSetting(this.systemDetail)
         .then(res => {
           this.modalEdit = false;
-          this.modalViewLoading = false;
+          this.$Message.success('操作成功!');
           this.getTableData();
         })
-        .catch(() => {
-          this.modalEdit = false;
+        .finally(() => {
           this.modalViewLoading = false;
         });
     },
@@ -628,14 +611,7 @@ export default {
       }
       this.modalEdit = true;
     },
-    // 删除
-    handleDelete(params) {
-      this.tableDataSelected = [];
-      this.tableDataSelected.push(params.row);
-      this.deleteTable(params.row.id);
-    },
     deleteTable(ids) {
-      this.loading = true;
       deleteSystemSetting({
         ids
       })
@@ -650,10 +626,6 @@ export default {
           }
           this.tableDataSelected = [];
           this.getTableData();
-        })
-        .catch(err => {
-          console.log(err);
-          this.loading = false;
         });
     },
     handleView(params) {
@@ -681,18 +653,14 @@ export default {
             });
           }
           this.total = res.total;
-          this.loading = false;
-          this.searchLoading = false;
-          this.clearSearchLoading = false;
         })
-        .catch(error => {
-          console.log(error);
+        .finally(() => {
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
         });
     },
-    getSystemSettingCategoryTree() {
+    getSysSettingTree() {
       getSystemSettingCategoryTree()
         .then(res => {
           if (res && res.array.length > 0) {

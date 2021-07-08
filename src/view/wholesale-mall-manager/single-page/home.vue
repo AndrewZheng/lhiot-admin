@@ -83,7 +83,7 @@
           ></Input>
           <Button
             v-waves
-            :searchLoading="searchLoading"
+            :search-loading="searchLoading"
             class="search-btn mr5"
             type="primary"
             @click="handleSearch"
@@ -125,6 +125,111 @@
         </Row>
       </div>
     </Card>
+
+    <Card>
+      <tables
+        ref="proTables"
+        v-model="proTableData"
+        :columns="proColumns"
+        :loading="proLoading"
+        :search-area-column="24"
+        :operate-area-column="6"
+        editable
+        searchable
+        border
+        search-place="top"
+        @on-select-all="onSelectionAll"
+        @on-selection-change="onSelectionChange"
+        @on-sort-change="onSortChangePro"
+      >
+        <div slot="searchCondition">
+          <RadioGroup
+            v-model="searchProRowData.queryDays"
+            type="button"
+            class="mr5"
+            @on-change="handleChangePro"
+          >
+            <Radio label="0">
+              <span>今日</span>
+            </Radio>
+            <Radio label="1">
+              <span>昨日</span>
+            </Radio>
+            <Radio label="7">
+              <span>最近7天</span>
+            </Radio>
+            <Radio label="30">
+              <span>最近30天</span>
+            </Radio>
+            <Radio label="-1">
+              <span>自定义</span>
+            </Radio>
+          </RadioGroup>
+          <DatePicker
+            v-model="searchProRowData.startTime"
+            :disabled="searchProRowData.queryDays!='-1'"
+            format="yyyy-MM-dd HH:mm:ss"
+            type="datetime"
+            placeholder="大于等于"
+            class="mr5"
+            style="width: 150px"
+            @on-change="startTimeChangePro"
+          />
+          <i>-</i>
+          <DatePicker
+            v-model="searchProRowData.endTime"
+            :disabled="searchProRowData.queryDays!='-1'"
+            format="yyyy-MM-dd HH:mm:ss"
+            type="datetime"
+            placeholder="小于等于"
+            class="mr5"
+            style="width: 150px"
+            @on-change="endTimeChangePro"
+          />
+          <Input
+            v-model="searchProRowData.params.goodsName"
+            placeholder="商品名称"
+            class="search-input mr5"
+            style="width: 100px"
+            clearable
+          ></Input>
+          <Button
+            v-waves
+            :search-loading="searchLoading"
+            class="search-btn mr5"
+            type="primary"
+            @click="handleSearchPro"
+          >
+            <Icon type="md-search" />&nbsp;搜索
+          </Button>
+          <Button
+            v-waves
+            :loading="clearSearchLoading"
+            class="search-btn"
+            type="info"
+            @click="handleClearPro"
+          >
+            <Icon type="md-refresh" />&nbsp;清除
+          </Button>
+        </div>
+        <div slot="operations">
+        </div>
+      </tables>
+      <div style="margin: 10px;overflow: hidden">
+        <Row type="flex" justify="end">
+          <Page
+            :total="proTotal"
+            :current="searchProRowData.page"
+            :page-size="searchProRowData.rows"
+            show-sizer
+            show-total
+            @on-change="changePagePro"
+            @on-page-size-change="changePageSizePro"
+          ></Page>
+        </Row>
+      </div>
+    </Card>
+
     <Row style="margin-top: 20px;">
       <Card shadow>
         <img
@@ -141,10 +246,8 @@ import Tables from '_c/tables';
 import InforCard from '_c/info-card';
 import CountTo from '_c/count-to';
 import config from '@/config';
-import { getAnalysisDatas } from '@/api/wholesale';
+import { getAnalysisDatas, getStandardAnalysisDatas } from '@/api/wholesale';
 import tableMixin from '@/mixins/tableMixin.js';
-import searchMixin from '@/mixins/searchMixin.js';
-import deleteMixin from '@/mixins/deleteMixin.js';
 import {
   fenToYuanDot2,
   fenToYuanDot2Number,
@@ -167,6 +270,19 @@ const roleRowData = {
   page: 1,
   rows: 10,
   sidx: 'sumFee',
+  sort: 'desc'
+};
+
+const proRowData = {
+  params: {
+    goodsName: ''
+  },
+  queryDays: '0', // 1(昨日) 7(最近7天) 30(最近30天) -1(自定义)
+  startTime: null,
+  endTime: null,
+  page: 1,
+  rows: 10,
+  sidx: 'payNum',
   sort: 'desc'
 };
 
@@ -211,9 +327,11 @@ export default {
     InforCard,
     CountTo
   },
-  mixins: [tableMixin, searchMixin, deleteMixin],
+  mixins: [tableMixin],
   data() {
     return {
+      proTableData: [],
+      proTotal: 0,
       brandType: config.brandType,
       inforCardData: [
         {
@@ -241,10 +359,9 @@ export default {
           color: '#9A66E4'
         }
       ],
-      modalViewLoading: false,
-      clearSearchLoading: false,
-      exportExcelLoading: false,
+      proLoading: false,
       searchRowData: _.cloneDeep(roleRowData),
+      searchProRowData: _.cloneDeep(proRowData),
       orderData: _.cloneDeep(orderData),
       orderGoodData: _.cloneDeep(orderGoodData),
       orderColumns,
@@ -274,8 +391,59 @@ export default {
           sortable: 'custom',
           minWidth: 80
         }
+      ],
+      proColumns: [
+        {
+          title: '商品名称',
+          align: 'center',
+          key: 'goodsName',
+          minWidth: 100
+        },
+        {
+          title: '点击数',
+          align: 'center',
+          key: 'clickNum',
+          sortable: 'custom',
+          minWidth: 80
+        },
+        {
+          title: '加购数',
+          align: 'center',
+          key: 'addCardNum',
+          sortable: 'custom',
+          minWidth: 80
+        },
+        {
+          title: '下单数',
+          align: 'center',
+          key: 'payNum',
+          sortable: 'custom',
+          minWidth: 80
+        },
+        {
+          title: '加购率',
+          align: 'center',
+          key: 'addCardRate',
+          sortable: 'custom',
+          minWidth: 80,
+          render: (h, params) => {
+            const { row } = params;
+            return <div>{(row.addCardRate * 100) + '%'}</div>;
+          }
+        },
+        {
+          title: '下单率',
+          align: 'center',
+          key: 'payRate',
+          sortable: 'custom',
+          minWidth: 80,
+          render: (h, params) => {
+            const { row } = params;
+            return <div>{(row.payRate * 100) + '%'}</div>;
+          }
+        }
       ]
-    };
+    }
   },
   computed: {
     banner() {
@@ -291,11 +459,13 @@ export default {
   },
   created() {
     this.getTableData();
+    this.getProTableData();
   },
   mounted() {},
   methods: {
     getTableData() {
       this.orderTableData = [];
+      this.loading = true;
       getAnalysisDatas(this.searchRowData)
         .then(res => {
           const {
@@ -312,14 +482,22 @@ export default {
           this.inforCardData[1].count = parseFloat(sumDeliveryFee);
           this.inforCardData[2].count = parseFloat(sumOrderFee);
           this.inforCardData[3].count = parseFloat(avgOrderPrice);
-          //   this.orderData.sumDeliveryFee = sumDeliveryFee;
-          //   this.orderData.sumOrderFee = sumOrderFee;
-          //   this.orderData.sumPayableFee = sumPayableFee;
-          //   this.orderData.totalCount = totalCount;
-          //   this.orderTableData.push(this.orderData);
         })
         .finally(res => {
           this.loading = false;
+          this.searchLoading = false;
+          this.clearSearchLoading = false;
+        });
+    },
+    getProTableData() {
+      this.proLoading = true;
+      getStandardAnalysisDatas(this.searchProRowData)
+        .then(res => {
+          this.proTableData = res.rows;
+          this.proTotal = res.total;
+        })
+        .finally(res => {
+          this.proLoading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
         });
@@ -330,14 +508,53 @@ export default {
     endTimeChange(value, data) {
       this.searchRowData.endTime = value;
     },
+    startTimeChangePro(value, date) {
+      this.searchProRowData.startTime = value;
+    },
+    endTimeChangePro(value, data) {
+      this.searchProRowData.endTime = value;
+    },
+    changePagePro(page) {
+      this.searchProRowData.page = page;
+      this.getProTableData();
+    },
+    changePageSizePro(pageSize) {
+      this.searchProRowData.page = 1;
+      this.searchProRowData.rows = pageSize;
+      this.getProTableData();
+    },
     resetSearchRowData() {
       this.searchRowData = _.cloneDeep(roleRowData);
+    },
+    resetSearchProRowData() {
+      this.searchProRowData = _.cloneDeep(proRowData);
     },
     handleChange(item) {
       this.searchRowData.startTime = null;
       this.searchRowData.endTime = null;
       this.searchRowData.queryDays = item;
+      if (item === '-1') return;
       this.getTableData();
+    },
+    handleChangePro(item) {
+      this.searchProRowData.startTime = null;
+      this.searchProRowData.endTime = null;
+      this.searchProRowData.queryDays = item;
+      if (item === '-1') return;
+      this.getProTableData();
+    },
+    handleSearchPro() {
+      this.searchProRowData.page = 1;
+      this.searchLoading = true;
+      this.getProTableData();
+    },
+    handleClearPro() {
+      this.button = '今日';
+      this.resetSearchProRowData();
+      this.page = 1;
+      this.pageSize = 10;
+      this.clearSearchLoading = true;
+      this.handleSearchPro();
     },
     handleDownload() {
       this.exportExcelLoading = true;
@@ -372,6 +589,11 @@ export default {
           this.searchLoading = false;
           this.clearSearchLoading = false;
         });
+    },
+    onSortChangePro(type) {
+      this.searchProRowData.sidx = type.key;
+      this.searchProRowData.sort = type.order;
+      this.getProTableData();
     }
   }
 };

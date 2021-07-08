@@ -81,7 +81,6 @@
               <!-- <Button v-waves type="success" class="mr5" @click="handleUploadExcel">
                 <Icon type="md-cloud-upload" /> 导入Excel
               </Button>-->
-              <BookTypeOption v-model="exportType" class="mr5" />
               <Button
                 :loading="downloadLoading"
                 class="search-btn mr5"
@@ -90,6 +89,7 @@
               >
                 <Icon type="md-download" />多类型导出
               </Button>
+              <BookTypeOption v-model="exportType" class="mr5" />
             </div>
           </tables>
           <div style="margin: 10px;overflow: hidden">
@@ -454,8 +454,6 @@ import CommonIcon from '_c/common-icon';
 import BookTypeOption from '_c/book-type-option';
 import UploadExcel from '_c/excel';
 import tableMixin from '@/mixins/tableMixin.js';
-import searchMixin from '@/mixins/searchMixin.js';
-import deleteMixin from '@/mixins/deleteMixin.js';
 import { getMenuData, getOperateData } from '@/api/data';
 import { getMenuList, deleteMenu, deleteOperate, createMenu, editMenu } from '@/api/system';
 import {
@@ -622,7 +620,7 @@ export default {
       return str;
     }
   },
-  mixins: [tableMixin, searchMixin, deleteMixin],
+  mixins: [tableMixin],
   data() {
     return {
       menuList: [],

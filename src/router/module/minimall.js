@@ -7,7 +7,8 @@ const miniMallRouter = [
     component: Main,
     meta: {
       hideInBread: true,
-      title: '商城小程序'
+      title: '商城小程序',
+      icon: 'md-home'
     },
     children: [{
       path: '/wechat-home',
@@ -18,6 +19,26 @@ const miniMallRouter = [
         notCache: true
       },
       component: () => import('@/view/mini-program-manager/single-page/home')
+    }]
+  },
+  {
+    path: '/small-analysis',
+    name: 'small-analysis',
+    component: Main,
+    meta: {
+      hideInBread: true,
+      title: '数据统计汇总',
+      icon: 'ios-stats'
+    },
+    children: [{
+      path: '/small-analysis',
+      name: 'small-analysis',
+      meta: {
+        icon: 'ios-stats',
+        title: '数据统计汇总',
+        notCache: true
+      },
+      component: () => import('@/view/mini-program-manager/member/statistics.vue')
     }]
   },
   {
@@ -65,7 +86,7 @@ const miniMallRouter = [
       component: () => import('@/view/mini-program-manager/goods/goods-standard.vue')
     },
     {
-      path: 'small-goods-relation-standard',
+      path: '/small-goods-relation-standard',
       name: 'small-goods-relation-standard',
       meta: {
         hideInMenu: true,
@@ -74,7 +95,6 @@ const miniMallRouter = [
       },
       component: () => import('@/view/mini-program-manager/goods/goods-standard.vue')
     },
-
     {
       path: '/small-goods-section',
       name: 'small-goods-section',
@@ -312,6 +332,15 @@ const miniMallRouter = [
       component: () => import('@/view/mini-program-manager/activity/newGoods.vue')
     },
     {
+      path: '/small-hot-goods',
+      name: 'small-hot-goods',
+      meta: {
+        icon: 'ios-nuclear',
+        title: '爆品集合活动管理'
+      },
+      component: () => import('@/view/mini-program-manager/activity/hot-goods.vue')
+    },
+    {
       path: '/small-activity-new-product',
       name: 'small-activity-new-product',
       meta: {
@@ -461,6 +490,15 @@ const miniMallRouter = [
       //   component: () => import('@/view/mini-program-manager/activity/flashsale.vue')
       // },
       {
+        path: '/small-live',
+        name: 'small-live',
+        meta: {
+          icon: 'logo-youtube',
+          title: '直播管理'
+        },
+        component: () => import('@/view/mini-program-manager/content/live.vue')
+      },
+      {
         path: '/small-feedback',
         name: 'small-feedback',
         meta: {
@@ -605,6 +643,15 @@ const miniMallRouter = [
           title: '积分数据统计'
         },
         component: () => import('@/view/mini-program-manager/member/integral-statistics.vue')
+      },
+      {
+        path: '/small-lottery-statistics',
+        name: 'small-lottery-statistics',
+        meta: {
+          icon: 'ios-stats',
+          title: '积分抽奖数据统计'
+        },
+        component: () => import('@/view/mini-program-manager/member/lottery-statistics.vue')
       },
       {
         path: '/small-coupon-statistics',

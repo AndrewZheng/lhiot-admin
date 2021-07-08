@@ -48,11 +48,10 @@
             >
               <Option
                 v-for="item in deliveryAtTypeList"
-                :value="item.value"
                 :key="`search-col-${item.value}`"
+                :value="item.value"
                 class="ptb2-5"
-                >{{ item.label }}</Option
-              >
+              >{{ item.label }}</Option>
             </Select>
             <Button
               v-waves
@@ -113,34 +112,34 @@
         <Form ref="modalEdit" :model="postageDetail" :rules="ruleInline">
           <Row span="24">
             <Col span="6">
-              <FormItem
-                :label-width="100"
-                label="金额范围:¥"
-                prop="minOrderAmount"
-              >
-                <InputNumber
-                  :readonly="modalTypeComputed"
-                  :min="0"
-                  :value="postageDetailMinOrderAmount"
-                  placeholder="最小金额"
-                  class="search-input"
-                  style="width: 100px"
-                  @on-change="postageDetailMinOrderAmountChange"
-                ></InputNumber>
-              </FormItem>
+            <FormItem
+              :label-width="100"
+              label="金额范围:¥"
+              prop="minOrderAmount"
+            >
+              <InputNumber
+                :readonly="modalTypeComputed"
+                :min="0"
+                :value="postageDetailMinOrderAmount"
+                placeholder="最小金额"
+                class="search-input"
+                style="width: 100px"
+                @on-change="postageDetailMinOrderAmountChange"
+              ></InputNumber>
+            </FormItem>
             </Col>
             <Col span="16">
-              <FormItem label="— ¥" prop="maxOrderAmount">
-                <InputNumber
-                  :readonly="modalTypeComputed"
-                  :min="0"
-                  :value="postageDetailMaxOrderAmount"
-                  placeholder="最大金额"
-                  class="search-input"
-                  style="width: 100px"
-                  @on-change="postageDetailMaxOrderAmountChange"
-                ></InputNumber>
-              </FormItem>
+            <FormItem label="— ¥" prop="maxOrderAmount">
+              <InputNumber
+                :readonly="modalTypeComputed"
+                :min="0"
+                :value="postageDetailMaxOrderAmount"
+                placeholder="最大金额"
+                class="search-input"
+                style="width: 100px"
+                @on-change="postageDetailMaxOrderAmountChange"
+              ></InputNumber>
+            </FormItem>
             </Col>
           </Row>
           <Row>
@@ -155,9 +154,9 @@
               >
                 <Radio
                   v-for="item in minDeliveryAtTypeEnum"
+                  :key="item.value"
                   :label="item.value"
                   :disabled="modalTypeComputed"
-                  :key="item.value"
                 >
                   <span>{{ item.label }}</span>
                 </Radio>
@@ -167,8 +166,8 @@
           <Row>
             <FormItem prop="deliveryRules">
               <tables
-                :columns="tableColumnComputed"
                 v-model="postageDetail.deliveryRules"
+                :columns="tableColumnComputed"
                 border
                 @on-delete="postageRuleTableHandleDelete"
               ></tables>
@@ -176,8 +175,8 @@
           </Row>
           <Row
             v-if="
-              tempModalType === modalType.create ||
-              tempModalType === modalType.edit
+              isCreate ||
+                isEdit
             "
             class="mt15"
           >
@@ -194,7 +193,7 @@
       </div>
       <div
         v-if="
-          tempModalType === modalType.create || tempModalType === modalType.edit
+          isCreate || isEdit
         "
         slot="footer"
       >
@@ -203,50 +202,42 @@
           :loading="modalViewLoading"
           type="primary"
           @click="handleSubmit('modalEdit')"
-          >确定</Button
-        >
+        >确定</Button>
       </div>
     </Modal>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
-import Tables from "_c/tables";
+import Tables from '_c/tables';
 import {
   getDeliveryFeeConfigPages,
   createDeliveryFeeConfig,
   deleteDeliveryFeeConfig,
   editDeliveryFeeConfig,
-  getDeliveryFeeConfigRulePages,
-  createDeliveryFeeConfigRule,
-  deleteDeliveryFeeConfigRule,
-  editDeliveryFeeConfigRule,
-} from "@/api/mini-program";
-import tableMixin from "@/mixins/tableMixin.js";
-import searchMixin from "@/mixins/searchMixin.js";
-import deleteMixin from "@/mixins/deleteMixin.js";
-import { deliveryAtTypeConvert } from "@/libs/converStatus";
+  getDeliveryFeeConfigRulePages
+} from '@/api/mini-program';
+import tableMixin from '@/mixins/tableMixin.js';
 import {
   deliveryAtTypeEnum,
-  updateWay,
-  deliveryAtType,
-} from "@/libs/enumerate";
+  updateWay
+} from '@/libs/enumerate';
 import {
   fenToYuanDot2Number,
   fenToYuanDot2,
-  yuanToFenNumber,
-} from "@/libs/util";
+  yuanToFenNumber
+} from '@/libs/util';
 
 const fruitMasterDetail = {
-  id: "",
+  id: '',
   name: 0,
-  phoneNumber: "",
-  extractingAmount: "",
-  settlementStatus: "",
-  creditCardNumbers: "",
-  headStatus: "",
-  applicationTime: "",
-  handlingTime: "2018-10-28",
+  phoneNumber: '',
+  extractingAmount: '',
+  settlementStatus: '',
+  creditCardNumbers: '',
+  headStatus: '',
+  applicationTime: '',
+  handlingTime: '2018-10-28'
 };
 
 const postageDetail = {
@@ -262,11 +253,11 @@ const postageDetail = {
   id: 0,
   minOrderAmount: 0,
   maxOrderAmount: 0,
-  deliveryTime: "8:00-18:00",
+  deliveryTime: '8:00-18:00',
   createTime: null,
   updateTime: null,
-  createBy: "",
-  deleteIds: [],
+  createBy: '',
+  deleteIds: []
 };
 const deliveryRules = {
   minDistance: 0,
@@ -275,80 +266,71 @@ const deliveryRules = {
   firstFee: 0,
   additionalWeight: 1,
   additionalFee: 0,
-  updateWay: updateWay.INSERT,
+  updateWay: updateWay.INSERT
 };
 const roleRowData = {
   minOrderAmount: null,
   maxOrderAmount: null,
   deliveryAtType: null,
   page: 1,
-  rows: 10,
+  rows: 10
 };
 
 const relationRowData = {
   deliveryFeeTemplateId: 0,
   page: 1,
-  rows: 10,
+  rows: 10
 };
 
 export default {
   components: {
-    Tables,
+    Tables
   },
-  mixins: [tableMixin, searchMixin, deleteMixin],
+  mixins: [tableMixin],
   data() {
     return {
-      ruleInline: {
-        minOrderAmount: [
-          { required: true, message: "请填写最小金额", type: "number" },
-        ],
-        maxOrderAmount: [
-          { required: true, message: "请填写最大金额", type: "number" },
-        ],
-        deliveryAtType: [{ required: true, message: "请选择时间段" }],
-        deliveryRules: [{ required: true, message: "请添加运费信息" }],
-      },
+      tempDetailList: [],
+      distanceList: ['0-3', '3-5'],
       deliveryAtTypeList: deliveryAtTypeEnum,
       minDeliveryAtTypeEnum: [
         {
-          label: "白天8:00-18:00",
-          value: "8:00-18:00",
+          label: '白天8:00-18:00',
+          value: '8:00-18:00'
         },
         {
-          label: "晚上18:00-22:00",
-          value: "18:00-22:00",
+          label: '晚上18:00-22:00',
+          value: '18:00-22:00'
         },
         {
-          label: "全天8:00-22:00",
-          value: "8:00-18:00,18:00-22:00",
-        },
+          label: '全天8:00-22:00',
+          value: '8:00-18:00,18:00-22:00'
+        }
       ],
-      distanceList: ["0-3", "3-5"],
       postageRuleTableColumns: [
         {
-          title: "距离范围（Km）",
+          title: '距离范围（Km）',
           minWidth: 150,
-          align: "center",
+          align: 'center',
           render: (h, params, vm) => {
-            return h("div", [
+            return h('div', [
               h(
-                "Select",
+                'Select',
                 {
                   props: {
-                    value: params.row.minDistance == 0 ? "0-3" : "3-5",
+                    value: params.row.minDistance == 0 ? '0-3' : '3-5',
                     disabled: this.modalTypeComputed,
-                    transfer:true
+                    transfer: true
                   },
                   on: {
-                    "on-change": (e) => {
-                      if (e == "0-3") {
+                    'on-change': (e) => {
+                      if (e == '0-3') {
                         this.postageDetail.deliveryRules[
                           params.row.initRowIndex
                         ].minDistance = 0;
                         this.postageDetail.deliveryRules[
                           params.row.initRowIndex
                         ].maxDistance = 3;
-                      } else if (e == "3-5") {
+                      } else if (e == '3-5') {
                         this.postageDetail.deliveryRules[
                           params.row.initRowIndex
                         ].minDistance = 3;
@@ -356,200 +338,208 @@ export default {
                           params.row.initRowIndex
                         ].maxDistance = 5;
                       }
-                    },
-                  },
+                    }
+                  }
                 },
                 [
                   h(
-                    "Option",
+                    'Option',
                     {
                       props: {
-                        value: "0-3",
-                      },
+                        value: '0-3'
+                      }
                     },
-                    "0-3Km"
+                    '0-3Km'
                   ),
                   h(
-                    "Option",
+                    'Option',
                     {
                       props: {
-                        value: "3-5",
-                      },
+                        value: '3-5'
+                      }
                     },
-                    "3-5Km"
-                  ),
+                    '3-5Km'
+                  )
                 ]
-              ),
+              )
             ]);
-          },
+          }
         },
         {
-          title: "首重（Kg）",
-          key: "updateAt",
+          title: '首重（Kg）',
+          key: 'updateAt',
           minWidth: 150,
-          align: "center",
+          align: 'center',
           render: (h, params) => {
-            return h("div", [
-              h("InputNumber", {
+            return h('div', [
+              h('InputNumber', {
                 props: {
                   value: params.row.firstWeight,
                   readonly: this.modalTypeComputed,
-                  min: 0,
+                  min: 0
                 },
                 on: {
-                  "on-change": (e) => {
+                  'on-change': (e) => {
                     if (!e) {
                       e = 0;
                     }
                     this.postageDetail.deliveryRules[
                       params.row.initRowIndex
                     ].firstWeight = e;
-                  },
-                },
-              }),
+                  }
+                }
+              })
             ]);
-          },
+          }
         },
         {
-          title: "费用（元）",
+          title: '费用（元）',
           minWidth: 150,
-          align: "center",
+          align: 'center',
           render: (h, params) => {
-            return h("div", [
-              h("InputNumber", {
+            return h('div', [
+              h('InputNumber', {
                 props: {
                   value: fenToYuanDot2Number(params.row.firstFee),
                   readonly: this.modalTypeComputed,
-                  min: 0,
+                  min: 0
                 },
                 on: {
-                  "on-change": (e) => {
+                  'on-change': (e) => {
                     if (!e) {
                       e = 0;
                     }
                     this.postageDetail.deliveryRules[
                       params.row.initRowIndex
                     ].firstFee = yuanToFenNumber(e);
-                  },
-                },
-              }),
+                  }
+                }
+              })
             ]);
-          },
+          }
         },
         {
-          title: "续重（Kg）",
-          align: "center",
+          title: '续重（Kg）',
+          align: 'center',
           minWidth: 150,
           render: (h, params) => {
-            return h("div", [
-              h("InputNumber", {
+            return h('div', [
+              h('InputNumber', {
                 props: {
                   value: params.row.additionalWeight,
                   readonly: this.modalTypeComputed,
-                  min: 0,
+                  min: 0
                 },
                 on: {
-                  "on-change": (e) => {
+                  'on-change': (e) => {
                     if (!e) {
                       e = 0;
                     }
                     this.postageDetail.deliveryRules[
                       params.row.initRowIndex
                     ].additionalWeight = e;
-                  },
-                },
-              }),
+                  }
+                }
+              })
             ]);
-          },
+          }
         },
         {
-          title: "续费（元）",
-          align: "center",
+          title: '续费（元）',
+          align: 'center',
           minWidth: 150,
           render: (h, params) => {
-            return h("div", [
-              h("InputNumber", {
+            return h('div', [
+              h('InputNumber', {
                 props: {
                   value: fenToYuanDot2Number(params.row.additionalFee),
                   readonly: this.modalTypeComputed,
-                  min: 0,
+                  min: 0
                 },
                 on: {
-                  "on-change": (e) => {
+                  'on-change': (e) => {
                     if (!e) {
                       e = 0;
                     }
                     this.postageDetail.deliveryRules[
                       params.row.initRowIndex
                     ].additionalFee = yuanToFenNumber(e);
-                  },
-                },
-              }),
+                  }
+                }
+              })
             ]);
-          },
-        },
+          }
+        }
       ],
       columns: [
         {
-          type: "selection",
-          key: "",
-          align: "center",
+          type: 'selection',
+          key: '',
+          align: 'center'
         },
         {
-          title: "ID",
-          align: "center",
-          key: "id",
+          title: 'ID',
+          align: 'center',
+          key: 'id'
         },
         {
-          title: "金额范围",
-          align: "center",
-          key: "minOrderAmount",
+          title: '金额范围',
+          align: 'center',
+          key: 'minOrderAmount',
           minWidth: 180,
           render(h, params) {
             return (
               <div>
                 {fenToYuanDot2(params.row.minOrderAmount) +
-                  " - " +
+                  ' - ' +
                   fenToYuanDot2(params.row.maxOrderAmount)}
               </div>
             );
-          },
+          }
         },
         {
-          title: "配送时间",
-          align: "center",
-          key: "deliveryTime",
-          minWidth: 150,
+          title: '配送时间',
+          align: 'center',
+          key: 'deliveryTime',
+          minWidth: 150
         },
         {
-          title: "更新时间",
-          key: "updateTime",
-          align: "center",
-          minWidth: 150,
+          title: '更新时间',
+          key: 'updateTime',
+          align: 'center',
+          minWidth: 150
         },
         {
-          title: "操作",
-          align: "center",
+          title: '操作',
+          align: 'center',
           minWidth: 200,
-          key: "handle",
-          options: ["view", "edit", "delete", "copy"],
-        },
+          key: 'handle',
+          options: ['view', 'edit', 'delete', 'copy']
+        }
       ],
       options: [
         {
-          title: "操作",
+          title: '操作',
           minWidth: 80,
-          align: "center",
-          key: "handle",
-          options: ["delete"],
-        },
+          align: 'center',
+          key: 'handle',
+          options: ['delete']
+        }
       ],
-      modalViewLoading: false,
-      tempDetailList: [],
+      ruleInline: {
+        minOrderAmount: [
+          { required: true, message: '请填写最小金额', type: 'number' }
+        ],
+        maxOrderAmount: [
+          { required: true, message: '请填写最大金额', type: 'number' }
+        ],
+        deliveryAtType: [{ required: true, message: '请选择时间段' }],
+        deliveryRules: [{ required: true, message: '请添加运费信息' }]
+      },
       searchRowData: this._.cloneDeep(roleRowData),
       searchRelationRowData: _.cloneDeep(relationRowData),
-      fruitMasterDetail: fruitMasterDetail,
-      postageDetail: this._.cloneDeep(postageDetail),
+      fruitMasterDetail: _.cloneDeep(fruitMasterDetail),
+      postageDetail: this._.cloneDeep(postageDetail)
     };
   },
   computed: {
@@ -574,7 +564,7 @@ export default {
     },
     maxOrderAmountComputed() {
       return fenToYuanDot2Number(this.searchRowData.maxOrderAmount);
-    },
+    }
   },
   created() {
     this.getTableData();
@@ -604,7 +594,7 @@ export default {
     deleteTable(ids) {
       this.loading = true;
       deleteDeliveryFeeConfig({
-        ids,
+        ids
       })
         .then((res) => {
           const totalPage = Math.ceil(this.total / this.searchRowData.pageSize);
@@ -626,15 +616,15 @@ export default {
       // return;
       this.$refs[name].validate((valid) => {
         if (valid) {
-          if (this.tempModalType === this.modalType.create) {
+          if (this.isCreate) {
             // 添加状态
             this.createTableRow();
-          } else if (this.tempModalType === this.modalType.edit) {
+          } else if (this.isEdit) {
             // 编辑状态
             this.editTableRow();
           }
         } else {
-          this.$Message.error("请完善信息!");
+          this.$Message.error('请完善信息!');
         }
       });
     },
@@ -645,7 +635,7 @@ export default {
         .then((res) => {
           this.modalViewLoading = false;
           this.modalEdit = false;
-          this.$Message.success("创建成功!");
+          this.$Message.success('创建成功!');
           this.getTableData();
         })
         .catch(() => {
@@ -671,15 +661,15 @@ export default {
       if (this.postageDetail.deliveryRules.length > 0) {
         const array = [];
         this.postageDetail.deliveryRules.forEach((item) => {
-          array.push(item.minDistance + "-" + item.maxDistance);
+          array.push(item.minDistance + '-' + item.maxDistance);
         });
         const tempArray = this.array_diff(this.distanceList, array);
         if (tempArray.length === 0) {
-          this.$Message.error("不能添加相同距离范围的运费模板！");
+          this.$Message.error('不能添加相同距离范围的运费模板！');
           return;
         } else {
           const str = tempArray[0];
-          const strArray = str.split("-");
+          const strArray = str.split('-');
           const obj = this._.cloneDeep(deliveryRules);
           obj.minDistance = strArray[0];
           obj.maxDistance = strArray[1];
@@ -706,7 +696,7 @@ export default {
       return A;
     },
     postageRuleTableHandleDelete(params) {
-      if (this.tempModalType === this.modalType.create) {
+      if (this.isCreate) {
         this.postageDetail.deliveryRules = params.tableData.filter(
           (item, index) => index !== params.row.initRowIndex
         );
@@ -752,7 +742,7 @@ export default {
       this.postageDetail = this._.cloneDeep(params.row);
       if (this.postageDetail.deliveryRules.length !== 0) {
         this.postageDetail.deliveryRules.forEach((item) => {
-          item.updateWay = "UPDATE";
+          item.updateWay = 'UPDATE';
         });
       }
       this.tempDetailList.length = 0;
@@ -777,7 +767,7 @@ export default {
     },
     exportExcel() {
       this.$refs.tables.exportCsv({
-        filename: `table-${new Date().valueOf()}.csv`,
+        filename: `table-${new Date().valueOf()}.csv`
       });
     },
     getRelationTableData() {
@@ -804,8 +794,8 @@ export default {
           this.searchLoading = false;
           this.clearSearchLoading = false;
         });
-    },
-  },
+    }
+  }
 };
 </script>
 

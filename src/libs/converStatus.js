@@ -66,6 +66,9 @@ import {
   receiveStatusEnum,
   serviceModeEnum,
   serviceStatusEnum,
+  userClassEnum,
+  prizeTypeEnum,
+  lotteryStatusEnum,
   // 批发商城小程序
   userStatusEnum,
   userTypeEnum,
@@ -98,6 +101,18 @@ const convertFunction = (value, list) => {
     };
   }
 };
+
+export const lotteryStatusConvert = (value) => {
+  return convertFunction(value, lotteryStatusEnum).label;
+}
+
+export const prizeTypeConvert = (value) => {
+  return convertFunction(value, prizeTypeEnum).label;
+}
+
+export const userClassConvert = (value) => {
+  return convertFunction(value, userClassEnum).label;
+}
 
 export const receiveStatusConvert = (value) => {
   return convertFunction(value, receiveStatusEnum).label;

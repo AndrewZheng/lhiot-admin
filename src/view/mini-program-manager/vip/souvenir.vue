@@ -17,7 +17,6 @@
         @on-select-all="onSelectionAll"
         @on-selection-change="onSelectionChange"
       >
-        <!-- @on-delete="handleDelete" -->
         <div slot="searchCondition">
           <Row>
             <Select
@@ -99,6 +98,7 @@
         </Row>
       </div>
     </Card>
+
     <!-- 查看优惠券 -->
     <Modal v-model="modalView" :width="800" draggable scrollable :mask-closable="false">
       <p slot="header">
@@ -357,6 +357,7 @@
         </Button>
       </div>
     </Modal>
+
     <!-- 添加优惠券 -->
     <Modal
       v-model="modalAdd"
@@ -624,6 +625,7 @@
         </Button>
       </div>
     </Modal>
+
     <!-- 修改优惠券 -->
     <Modal v-model="modalEdit" :mask-closable="false" :width="1000" draggable>
       <p slot="header">
@@ -867,7 +869,6 @@
 <script type="text/ecmascript-6">
 import Tables from '_c/tables';
 import IViewUpload from '_c/iview-upload';
-import _ from 'lodash';
 import {
   getSvipGift,
   getSvipGiftPages,
@@ -878,16 +879,13 @@ import {
   getHdCouponActivitiesPages
 } from '@/api/mini-program';
 import uploadMixin from '@/mixins/uploadMixin';
-import deleteMixin from '@/mixins/deleteMixin.js';
 import tableMixin from '@/mixins/tableMixin.js';
-import searchMixin from '@/mixins/searchMixin.js';
 import {
   couponStatusConvert,
   couponTypeConvert,
   couponScopeConvert,
   couponUseLimitConvert,
-  vipTypeConvert,
-  giftTypeConvert
+  vipTypeConvert
 } from '@/libs/converStatus';
 import {
   couponTypeEnum,
@@ -900,7 +898,6 @@ import {
 } from '@/libs/enumerate';
 import {
   compareData,
-  getSmallCouponActivity,
   fenToYuanDot2,
   fenToYuanDot2Number,
   yuanToFenNumber,
@@ -917,7 +914,6 @@ const relationDetail = {
   couponFee: 0,
   minBuyFee: 0,
   couponStatus: 'VALID',
-  svipLevel: null,
   effectiveStartTime: null,
   effectiveEndTime: null,
   couponLimit: 999,
@@ -932,33 +928,6 @@ const relationDetail = {
   endDay: 0,
   rank: 0, // 排序字段
   giftType: 'OPEN_CARD_COUPON'
-};
-
-const couponTemplateDetail = {
-  id: 0,
-  couponName: '',
-  couponType: null,
-  couponFee: 0,
-  minBuyFee: 0,
-  couponStatus: null,
-  svipLevel: null,
-  couponImage: '',
-  createUser: '',
-  createTime: null,
-  couponRules: '',
-  couponScope: null
-};
-
-const hdCouponTemplateDetail = {
-  activityId: 0,
-  beginDate: null,
-  endDate: null,
-  couponName: '',
-  couponRemark: '',
-  couponType: '',
-  faceValue: 0,
-  price: 0,
-  useRule: ''
 };
 
 const roleRowData = {
@@ -1187,14 +1156,14 @@ const dataColumns = [
     width: 160,
     render: (h, params, vm) => {
       const { row } = params;
-      if (row.source == 'SMALL' && row.validDateType === 'FIXED_DATE') {
+      if (row.source === 'SMALL' && row.validDateType === 'FIXED_DATE') {
         return <div>{row.effectiveStartTime}</div>;
       } else if (
-        row.source == 'SMALL' &&
+        row.source === 'SMALL' &&
         row.validDateType === 'UN_FIXED_DATE'
       ) {
         return <div>{row.beginDay}</div>;
-      } else if (row.source == 'HD') {
+      } else if (row.source === 'HD') {
         return <div>{row.effectiveStartTime}</div>;
       } else {
         return <div>N/A</div>;
@@ -1208,14 +1177,14 @@ const dataColumns = [
     width: 160,
     render: (h, params, vm) => {
       const { row } = params;
-      if (row.source == 'SMALL' && row.validDateType === 'FIXED_DATE') {
+      if (row.source === 'SMALL' && row.validDateType === 'FIXED_DATE') {
         return <div>{row.effectiveEndTime}</div>;
       } else if (
-        row.source == 'SMALL' &&
+        row.source === 'SMALL' &&
         row.validDateType === 'UN_FIXED_DATE'
       ) {
         return <div>{row.endDay}</div>;
-      } else if (row.source == 'HD') {
+      } else if (row.source === 'HD') {
         return <div>{row.effectiveEndTime}</div>;
       } else {
         return <div>N/A</div>;
@@ -1457,9 +1426,32 @@ export default {
     Tables,
     IViewUpload
   },
-  mixins: [deleteMixin, tableMixin, searchMixin, uploadMixin],
+  mixins: [tableMixin, uploadMixin],
   data() {
     return {
+      defaultListMain: [],
+      uploadListMain: [],
+      areaList: [],
+      addRelationList: [],
+      couponTemplateData: [],
+      hdCouponTemplateData: [],
+      templatePageOpts: [5, 10],
+      addTempDataLoading: false,
+      tempTableLoading: false,
+      couponTemplateTotal: 0,
+      couponHdTemplateTotal: 0,
+      yetgrant: '',
+      issued: '',
+      vipStatusEnum,
+      couponTypeEnum,
+      couponStatusEnum,
+      couponScopeEnum,
+      couponUseLimitEnum,
+      giftTypeEnum,
+      validDateTypeEnum,
+      dataColumns: dataColumns,
+      templateColumns: templateColumns,
+      hdTemplateColumns: hdTemplateColumns,
       relationRuleInline: {
         effectiveStartTime: [{ required: true, message: '请选择生效时间' }],
         effectiveEndTime: [{ required: true, message: '请选择失效时间' }],
@@ -1556,37 +1548,11 @@ export default {
           }
         ]
       },
-      defaultListMain: [],
-      uploadListMain: [],
-      areaList: [],
-      vipStatusEnum,
-      couponTypeEnum,
-      couponStatusEnum,
-      couponScopeEnum,
-      couponUseLimitEnum,
-      giftTypeEnum,
-      validDateTypeEnum,
-      dataColumns: dataColumns,
-      templatePageOpts: [5, 10],
-      templateColumns: templateColumns,
-      hdTemplateColumns: hdTemplateColumns,
-      addTempDataLoading: false,
-      tempTableLoading: false,
-      createLoading: false,
-      modalViewLoading: false,
       searchRowData: _.cloneDeep(roleRowData),
       searchTemplateRowData: _.cloneDeep(templateRowData),
       searchHdTemplateRowData: _.cloneDeep(hdTemplateRowData),
       relationDetail: _.cloneDeep(relationDetail),
-      addRelationDetail: _.cloneDeep(relationDetail),
-      addRelationList: [],
-      couponTemplateData: [],
-      hdCouponTemplateData: [],
-      couponTemplateTotal: 0,
-      couponHdTemplateTotal: 0,
-      modalAdd: false,
-      yetgrant: '',
-      issued: ''
+      addRelationDetail: _.cloneDeep(relationDetail)
     };
   },
   computed: {
@@ -1596,13 +1562,13 @@ export default {
     systemCouponFixDate() {
       return (
         this.tempModalType === 'addTemplate' &&
-        this.addRelationDetail.validDateType == 'FIXED_DATE'
+        this.addRelationDetail.validDateType === 'FIXED_DATE'
       );
     },
     systemCouponUnFixDate() {
       return (
         this.tempModalType === 'addTemplate' &&
-        this.addRelationDetail.validDateType == 'UN_FIXED_DATE'
+        this.addRelationDetail.validDateType === 'UN_FIXED_DATE'
       );
     }
   },
@@ -1624,7 +1590,7 @@ export default {
       // 先清除对象
       this.resetFields();
       // 当展示的是添加系统优惠券
-      if (isShow && this.tempModalType == 'addTemplate') {
+      if (isShow && this.tempModalType === 'addTemplate') {
         this.addRelationDetail.couponScope = 'SMALL';
         this.addRelationDetail.useLimitType = 'SMALL_ALL';
       }
@@ -1646,33 +1612,25 @@ export default {
       this.modalEdit = true;
     },
     getTableData() {
+      this.loading = true;
       getSvipGiftPages(this.searchRowData)
         .then(res => {
           this.tableData = res.rows;
           this.total = res.total;
-          this.loading = false;
-          this.searchLoading = false;
-          this.clearSearchLoading = false;
         })
-        .catch(error => {
-          console.log(error);
+        .finally(() => {
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
         });
     },
-
     getTemplateTableData() {
       getCouponTemplatePages(this.searchTemplateRowData)
         .then(res => {
           this.couponTemplateData = res.rows;
           this.couponTemplateTotal = res.total;
-          this.loading = false;
-          this.searchLoading = false;
-          this.clearSearchLoading = false;
         })
-        .catch(error => {
-          console.log(error);
+        .finally(() => {
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
@@ -1790,7 +1748,7 @@ export default {
         if (valid) {
           _this.extraValidator();
           _this.replaceTextByTag();
-          if (this.tempModalType === this.modalType.edit) {
+          if (this.isEdit) {
             _this.editSvipGift();
           }
         } else {
@@ -1886,12 +1844,8 @@ export default {
         .then(res => {
           this.hdCouponTemplateData = res.rows;
           this.couponHdTemplateTotal = res.total;
-          this.loading = false;
-          this.searchLoading = false;
-          this.clearSearchLoading = false;
         })
-        .catch(error => {
-          console.log(error);
+        .finally(() => {
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
@@ -1928,7 +1882,7 @@ export default {
         .then(res => {
           const totalPage = Math.ceil(this.total / this.searchRowData.pageSize);
           if (
-            this.tableData.length == this.tableDataSelected.length &&
+            this.tableData.length === this.tableDataSelected.length &&
             this.searchRowData.page === totalPage &&
             this.searchRowData.page !== 1
           ) {

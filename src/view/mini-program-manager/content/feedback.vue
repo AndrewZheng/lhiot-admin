@@ -230,8 +230,8 @@
           </Row>
         </Row>
         <Form
-          v-if="tempModalType === modalType.edit"
-          ref="modalEdit"
+          v-if="isEdit"
+          ref="editForm"
           :model="feedbackDetail"
           :rules="ruleInline"
           :label-width="100"
@@ -241,8 +241,8 @@
           </FormItem>
         </Form>
       </div>
-      <div v-if="tempModalType === modalType.edit" slot="footer">
-        <Button :loading="feedbackLoading" type="primary" @click="handleEditOk('modalEdit')">
+      <div v-if="isEdit" slot="footer">
+        <Button :loading="feedbackLoading" type="primary" @click="handleSubmit">
           确认
         </Button>
       </div>
@@ -256,15 +256,12 @@
 
 <script type="text/ecmascript-6">
 import Tables from '_c/tables';
-import _ from 'lodash';
 import {
   getFeedbackPages,
   editFeedback,
   getSystemParameter
 } from '@/api/mini-program';
 import tableMixin from '@/mixins/tableMixin.js';
-import searchMixin from '@/mixins/searchMixin.js';
-import { appTypeConvert } from '@/libs/converStatus';
 
 const feedbackDetail = {
   id: 0,
@@ -294,9 +291,25 @@ export default {
   components: {
     Tables
   },
-  mixins: [tableMixin, searchMixin],
+  mixins: [tableMixin],
   data() {
     return {
+      feedbackClassify: [],
+      feedbackLoading: false,
+      feedbackStatus: [
+        {
+          label: '未回复',
+          value: 'UNREPLY'
+        },
+        {
+          label: '已回复',
+          value: 'REPLY'
+        },
+        {
+          label: '已读',
+          value: 'READED'
+        }
+      ],
       ruleInline: {
         backMessage: [{ required: true, message: '回复内容不能为空' }]
       },
@@ -367,25 +380,8 @@ export default {
           options: ['view', 'feedback']
         }
       ],
-      feedbackClassify: [],
       feedbackDetail: _.cloneDeep(feedbackDetail),
-      searchRowData: _.cloneDeep(roleRowData),
-      feedbackLoading: false,
-      // 反馈状态（UNREPLY-未回复，REPLY-已回复且用户未读，READED-已读）
-      feedbackStatus: [
-        {
-          label: '未回复',
-          value: 'UNREPLY'
-        },
-        {
-          label: '已回复',
-          value: 'REPLY'
-        },
-        {
-          label: '已读',
-          value: 'READED'
-        }
-      ]
+      searchRowData: _.cloneDeep(roleRowData)
     };
   },
   computed: {},
@@ -397,32 +393,6 @@ export default {
   methods: {
     resetSearchRowData() {
       this.searchRowData = _.cloneDeep(roleRowData);
-    },
-    handleEdit(params) {
-      // this.$refs.modalEdit.resetFields();
-      this.tempModalType = this.modalType.edit;
-      this.feedbackDetail = _.cloneDeep(params.row);
-      this.modalView = true;
-    },
-    handleEditOk(params) {
-      this.feedbackLoading = true;
-      editFeedback({
-        id: this.feedbackDetail.id,
-        backMessage: this.feedbackDetail.backMessage
-      })
-        .then(res => {
-          this.$Message.success('回复成功!');
-          this.getTableData();
-        })
-        .finally(res => {
-          this.modalView = false;
-          this.feedbackLoading = false;
-        });
-    },
-    handleView(params) {
-      this.tempModalType = this.modalType.view;
-      this.feedbackDetail = params.row;
-      this.modalView = true;
     },
     getTableData() {
       getFeedbackPages(this.searchRowData)
@@ -455,6 +425,32 @@ export default {
       this.searchLoading = true;
       this.getTableData();
       this.searchRowData.title = value;
+    },
+    handleView(params) {
+      this.tempModalType = this.modalType.view;
+      this.feedbackDetail = _.cloneDeep(params.row);
+      this.modalView = true;
+    },
+    handleEdit(params) {
+      // this.$refs.editForm.resetFields();
+      this.tempModalType = this.modalType.edit;
+      this.feedbackDetail = _.cloneDeep(params.row);
+      this.modalView = true;
+    },
+    handleSubmit() {
+      this.feedbackLoading = true;
+      editFeedback({
+        id: this.feedbackDetail.id,
+        backMessage: this.feedbackDetail.backMessage
+      })
+        .then(res => {
+          this.$Message.success('回复成功!');
+          this.getTableData();
+        })
+        .finally(res => {
+          this.modalView = false;
+          this.feedbackLoading = false;
+        });
     }
   }
 };

@@ -15,7 +15,7 @@
         @on-delete="handleDelete"
         @on-view="handleView"
         @on-edit="handleEdit"
-        @on-sale="switchStatus"
+        @on-sale="handleSwitch"
         @on-select-all="onSelectionAll"
         @on-selection-change="onSelectionChange"
         @on-relevance="handleSetting"
@@ -218,7 +218,7 @@
       <p slot="header">
         <i-col>
           {{
-            tempModalType === modalType.edit
+            isEdit
               ? "修改板块活动分享配置"
               : "创建板块活动分享配置"
           }}
@@ -335,7 +335,7 @@
           关闭
         </Button>
         <Button
-          :loading="modalViewLoading"
+          :loading="modalEditLoading"
           type="primary"
           @click="handleSubmit"
         >
@@ -343,6 +343,7 @@
         </Button>
       </div>
     </Modal>
+
     <Modal v-model="uploadVisible" title="图片预览">
       <img :src="imgUploadViewItem" style="width: 100%">
     </Modal>
@@ -352,7 +353,6 @@
 <script type="text/ecmascript-6">
 import Tables from '_c/tables';
 import IViewUpload from '_c/iview-upload';
-import _ from 'lodash';
 import {
   getShareSettingPages,
   deleteShareSetting,
@@ -360,16 +360,9 @@ import {
   updateShareSetting
 } from '@/api/mini-program';
 import uploadMixin from '@/mixins/uploadMixin';
-import deleteMixin from '@/mixins/deleteMixin.js';
 import tableMixin from '@/mixins/tableMixin.js';
-import searchMixin from '@/mixins/searchMixin.js';
-import { imageStatusConvert, receiveTypeConvert } from '@/libs/converStatus';
 import { imageStatusEnum, receiveTypeEnum } from '@/libs/enumerate';
-import {
-  compareData,
-  setSmallCouponActivity,
-  compareCouponData
-} from '@/libs/util';
+import { setSmallCouponActivity } from '@/libs/util';
 
 const shareDetail = {
   shareContext: '',
@@ -392,9 +385,17 @@ export default {
     Tables,
     IViewUpload
   },
-  mixins: [deleteMixin, tableMixin, searchMixin, uploadMixin],
+  mixins: [tableMixin, uploadMixin],
   data() {
     return {
+      defaultListMain: [],
+      uploadListMain: [],
+      addTempDataLoading: false,
+      tempTableLoading: false,
+      templateLoading: false,
+      modalRelation: false,
+      imageStatusEnum,
+      receiveTypeEnum,
       ruleInline: {
         // activityName: [
         //   { required: true, message: "请输入活动名称" },
@@ -425,10 +426,6 @@ export default {
         sharePagePath: [{ required: true, message: '请输入分享页面路径' }],
         shareUrl: [{ required: true, message: '请输入分享图片路径' }]
       },
-      defaultListMain: [],
-      uploadListMain: [],
-      imageStatusEnum,
-      receiveTypeEnum,
       columns: [
         {
           title: 'ID',
@@ -479,11 +476,6 @@ export default {
           options: ['edit', 'delete']
         }
       ],
-      addTempDataLoading: false,
-      tempTableLoading: false,
-      templateLoading: false,
-      modalViewLoading: false,
-      modalRelation: false,
       searchRowData: _.cloneDeep(roleRowData),
       shareDetail: _.cloneDeep(shareDetail)
     };
@@ -495,7 +487,8 @@ export default {
   created() {},
   methods: {
     resetSearchRowData() {
-      (this.searchRowData = _.cloneDeep(roleRowData)), this.getTableData();
+      this.searchRowData = _.cloneDeep(roleRowData);
+      this.getTableData();
     },
     resetFields() {
       if (this.tempModalType == null) {
@@ -504,91 +497,16 @@ export default {
       this.$refs.editForm.resetFields();
       this.uploadListMain = [];
     },
-    handleSubmit() {
-      this.$refs.editForm.validate((valid) => {
-        if (valid) {
-          if (this.tempModalType === this.modalType.create) {
-            // 添加状态
-            this.createShareSettingPages();
-          } else if (this.tempModalType === this.modalType.edit) {
-            // 编辑状态
-            this.updateShareSetting();
-          }
-        } else {
-          this.$Message.error('请完善信息!');
-        }
-      });
-    },
-    createShareSettingPages() {
-      this.modalViewLoading = true;
-      createShareSettingPages(this.shareDetail)
+    getTableData() {
+      getShareSettingPages(this.searchRowData)
         .then((res) => {
-          this.modalViewLoading = false;
-          this.modalEdit = false;
-          this.$Message.success('创建成功!');
-          this.getTableData();
+          this.tableData = res.rows;
+          this.total = res.total;
         })
-        .catch(() => {
-          this.modalViewLoading = false;
-          this.modalEdit = false;
-        });
-    },
-    updateShareSetting() {
-      this.modalViewLoading = true;
-      updateShareSetting(this.shareDetail)
-        .then((res) => {
-          this.modalEdit = false;
-          this.modalViewLoading = false;
-          this.$Message.success('修改成功!');
-          this.getTableData();
-        })
-        .catch(() => {
-          this.modalEdit = false;
-          this.modalViewLoading = false;
-        });
-    },
-    addShareSetting() {
-      if (this.tempModalType !== this.modalType.create) {
-        this.tempModalType = this.modalType.create;
-        this.shareDetail = _.cloneDeep(shareDetail);
-      }
-      this.resetFields();
-      this.modalEdit = true;
-    },
-    handleSetting(params) {
-      var rows = params.row;
-      setSmallCouponActivity(rows);
-      this.turnToPage({
-        name: 'small-vip-activities-associated'
-      });
-    },
-    // 删除
-    handleDelete(params) {
-      this.tableDataSelected = [];
-      this.tableDataSelected.push(params.row);
-      this.deleteTable(params.row.id);
-    },
-    deleteTable(ids) {
-      this.loading = true;
-      deleteShareSetting({
-        ids
-      })
-        .then((res) => {
-          const totalPage = Math.ceil(this.total / this.searchRowData.pageSize);
-          if (
-            this.tableData.length == this.tableDataSelected.length &&
-            this.searchRowData.page === totalPage &&
-            this.searchRowData.page !== 1
-          ) {
-            this.searchRowData.page -= 1;
-          }
-          this.tableDataSelected = [];
-          this.$Message.success('删除成功!');
-          this.getTableData();
-        })
-        .catch((err) => {
-          err;
+        .finally(() => {
           this.loading = false;
+          this.searchLoading = false;
+          this.clearSearchLoading = false;
         });
     },
     handleView(params) {
@@ -608,31 +526,10 @@ export default {
       this.setDefaultUploadList(params.row);
       this.modalEdit = true;
     },
-    getTableData() {
-      getShareSettingPages(this.searchRowData)
-        .then((res) => {
-          this.tableData = res.rows;
-          this.total = res.total;
-          this.loading = false;
-          this.searchLoading = false;
-          this.clearSearchLoading = false;
-        })
-        .catch((error) => {
-          console.log(error);
-          this.loading = false;
-          this.searchLoading = false;
-          this.clearSearchLoading = false;
-        });
-    },
-    switchStatus(params) {
+    handleSwitch(params) {
       this.shareDetail = _.cloneDeep(params.row);
-      if (params.row.onOff === 'ON') {
-        this.shareDetail.onOff = 'OFF';
-      } else {
-        this.shareDetail.onOff = 'ON';
-      }
-      this.loading = true;
-      this.editRegister();
+      this.shareDetail.onOff = params.row.onOff === 'ON' ? 'OFF' : 'ON';
+      this.updateShareSetting();
     },
     beginTimeChange(value, date) {
       this.shareDetail.beginTime = value;
@@ -650,7 +547,74 @@ export default {
         ).format('YYYY-MM-DD HH:mm:ss');
       }
     },
-    // 设置编辑商品的图片列表 shareDetail.shareUrl
+    handleSubmit() {
+      this.$refs.editForm.validate((valid) => {
+        if (valid) {
+          if (this.isCreate) {
+            this.createShareSettingPages();
+          } else if (this.isEdit) {
+            this.updateShareSetting();
+          }
+        } else {
+          this.$Message.error('请完善信息!');
+        }
+      });
+    },
+    createShareSettingPages() {
+      this.modalEditLoading = true;
+      createShareSettingPages(this.shareDetail)
+        .then((res) => {
+          this.modalEdit = false;
+          this.$Message.success('创建成功!');
+          this.getTableData();
+        })
+        .finally(() => {
+          this.modalEditLoading = false;
+        });
+    },
+    updateShareSetting() {
+      this.modalEditLoading = true;
+      updateShareSetting(this.shareDetail)
+        .then((res) => {
+          this.modalEdit = false;
+          this.$Message.success('修改成功!');
+          this.getTableData();
+        })
+        .finally(() => {
+          this.modalEditLoading = false;
+        });
+    },
+    addShareSetting() {
+      this.tempModalType = this.modalType.create;
+      this.shareDetail = _.cloneDeep(shareDetail);
+      this.resetFields();
+      this.modalEdit = true;
+    },
+    handleSetting(params) {
+      var rows = params.row;
+      setSmallCouponActivity(rows);
+      this.turnToPage({
+        name: 'small-vip-activities-associated'
+      });
+    },
+    deleteTable(ids) {
+      deleteShareSetting({
+        ids
+      })
+        .then((res) => {
+          const totalPage = Math.ceil(this.total / this.searchRowData.pageSize);
+          if (
+            this.tableData.length === this.tableDataSelected.length &&
+            this.searchRowData.page === totalPage &&
+            this.searchRowData.page !== 1
+          ) {
+            this.searchRowData.page -= 1;
+          }
+          this.tableDataSelected = [];
+          this.$Message.success('删除成功!');
+          this.getTableData();
+        });
+    },
     setDefaultUploadList(res) {
       if (res.shareUrl != null) {
         const map = { status: 'finished', url: 'url' };

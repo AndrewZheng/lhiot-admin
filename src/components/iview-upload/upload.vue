@@ -103,7 +103,6 @@ export default {
         this.$refs.iViewUpload.fileList = fileList;
       }
       file.url = response.fileUrl;
-      file.name = file.name;
       file.fileDir = `image/${file.name}`;
       this.$emit('on-success', response, file, fileList);
     },
@@ -114,18 +113,15 @@ export default {
     // 文件格式校验
     handleFormatError(file) {
       this.$Notice.warning({
-        title: 'The file format is incorrect',
-        desc:
-          'File format of ' +
-          file.name +
-          ' is incorrect, please select jpg or png.'
+        title: '图片格式不正确',
+        desc: '图片-' + file.name + '格式不正确, 请上传格式为jpg、png的图片'
       });
     },
     // 文件大小校验
     handleMaxSize(file) {
       this.$Notice.warning({
-        title: 'Exceeding file size limit',
-        desc: 'File  ' + file.name + ' is too large, no more than 2M.'
+        title: '图片大小超过限制',
+        desc: '图片-' + file.name + ' 太大了, 大小不能超过2M'
       });
     },
     // 图片宽高校验

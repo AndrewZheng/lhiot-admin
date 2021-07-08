@@ -551,7 +551,6 @@ import {
 } from '@/api/wholesale';
 import getLodop from '@/mixins/LodopFuncs.js';
 import tableMixin from '@/mixins/tableMixin.js';
-import searchMixin from '@/mixins/searchMixin.js';
 import { fenToYuanDot2, fenToYuanDot2Number } from '@/libs/util';
 import {
   orderStatusEnum,
@@ -971,7 +970,7 @@ export default {
     Tables,
     BookTypeOption
   },
-  mixins: [tableMixin, searchMixin],
+  mixins: [tableMixin],
   data() {
     return {
       amount: 0,

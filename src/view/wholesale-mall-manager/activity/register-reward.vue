@@ -168,9 +168,7 @@ import {
   createRewardConfig,
   editRewardConfig
 } from '@/api/wholesale';
-import deleteMixin from '@/mixins/deleteMixin.js';
 import tableMixin from '@/mixins/tableMixin.js';
-import searchMixin from '@/mixins/searchMixin.js';
 import {
   couponStatusConvert,
   couponTypeConvert,
@@ -402,7 +400,6 @@ const configColumns = [
   }
 ];
 
-
 const relationTempColumns = [
   {
     type: 'selection',
@@ -613,7 +610,7 @@ export default {
   components: {
     Tables
   },
-  mixins: [deleteMixin, tableMixin, searchMixin],
+  mixins: [tableMixin],
   data() {
     return {
       ruleInline: {

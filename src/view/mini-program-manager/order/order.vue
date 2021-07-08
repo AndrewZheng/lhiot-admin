@@ -6,17 +6,19 @@
         v-model="tableData"
         :columns="columns"
         :loading="loading"
-        :search-area-column="24"
-        :operate-area-column="5"
+        :search-area-column="15"
+        :operate-area-column="9"
         editable
         searchable
         border
         highlight-row
         search-place="top"
         @on-view="handleView"
+        @on-edit="handleEdit"
         @on-hand="handleReimburse"
         @on-receive="handSureReceive"
         @on-meituan="handMeituan"
+        @on-coupon="handCoupon"
         @on-current-change="onCurrentChange"
         @on-select-all="onSelectionAll"
         @on-selection-change="onSelectionChange"
@@ -194,7 +196,7 @@
             <Button
               v-waves
               :loading="searchLoading"
-              class="search-btn"
+              class="search-btn mt10"
               type="primary"
               @click="handleSearch"
             >
@@ -204,7 +206,7 @@
               v-show="this.$route.name != 'small-skip-order'"
               v-waves
               :loading="clearSearchLoading"
-              class="search-btn"
+              class="search-btn mt10"
               type="info"
               @click="handleClear"
             >
@@ -213,13 +215,15 @@
             <Button
               v-show="this.$route.name == 'small-skip-order'"
               v-waves
-              class="search-btn"
+              class="search-btn mt10"
               type="warning"
               @click="goBack"
             >
               <Icon type="md-home" />&nbsp;返回首页
             </Button>
           </Row>
+        </div>
+        <div slot="operations">
           <Row
             v-show="this.$route.name != 'small-skip-order'"
             style="float: right; margin-top: 10px"
@@ -294,6 +298,7 @@
         </Row>
       </div>
     </Card>
+
     <!--查看订单详情-->
     <Modal v-model="modalView" :width="1000" :mask-closable="false">
       <p slot="header">
@@ -696,6 +701,310 @@
         <Button type="primary" @click="handleClose"> 关闭 </Button>
       </div>
     </Modal>
+
+    <!-- 修改配送时间 -->
+    <Modal v-model="modalEdit" :mask-closable="false" :width="1000" :z-index="1000">
+      <p slot="header">
+        <i-col>修改订单配送时间</i-col>
+      </p>
+      <div class="modal-content">
+        <Row>
+          <i-col span="12">
+            <Row class-name="mb10">
+              <i-col span="8"> 订单编号: </i-col>
+              <i-col span="16">
+                {{ orderDetail.code }}
+              </i-col>
+            </Row>
+          </i-col>
+          <i-col span="12">
+            <Row class-name="mb10">
+              <i-col span="8"> 订单状态: </i-col>
+              <i-col span="16">
+                {{ orderDetail.orderStatus | miniOrderStatusFilter }}
+              </i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row>
+          <i-col span="12">
+            <Row class-name="mb10">
+              <i-col span="8"> 海鼎编码: </i-col>
+              <i-col span="16">
+                {{ orderDetail.hdOrderCode }}
+              </i-col>
+            </Row>
+          </i-col>
+          <i-col span="12">
+            <Row>
+              <i-col span="8"> 海鼎状态: </i-col>
+              <i-col v-if="orderDetail.hdStatus === 'NOT_SEND'" span="16">
+                <tag color="warning">
+                  {{ "未发送" }}
+                </tag>
+              </i-col>
+              <i-col v-else-if="orderDetail.hdStatus === 'SEND_OUT'" span="16">
+                <tag color="success">
+                  {{ "成功" }}
+                </tag>
+              </i-col>
+              <i-col
+                v-else-if="orderDetail.hdStatus === 'SEND_FAILURE'"
+                span="16"
+              >
+                <tag color="error">
+                  {{ "失败" }}
+                </tag>
+              </i-col>
+              <i-col v-else-if="orderDetail.hdStatus === null" span="16">
+                {{ "N/A" }}
+              </i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row>
+          <i-col span="12">
+            <Row class-name="mb10">
+              <i-col span="8"> 收货方式: </i-col>
+              <i-col span="16">
+                {{ orderDetail.receivingWay | receivingWayFilters }}
+              </i-col>
+            </Row>
+          </i-col>
+          <i-col span="12">
+            <Row class-name="mb10">
+              <i-col span="8"> 海鼎备货时间: </i-col>
+              <i-col span="16">
+                {{ orderDetail.hdStockAt ? orderDetail.hdStockAt : "N/A" }}
+              </i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row>
+          <i-col span="12">
+            <Row class-name="mb10">
+              <i-col span="8"> 订单类型: </i-col>
+              <i-col span="16">
+                {{ orderDetail.orderType | miniOrderTypeFilter }}
+              </i-col>
+            </Row>
+          </i-col>
+          <i-col span="12">
+            <Row class-name="mb10">
+              <i-col span="8"> 应用类型: </i-col>
+              <i-col span="16">
+                {{ orderDetail.apply | appTypeFilter }}
+              </i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Divider orientation="center"> 用户信息 </Divider>
+        <Row>
+          <i-col span="12">
+            <Row class-name="mb10">
+              <i-col span="8"> 下单用户: </i-col>
+              <i-col span="16">
+                {{ orderDetail.receiveUser }}
+              </i-col>
+            </Row>
+          </i-col>
+          <i-col span="12">
+            <Row class-name="mb10">
+              <i-col span="8"> 下单时间: </i-col>
+              <i-col span="16">
+                {{ orderDetail.createAt }}
+              </i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row>
+          <i-col span="12">
+            <Row class-name="mb10">
+              <i-col span="8"> 下单门店: </i-col>
+              <i-col span="16">
+                {{ orderDetail.storeName }}
+              </i-col>
+            </Row>
+          </i-col>
+          <i-col span="12">
+            <Row class-name="mb10">
+              <i-col span="8"> 提货截止时间: </i-col>
+              <i-col span="16">
+                {{
+                  orderDetail.deliveryEndTime
+                    ? orderDetail.deliveryEndTime
+                    : "N/A"
+                }}
+              </i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row>
+          <i-col span="12">
+            <Row class-name="mb10">
+              <i-col span="8"> 门店编码: </i-col>
+              <i-col span="16">
+                {{ orderDetail.storeCode }}
+              </i-col>
+            </Row>
+          </i-col>
+          <i-col span="12">
+            <Row class-name="mb10">
+              <i-col span="8"> 优惠券编号: </i-col>
+              <i-col span="16">
+                {{ orderDetail.couponId ? orderDetail.couponId : "未使用" }}
+              </i-col>
+            </Row>
+          </i-col>
+        </Row>
+
+        <Divider orientation="center"> 支付信息 </Divider>
+        <Row>
+          <i-col span="12">
+            <Row class-name="mb10">
+              <i-col span="8"> 订单总额: </i-col>
+              <i-col span="16">
+                {{ orderDetail.totalAmount | fenToYuanDot2Filters }}
+              </i-col>
+            </Row>
+          </i-col>
+          <i-col span="12">
+            <Row class-name="mb10">
+              <i-col span="8"> 优惠金额: </i-col>
+              <i-col span="16">
+                {{ orderDetail.couponAmount | fenToYuanDot2Filters }}
+              </i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row>
+          <i-col v-if="orderDetail.receivingWay === 'TO_THE_HOME'" span="12">
+            <Row class-name="mb10">
+              <i-col span="8"> 运费: </i-col>
+              <i-col span="16">
+                {{ orderDetail.deliveryAmount | fenToYuanDot2Filters }}
+              </i-col>
+            </Row>
+          </i-col>
+          <i-col span="12">
+            <Row class-name="mb10">
+              <i-col span="8"> 应付金额: </i-col>
+              <i-col span="16">
+                {{ orderDetail.amountPayable | fenToYuanDot2Filters }}
+              </i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row>
+          <i-col span="12">
+            <Row class-name="mb10">
+              <i-col span="8"> 是否允许退货: </i-col>
+              <i-col span="16">
+                {{ orderDetail.allowRefund | yesNoFilter }}
+              </i-col>
+            </Row>
+          </i-col>
+          <i-col span="12">
+            <Row class-name="mb10">
+              <i-col span="8"> 退货原因: </i-col>
+              <i-col span="16">
+                {{ orderDetail.reason }}
+              </i-col>
+            </Row>
+          </i-col>
+        </Row>
+
+        <Divider orientation="center"> 配送信息 </Divider>
+        <Row>
+          <i-col span="12">
+            <Row class-name="mb10">
+              <i-col span="8"> 收货人: </i-col>
+              <i-col span="16">
+                {{ orderDetail.receiveUser }}
+              </i-col>
+            </Row>
+          </i-col>
+          <i-col span="12">
+            <Row class-name="mb10">
+              <i-col span="8"> 联系方式: </i-col>
+              <i-col span="16">
+                {{ orderDetail.contactPhone }}
+              </i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row
+          v-if="orderDetail.receivingWay === 'TO_THE_HOME'"
+        >
+          <Row>
+            <i-col span="16">
+              <Row class="mb10 pt5">
+                <i-col span="6"> 收货地址: </i-col>
+                <i-col span="18">
+                  {{ shippingAddress }}
+                </i-col>
+              </Row>
+            </i-col>
+            <i-col span="16">
+              <Row class="mb10 pt5">
+                <i-col span="6"> 配送时间（旧）: </i-col>
+                <i-col span="18">
+                  {{ orderDetail.deliverTime.startTime + " - " +orderDetail.deliverTime.endTime }}
+                </i-col>
+              </Row>
+            </i-col>
+          </Row>
+          <Row>
+            <i-col span="24">
+              <Row class-name="mb10">
+                <i-col span="4"> 配送时间（新）: </i-col>
+                <i-col span="20">
+                  <RadioGroup v-model="selectedTimeOption" class="time-options" @on-change="handleSelectTime">
+                    <Radio v-for="(item, index) in timeOptionsList" :key="index" :label="JSON.stringify(item)" border size="small">
+                      {{ index > todayIndex? tomorrow.date +' '+ item.display: today.date +' '+ item.display }}
+                    </Radio>
+                  </RadioGroup>
+                  <!-- <Form ref="editForm" :model="orderDetail" :rules="ruleInline" inline>
+                    <Row>
+                      <FormItem label="" prop="effectiveStartTime">
+                        <DatePicker
+                          v-model="orderDetail.deliverTime.startTime"
+                          format="yyyy-MM-dd HH:mm:ss"
+                          type="datetime"
+                          placeholder="配送时间起"
+                          style="width: 180px"
+                          @on-change="deliveryStartTimeChange"
+                        />
+                      </FormItem>
+                      <i> - </i>
+                      <FormItem label="" prop="effectiveEndTime">
+                        <DatePicker
+                          v-model="orderDetail.deliverTime.endTime"
+                          format="yyyy-MM-dd HH:mm:ss"
+                          type="datetime"
+                          placeholder="配送时间止"
+                          style="width: 180px"
+                          @on-change="deliveryEndTimeChange"
+                        />
+                      </FormItem>
+                    </Row>
+                  </Form>-->
+                </i-col>
+              </Row>
+            </i-col>
+          </Row>
+        </Row>
+      </div>
+      <div slot="footer">
+        <Button @click="handleEditClose">
+          关闭
+        </Button>
+        <Button :loading="modalEditLoading" type="primary" @click="handleSubmitEdit">
+          确定
+        </Button>
+      </div>
+    </Modal>
+
     <!-- 订单调货 -->
     <Modal v-model="transferModalView">
       <p slot="header">
@@ -799,7 +1108,6 @@
 <script type="text/ecmascript-6">
 import Tables from '_c/tables';
 import {
-  getOrderCouponDetails,
   getOrderPages,
   getOrder,
   getStorePages,
@@ -809,13 +1117,13 @@ import {
   refundWx,
   refundPt,
   sureReceive,
-  sureMaituan
+  sureMaituan,
+  retryCoupon,
+  editOrderDeliveryTime
 } from '@/api/mini-program';
 import tableMixin from '@/mixins/tableMixin.js';
-import searchMixin from '@/mixins/searchMixin.js';
 import {
   fenToYuanDot2,
-  fenToYuanDot2Number,
   getSmallGoodsStandard
 } from '@/libs/util';
 import {
@@ -926,22 +1234,27 @@ const roleRowData = {
   totalOrderType: null
 };
 
+const timeOptions = {
+  value: [],
+  date: '',
+  sunday: ''
+}
+
 export default {
   components: {
     Tables
   },
-  mixins: [tableMixin, searchMixin],
+  mixins: [tableMixin],
   data() {
     return {
-      mark: true,
-      button: '今日',
-      num: 0,
-      searchMark: true,
       deliverNoteList: [],
       haiDingStatus: [],
       storeList: [],
+      num: 0,
+      mark: true,
+      searchMark: true,
+      downloadLoading: false,
       transferModalView: false,
-      modalViewLoading: false,
       deliverOrderLoading: false,
       orderType: miniOrderTypeEnum,
       orderStatus: orderStatusEnum,
@@ -957,6 +1270,8 @@ export default {
       miniHdStatus,
       shippingAddress: '',
       orderState: '',
+      button: '今日',
+      selectedTimeOption: '',
       tempColumnsView: [
         {
           title: '配送方',
@@ -1058,6 +1373,20 @@ export default {
             const amount = params.row.discountPrice / 100;
             const price = amount * params.row.productQty;
             return <div>{'¥' + price.toFixed(2)}</div>;
+          }
+        },
+        {
+          title: '退货数量',
+          key: 'refundQty',
+          align: 'center',
+          render(h, params) {
+            const orderStates = this.orderState;
+            const { row } = params;
+            if (row.refundStatus === 'REFUND' || orderStates === 'ALREADY_RETURN' || orderStates === 'RETURNING') {
+              return <div>{row.refundQty}</div>
+            } else {
+              return <div>0</div>
+            }
           }
         },
         {
@@ -1551,20 +1880,22 @@ export default {
         // },
         {
           title: '操作',
-          minWidth: 180,
+          minWidth: 220,
           align: 'center',
           fixed: 'right',
           key: 'handle',
-          options: ['view', 'onHand', 'onReceive', 'onMeituan']
+          options: ['view', 'orderEdit', 'onHand', 'onReceive', 'onMeituan', 'onCoupon']
         }
       ],
       currentTableRowSelected: null,
+      today: _.cloneDeep(timeOptions),
+      tomorrow: _.cloneDeep(timeOptions),
+      todayIndex: 0, // 区分今天和明天的标识位
+      timeOptionsList: [],
+      ruleInline: {},
       searchRowData: _.cloneDeep(roleRowData),
       orderDetail: _.cloneDeep(orderDetail),
-      deliverNote: _.cloneDeep(deliverNote),
-      exportType: 'xlsx',
-      downloadLoading: false,
-      tableDataSelected: []
+      deliverNote: _.cloneDeep(deliverNote)
     };
   },
   created() {
@@ -1590,11 +1921,22 @@ export default {
     recieveEndTimeChange(value, data) {
       this.searchRowData.recieveEndTime = value;
     },
+    // 配送时间
+    deliveryStartTimeChange(value, date) {
+      this.orderDetail.deliverTime.startTime = value;
+    },
+    deliveryEndTimeChange(value, data) {
+      this.orderDetail.deliverTime.endTime = value;
+    },
     handleEditCloseTransferModalView() {
       this.transferModalView = false;
     },
     handleEditClose() {
-      this.modalViewLoading = false;
+      this.modalEditLoading = false;
+      this.modalEdit = false;
+    },
+    handleSelectTime(item) {
+      this.selectedTimeOption = typeof (item) === Object ? JSON.stringify(item) : item;
     },
     handleRefund() {
       if (!this.searchRowData.endTime) {
@@ -1691,6 +2033,67 @@ export default {
         this.$Message.error('只有送到家的订单才能操作发送美团');
       }
     },
+    // 购券重发
+    handCoupon(params) {
+      const orderId = params.row.id;
+      retryCoupon(orderId)
+        .then((res) => {
+          this.$Message.success('操作成功');
+          this.getTableData();
+        })
+        .finally(() => {
+          this.loading = false;
+        });
+    },
+    validateTime() {
+      if (!this.orderDetail.deliverTime.startTime) {
+        this.$Message.error('请填写配送开始时间');
+        return;
+      }
+      if (!this.orderDetail.deliverTime.endTime) {
+        this.$Message.error('请填写配送结束时间');
+        return;
+      }
+      // 选择的配送起止时间都不能小于下单时间
+      const _createAt = this.$moment(this.orderDetail.createAt);
+      const _startTime = this.$moment(this.orderDetail.deliverTime.startTime);
+      const _endTime = this.$moment(this.orderDetail.deliverTime.endTime);
+
+      if (this.$moment.duration(_startTime.diff(_createAt))._milliseconds < 0) {
+        console.log(`与创建时间相差`, this.$moment.duration(_startTime.diff(_createAt))._milliseconds);
+        this.$Message.error('配送开始时间不能早于下单时间');
+        return;
+      }
+
+      if (this.$moment.duration(_endTime.diff(_startTime))._milliseconds < 0) {
+        console.log(`两者时间相差`, this.$moment.duration(_endTime.diff(_startTime))._milliseconds);
+        this.$Message.error('配送结束时间不能早于开始时间');
+        return;
+      }
+
+      if (this.$moment.duration(_endTime.diff(_createAt))._milliseconds < 0) {
+        console.log(`与创建时间相差`, this.$moment.duration(_endTime.diff(_createAt))._milliseconds);
+        this.$Message.error('配送结束时间不能早于下单时间');
+        return;
+      }
+    },
+    handleSubmitEdit() {
+      // this.validateTime();
+      if (!this.selectedTimeOption || this.selectedTimeOption === JSON.stringify(this.orderDetail.deliverTime)) {
+        this.$Message.error('请先选择新的配送时间');
+        return;
+      }
+      const data = {
+        orderId: this.orderDetail.id,
+        deliverTime: this.selectedTimeOption
+      }
+      // 修改订单-更新配送时间
+      editOrderDeliveryTime(data)
+        .then((res) => {
+          this.$Message.success('操作成功');
+          this.modalEdit = false;
+        });
+    },
     // 门店调货
     handleSubmit() {
       if (!this.currentTableRowSelected) {
@@ -1746,6 +2149,56 @@ export default {
       this.clearSearchLoading = true;
       this.searchRowData = this._.cloneDeep(roleRowData);
       this.getTableData();
+    },
+    handleEdit(params) {
+      const { row } = params;
+      // 获取完整订单信息
+      getOrder({ orderCode: row.code })
+        .then((res) => {
+          this.orderDetail = res;
+          let addresss = '';
+          if (
+            this.orderDetail.receivingWay === 'TO_THE_HOME' &&
+            this.orderDetail.receivingWay != null
+          ) {
+            if (this.orderDetail.address.substr(0, 1) === '{') {
+              addresss = JSON.parse(this.orderDetail.address);
+              this.shippingAddress = addresss.address + addresss.detailedAddress;
+            } else {
+              this.shippingAddress = this.orderDetail.address;
+            }
+          }
+          if (
+            this.orderDetail.receivingWay === 'TO_THE_HOME' &&
+            this.orderDetail.deliverNote != null
+          ) {
+            this.deliverNote = _.cloneDeep(this.orderDetail.deliverNote);
+          }
+          if (
+            this.orderDetail &&
+            this.orderDetail.deliverTime != '' &&
+            this.orderDetail.deliverTime != null
+          ) {
+            // 反选当前配送时间段
+            this.selectedTimeOption = this.orderDetail.deliverTime;
+            this.orderDetail.deliverTime = JSON.parse(this.orderDetail.deliverTime);
+          }
+          // 获取配送时间列表
+          this.getDeliveyTimeList(this.orderDetail.deliveryTimeOptions);
+          this.tempModalType = this.modalType.edit;
+          this.modalEdit = true;
+          this.orderState = this.orderDetail.orderStatus;
+        });
+    },
+    getDeliveyTimeList(deliveryTimeOptions) {
+      if (!deliveryTimeOptions) return;
+      const timeOptionsObj = JSON.parse(deliveryTimeOptions);
+      const { today, tomorrow } = timeOptionsObj;
+      this.today = _.cloneDeep(today);
+      this.tomorrow = _.cloneDeep(tomorrow);
+      this.todayIndex = today.value.length > 0 ? today.value.length - 1 : 0;
+      this.timeOptionsList = today.value.concat(tomorrow.value);
+      console.log(`todayIndex:${this.todayIndex} this.timeOptionsList: `, this.timeOptionsList);
     },
     handleView(params) {
       this.loading = true;
@@ -1852,14 +2305,11 @@ export default {
         .then((res) => {
           this.tableData = res.rows;
           this.total = res.total;
-          this.loading = false;
-          this.clearSearchLoading = false;
-          this.searchLoading = false;
           if (this.num < 1) {
             this.handleSearch();
           }
         })
-        .catch(() => {
+        .finally(() => {
           this.loading = false;
           this.clearSearchLoading = false;
           this.searchLoading = false;
@@ -2032,13 +2482,14 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.img {
-  width: 150px;
-  height: auto !important;
+.ivu-form-inline .ivu-form-item{
+  margin-right: 0;
+  margin-bottom: 0;
 }
-.add-image {
-  line-height: 48px;
-  vertical-align: text-bottom;
-  margin-right: 10px;
+
+.time-options{
+  .ivu-radio-group-item{
+    margin-top:10px;
+  }
 }
 </style>

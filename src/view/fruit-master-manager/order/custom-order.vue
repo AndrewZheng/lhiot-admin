@@ -319,7 +319,6 @@
 import Tables from '_c/tables';
 import { getCustomOrdersPages, getCustomPlanSpecificationStandardsPages, getcustomOrders } from '@/api/fruitermaster';
 import tableMixin from '@/mixins/tableMixin.js';
-import searchMixin from '@/mixins/searchMixin.js';
 import { fenToYuanDot2 } from '@/libs/util';
 import { deliveryTypeCustom, customOrderStatusEnum } from '@/libs/enumerate';
 import { customOrderStatusConvert, customPeriodConvert, deliveryTypeCustomConvert, customDeliverStatusConvert } from '@/libs/converStatus';
@@ -374,7 +373,7 @@ export default {
     Tables,
     BookTypeOption
   },
-  mixins: [tableMixin, searchMixin],
+  mixins: [tableMixin],
   data() {
     return {
       totalQtyList: [

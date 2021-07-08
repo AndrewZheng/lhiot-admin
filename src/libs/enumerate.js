@@ -579,7 +579,6 @@ export const storeTypeEnum = [{
   label: '加盟店',
   value: storeType.JOIN_STORE
 }
-
 ];
 
 // GCJ02("高德坐标系/火星坐标系"),
@@ -909,6 +908,10 @@ export const expandTypeEnum = [
     label: '助力商品',
     value: 'ASSIST_PRODUCT'
   },
+  {
+    label: '积分抽奖商品',
+    value: 'POINTS_LOTTERY_PRODUCT'
+  }
 ];
 
 export const pfExpandTypeEnum = [
@@ -1053,7 +1056,8 @@ export const payType = {
   weixin: 'weixin',
   balance: 'balance',
   points: 'points',
-  haiding: 'haiding'
+  haiding: 'haiding',
+  cmb: 'cmb'
 };
 
 export const payTypeEnum = [{
@@ -1071,6 +1075,10 @@ export const payTypeEnum = [{
 {
   label: '鼎付通',
   value: payType.haiding
+},
+{
+  label: '一网通支付',
+  value: payType.cmb
 }
 ];
 
@@ -2295,21 +2303,19 @@ export const advertisementPositionTypeEnum = [{
 ];
 
 // 小程序广告关联类别
-// GOODSINFO("商品详情"),STORELIVE("门店直播"),
-// AMUSEMENT("多娱"),EXTERNALLINK("外部链接"), INTERNALLINK('内部链接') TABLINK('底部导航')
-// GAME("游戏"),INVITEACTIVE("邀请有礼"),FLASHACTIVE("抢购商品"),RECHARGE("充值页面"),STOCK("仓库")
+// GOODSINFO("商品详情"),EXTERNALLINK("外部链接"),INTERNALLINK('内部链接'),TABLINK('底部导航')
+// INVITEACTIVE("邀请有礼"),FLASHACTIVE("抢购商品"),PRESALEACTIVE("预售商品"),
+// GROUPACTIVE("拼团商品"),SECKILLACTIVE("秒杀商品")
 export const linkType = {
   GOODSINFO: 'GOODSINFO',
-  STORELIVE: 'STORELIVE',
-  AMUSEMENT: 'AMUSEMENT',
   EXTERNALLINK: 'EXTERNALLINK',
-  GAME: 'GAME',
+  INTERNALLINK: 'INTERNALLINK',
+  TABLINK: 'TABLINK',
   INVITEACTIVE: 'INVITEACTIVE',
   FLASHACTIVE: 'FLASHACTIVE',
-  RECHARGE: 'RECHARGE',
-  STOCK: 'STOCK',
-  TABLINK: 'TABLINK',
-  INTERNALLINK: 'INTERNALLINK'
+  PRESALEACTIVE: 'PRESALEACTIVE',
+  GROUPACTIVE: 'GROUPACTIVE',
+  SECKILLACTIVE: 'SECKILLACTIVE'
 };
 
 export const linkTypeEnum = [{
@@ -2317,28 +2323,16 @@ export const linkTypeEnum = [{
   value: linkType.GOODSINFO
 },
 {
-  label: '门店直播',
-  value: linkType.STORELIVE
-},
-{
-  label: '多娱',
-  value: linkType.AMUSEMENT
-},
-{
-  label: '底部导航',
-  value: linkType.TABLINK
+  label: '外部链接',
+  value: linkType.EXTERNALLINK
 },
 {
   label: '内部链接',
   value: linkType.INTERNALLINK
 },
 {
-  label: '外部链接',
-  value: linkType.EXTERNALLINK
-},
-{
-  label: '游戏',
-  value: linkType.GAME
+  label: '底部导航',
+  value: linkType.TABLINK
 },
 {
   label: '邀请有礼',
@@ -2349,12 +2343,16 @@ export const linkTypeEnum = [{
   value: linkType.FLASHACTIVE
 },
 {
-  label: '充值页面',
-  value: linkType.RECHARGE
+  label: '预售商品',
+  value: linkType.PRESALEACTIVE
 },
 {
-  label: '仓库',
-  value: linkType.STOCK
+  label: '拼团商品',
+  value: linkType.GROUPACTIVE
+},
+{
+  label: '秒杀商品',
+  value: linkType.SECKILLACTIVE
 }
 ];
 
@@ -2374,7 +2372,7 @@ export const miniOrderStatus = {
   ALREADY_RETURN: 'ALREADY_RETURN',
   FAILURE: 'FAILURE',
   FINISHED: 'FINISHED',
-  EXPIRED:'EXPIRED'
+  EXPIRED: 'EXPIRED'
 };
 
 export const miniOrderStatusEnum = [{
@@ -2451,7 +2449,9 @@ export const miniOrderType = {
   SELF_BUYING: 'SELF_BUYING',
   TEAM_BUYING: 'TEAM_BUYING',
   PRESAL_ORDER: 'PRESAL_ORDER',
-  POINTS_BUYING: 'POINTS_BUYING'
+  POINTS_BUYING: 'POINTS_BUYING',
+  BUY_COUPON_ALL_ORDER: 'BUY_COUPON_ALL_ORDER',
+  POINTS_LOTTERY: 'POINTS_LOTTERY'
 };
 
 export const miniOrderTypeEnum = [{
@@ -2469,6 +2469,14 @@ export const miniOrderTypeEnum = [{
 {
   label: '积分兑换订单',
   value: miniOrderType.POINTS_BUYING
+},
+{
+  label: '积分抽奖订单',
+  value: miniOrderType.POINTS_LOTTERY
+},
+{
+  label: '购券订单',
+  value: miniOrderType.BUY_COUPON_ALL_ORDER
 }
 ];
 
@@ -2699,7 +2707,7 @@ export const couponFromEnum = [{
 {
   label: '活动送券',
   value: 'activity'
-},
+}
 ];
 
 export const layoutEnum = [{
@@ -2786,7 +2794,7 @@ export const paymentFromEnum = [{
 {
   label: '订单',
   value: 'order'
-},
+}
   // {
   //   label: '发票',
   //   value: 'invoice'
@@ -2924,3 +2932,47 @@ export const serviceStatusEnum = [{
   value: 'FINISH'
 }]
 
+export const userClassEnum = [{
+  label: '外部用户',
+  value: 'EXTERIOR'
+},
+{
+  label: '内部用户',
+  value: 'INTERIOR'
+}]
+
+// PROD("商品");COUPON("券");PSEUDO("虚假的")
+export const prizeTypeEnum = [{
+  label: '商品',
+  value: 'PROD'
+},
+{
+  label: '优惠券',
+  value: 'COUPON'
+},
+{
+  label: '谢谢惠顾',
+  value: 'PSEUDO'
+}]
+
+// NO_REWARD("未中奖"), WAIT_RECEIVE("待领取"), EXPIRE("失效"), RECEIVE("已领取"), FAILED("领取失败");
+export const lotteryStatusEnum = [{
+  label: '未中奖',
+  value: 'NO_REWARD'
+},
+{
+  label: '待领取',
+  value: 'WAIT_RECEIVE'
+},
+{
+  label: '已领取',
+  value: 'RECEIVE'
+},
+{
+  label: '领取失败',
+  value: 'FAILED'
+},
+{
+  label: '已失效',
+  value: 'EXPIRE'
+}]

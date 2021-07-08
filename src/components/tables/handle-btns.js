@@ -88,6 +88,39 @@ const btns = {
       ])
     ]);
   },
+  orderEdit: (h, params, vm) => {
+    const { row } = params;
+    if (row.orderStatus === 'WAIT_SEND_OUT' && row.receivingWay === 'TO_THE_HOME') {
+      return h('Tooltip', {
+        props: { placement: 'top', transfer: true, content: '修改' }
+      }, [
+        h('Button', {
+          props: {
+            type: 'warning',
+            size: 'small'
+          },
+          style: {
+            marginRight: '5px'
+          },
+          on: {
+            click: () => {
+              vm.$emit('on-edit', params);
+            }
+          }
+        }, [
+          h('Icon', {
+            props: {
+              type: 'md-create',
+              size: 16,
+              color: '#fff'
+            }
+          })
+        ])
+      ]);
+    } else {
+      return '';
+    }
+  },
   operate: (h, params, vm) => {
     return h('Tooltip', {
       props: { placement: 'top', transfer: true, content: '查看 / 审核' }
@@ -476,32 +509,38 @@ const btns = {
     }
   },
   discount: (h, params, vm) => {
-    return h('Tooltip', {
-      props: { placement: 'top', transfer: true, content: '折扣' }
-    }, [
-      h('Button', {
-        props: {
-          type: 'primary',
-          size: 'small'
-        },
-        style: {
-          marginRight: '5px'
-        },
-        on: {
-          click: () => {
-            vm.$emit('on-discount', params);
-          }
-        }
+    const { row } = params;
+    if (row.productType === 'ORDINARY_PRODUCT' || row.productType === 'TEAM_BUY_PRODUCT' ||
+       row.productType === 'PRE_SALE_PRODUCT' || row.productType === 'SHARE_PRODUCT' || row.productType === 'POINTS_LOTTERY_PRODUCT') {
+      return '';
+    } else {
+      return h('Tooltip', {
+        props: { placement: 'top', transfer: true, content: '折扣' }
       }, [
-        h('Icon', {
+        h('Button', {
           props: {
-            type: 'md-pricetags',
-            size: 16,
-            color: '#fff'
+            type: 'primary',
+            size: 'small'
+          },
+          style: {
+            marginRight: '5px'
+          },
+          on: {
+            click: () => {
+              vm.$emit('on-discount', params);
+            }
           }
-        })
-      ])
-    ]);
+        }, [
+          h('Icon', {
+            props: {
+              type: 'md-pricetags',
+              size: 16,
+              color: '#fff'
+            }
+          })
+        ])
+      ]);
+    }
   },
   onSale: (h, params, vm) => {
     const {
@@ -640,6 +679,48 @@ const btns = {
           })
         ])
       ]);
+    }
+  },
+  // 商品规格选择部分门店-发布
+  publish: (h, params, vm) => {
+    const { row } = params;
+    if (row.productType === 'ORDINARY_PRODUCT' && row.shelvesStatus === 'VALID') {
+      return h('Tooltip', {
+        props: { placement: 'top', transfer: true, content: '发布' }
+      }, [
+        h('Poptip', {
+          props: {
+            confirm: true,
+            transfer: true,
+            title: '确认要发布吗?'
+          },
+          style: {
+            marginRight: '5px'
+          },
+          on: {
+            'on-ok': () => {
+              vm.$emit('on-publish', params);
+            }
+          }
+        }, [
+          h('Button', {
+            props: {
+              type: 'primary',
+              size: 'small'
+            }
+          }, [
+            h('Icon', {
+              props: {
+                type: 'ios-paper-plane',
+                size: 16,
+                color: '#fff'
+              }
+            })
+          ])
+        ])
+      ]);
+    } else {
+      return '';
     }
   },
   // 优惠券上下架操作
@@ -850,40 +931,45 @@ const btns = {
   },
   // 手动退款
   onHand: (h, params, vm) => {
-    return h('Poptip', {
-      props: {
-        confirm: true,
-        transfer: true,
-        title: '确认要退款?'
-      },
-      style: {
-        marginRight: '5px'
-      },
-      on: {
-        'on-ok': () => {
-          vm.$emit('on-hand', params);
-        }
-      }
-    }, [
-      h('Tooltip', {
-        props: { placement: 'top', transfer: true, content: '手动退款' }
-      }, [
-        h('Button', {
-          props: {
-            type: 'error',
-            size: 'small'
+    const { row } = params;
+    if (row.orderType !== 'POINTS_LOTTERY') {
+      return h('Poptip', {
+        props: {
+          confirm: true,
+          transfer: true,
+          title: '确认要退款?'
+        },
+        style: {
+          marginRight: '5px'
+        },
+        on: {
+          'on-ok': () => {
+            vm.$emit('on-hand', params);
           }
+        }
+      }, [
+        h('Tooltip', {
+          props: { placement: 'top', transfer: true, content: '手动退款' }
         }, [
-          h('Icon', {
+          h('Button', {
             props: {
-              type: 'logo-usd',
-              size: 16,
-              color: '#fff'
+              type: 'error',
+              size: 'small'
             }
-          })
+          }, [
+            h('Icon', {
+              props: {
+                type: 'logo-usd',
+                size: 16,
+                color: '#fff'
+              }
+            })
+          ])
         ])
-      ])
-    ]);
+      ]);
+    } else {
+      return '';
+    }
   },
   sendHd: (h, params, vm) => {
     return h('Poptip', {
@@ -1420,7 +1506,7 @@ const btns = {
           confirm: true,
           transfer: true,
           title: '确认要把该门店改为营业吗?',
-          placement: params.index === 0 || params.index === 1 ? 'bottom' : 'top',
+          placement: params.index === 0 || params.index === 1 ? 'bottom' : 'top'
         },
         style: {
           marginRight: '5px'
@@ -1452,7 +1538,7 @@ const btns = {
           confirm: true,
           transfer: true,
           title: '确认要把该门店改为未营业吗?',
-          placement: params.index === 0 || params.index === 1 ? 'bottom' : 'top',
+          placement: params.index === 0 || params.index === 1 ? 'bottom' : 'top'
         },
         style: {
           marginRight: '5px'
@@ -1482,79 +1568,138 @@ const btns = {
   },
   // 确认收货
   onReceive: (h, params, vm) => {
-    return h('Poptip', {
-      props: {
-        confirm: true,
-        transfer: true,
-        title: '确认要收货?'
+    const {
+      row
+    } = params;
+    if (row.orderType != 'BUY_COUPON_ALL_ORDER') {
+      return h('Poptip', {
+        props: {
+          confirm: true,
+          transfer: true,
+          title: '确认要收货?'
         // placement: params.index === 0 || params.index === 1 ? 'bottom' : 'top',
-      },
-      style: {
-        marginRight: '5px'
-      },
-      on: {
-        'on-ok': () => {
-          vm.$emit('on-receive', params);
-        }
-      }
-    }, [
-      h('Tooltip', {
-        props: { placement: 'top', transfer: true, content: '确认收货' }
-      }, [
-        h('Button', {
-          props: {
-            type: 'success',
-            size: 'small'
+        },
+        style: {
+          marginRight: '5px'
+        },
+        on: {
+          'on-ok': () => {
+            vm.$emit('on-receive', params);
           }
+        }
+      }, [
+        h('Tooltip', {
+          props: { placement: 'top', transfer: true, content: '确认收货' }
         }, [
-          h('Icon', {
+          h('Button', {
             props: {
-              type: 'md-checkbox',
-              size: 16,
-              color: '#fff'
+              type: 'success',
+              size: 'small'
             }
-          })
+          }, [
+            h('Icon', {
+              props: {
+                type: 'md-checkbox',
+                size: 16,
+                color: '#fff'
+              }
+            })
+          ])
         ])
-      ])
-    ]);
+      ]);
+    } else {
+      return ''
+    }
   },
   // 发送美团
   onMeituan: (h, params, vm) => {
-    return h('Poptip', {
-      props: {
-        confirm: true,
-        transfer: true,
-        title: '是否发送美团?'
+    const {
+      row
+    } = params;
+    if (row.orderType != 'BUY_COUPON_ALL_ORDER') {
+      return h('Poptip', {
+        props: {
+          confirm: true,
+          transfer: true,
+          title: '是否发送美团?'
         // placement: params.index === 0 || params.index === 1 ? 'bottom' : 'top',
-      },
-      style: {
-        marginRight: '5px'
-      },
-      on: {
-        'on-ok': () => {
-          vm.$emit('on-meituan', params);
-        }
-      }
-    }, [
-      h('Tooltip', {
-        props: { placement: 'top', transfer: true, content: '发送美团' }
-      }, [
-        h('Button', {
-          props: {
-            type: 'success',
-            size: 'small'
+        },
+        style: {
+          marginRight: '5px'
+        },
+        on: {
+          'on-ok': () => {
+            vm.$emit('on-meituan', params);
           }
+        }
+      }, [
+        h('Tooltip', {
+          props: { placement: 'top', transfer: true, content: '发送美团' }
         }, [
-          h('Icon', {
+          h('Button', {
             props: {
-              type: 'ios-paper-plane',
-              size: 16,
-              color: '#fff'
+              type: 'success',
+              size: 'small'
             }
-          })
+          }, [
+            h('Icon', {
+              props: {
+                type: 'ios-paper-plane',
+                size: 16,
+                color: '#fff'
+              }
+            })
+          ])
         ])
-      ])
-    ]);
+      ]);
+    } else {
+      return ''
+    }
+  },
+  // 购券重发
+  onCoupon: (h, params, vm) => {
+    const {
+      row
+    } = params;
+    if (row.orderType === 'BUY_COUPON_ALL_ORDER' && row.orderStatus === 'WAIT_SEND_OUT') {
+      return h('Poptip', {
+        props: {
+          confirm: true,
+          transfer: true,
+          title: '是否购券重发?'
+          // placement: params.index === 0 || params.index === 1 ? 'bottom' : 'top',
+        },
+        style: {
+          marginRight: '5px'
+        },
+        on: {
+          'on-ok': () => {
+            vm.$emit('on-coupon', params);
+          }
+        }
+      }, [
+        h('Tooltip', {
+          props: { placement: 'top', transfer: true, content: '购券重发' }
+        }, [
+          h('Button', {
+            props: {
+              type: 'success',
+              size: 'small'
+            }
+          }, [
+            h('Icon', {
+              props: {
+                type: 'md-sync',
+                size: 16,
+                color: '#fff'
+              }
+            })
+          ])
+        ])
+      ]);
+    } else {
+      return ''
+    }
   },
   analytics: (h, params, vm) => {
     return h('Tooltip', {
@@ -1739,6 +1884,35 @@ const btns = {
         ])
       ]);
     }
+  },
+  // 查询改用户当前券列表
+  searchCoupons: (h, params, vm) => {
+    return h('Tooltip', {
+      props: { placement: 'top', transfer: true, content: '查询券列表' }
+    }, [
+      h('Button', {
+        props: {
+          type: 'primary',
+          size: 'small'
+        },
+        style: {
+          marginRight: '5px'
+        },
+        on: {
+          click: () => {
+            vm.$emit('on-coupons', params);
+          }
+        }
+      }, [
+        h('Icon', {
+          props: {
+            type: 'md-pricetags',
+            size: 16,
+            color: '#fff'
+          }
+        })
+      ])
+    ]);
   },
   // 员工特权
   staff: (h, params, vm) => {
@@ -2138,9 +2312,98 @@ const btns = {
         ])
       ]);
     } else {
-      return "N/A"
+      return 'N/A'
     }
   },
+  proAnalytics: (h, params, vm) => {
+    return h('Tooltip', {
+      props: { placement: 'top', transfer: true, content: '商品分析' }
+    }, [
+      h('Button', {
+        props: {
+          type: 'primary',
+          size: 'small'
+        },
+        style: {
+          marginRight: '5px'
+        },
+        on: {
+          click: () => {
+            vm.$emit('on-analytics', params);
+          }
+        }
+      }, [
+        h('Icon', {
+          props: {
+            type: 'md-analytics',
+            size: 16,
+            color: '#fff'
+          }
+        })
+      ])
+    ]);
+  },
+  linkGenerate: (h, params, vm) => {
+    return h('Tooltip', {
+      props: { placement: 'top', transfer: true, content: '生成链接' }
+    }, [
+      h('Button', {
+        props: {
+          type: 'primary',
+          size: 'small'
+        },
+        style: {
+          marginRight: '5px'
+        },
+        on: {
+          click: () => {
+            vm.$emit('on-link-generate', params);
+          }
+        }
+      }, [
+        h('Icon', {
+          props: {
+            type: 'ios-link',
+            size: 16,
+            color: '#fff'
+          }
+        })
+      ])
+    ]);
+  },
+  rewardAnalytics: (h, params, vm) => {
+    const { row } = params;
+    if (!row.dataTotalJsonStr) { return ''; }
+    const { NO_REWARD, WAIT_RECEIVE, EXPIRE, RECEIVE, FAILED } = JSON.parse(row.dataTotalJsonStr);
+    return h('Tooltip', {
+      props: {
+        placement: 'top',
+        wordWrap: true,
+        transfer: true,
+        content: `已领取-${RECEIVE} / 待领取-${WAIT_RECEIVE} / 未中奖-${NO_REWARD} / 领取失败-${FAILED} / 已过期-${EXPIRE}`,
+        trigger: 'hover',
+        maxWidth: '180px'
+      }
+    }, [
+      h('Button', {
+        props: {
+          type: 'primary',
+          size: 'small'
+        },
+        style: {
+          marginRight: '5px'
+        }
+      }, [
+        h('Icon', {
+          props: {
+            type: 'md-analytics',
+            size: 16,
+            color: '#fff'
+          }
+        })
+      ])
+    ]);
+  }
 };
 
 export default btns;

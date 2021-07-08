@@ -290,19 +290,15 @@
 <script type="text/ecmascript-6">
 import Tables from '_c/tables';
 import IViewUpload from '_c/iview-upload';
-import _ from 'lodash';
 import {
   deleteRobot,
   getRobotPages,
   editRobot,
   createRobot,
-  getStorePages,
-  deletePicture
+  getStorePages
 } from '@/api/mini-program';
 import uploadMixin from '@/mixins/uploadMixin';
-import deleteMixin from '@/mixins/deleteMixin.js';
 import tableMixin from '@/mixins/tableMixin.js';
-import searchMixin from '@/mixins/searchMixin.js';
 
 const robotDetail = {
   id: 0,
@@ -326,9 +322,16 @@ export default {
     Tables,
     IViewUpload
   },
-  mixins: [uploadMixin, deleteMixin, tableMixin, searchMixin],
+  mixins: [uploadMixin, tableMixin],
   data() {
     return {
+      defaultListMain: [],
+      uploadListMain: [],
+      areaList: [],
+      flagShipList: [],
+      oldPicture: [],
+      newPicture: [],
+      save: [],
       ruleInline: {
         storeId: [{ required: true, message: '请选择门店' }],
         userId: [
@@ -347,13 +350,6 @@ export default {
         nickName: [{ required: true, message: '请输入用户昵称' }],
         avater: [{ required: true, message: '请上传用户头像' }]
       },
-      defaultListMain: [],
-      uploadListMain: [],
-      areaList: [],
-      flagShipList: [],
-      oldPicture: [],
-      newPicture: [],
-      save: [],
       columns: [
         {
           type: 'selection',
@@ -409,24 +405,13 @@ export default {
           options: ['view', 'edit', 'delete']
         }
       ],
-      createLoading: false,
-      modalViewLoading: false,
       searchRowData: _.cloneDeep(roleRowData),
       robotDetail: _.cloneDeep(robotDetail)
     };
   },
   mounted() {
-    this.searchRowData = _.cloneDeep(roleRowData);
-    this.loading = true;
-    this.createLoading = true;
     this.getTableData();
-    getStorePages({
-      page: 1,
-      rows: 100
-    }).then(res => {
-      this.flagShipList = res.rows;
-      this.createLoading = false;
-    });
+    this.getStorePages();
   },
   created() {},
   methods: {
@@ -440,119 +425,26 @@ export default {
       this.uploadListMain = [];
       this.robotDetail.storeImage = null;
     },
-    handleSubmit(name) {
-      // if (this.oldPicture.length > 0) {
-      //   const urls = {
-      //     urls: this.oldPicture
-      //   };
-      //   this.deletePicture(urls);
-      // }
-      this.$refs[name].validate(valid => {
-        if (valid) {
-          if (this.tempModalType === this.modalType.create) {
-            // 添加状态
-            this.createStore();
-          } else if (this.tempModalType === this.modalType.edit) {
-            // 编辑状态
-            this.editStore();
-          }
-        } else {
-          this.$Message.error('请完善信息!');
-        }
+    getStorePages() {
+      getStorePages({
+        page: 1,
+        rows: 100
+      }).then(res => {
+        this.flagShipList = res.rows;
       });
     },
-    handleEditClose() {
-      // if (this.newPicture.length > 0) {
-      //   const urls = {
-      //     urls: this.newPicture
-      //   };
-      //   this.deletePicture(urls);
-      // }
-      this.oldPicture = [];
-      this.newPicture = [];
-      this.modalEdit = false;
-    },
-    // deletePicture(urls) {
-    //   deletePicture({
-    //     urls
-    //   })
-    //     .then(res => {})
-    //     .catch(() => {});
-    // },
-    createStore() {
-      this.modalViewLoading = true;
-      createRobot(this.robotDetail)
-        .then(res => {
-          this.modalViewLoading = false;
-          this.modalEdit = false;
-          this.$Message.success('创建成功!');
-          this.getTableData();
-        })
-        .catch(() => {
-          this.modalViewLoading = false;
-          this.modalEdit = false;
-        });
-    },
-    editStore() {
-      this.modalViewLoading = true;
-      editRobot(this.robotDetail)
-        .then(res => {
-          this.modalEdit = false;
-          this.modalViewLoading = false;
-          this.getTableData();
-        })
-        .catch(() => {
-          this.modalEdit = false;
-          this.modalViewLoading = false;
-        });
-    },
-    addStore() {
-      this.resetFields();
-      if (this.tempModalType !== this.modalType.create) {
-        this.tempModalType = this.modalType.create;
-        this.robotDetail = _.cloneDeep(robotDetail);
-      }
-
-      this.modalEdit = true;
-    },
-    // 删除
-    handleDelete(params) {
-      this.tableDataSelected = [];
-      this.tableDataSelected.push(params.row);
-      this.deleteTable(params.row.storeId);
-    },
-    deleteTable(ids) {
+    getTableData() {
       this.loading = true;
-      deleteRobot({
-        ids
-      })
+      getRobotPages(this.searchRowData)
         .then(res => {
-          const totalPage = Math.ceil(this.total / this.searchRowData.pageSize);
-          if (
-            this.tableData.length == this.tableDataSelected.length &&
-            this.searchRowData.page === totalPage &&
-            this.searchRowData.page !== 1
-          ) {
-            this.searchRowData.page -= 1;
-          }
-          this.tableDataSelected = [];
-          this.getTableData();
+          this.tableData = res.rows;
+          this.total = res.total;
         })
-        .catch(err => {
-          console.log(err);
+        .finally(() => {
           this.loading = false;
+          this.searchLoading = false;
+          this.clearSearchLoading = false;
         });
-    },
-    // 设置编辑商品的图片列表
-    setDefaultUploadList(res) {
-      if (res.avater != null) {
-        const map = { status: 'finished', url: 'url' };
-        const mainImgArr = [];
-        map.url = res.avater;
-        mainImgArr.push(map);
-        this.$refs.uploadMain.setDefaultFileList(mainImgArr);
-        this.uploadListMain = mainImgArr;
-      }
     },
     handleView(params) {
       this.resetFields();
@@ -569,21 +461,87 @@ export default {
       this.setDefaultUploadList(this.robotDetail);
       this.modalEdit = true;
     },
-    getTableData() {
-      getRobotPages(this.searchRowData)
+    handleSubmit(name) {
+      this.$refs[name].validate(valid => {
+        if (valid) {
+          if (this.isCreate) {
+            this.createStore();
+          } else if (this.isEdit) {
+            this.editStore();
+          }
+        } else {
+          this.$Message.error('请完善信息!');
+        }
+      });
+    },
+    handleEditClose() {
+      this.oldPicture = [];
+      this.newPicture = [];
+      this.modalEdit = false;
+    },
+    createStore() {
+      this.modalViewLoading = true;
+      createRobot(this.robotDetail)
         .then(res => {
-          this.tableData = res.rows;
-          this.total = res.total;
-          this.loading = false;
-          this.searchLoading = false;
-          this.clearSearchLoading = false;
+          this.modalEdit = false;
+          this.$Message.success('创建成功!');
+          this.getTableData();
         })
-        .catch(error => {
-          console.log(error);
-          this.loading = false;
-          this.searchLoading = false;
-          this.clearSearchLoading = false;
+        .finally(() => {
+          this.modalViewLoading = false;
         });
+    },
+    editStore() {
+      this.modalViewLoading = true;
+      editRobot(this.robotDetail)
+        .then(res => {
+          this.modalEdit = false;
+          this.$Message.success('操作成功!');
+          this.getTableData();
+        })
+        .finally(() => {
+          this.modalViewLoading = false;
+        });
+    },
+    addStore() {
+      this.resetFields();
+      this.tempModalType = this.modalType.create;
+      this.robotDetail = _.cloneDeep(robotDetail);
+      this.modalEdit = true;
+    },
+    // 删除
+    handleDelete(params) {
+      this.tableDataSelected = [];
+      this.tableDataSelected.push(params.row);
+      this.deleteTable(params.row.storeId);
+    },
+    deleteTable(ids) {
+      deleteRobot({
+        ids
+      })
+        .then(res => {
+          const totalPage = Math.ceil(this.total / this.searchRowData.pageSize);
+          if (
+            this.tableData.length === this.tableDataSelected.length &&
+            this.searchRowData.page === totalPage &&
+            this.searchRowData.page !== 1
+          ) {
+            this.searchRowData.page -= 1;
+          }
+          this.tableDataSelected = [];
+          this.getTableData();
+        });
+    },
+    // 设置编辑商品的图片列表
+    setDefaultUploadList(res) {
+      if (res.avater != null) {
+        const map = { status: 'finished', url: 'url' };
+        const mainImgArr = [];
+        map.url = res.avater;
+        mainImgArr.push(map);
+        this.$refs.uploadMain.setDefaultFileList(mainImgArr);
+        this.uploadListMain = mainImgArr;
+      }
     },
     handleRemoveMain(file) {
       this.$refs.uploadMain.deleteFile(file);

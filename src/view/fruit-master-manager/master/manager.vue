@@ -523,7 +523,6 @@ import Tables from '_c/tables';
 import _ from 'lodash';
 import { getFruitDoctorsPages, editFruitDoctor } from '@/api/fruitermaster';
 import tableMixin from '@/mixins/tableMixin.js';
-import searchMixin from '@/mixins/searchMixin.js';
 import uploadMixin from '@/mixins/uploadMixin';
 import IViewUpload from '_c/iview-upload';
 import {
@@ -574,7 +573,7 @@ export default {
     IViewUpload,
     BookTypeOption
   },
-  mixins: [tableMixin, searchMixin, uploadMixin],
+  mixins: [tableMixin, uploadMixin],
   data() {
     return {
       defaultListMain: [],

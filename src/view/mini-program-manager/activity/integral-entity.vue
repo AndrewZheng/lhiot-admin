@@ -336,10 +336,9 @@
                 <FormItem
                   :label-width="85"
                   label="所属城市:"
-                  prop="cityCode"
                 >
                   <Select
-                    v-model="addRelationDetail.cityCode"
+                    v-model="cityCode"
                     style="width: 220px"
                     @on-change="handleCitySwitch"
                   >
@@ -357,6 +356,21 @@
               </i-col>
             </Row>
             <Row v-show="showStoreList">
+              <i-col v-if="storeData.length>0" span="24">
+                <FormItem>
+                  <div class="bottom-line">
+                    <div style="margin-left: -54px; margin-right: 18px">
+                      地级市全部门店
+                    </div>
+                    <Checkbox
+                      :value="checkAllStore"
+                      @click.prevent.native="handleCheckAll(-1)"
+                    >
+                      全选/反选
+                    </Checkbox>
+                  </div>
+                </FormItem>
+              </i-col>
               <i-col v-if="storeData.length>0" span="24">
                 <FormItem>
                   <div
@@ -683,9 +697,7 @@ import {
   getProductUnits
 } from '@/api/mini-program';
 import uploadMixin from '@/mixins/uploadMixin';
-import deleteMixin from '@/mixins/deleteMixin.js';
 import tableMixin from '@/mixins/tableMixin.js';
-import searchMixin from '@/mixins/searchMixin.js';
 import relationStoreMixin from '@/mixins/relationStoreMixin.js';
 import {
   customPlanStatusConvert,
@@ -736,51 +748,7 @@ const relationDetail = {
   relationStoreType: 'ALL',
   barcode: '', // inherit
   specification: '',
-  cityCode: '0744'
-};
-
-const productStandardDetail = {
-  id: 0,
-  productId: 0,
-  barcode: '',
-  specification: '',
-  standardQty: 0,
-  unitId: 0,
-  productUnit: '',
-  price: 0,
-  salePrice: 0,
-  rank: 0,
-  description: null,
-  shelvesStatus: null,
-  applyType: '',
-  productName: '',
-  createUser: null,
-  image: null,
-  productDescription: '',
-  productCode: '',
-  baseProductName: '',
-  baseProductDescription: '',
-  groupId: 0,
-  groupName: '',
-  sourceCode: '',
-  baseImage: '',
-  smallImage: '',
-  largeImage: '',
-  status: '',
-  baseUnitId: 0,
-  baseUnit: '',
-  baseBarcode: '',
-  hdSkuid: '',
-  videoUrl: '',
-  videoImage: '',
-  baseQty: 0,
-  limitQty: 0,
-  queryStatus: null,
-  invEnough: null,
-  invNum: null,
-  saleCount: null,
-  positionName: null,
-  dbId: null
+  cityCode: '0731'
 };
 
 const roleRowData = {
@@ -985,7 +953,7 @@ export default {
     Tables,
     IViewUpload
   },
-  mixins: [deleteMixin, tableMixin, searchMixin, uploadMixin, relationStoreMixin],
+  mixins: [tableMixin, uploadMixin, relationStoreMixin],
   data() {
     return {
       defaultListMain: [],
@@ -1095,7 +1063,6 @@ export default {
     });
   },
   mounted() {
-    this.searchRowData = _.cloneDeep(roleRowData); // 刷新清除上次搜索结果
     this.getTableData();
   },
   methods: {
@@ -1133,7 +1100,7 @@ export default {
         const firstStoreId = this.storeIds[0];
         // 编辑时从返回的第一个storeId单独查询下cityCode来反选城市
         const storeObj = this.allStoreList.find(item => item.storeId === firstStoreId);
-        this.addRelationDetail.cityCode = storeObj.cityCode;
+        this.cityCode = storeObj.cityCode;
         this.getStore(true);
       } else {
         this.showStoreList = false;
@@ -1145,7 +1112,7 @@ export default {
     },
     handleModalAdd(isShow) {
       // 如果是创建则先清除对象
-      if (isShow && this.tempModalType === this.modalType.create) {
+      if (isShow && this.isCreate) {
         this.resetFields();
       }
     },
@@ -1172,12 +1139,8 @@ export default {
         .then((res) => {
           this.tableData = res.rows;
           this.total = res.total;
-          this.loading = false;
-          this.searchLoading = false;
-          this.clearSearchLoading = false;
         })
-        .catch((error) => {
-          console.log(error);
+        .finally(() => {
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
@@ -1188,11 +1151,8 @@ export default {
         .then((res) => {
           this.couponTemplateData = res.rows;
           this.couponTemplateTotal = res.total;
-          this.loading = false;
-          this.searchLoading = false;
-          this.clearSearchLoading = false;
         })
-        .catch(() => {
+        .finally(() => {
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
@@ -1301,7 +1261,7 @@ export default {
         .then((res) => {
           const totalPage = Math.ceil(this.total / this.searchRowData.pageSize);
           if (
-            this.tableData.length == this.tableDataSelected.length &&
+            this.tableData.length === this.tableDataSelected.length &&
             this.searchRowData.page === totalPage &&
             this.searchRowData.page !== 1
           ) {

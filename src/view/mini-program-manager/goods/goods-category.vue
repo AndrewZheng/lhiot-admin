@@ -40,7 +40,7 @@
                   clearable
                 ></Input>
                 <Button
-                  :searchLoading="searchLoading"
+                  :search-loading="searchLoading"
                   class="search-btn mr5"
                   type="primary"
                   @click="handleSearch"
@@ -103,166 +103,140 @@
     <Modal v-model="modalEdit" :mask-closable="false">
       <p slot="header">
         <i-col>{{
-          tempModalType === modalType.edit ? "修改商品分类" : "创建商品分类"
+          isEdit ? "修改商品分类" : "创建商品分类"
         }}</i-col>
       </p>
       <div class="modal-content">
-        <Form :label-width="100">
+        <Form
+          ref="editForm"
+          :model="currentCategory"
+          :rules="ruleInline"
+          :label-width="100"
+        >
           <FormItem v-show="addSon" label="父级ID:">
             <i-col>{{ parentCategory.id }}</i-col>
           </FormItem>
           <FormItem v-show="addSon" label="父级分类:">
             <i-col>{{ parentCategory.groupName }}</i-col>
           </FormItem>
-          <FormItem label="子分类名:">
+          <FormItem label="子分类名:" prop="groupName">
             <Input
               v-model="currentCategory.groupName"
-              placeholder="子分类名"
+              placeholder="请输入子分类名"
             ></Input>
           </FormItem>
         </Form>
       </div>
       <div slot="footer">
         <Button @click="handleEditClose">关闭</Button>
-        <Button :loading="modalEditLoading" type="primary" @click="asyncEditOK"
-          >确定</Button
-        >
+        <Button
+          :loading="modalEditLoading"
+          type="primary"
+          @click="handleSubmit"
+        >确定</Button>
       </div>
     </Modal>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
-import Tables from "_c/tables";
-import _ from "lodash";
+import Tables from '_c/tables';
 import {
   createProductCategories,
   delProductCategories,
   getProductCategoriesPages,
   getProductCategoriesTree,
-  editProductCategories,
-} from "@/api/mini-program";
-import { buildMenu, convertTree } from "@/libs/util";
-import CommonIcon from "_c/common-icon";
-import tableMixin from "@/mixins/tableMixin.js";
-import searchMixin from "@/mixins/searchMixin.js";
-import deleteMixin from "@/mixins/deleteMixin.js";
+  editProductCategories
+} from '@/api/mini-program';
+import { buildMenu, convertTree } from '@/libs/util';
+import CommonIcon from '_c/common-icon';
+import tableMixin from '@/mixins/tableMixin.js';
 
 const currentCategory = {
   id: 0,
   parentId: 0,
-  groupName: "",
+  groupName: ''
 };
 
 const roleRowData = {
   parentId: 0,
   page: 1,
-  rows: 10,
+  rows: 10
 };
 
 export default {
   components: {
     Tables,
-    CommonIcon,
+    CommonIcon
   },
-  mixins: [tableMixin, searchMixin, deleteMixin],
+  mixins: [tableMixin],
   data() {
     return {
+      addSon: false,
+      currentParentId: 0,
+      currentParentName: '',
       menuData: [],
+      ruleInline: {
+        groupName: [{ required: true, message: '请输入子分类名称' }]
+      },
       columns: [
         {
-          type: "selection",
-          key: "",
+          type: 'selection',
+          key: '',
           width: 60,
-          align: "center",
-          fixed: "left",
+          align: 'center',
+          fixed: 'left'
         },
         {
-          title: "商品分类ID",
-          key: "id",
+          title: '商品分类ID',
+          key: 'id',
           sortable: true,
-          align: "center",
-          minWidth: 150,
+          align: 'center',
+          minWidth: 150
         },
         {
-          title: "分类名",
-          key: "groupName",
+          title: '分类名',
+          key: 'groupName',
           sortable: true,
-          align: "center",
+          align: 'center',
 
-          minWidth: 150,
+          minWidth: 150
         },
         {
-          title: "操作",
-          align: "center",
-          key: "handle",
+          title: '操作',
+          align: 'center',
+          key: 'handle',
           minWidth: 150,
-          options: ["edit", "delete"],
-        },
+          options: ['edit', 'delete']
+        }
       ],
-      modalEdit: false,
-      modalViewLoading: false,
-      modalEditLoading: false,
-      clearSearchLoading: false,
-      currentParentName: "",
-      currentParentId: 0,
-      currentCategory: this._.cloneDeep(currentCategory),
-      parentCategory: this._.cloneDeep(currentCategory),
-      searchRowData: this._.cloneDeep(roleRowData),
-      addSon: false,
+      currentCategory: _.cloneDeep(currentCategory),
+      parentCategory: _.cloneDeep(currentCategory),
+      searchRowData: _.cloneDeep(roleRowData)
     };
   },
   created() {
     this.initMenuList();
   },
   methods: {
-    renderContent(h, { root, node, data }) {
-      if (data.type == "PARENT") {
-        return (
-          <div
-            style={{
-              display: "inline-block",
-              width: "100%",
-              fontSize: "14px",
-              cursor: "pointer",
-            }}
-          >
-            <span>
-              <CommonIcon type="ios-folder" class="mr10" />
-            </span>
-            <span onClick={() => this.handleClick({ root, node, data })}>
-              {data.title}
-            </span>
-          </div>
-        );
-      } else {
-        return (
-          <div
-            style={{
-              display: "inline-block",
-              width: "100%",
-              fontSize: "14px",
-              cursor: "pointer",
-            }}
-          >
-            <span>
-              <CommonIcon type="ios-paper" class="mr10" />
-            </span>
-            <span>{data.title}</span>
-          </div>
-        );
-      }
+    getTableData() {
+      this.loading = true;
+      getProductCategoriesPages(this.searchRowData).then((res) => {
+        this.tableData = res.rows;
+        this.total = res.total;
+      }).finally(() => {
+        this.loading = false;
+        this.searchLoading = false;
+        this.clearSearchLoading = false;
+      });
     },
     createSonRow() {
       if (!this.parentCategory.id) {
-        this.$Message.warning("请从左侧选择一个父分类");
+        this.$Message.warning('请从左侧选择一个父分类');
         return;
       }
-      this.resetRowData();
-      if (this.tempModalType !== this.modalType.create) {
-        this.currentCategory = this._.cloneDeep(currentCategory);
-      }
       this.addSon = true;
+      this.resetRowData();
       this.currentCategory.parentId = this.parentCategory.id;
       this.tempModalType = this.modalType.create;
       this.modalEdit = true;
@@ -270,55 +244,63 @@ export default {
     createParentRow() {
       this.addSon = false;
       this.resetRowData();
-      if (this.tempModalType !== this.modalType.create) {
-        this.currentCategory = this._.cloneDeep(currentCategory);
-      }
       this.currentCategory.parentId = 0;
       this.tempModalType = this.modalType.create;
       this.modalEdit = true;
     },
     resetRowData() {
-      this.currentCategory = this._.cloneDeep(currentCategory);
+      this.currentCategory = _.cloneDeep(currentCategory);
     },
-    asyncEditOK() {
-      if (!this.currentCategory.groupName) {
-        this.$Message.warning("请输入子分类");
-        return;
-      }
-      if (this.tempModalType === this.modalType.create) {
-        this.createProductCategories();
-      } else if (this.tempModalType === this.modalType.edit) {
-        this.editProductCategories();
-      }
+    // 编辑分类
+    handleEdit(params) {
+      this.$refs.editForm.resetFields();
+      this.tempModalType = this.modalType.edit;
+      this.currentCategory = _.cloneDeep(params.row);
+      this.modalEdit = true;
+    },
+    handleEditClose() {
+      this.modalEdit = false;
+    },
+    handleSubmit() {
+      this.$refs.editForm.validate((valid) => {
+        if (valid) {
+          if (this.isCreate) {
+            this.createProductCategories();
+          } else if (this.isEdit) {
+            this.editProductCategories();
+          }
+        } else {
+          this.$Message.error('请完善信息!');
+        }
+      });
     },
     createProductCategories() {
       this.modalEditLoading = true;
       createProductCategories(this.currentCategory)
-        .then((res) => {})
-        .finally((res) => {
+        .then((res) => {
           this.initMenuList();
-          this.modalEditLoading = false;
           this.modalEdit = false;
+        })
+        .finally(() => {
+          this.modalEditLoading = false;
         });
     },
     editProductCategories() {
       this.modalEditLoading = true;
       editProductCategories(this.currentCategory)
-        .then((res) => {})
-        .finally((res) => {
+        .then((res) => {
           this.initMenuList();
-          this.modalEditLoading = false;
           this.modalEdit = false;
+        })
+        .finally(() => {
+          this.modalEditLoading = false;
         });
-    },
-    handleEditClose() {
-      this.modalEdit = false;
     },
     // 删除
     deleteTable(ids) {
       this.loading = true;
       delProductCategories({
-        ids,
+        ids
       })
         .then((res) => {
           const totalPage = Math.ceil(this.total / this.pageSize);
@@ -336,96 +318,82 @@ export default {
           this.loading = false;
         });
     },
-    // 编辑分类
-    handleEdit(params) {
-      // this.$refs.modalEdit.resetFields();
-      this.tempModalType = this.modalType.edit;
-      this.currentCategory = _.cloneDeep(params.row);
-      this.modalEdit = true;
-    },
-    getTableData() {
-      this.loading = true;
-      getProductCategoriesPages(this.searchRowData).then((res) => {
-        // if (this.menuData.length > 0) {
-        // 现在对象是 PagerResultObject res.rows获取数据，如果是Pages res.array获取数据
-        this.tableData = res.rows;
-        this.total = res.total;
-        this.loading = false;
-        this.searchLoading = false;
-        this.clearSearchLoading = false;
-        // }
-      });
-    },
     // 初始化商品菜单列表
     initMenuList() {
       getProductCategoriesTree().then((res) => {
-        // if (res && res.array.length > 0) {
         const menuList = buildMenu(res.array);
         const map = {
-          title: "title",
-          children: "children",
+          title: 'title',
+          children: 'children'
         };
         this.menuData = convertTree(menuList, map, true);
-        // if (this.menuData.length > 0) {
         this.getTableData();
-        //   }
-        // }
       });
     },
-
+    renderContent(h, { root, node, data }) {
+      if (data.type === 'PARENT') {
+        return (
+          <div
+            style={{
+              display: 'inline-block',
+              width: '100%',
+              fontSize: '14px',
+              cursor: 'pointer'
+            }}
+          >
+            <span>
+              <CommonIcon type='ios-folder' class='mr10' />
+            </span>
+            <span onClick={() => this.handleClick({ root, node, data })}>
+              {data.title}
+            </span>
+          </div>
+        );
+      } else {
+        return (
+          <div
+            style={{
+              display: 'inline-block',
+              width: '100%',
+              fontSize: '14px',
+              cursor: 'pointer'
+            }}
+          >
+            <span>
+              <CommonIcon type='ios-paper' class='mr10' />
+            </span>
+            <span>{data.title}</span>
+          </div>
+        );
+      }
+    },
     handleClick({ root, node, data }) {
       this.loading = true;
-      // 递归展开当前节点
-      if (typeof data.expand === "undefined") {
-        this.$set(data, "expend", false);
+      if (typeof data.expand === 'undefined') {
+        this.$set(data, 'expend', false);
         if (data.children) {
           this.expandChildren(data.children);
         }
       }
-
-      if (typeof data.selected === "undefined") {
-        this.$set(data, "selected", true);
+      if (typeof data.selected === 'undefined') {
+        this.$set(data, 'selected', true);
       } else {
-        this.$set(data, "selected", !data.selected);
+        this.$set(data, 'selected', !data.selected);
       }
-
       this.parentCategory.id = data.id;
       this.parentCategory.groupName = data.title;
       this.currentParentId = data.id;
       this.searchRowData.parentId = data.id;
-      // 获取新数据
       this.getTableData();
-    },
-    expandChildren(array) {
-      array.forEach((item) => {
-        if (typeof item.expand === "undefined") {
-          this.$set(item, "expend", false);
-        } else {
-          item.expand = !item.expand;
-        }
-        if (item.children) {
-          this.expandChildren(item.children);
-        }
-      });
     },
     resetSearchRowData() {
       this.clearSearchLoading = true;
       this.searchRowData = this._.cloneDeep(roleRowData);
       this.getTableData();
-    },
-  },
+    }
+  }
 };
 </script>
 
 <style lang="scss" scoped>
-.img {
-  width: 150px;
-  height: auto !important;
-}
-
-.add-image {
-  line-height: 48px;
-  vertical-align: text-bottom;
-  margin-right: 10px;
-}
 </style>

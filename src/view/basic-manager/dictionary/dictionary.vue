@@ -95,7 +95,7 @@
           </i-col>
         </Row>
         <Row v-if="dictionaryDetail.entries" class-name="mb10">
-          <tables :columns="tempColumnsView" v-model="dictionaryDetail.entries" border></tables>
+          <tables v-model="dictionaryDetail.entries" :columns="tempColumnsView" border></tables>
         </Row>
       </div>
       <div slot="footer">
@@ -114,11 +114,11 @@
             <i-col span="12">
               <FormItem label="父级字典:" prop="parentId">
                 <Select
+                  v-model="dictionaryDetail.parentId"
                   :remote="true"
                   :filterable="true"
                   :remote-method="remoteMethod"
                   :loading="dictionaryLoading"
-                  v-model="dictionaryDetail.parentId"
                   :label="dictionaryDetail.code"
                   :placeholder="dictionaryDetail.parentId == 0 ? '0' : dictionaryDetail.parentId + ''"
                   style="width: 200px"
@@ -126,8 +126,8 @@
                 >
                   <Option
                     v-for="(option, index) in optionsDictionary"
-                    :value="option.id"
                     :key="index"
+                    :value="option.id"
                     class="pb5 pt5 pl15"
                     @click.native="selectIndex(option)"
                   >{{ option.code }}</Option>
@@ -216,8 +216,8 @@
               <FormItem label="排序序号:" prop="sort">
                 <!-- <InputNumber :min="1" v-model="entry.sort" class="ml20"></InputNumber> -->
                 <InputNumber
-                  :min="1"
                   v-model="entry.sort"
+                  :min="1"
                   placeholder="排序序号"
                   class="search-input mr5"
                   style="width: 200px"
@@ -250,8 +250,8 @@
             </i-col>
           </Row>
           <tables
-            :columns="tempColumnsView"
             v-model="dictionaryDetail.entries"
+            :columns="tempColumnsView"
             :loading="tempTableLoading"
             border
             @on-delete="modalHandleDelete"
@@ -280,8 +280,6 @@ import {
   editDictionaryEntry
 } from '@/api/basic';
 import tableMixin from '@/mixins/tableMixin.js';
-import searchMixin from '@/mixins/searchMixin.js';
-import deleteMixin from '@/mixins/deleteMixin.js';
 
 const dictionaryDetail = {
   children: [null],
@@ -401,7 +399,7 @@ export default {
   components: {
     Tables
   },
-  mixins: [tableMixin, searchMixin, deleteMixin],
+  mixins: [tableMixin],
   data() {
     return {
       ruleInline: {
@@ -530,10 +528,10 @@ export default {
       // return;
       this.$refs[name].validate(valid => {
         if (valid) {
-          if (this.tempModalType === this.modalType.create) {
+          if (this.isCreate) {
             // 添加状态
             this.createTableRow();
-          } else if (this.tempModalType === this.modalType.edit) {
+          } else if (this.isEdit) {
             // 编辑状态
             this.editTableRow();
           }

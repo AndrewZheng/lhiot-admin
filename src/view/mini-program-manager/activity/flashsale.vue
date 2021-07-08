@@ -19,7 +19,6 @@
         @on-selection-change="onSelectionChange"
         @on-relevance="onRelevance"
       >
-        <!--  @on-delete="handleDelete" -->
         <div slot="searchCondition">
           <Row>
             <DatePicker
@@ -194,7 +193,7 @@
         <i-col>{{ tempModalType==modalType.edit?'修改限时抢购活动':(tempModalType==modalType.create?'创建限时抢购活动': '限时抢购活动和商品关联') }}</i-col>
       </p>
       <div class="modal-content">
-        <Row v-if="tempModalType == modalType.edit || tempModalType == modalType.create">
+        <Row v-if="isEdit || isCreate">
           <Form ref="editForm" :model="flashsaleDetail" :rules="ruleInline" :label-width="80">
             <Row>
               <i-col span="18">
@@ -403,7 +402,7 @@
           关闭
         </Button>
         <Button
-          v-if="tempModalType == modalType.edit || tempModalType == modalType.create"
+          v-if="isEdit || isCreate"
           :loading="modalViewLoading"
           type="primary"
           @click="handleSubmit('editForm')"
@@ -417,7 +416,6 @@
 
 <script type="text/ecmascript-6">
 import Tables from '_c/tables';
-import _ from 'lodash';
 import {
   deleteFlashsale,
   getFlashsalePages,
@@ -429,9 +427,7 @@ import {
   editFlashsaleProductRelation,
   getProductStandardsPages
 } from '@/api/mini-program';
-import deleteMixin from '@/mixins/deleteMixin.js';
 import tableMixin from '@/mixins/tableMixin.js';
-import searchMixin from '@/mixins/searchMixin.js';
 import { imageStatusConvert } from '@/libs/converStatus';
 import { imageStatusEnum } from '@/libs/enumerate';
 import {
@@ -759,62 +755,17 @@ export default {
   components: {
     Tables
   },
-  mixins: [deleteMixin, tableMixin, searchMixin],
+  mixins: [tableMixin],
   data() {
     return {
-      ruleInline: {
-        startTime: [{ required: true, message: '请选择活动开始时间' }],
-        endTime: [{ required: true, message: '请选择活动结束时间' }],
-        onOff: [{ required: true, message: '请选择活动状态' }]
-      },
-      relationRuleInline: {
-        salePrice: [
-          { required: true, message: '请输入抢购价' },
-          {
-            message: '必须为大于0的数字',
-            pattern: /^(?!(0[0-9]{0,}$))[0-9]{1,}[.]{0,}[0-9]{0,}$/
-          }
-        ],
-        goodsLimit: [
-          { required: true, message: '请输入商品总数量' },
-          {
-            validator(rule, value, callback, source, options) {
-              const errors = [];
-              if (!/^[-1-9]\d*$/.test(value)) {
-                errors.push(new Error('必须为非零整数'));
-              }
-              callback(errors);
-            }
-          }
-        ],
-        remainCount: [
-          { required: true, message: '请输入剩余数量' },
-          {
-            validator(rule, value, callback, source, options) {
-              const errors = [];
-              if (!/^[-1-9]\d*$/.test(value)) {
-                errors.push(new Error('必须为非零整数'));
-              }
-              callback(errors);
-            }
-          }
-        ],
-        userLimit: [
-          { required: true, message: '请输入限购数量' },
-          {
-            validator(rule, value, callback, source, options) {
-              const errors = [];
-              if (!/^[-1-9]\d*$/.test(value)) {
-                errors.push(new Error('必须为非零整数'));
-              }
-              callback(errors);
-            }
-          }
-        ]
-      },
+      relationProducts: [],
+      products: [],
       defaultListMain: [],
       uploadListMain: [],
       areaList: [],
+      addTempDataLoading: false,
+      tempTableLoading: false,
+      productTotal: 0,
       imageStatusEnum,
       columns: [
         {
@@ -891,20 +842,63 @@ export default {
           options: ['inlineEdit', 'delete']
         }
       ],
+      ruleInline: {
+        startTime: [{ required: true, message: '请选择活动开始时间' }],
+        endTime: [{ required: true, message: '请选择活动结束时间' }],
+        onOff: [{ required: true, message: '请选择活动状态' }]
+      },
+      relationRuleInline: {
+        salePrice: [
+          { required: true, message: '请输入抢购价' },
+          {
+            message: '必须为大于0的数字',
+            pattern: /^(?!(0[0-9]{0,}$))[0-9]{1,}[.]{0,}[0-9]{0,}$/
+          }
+        ],
+        goodsLimit: [
+          { required: true, message: '请输入商品总数量' },
+          {
+            validator(rule, value, callback, source, options) {
+              const errors = [];
+              if (!/^[-1-9]\d*$/.test(value)) {
+                errors.push(new Error('必须为非零整数'));
+              }
+              callback(errors);
+            }
+          }
+        ],
+        remainCount: [
+          { required: true, message: '请输入剩余数量' },
+          {
+            validator(rule, value, callback, source, options) {
+              const errors = [];
+              if (!/^[-1-9]\d*$/.test(value)) {
+                errors.push(new Error('必须为非零整数'));
+              }
+              callback(errors);
+            }
+          }
+        ],
+        userLimit: [
+          { required: true, message: '请输入限购数量' },
+          {
+            validator(rule, value, callback, source, options) {
+              const errors = [];
+              if (!/^[-1-9]\d*$/.test(value)) {
+                errors.push(new Error('必须为非零整数'));
+              }
+              callback(errors);
+            }
+          }
+        ]
+      },
       productColumns: _.cloneDeep(productColumns),
-      addTempDataLoading: false,
-      tempTableLoading: false,
-      createLoading: false,
-      modalViewLoading: false,
       searchRowData: _.cloneDeep(roleRowData),
       searchRelationRowData: _.cloneDeep(relationRowData),
       searchProductRowData: _.cloneDeep(productRowData),
       flashsaleDetail: _.cloneDeep(flashsaleDetail),
-      relationProducts: [],
       addRelationDetail: _.cloneDeep(relationDetail),
-      productDetail: _.cloneDeep(productDetail),
-      products: [],
-      productTotal: 0
+      productDetail: _.cloneDeep(productDetail)
     };
   },
   computed: {
@@ -937,11 +931,9 @@ export default {
             this.$Message.error('开始时间不能大于结束时间!');
             return;
           }
-          if (this.tempModalType === this.modalType.create) {
-            // 添加状态
+          if (this.isCreate) {
             this.createFlashsale();
-          } else if (this.tempModalType === this.modalType.edit) {
-            // 编辑状态
+          } else if (this.isEdit) {
             this.editFlashsale();
           }
         } else {
@@ -953,14 +945,12 @@ export default {
       this.modalViewLoading = true;
       createFlashsale(this.flashsaleDetail)
         .then(res => {
-          this.modalViewLoading = false;
           this.modalEdit = false;
           this.$Message.success('创建成功!');
           this.getTableData();
         })
-        .catch(() => {
+        .finally(() => {
           this.modalViewLoading = false;
-          this.modalEdit = false;
         });
     },
     editFlashsale() {
@@ -968,11 +958,10 @@ export default {
       editFlashsale(this.flashsaleDetail)
         .then(res => {
           this.modalEdit = false;
-          this.modalViewLoading = false;
+          this.$Message.success('操作成功!');
           this.getTableData();
         })
-        .catch(() => {
-          this.modalEdit = false;
+        .finally(() => {
           this.modalViewLoading = false;
         });
     },
@@ -982,21 +971,14 @@ export default {
       this.flashsaleDetail = _.cloneDeep(flashsaleDetail);
       this.modalEdit = true;
     },
-    // 删除
-    // handleDelete(params) {
-    //   this.tableDataSelected = [];
-    //   this.tableDataSelected.push(params.row);
-    //   this.deleteTable(params.row.id);
-    // },
     deleteTable(ids) {
-      this.loading = true;
       deleteFlashsale({
         ids
       })
         .then(res => {
           const totalPage = Math.ceil(this.total / this.searchRowData.pageSize);
           if (
-            this.tableData.length == this.tableDataSelected.length &&
+            this.tableData.length === this.tableDataSelected.length &&
             this.searchRowData.page === totalPage &&
             this.searchRowData.page !== 1
           ) {
@@ -1004,10 +986,6 @@ export default {
           }
           this.tableDataSelected = [];
           this.getTableData();
-        })
-        .catch(err => {
-          console.log(err);
-          this.loading = false;
         });
     },
     handleView(params) {
@@ -1022,16 +1000,13 @@ export default {
       this.modalEdit = true;
     },
     getTableData() {
+      this.loading = true;
       getFlashsalePages(this.searchRowData)
         .then(res => {
           this.tableData = res.rows;
           this.total = res.total;
-          this.loading = false;
-          this.searchLoading = false;
-          this.clearSearchLoading = false;
         })
-        .catch(error => {
-          console.log(error);
+        .finally(() => {
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
@@ -1197,7 +1172,6 @@ export default {
       this.getProductTableData();
     },
     handleProductClear() {
-      // 重置数据
       this.resetSearchRowData();
       this.page = 1;
       this.pageSize = 10;
@@ -1224,14 +1198,12 @@ export default {
       this.modalViewLoading = true;
       createFlashsaleProductRelation(this.addRelationDetail)
         .then(res => {
-          this.modalViewLoading = false;
           this.modalEdit = false;
           this.$Message.success('创建成功!');
           this.getRelationTableData();
         })
-        .catch(() => {
+        .finally(() => {
           this.modalViewLoading = false;
-          this.modalEdit = false;
         });
     }
   }

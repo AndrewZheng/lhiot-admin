@@ -158,7 +158,7 @@
                 >
                   <template v-if="item.status === 'finished'">
                     <div>
-                      <img :src="item.url" />
+                      <img :src="item.url">
                       <div class="demo-upload-list-cover">
                         <Icon
                           type="ios-eye-outline"
@@ -258,57 +258,54 @@
         </Button>
       </div>
     </Modal>
+
     <Modal v-model="uploadVisible" title="图片预览">
-      <img :src="imgUploadViewItem" style="width: 100%" />
+      <img :src="imgUploadViewItem" style="width: 100%">
     </Modal>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
-import Tables from "_c/tables";
-import IViewUpload from "_c/iview-upload";
+import Tables from '_c/tables';
+import IViewUpload from '_c/iview-upload';
 import {
   getTaskPages,
   editTask,
   deleteTask,
-  createTask,
-  deletePicture,
-} from "@/api/mini-program";
-import tableMixin from "@/mixins/tableMixin.js";
-import searchMixin from "@/mixins/searchMixin.js";
-import deleteMixin from "@/mixins/deleteMixin.js";
-import uploadMixin from "@/mixins/uploadMixin.js";
-import { taskTypeEnum } from "@/libs/enumerate";
-import { taskTypeConvert } from "@/libs/converStatus";
+  createTask
+} from '@/api/mini-program';
+import tableMixin from '@/mixins/tableMixin.js';
+import uploadMixin from '@/mixins/uploadMixin.js';
+import { taskTypeEnum } from '@/libs/enumerate';
+import { taskTypeConvert } from '@/libs/converStatus';
 
 const taskDetail = {
-  createTime: "",
+  createTime: '',
   id: 0,
-  taskBannerImage: "",
-  taskDesc: "",
-  taskImage: "",
+  taskBannerImage: '',
+  taskDesc: '',
+  taskImage: '',
   taskIntegral: 0,
-  taskName: "",
-  taskRuleDesc: "",
-  taskType: "",
+  taskName: '',
+  taskRuleDesc: '',
+  taskType: ''
 };
 
 const searchRowData = {
-  taskName: "",
-  taskType: "",
+  taskName: '',
+  taskType: '',
   page: 1,
-  rows: 10,
+  rows: 10
 };
 
 export default {
   components: {
     Tables,
-    IViewUpload,
+    IViewUpload
   },
-  mixins: [tableMixin, searchMixin, deleteMixin, uploadMixin],
+  mixins: [tableMixin, uploadMixin],
   data() {
     return {
-      taskTypeEnum,
       ids: [],
       defaultListMain: [],
       uploadListMain: [],
@@ -317,61 +314,59 @@ export default {
       oldPicture: [],
       newPicture: [],
       save: [],
-      modalEditLoading: false,
-      searchRowData: this._.cloneDeep(searchRowData),
-      taskDetail: this._.cloneDeep(taskDetail),
+      taskTypeEnum,
       columns: [
         {
-          title: "编号",
-          align: "center",
-          key: "id",
-          width: 80,
+          title: '编号',
+          align: 'center',
+          key: 'id',
+          width: 80
         },
         {
-          title: "任务图标",
-          align: "center",
-          key: "taskImage",
-          width: "100",
+          title: '任务图标',
+          align: 'center',
+          key: 'taskImage',
+          width: '100',
           render: (h, params, vm) => {
             const { row } = params;
             const str = (
               <img
                 src={row.taskImage ? row.taskImage : this.defaultImg}
-                height="60"
-                width="60"
-                class="img"
+                height='60'
+                width='60'
+                class='img'
               />
             );
             return <div>{str}</div>;
-          },
+          }
         },
         {
-          title: "任务名称",
-          align: "center",
-          key: "taskName",
+          title: '任务名称',
+          align: 'center',
+          key: 'taskName',
           resizable: true,
-          width: "150",
+          width: '150'
         },
         {
-          title: "任务类型",
-          align: "center",
-          key: "taskType",
-          width: "160",
+          title: '任务类型',
+          align: 'center',
+          key: 'taskType',
+          width: '160',
           render: (h, params, vm) => {
             const { row } = params;
             return <div>{taskTypeConvert(row.taskType)}</div>;
-          },
+          }
         },
         {
-          title: "任务积分",
-          align: "center",
-          key: "taskIntegral",
-          width: "100",
+          title: '任务积分',
+          align: 'center',
+          key: 'taskIntegral',
+          width: '100'
         },
         {
-          title: "任务描述",
-          align: "center",
-          key: "taskDesc",
+          title: '任务描述',
+          align: 'center',
+          key: 'taskDesc'
         },
         //   {
         //     title: '任务规则',
@@ -381,26 +376,28 @@ export default {
         //     width: '150px'
         //   },
         {
-          title: "创建时间",
-          align: "center",
-          key: "createTime",
-          width: "200",
+          title: '创建时间',
+          align: 'center',
+          key: 'createTime',
+          width: '200'
         },
         {
-          title: "操作",
-          align: "center",
-          key: "handle",
-          width: "160",
-          options: ["edit", "delete"],
-        },
+          title: '操作',
+          align: 'center',
+          key: 'handle',
+          width: '160',
+          options: ['edit', 'delete']
+        }
       ],
       ruleInline: {
-        taskBannerImage: { required: false, message: "请上传任务Banner图标" },
-        taskImage: { required: false, message: "请上传任务小图标" },
-        taskIntegral: { required: true, message: "请填写任务积分" },
-        taskType: { required: true, message: "请选择任务类型" },
-        taskName: { required: true, message: "请填写任务名称" },
+        taskBannerImage: { required: false, message: '请上传任务Banner图标' },
+        taskImage: { required: false, message: '请上传任务小图标' },
+        taskIntegral: { required: true, message: '请填写任务积分' },
+        taskType: { required: true, message: '请选择任务类型' },
+        taskName: { required: true, message: '请填写任务名称' }
       },
+      searchRowData: _.cloneDeep(searchRowData),
+      taskDetail: _.cloneDeep(taskDetail)
     };
   },
   created() {
@@ -428,21 +425,18 @@ export default {
       this.searchRowData = _.cloneDeep(searchRowData);
     },
     handleCreate() {
-      this.$refs.editForm.resetFields();
+      this.resetFields();
       this.tempModalType = this.modalType.create;
-      this.taskDetail = taskDetail;
+      this.taskDetail = _.cloneDeep(taskDetail);
       this.modalEdit = true;
     },
     handleEdit(params) {
-      this.$refs.editForm.resetFields();
+      this.resetFields();
       this.tempModalType = this.modalType.edit;
-      this.taskDetail = this._.cloneDeep(params.row);
+      this.taskDetail = _.cloneDeep(params.row);
       this.setDefaultUploadList(params.row);
       if (this.taskDetail.taskRuleDesc) {
-        this.taskDetail.taskRuleDesc = this.taskDetail.taskRuleDesc.replace(
-          /&/g,
-          "\n"
-        );
+        this.taskDetail.taskRuleDesc = this.taskDetail.taskRuleDesc.replace(/&/g, '\n');
       }
       this.modalEdit = true;
     },
@@ -451,10 +445,7 @@ export default {
         if (valid) {
           // 任务规则换行用“&”拼接
           if (this.taskDetail.taskRuleDesc) {
-            this.taskDetail.taskRuleDesc = this.taskDetail.taskRuleDesc.replace(
-              /\n|\r/g,
-              "&"
-            );
+            this.taskDetail.taskRuleDesc = this.taskDetail.taskRuleDesc.replace(/\n|\r/g, '&');
           }
           if (this.isCreate) {
             this.createTableRow();
@@ -462,7 +453,7 @@ export default {
             this.editTableRow();
           }
         } else {
-          this.$Message.error("请完善任务信息!");
+          this.$Message.error('请完善任务信息!');
         }
       });
     },
@@ -472,28 +463,25 @@ export default {
         .then((res) => {
           this.modalEdit = false;
           this.getTableData();
-          this.resetFields();
         })
         .finally(() => {
           this.modalEditLoading = false;
         });
     },
     createTableRow() {
+      this.modalEditLoading = true;
       createTask(this.taskDetail)
-        .then((res) => {})
-        .finally((res) => {
+        .then((res) => {
           this.modalEdit = false;
           this.getTableData();
-          this.resetFields();
         })
         .finally(() => {
           this.modalEditLoading = false;
         });
     },
     deleteTable(ids) {
-      this.loading = true;
       deleteTask({
-        ids,
+        ids
       })
         .then((res) => {
           const totalPage = Math.ceil(this.total / this.pageSize);
@@ -507,14 +495,11 @@ export default {
           this.tableDataSelected = [];
           this.getTableData();
         })
-        .finally(() => {
-          this.loading = false;
-        });
     },
     // 设置编辑商品的图片列表
     setDefaultUploadList(res) {
       if (res.taskImage != null) {
-        const map = { status: "finished", url: "url" };
+        const map = { status: 'finished', url: 'url' };
         const mainImgArr = [];
         map.url = res.taskImage;
         mainImgArr.push(map);
@@ -523,20 +508,10 @@ export default {
       }
     },
     handleEditClose() {
-      // if (this.newPicture.length > 0) {
-      //   const urls = { urls: this.newPicture };
-      //   this.deletePicture(urls);
-      // }
       this.oldPicture = [];
       this.newPicture = [];
       this.modalEdit = false;
     },
-    // deletePicture(urls) {
-    //   deletePicture({
-    //     urls
-    //   })
-    //     .then(res => {})
-    // },
     handleRemoveMain(file) {
       this.$refs.uploadMain.deleteFile(file);
       this.taskDetail.taskImage = null;
@@ -558,8 +533,8 @@ export default {
       this.taskDetail.taskBannerImage = fileList[0].url;
       this.newPicture.push(fileList[0].url);
       this.oldPicture = this.save;
-    },
-  },
+    }
+  }
 };
 </script>
 <style lang="scss" scoped>

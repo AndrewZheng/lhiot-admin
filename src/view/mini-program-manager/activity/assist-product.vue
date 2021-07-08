@@ -14,12 +14,11 @@
         search-place="top"
         @on-view="handleView"
         @on-edit="handleEdit"
-        @on-sale="onOff"
+        @on-sale="handleSwitch"
         @on-select-all="onSelectionAll"
         @on-selection-change="onSelectionChange"
         @on-relevance="onRelevance"
       >
-        <!--  @on-delete="handleDelete" -->
         <div slot="searchCondition">
           <Row>
             <Input
@@ -102,6 +101,7 @@
         </Row>
       </div>
     </Card>
+
     <!-- 查看活动详情 -->
     <Modal v-model="modalView" :mask-closable="false">
       <p slot="header">
@@ -218,24 +218,17 @@
         </Button>
       </div>
     </Modal>
+
     <!-- 创建活动/修改活动/添加活动关联 -->
     <Modal v-model="modalEdit" :width="1200" :mask-closable="false">
       <p slot="header">
         <i-col>
-          {{
-            tempModalType == modalType.edit
-              ? "修改助力抢爆品活动"
-              : tempModalType == modalType.create
-                ? "创建助力抢爆品活动"
-                : "添加助力抢爆品活动和商品/券关联"
-          }}
+          {{ isEdit ? "修改助力抢爆品活动" : isCreate? "创建助力抢爆品活动": "添加助力抢爆品活动和商品/券关联" }}
         </i-col>
       </p>
       <div class="modal-content">
         <Row
-          v-if="
-            tempModalType == modalType.edit || tempModalType == modalType.create
-          "
+          v-if=" isEdit || isCreate"
         >
           <Form
             ref="editForm"
@@ -584,7 +577,7 @@
                   </i-col>
                   <i-col span="5">
                     <Button
-                      v-show="this.proFlag === true"
+                      v-show="proFlag === true"
                       v-waves
                       :loading="addTempDataLoading"
                       span="4"
@@ -622,16 +615,17 @@
         </Button>
         <Button
           v-if="
-            tempModalType == modalType.edit || tempModalType == modalType.create
+            isEdit || isCreate
           "
           :loading="modalViewLoading"
           type="primary"
-          @click="handleSubmit('editForm')"
+          @click="handleSubmit"
         >
           确定
         </Button>
       </div>
     </Modal>
+
     <!-- 查看关联商品/券详情 -->
     <Modal
       v-model="modalRelevanceView"
@@ -1007,6 +1001,7 @@
         </Button>
       </div>
     </Modal>
+
     <!-- 修改关联商品/券详情 -->
     <Modal
       v-model="modalRelevanceEdit"
@@ -1143,7 +1138,6 @@
 <script type="text/ecmascript-6">
 import Tables from '_c/tables';
 import IViewUpload from '_c/iview-upload';
-import _ from 'lodash';
 import {
   deleteAssist,
   getAssistPages,
@@ -1157,25 +1151,18 @@ import {
   getCouponPagess
 } from '@/api/mini-program';
 import uploadMixin from '@/mixins/uploadMixin';
-import deleteMixin from '@/mixins/deleteMixin.js';
 import tableMixin from '@/mixins/tableMixin.js';
-import searchMixin from '@/mixins/searchMixin.js';
 import {
   imageStatusConvert,
   expandTypeConvert,
-  onSaleStatusConvert,
-  couponTypeConvert,
-  couponStatusConvert,
-  couponUseLimitConvert
+  couponTypeConvert
 } from '@/libs/converStatus';
 import { imageStatusEnum, onSaleStatusEnum } from '@/libs/enumerate';
 import {
   fenToYuanDot2,
-  fenToYuanDot2Number,
   yuanToFenNumber,
   compareCouponData
 } from '@/libs/util';
-import { customPlanStatusConvert, appTypeConvert } from '@/libs/converStatus';
 
 const flashsaleDetail = {
   beginTime: null,
@@ -1256,7 +1243,7 @@ const productDetail = {
   dbId: null
 };
 
-const roleRowData = {
+const rowData = {
   beginTime: null,
   endTime: null,
   title: '',
@@ -1283,6 +1270,7 @@ const productRowData = {
   page: 1,
   rows: 5
 };
+
 const couponRowData = {
   couponName: '',
   couponBusinessType: 'ACTIVITY_ASSIST_COUPON',
@@ -1376,8 +1364,7 @@ const relationTempColumns = [
         return <div>{row.couponConfigManage.couponType}</div>;
       } else if (row.type === 'PROD') {
         if (
-          row.productStandard.productStandardExpand.expandType ==
-          'ASSIST_PRODUCT'
+          row.productStandard.productStandardExpand.expandType === 'ASSIST_PRODUCT'
         ) {
           return (
             <div>
@@ -1509,7 +1496,7 @@ const productColumns = [
     render: (h, params, vm) => {
       const { row } = params;
       if (row.productStandardExpand != null) {
-        if (row.productStandardExpand.expandType == 'DISCOUNT_PRODUCT') {
+        if (row.productStandardExpand.expandType === 'DISCOUNT_PRODUCT') {
           return (
             <div>
               <tag color='magenta'>
@@ -1517,7 +1504,7 @@ const productColumns = [
               </tag>
             </div>
           );
-        } else if (row.productStandardExpand.expandType == 'PULL_NEW_PRODUCT') {
+        } else if (row.productStandardExpand.expandType === 'PULL_NEW_PRODUCT') {
           return (
             <div>
               <tag color='orange'>
@@ -1525,7 +1512,7 @@ const productColumns = [
               </tag>
             </div>
           );
-        } else if (row.productStandardExpand.expandType == 'SECKILL_PRODUCT') {
+        } else if (row.productStandardExpand.expandType === 'SECKILL_PRODUCT') {
           return (
             <div>
               <tag color='blue'>
@@ -1533,7 +1520,7 @@ const productColumns = [
               </tag>
             </div>
           );
-        } else if (row.productStandardExpand.expandType == 'NEW_TRY_PRODUCT') {
+        } else if (row.productStandardExpand.expandType === 'NEW_TRY_PRODUCT') {
           return (
             <div>
               <tag color='blue'>
@@ -1541,7 +1528,7 @@ const productColumns = [
               </tag>
             </div>
           );
-        } else if (row.productStandardExpand.expandType == 'ASSIST_PRODUCT') {
+        } else if (row.productStandardExpand.expandType === 'ASSIST_PRODUCT') {
           return (
             <div>
               <tag color='green'>
@@ -1642,7 +1629,6 @@ const couponColumns = [
       } else {
         return <div>{'N/A'}</div>;
       }
-      return <div>{fenToYuanDot2(row.maxDiscountFee)}</div>;
     }
   },
   {
@@ -1652,14 +1638,14 @@ const couponColumns = [
     minWidth: 90,
     render: (h, params, vm) => {
       const { row } = params;
-      if (row.source == 'SMALL' && row.validDateType === 'FIXED_DATE') {
+      if (row.source === 'SMALL' && row.validDateType === 'FIXED_DATE') {
         return <div>{row.effectiveStartTime}</div>;
       } else if (
-        row.source == 'SMALL' &&
+        row.source === 'SMALL' &&
         row.validDateType === 'UN_FIXED_DATE'
       ) {
         return <div>{row.beginDay}</div>;
-      } else if (row.source == 'HD') {
+      } else if (row.source === 'HD') {
         return <div>{row.effectiveStartTime}</div>;
       } else {
         return <div>N/A</div>;
@@ -1673,18 +1659,18 @@ const couponColumns = [
     minWidth: 90,
     render: (h, params, vm) => {
       const { row } = params;
-      if (row.source == 'SMALL' && row.validDateType === 'FIXED_DATE') {
+      if (row.source === 'SMALL' && row.validDateType === 'FIXED_DATE') {
         if (!compareCouponData(row.effectiveEndTime)) {
           return <div style='color:red'>{row.effectiveEndTime + '已过期'}</div>;
         } else {
           return <div>{row.effectiveEndTime}</div>;
         }
       } else if (
-        row.source == 'SMALL' &&
+        row.source === 'SMALL' &&
         row.validDateType === 'UN_FIXED_DATE'
       ) {
         return <div>{row.endDay}</div>;
-      } else if (row.source == 'HD') {
+      } else if (row.source === 'HD') {
         if (!compareCouponData(row.effectiveEndTime)) {
           return <div style='color:red'>{row.effectiveEndTime + '已过期'}</div>;
         } else {
@@ -1701,9 +1687,31 @@ export default {
     Tables,
     IViewUpload
   },
-  mixins: [uploadMixin, deleteMixin, tableMixin, searchMixin],
+  mixins: [uploadMixin, tableMixin],
   data() {
     return {
+      relationProducts: [],
+      products: [],
+      coupons: [],
+      defaultListMain: [],
+      uploadListMain: [],
+      areaList: [],
+      templatePageOpts: [5, 10],
+      imageStatusEnum,
+      addTempDataLoading: false,
+      tempTableLoading: false,
+      editStatus: false,
+      modalRelevanceView: false,
+      modalRelevanceEdit: false,
+      proFlag: true,
+      productTotal: 0,
+      couponsTotal: 0,
+      onSaleStatusEnum,
+      topStatus: 'PROD',
+      discountPrice: '',
+      activitiesRelevanceDetail: {},
+      activitiesProductDetail: {},
+      activitiesCouponDetail: {},
       ruleInline: {
         beginTime: [{ required: true, message: '请选择活动开始时间' }],
         endTime: [{ required: true, message: '请选择活动结束时间' }],
@@ -1765,15 +1773,6 @@ export default {
         ],
         shareImage: [{ required: true, message: '请上传分享图片' }]
       },
-      defaultListMain: [],
-      uploadListMain: [],
-      areaList: [],
-      templatePageOpts: [5, 10],
-      imageStatusEnum,
-      editStatus: false,
-      onSaleStatusEnum,
-      topStatus: 'PROD',
-      discountPrice: '',
       columns: [
         {
           title: '活动ID',
@@ -1861,7 +1860,6 @@ export default {
           align: 'center',
           minWidth: 170,
           key: 'handle',
-          // "delete",
           options: ['onSale', 'view', 'edit', 'settings']
         }
       ],
@@ -1877,39 +1875,23 @@ export default {
       ],
       productColumns: _.cloneDeep(productColumns),
       couponColumns: _.cloneDeep(couponColumns),
-      addTempDataLoading: false,
-      tempTableLoading: false,
-      createLoading: false,
-      modalViewLoading: false,
-      searchRowData: _.cloneDeep(roleRowData),
+      searchRowData: _.cloneDeep(rowData),
       searchRelationRowData: _.cloneDeep(relationRowData),
       searchProductRowData: _.cloneDeep(productRowData),
       searchCouponRowData: _.cloneDeep(couponRowData),
       flashsaleDetail: _.cloneDeep(flashsaleDetail),
-      relationProducts: [],
       addRelationDetail: _.cloneDeep(relationDetail),
-      productDetail: _.cloneDeep(productDetail),
-      products: [],
-      coupons: [],
-      productTotal: 0,
-      couponsTotal: 0,
-      activitiesRelevanceDetail: {},
-      activitiesProductDetail: {},
-      activitiesCouponDetail: {},
-      modalRelevanceView: false,
-      modalRelevanceEdit: false,
-      proFlag: true
+      productDetail: _.cloneDeep(productDetail)
     };
   },
   computed: {},
   mounted() {
-    this.searchRowData = _.cloneDeep(roleRowData);
     this.getTableData();
   },
   created() {},
   methods: {
     resetSearchRowData() {
-      this.searchRowData = _.cloneDeep(roleRowData);
+      this.searchRowData = _.cloneDeep(rowData);
       this.getTableData();
     },
     resetSearchProductRowData() {
@@ -1925,149 +1907,14 @@ export default {
       this.uploadListMain = [];
       this.addRelationDetail.shareImage = null;
     },
-    handleRemoveMain(file) {
-      this.$refs.uploadMain.deleteFile(file);
-      this.addRelationDetail.shareImage = null;
-    },
-    // 商品主图
-    handleSuccessMain(response, file, fileList) {
-      this.uploadListMain = fileList;
-      this.addRelationDetail.shareImage = null;
-      this.addRelationDetail.shareImage = fileList[0].url;
-    },
-    // 设置编辑商品的图片列表
-    setDefaultUploadList(res) {
-      if (res.shareImage != null) {
-        const map = { status: 'finished', url: 'url' };
-        const mainImgArr = [];
-        map.url = res.shareImage;
-        mainImgArr.push(map);
-        this.$refs.uploadMain.setDefaultFileList(mainImgArr);
-        this.uploadListMain = mainImgArr;
-      }
-    },
-    handleSubmit(name) {
-      this.$refs[name].validate((valid) => {
-        if (valid) {
-          if (this.flashsaleDetail.startTime > this.flashsaleDetail.endTime) {
-            this.$Message.error('开始时间不能大于结束时间!');
-            return;
-          }
-          if (this.flashsaleDetail.beginTime.toString().indexOf('T') > -1) {
-            this.flashsaleDetail.beginTime = this.$moment(
-              this.flashsaleDetail.beginTime
-            ).format('YYYY-MM-DD HH:mm:ss');
-          }
-          if (this.flashsaleDetail.endTime.toString().indexOf('T') > -1) {
-            this.flashsaleDetail.endTime = this.$moment(
-              this.flashsaleDetail.endTime
-            ).format('YYYY-MM-DD HH:mm:ss');
-          }
-          if (this.tempModalType === this.modalType.create) {
-            // 添加状态
-            this.createAssist();
-          } else if (this.tempModalType === this.modalType.edit) {
-            // 编辑状态
-            this.editAssist();
-          }
-        } else {
-          this.$Message.error('请完善信息!');
-        }
-      });
-    },
-    createAssist() {
-      this.modalViewLoading = true;
-      createAssist(this.flashsaleDetail)
-        .then((res) => {
-          this.modalViewLoading = false;
-          this.modalEdit = false;
-          this.$Message.success('创建成功!');
-          this.getTableData();
-        })
-        .catch(() => {
-          this.modalViewLoading = false;
-          this.modalEdit = false;
-        });
-    },
-    editAssist() {
-      this.modalViewLoading = true;
-      this.flashsaleDetail.beginTime = this.$moment(
-        this.flashsaleDetail.beginTime
-      ).format('YYYY-MM-DD HH:mm:ss');
-      this.flashsaleDetail.endTime = this.$moment(
-        this.flashsaleDetail.endTime
-      ).format('YYYY-MM-DD HH:mm:ss');
-
-      editAssist(this.flashsaleDetail)
-        .then((res) => {
-          this.modalEdit = false;
-          this.modalViewLoading = false;
-          this.$Message.success('修改成功!');
-          this.getTableData();
-        })
-        .catch(() => {
-          this.modalEdit = false;
-          this.modalViewLoading = false;
-        });
-    },
-    addFlashsale() {
-      this.editStatus = false;
-      // this.resetFields();
-      this.tempModalType = this.modalType.create;
-      this.flashsaleDetail = _.cloneDeep(flashsaleDetail);
-      this.modalEdit = true;
-    },
-    // 删除
-    // handleDelete(params) {
-    //   this.tableDataSelected = [];
-    //   this.tableDataSelected.push(params.row);
-    //   this.deleteTable(params.row.id);
-    // },
-    deleteTable(ids) {
-      this.loading = true;
-      deleteAssist({
-        ids
-      })
-        .then((res) => {
-          const totalPage = Math.ceil(this.total / this.searchRowData.pageSize);
-          if (
-            this.tableData.length == this.tableDataSelected.length &&
-            this.searchRowData.page === totalPage &&
-            this.searchRowData.page !== 1
-          ) {
-            this.searchRowData.page -= 1;
-          }
-          this.tableDataSelected = [];
-          this.getTableData();
-        })
-        .catch((err) => {
-          console.log(err);
-          this.loading = false;
-        });
-    },
-    handleView(params) {
-      this.tempModalType = this.modalType.view;
-      this.flashsaleDetail = _.cloneDeep(params.row);
-      this.modalView = true;
-    },
-    handleEdit(params) {
-      // this.resetFields();
-      this.editStatus = !compareCouponData(params.row.beginTime);
-      this.tempModalType = this.modalType.edit;
-      this.flashsaleDetail = _.cloneDeep(params.row);
-      this.modalEdit = true;
-    },
     getTableData() {
+      this.loading = true;
       getAssistPages(this.searchRowData)
         .then((res) => {
           this.tableData = res.rows;
           this.total = res.total;
-          this.loading = false;
-          this.searchLoading = false;
-          this.clearSearchLoading = false;
         })
-        .catch((error) => {
-          console.log(error);
+        .finally(() => {
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
@@ -2088,14 +1935,102 @@ export default {
           this.clearSearchLoading = false;
         });
     },
-    onOff(params) {
+    addFlashsale() {
+      this.editStatus = false;
+      // this.resetFields();
+      this.tempModalType = this.modalType.create;
+      this.flashsaleDetail = _.cloneDeep(flashsaleDetail);
+      this.modalEdit = true;
+    },
+    handleView(params) {
+      this.tempModalType = this.modalType.view;
+      this.flashsaleDetail = _.cloneDeep(params.row);
+      this.modalView = true;
+    },
+    handleEdit(params) {
+      // this.resetFields();
+      this.editStatus = !compareCouponData(params.row.beginTime);
+      this.tempModalType = this.modalType.edit;
+      this.flashsaleDetail = _.cloneDeep(params.row);
+      this.modalEdit = true;
+    },
+    handleSubmit() {
+      this.$refs.editForm.validate((valid) => {
+        if (valid) {
+          if (this.flashsaleDetail.startTime > this.flashsaleDetail.endTime) {
+            this.$Message.error('开始时间不能大于结束时间!');
+            return;
+          }
+          if (this.flashsaleDetail.beginTime.toString().indexOf('T') > -1) {
+            this.flashsaleDetail.beginTime = this.$moment(
+              this.flashsaleDetail.beginTime
+            ).format('YYYY-MM-DD HH:mm:ss');
+          }
+          if (this.flashsaleDetail.endTime.toString().indexOf('T') > -1) {
+            this.flashsaleDetail.endTime = this.$moment(
+              this.flashsaleDetail.endTime
+            ).format('YYYY-MM-DD HH:mm:ss');
+          }
+          if (this.isCreate) {
+            this.createAssist();
+          } else if (this.isEdit) {
+            this.editAssist();
+          }
+        } else {
+          this.$Message.error('请完善信息!');
+        }
+      });
+    },
+    createAssist() {
+      this.modalViewLoading = true;
+      createAssist(this.flashsaleDetail)
+        .then((res) => {
+          this.modalEdit = false;
+          this.$Message.success('创建成功!');
+          this.getTableData();
+        })
+        .finally(() => {
+          this.modalViewLoading = false;
+        });
+    },
+    editAssist() {
+      this.modalViewLoading = true;
+      this.flashsaleDetail.beginTime = this.$moment(
+        this.flashsaleDetail.beginTime
+      ).format('YYYY-MM-DD HH:mm:ss');
+      this.flashsaleDetail.endTime = this.$moment(
+        this.flashsaleDetail.endTime
+      ).format('YYYY-MM-DD HH:mm:ss');
+      editAssist(this.flashsaleDetail)
+        .then((res) => {
+          this.modalEdit = false;
+          this.$Message.success('修改成功!');
+          this.getTableData();
+        })
+        .finally(() => {
+          this.modalViewLoading = false;
+        });
+    },
+    deleteTable(ids) {
+      deleteAssist({
+        ids
+      })
+        .then((res) => {
+          const totalPage = Math.ceil(this.total / this.searchRowData.pageSize);
+          if (
+            this.tableData.length === this.tableDataSelected.length &&
+            this.searchRowData.page === totalPage &&
+            this.searchRowData.page !== 1
+          ) {
+            this.searchRowData.page -= 1;
+          }
+          this.tableDataSelected = [];
+          this.getTableData();
+        })
+    },
+    handleSwitch(params) {
       this.flashsaleDetail = this._.cloneDeep(params.row);
-      if (params.row.status === 'ON') {
-        this.flashsaleDetail.status = 'OFF';
-      } else {
-        this.flashsaleDetail.status = 'ON';
-      }
-      this.loading = true;
+      this.flashsaleDetail.status = params.row.status === 'ON' ? 'OFF' : 'ON';
       this.editAssist();
     },
     startTimeChange(value, date) {
@@ -2104,7 +2039,6 @@ export default {
     endTimeChange(value, date) {
       this.flashsaleDetail.endTime = value;
     },
-    // ====
     edBeginTimeChange(value) {
       this.searchRowData.beginTime = value;
     },
@@ -2113,8 +2047,8 @@ export default {
     },
     onRelevance(params) {
       this.tempModalType = null;
-      (this.addRelationDetail = _.cloneDeep(relationDetail)),
-      (this.uploadListMain = []);
+      this.addRelationDetail = _.cloneDeep(relationDetail);
+      this.uploadListMain = [];
       // FIXME 查询商品规格分页信息（后期按钮触发，或者先存储，需要时再调用接口）
       this.getProductTableData();
       this.getCouponTableData();
@@ -2188,22 +2122,26 @@ export default {
         });
     },
     getProductTableData() {
-      this.loading = true;
-      getProductStandardsPages(this.searchProductRowData).then((res) => {
-        this.products = res.rows;
-        this.productTotal = res.total;
-        this.loading = false;
-        this.searchLoading = false;
-      });
+      this.tempTableLoading = true;
+      getProductStandardsPages(this.searchProductRowData)
+        .then((res) => {
+          this.products = res.rows;
+          this.productTotal = res.total;
+        }).finally(() => {
+          this.tempTableLoading = false;
+          this.searchLoading = false;
+        });
     },
     getCouponTableData() {
-      this.loading = true;
-      getCouponPagess(this.searchCouponRowData).then((res) => {
-        this.coupons = res.rows;
-        this.couponsTotal = res.total;
-        this.loading = false;
-        this.searchLoading = false;
-      });
+      this.tempTableLoading = true;
+      getCouponPagess(this.searchCouponRowData)
+        .then((res) => {
+          this.coupons = res.rows;
+          this.couponsTotal = res.total;
+        }).finally(() => {
+          this.tempTableLoading = false;
+          this.searchLoading = false;
+        });
     },
     changeProductPage(page) {
       this.searchProductRowData.page = page;
@@ -2225,7 +2163,6 @@ export default {
     },
     handleProductSearch() {
       this.searchProductRowData.page = 1;
-      // this.searchLoading = true;
       this.getProductTableData();
     },
     handleProductClear() {
@@ -2233,12 +2170,10 @@ export default {
       this.resetSearchProductRowData();
       this.page = 1;
       this.pageSize = 10;
-      // this.clearSearchLoading = true;
       this.handleProductSearch();
     },
     handleCouponSearch() {
       this.searchCouponRowData.page = 1;
-      // this.searchLoading = true;
       this.getCouponTableData();
     },
     handleCouponClear() {
@@ -2246,7 +2181,6 @@ export default {
       this.resetSearchCouponRowData();
       this.page = 1;
       this.pageSize = 10;
-      // this.clearSearchLoading = true;
       this.handleCouponSearch();
     },
     onProductSelectionAll(selection) {
@@ -2287,7 +2221,7 @@ export default {
       } else if (this.addRelationDetail.type === 'COUPON') {
         const activityProducts = this.relationProducts;
         const couponIds = [];
-        for (var item = 0; item < activityProducts.length; item++) {
+        for (let item = 0; item < activityProducts.length; item++) {
           couponIds.push(activityProducts[item].couponConfigId);
         }
         if (couponIds.indexOf(currentRow.id) != -1) {
@@ -2373,9 +2307,8 @@ export default {
           this.modalRelevanceEdit = false;
           this.$Message.success('修改成功!');
           this.getRelationTableData();
-          (this.addRelationDetail = _.cloneDeep(relationDetail)),
-          (this.uploadListMain = []);
-          // this.uploadListMain = [];
+          this.addRelationDetail = _.cloneDeep(relationDetail);
+          this.uploadListMain = [];
         })
         .finally((res) => {
           this.tempTableLoading = false;
@@ -2384,11 +2317,7 @@ export default {
     // 上下架
     switchStatus(params) {
       // this.relationProducts.status = this._.cloneDeep(params.row.status);
-      if (params.row.status === 'ON') {
-        params.row.status = 'OFF';
-      } else {
-        params.row.status = 'ON';
-      }
+      params.row.status = params.row.status === 'ON' ? 'OFF' : 'ON';
       this.loading = true;
       editAssistProductRelation(params.row)
         .then((res) => {
@@ -2399,6 +2328,27 @@ export default {
         });
       this.tempTableLoading = false;
       this.$set(params.row, 'isEdit', false);
+    },
+    handleRemoveMain(file) {
+      this.$refs.uploadMain.deleteFile(file);
+      this.addRelationDetail.shareImage = null;
+    },
+    // 商品主图
+    handleSuccessMain(response, file, fileList) {
+      this.uploadListMain = fileList;
+      this.addRelationDetail.shareImage = null;
+      this.addRelationDetail.shareImage = fileList[0].url;
+    },
+    // 设置编辑商品的图片列表
+    setDefaultUploadList(res) {
+      if (res.shareImage != null) {
+        const map = { status: 'finished', url: 'url' };
+        const mainImgArr = [];
+        map.url = res.shareImage;
+        mainImgArr.push(map);
+        this.$refs.uploadMain.setDefaultFileList(mainImgArr);
+        this.uploadListMain = mainImgArr;
+      }
     }
   }
 };

@@ -363,7 +363,7 @@
                   class="demo-upload-list"
                   style="width: 100px; height: 100px"
                 >
-                  <img :src="item" />
+                  <img :src="item">
                   <div class="demo-upload-list-cover">
                     <Icon
                       type="ios-eye-outline"
@@ -392,7 +392,7 @@
       </p>
       <div class="modal-content">
         <Form
-          ref="modalEdit"
+          ref="editForm"
           :model="evaluateDetail"
           :rules="ruleInline"
           :label-width="100"
@@ -515,7 +515,7 @@
                     class="demo-upload-list"
                     style="width: 100px; height: 100px"
                   >
-                    <img :src="item" />
+                    <img :src="item">
                     <div class="demo-upload-list-cover">
                       <Icon
                         type="ios-eye-outline"
@@ -562,66 +562,60 @@
         <Button
           :loading="modalViewLoading"
           type="primary"
-          @click="handleSubmit()"
+          @click="handleSubmit"
         >
           确定
         </Button>
       </div>
     </Modal>
+
     <Modal v-model="uploadVisible" title="图片预览">
-      <img :src="imgUploadViewItem" style="width: 100%" />
+      <img :src="imgUploadViewItem" style="width: 100%">
     </Modal>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
-import Tables from "_c/tables";
-import IViewUpload from "_c/iview-upload";
-import DragList from "_c/drag-list";
-import _ from "lodash";
-import { getEvaluatePages, replyEvaluate } from "@/api/mini-program";
-import deleteMixin from "@/mixins/deleteMixin.js";
-import tableMixin from "@/mixins/tableMixin.js";
-import searchMixin from "@/mixins/searchMixin.js";
-import {
-  imageStatusConvert,
-  deliveryTypeConvert,
-  commentScoreConvert,
-} from "@/libs/converStatus";
+import Tables from '_c/tables';
+import IViewUpload from '_c/iview-upload';
+import DragList from '_c/drag-list';
+import { getEvaluatePages, replyEvaluate } from '@/api/mini-program';
+import tableMixin from '@/mixins/tableMixin.js';
+import { deliveryTypeConvert } from '@/libs/converStatus';
 import {
   imageStatusEnum,
   deliveryTypeEnum,
-  commentScoreTypeEnum,
-} from "@/libs/enumerate";
+  commentScoreTypeEnum
+} from '@/libs/enumerate';
 
 const evaluateDetail = {
-  answerContent: "",
-  avatarUrl: "",
-  beginDate: "",
-  commentContent: "",
-  commentImages: "",
-  commentScore: "",
-  commentSource: "",
-  createTime: "",
-  deliveryComment: "",
-  endDate: "",
-  id: "",
-  istop: "NO",
-  nickName: "",
-  orderCode: "",
-  orderId: "",
-  phone: "",
-  point: "",
-  productNames: "",
-  status: "",
-  storeCode: "",
-  storeId: "",
-  storeName: "",
-  topTime: "",
-  type: "",
-  userId: "",
-  orderType: "",
-  xid: "",
+  answerContent: '',
+  avatarUrl: '',
+  beginDate: '',
+  commentContent: '',
+  commentImages: '',
+  commentScore: '',
+  commentSource: '',
+  createTime: '',
+  deliveryComment: '',
+  endDate: '',
+  id: '',
+  istop: 'NO',
+  nickName: '',
+  orderCode: '',
+  orderId: '',
+  phone: '',
+  point: '',
+  productNames: '',
+  status: '',
+  storeCode: '',
+  storeId: '',
+  storeName: '',
+  topTime: '',
+  type: '',
+  userId: '',
+  orderType: '',
+  xid: ''
 };
 
 const roleRowData = {
@@ -629,189 +623,187 @@ const roleRowData = {
   nickName: null,
   commentScore: null,
   phone: null,
-  storeName: "",
-  beginDate: "",
-  endDate: "",
+  storeName: '',
+  beginDate: '',
+  endDate: '',
   page: 1,
   rows: 10,
-  isTop: "",
-  orderType: "WX_SMALL",
-  sidx: "createTime",
-  sort: "desc",
+  isTop: '',
+  orderType: 'WX_SMALL',
+  sidx: 'createTime',
+  sort: 'desc'
 };
 
 export default {
   components: {
     Tables,
     IViewUpload,
-    DragList,
+    DragList
   },
-  mixins: [deleteMixin, tableMixin, searchMixin],
+  mixins: [tableMixin],
   data() {
     return {
-      searchRowData: _.cloneDeep(roleRowData),
-      evaluateDetail: _.cloneDeep(evaluateDetail),
-      ruleInline: {
-        answerContent: [{ required: true, message: "请输入评价回复" }],
-      },
       defaultListMain: [],
       uploadListMain: [],
       areaList: [],
       evaluateList: [],
       uploadVisible: false,
       evaluateStatus: false,
-      imgUploadViewItem: "",
+      imgUploadViewItem: '',
       imageStatusEnum,
       deliveryTypeEnum,
       commentScoreTypeEnum,
       orderType: [
-        { label: "小程序订单", value: "WX_SMALL" },
-        { label: "门店订单", value: "STORE" },
+        { label: '小程序订单', value: 'WX_SMALL' },
+        { label: '门店订单', value: 'STORE' }
       ],
       istopTypeEnum: [
-        { label: "是", value: "YES" },
-        { label: "否", value: "NO" },
+        { label: '是', value: 'YES' },
+        { label: '否', value: 'NO' }
       ],
+      ruleInline: {
+        answerContent: [{ required: true, message: '请输入评价回复' }]
+      },
       columns: [
         {
-          title: "订单编号",
-          align: "center",
+          title: '订单编号',
+          align: 'center',
           width: 190,
-          fixed: "left",
-          key: "orderCode",
+          fixed: 'left',
+          key: 'orderCode',
           render: (h, params, vm) => {
             const { row } = params;
-            if (row.orderType === "WX_SMALL") {
+            if (row.orderType === 'WX_SMALL') {
               return <div>{row.orderCode}</div>;
             } else {
               return <div>{row.xid}</div>;
             }
             return <div>{row.orderCode}</div>;
-          },
+          }
         },
         {
-          title: "商品名称",
-          align: "center",
-          key: "productNames",
+          title: '商品名称',
+          align: 'center',
+          key: 'productNames',
           tooltip: true,
-          minWidth: 160,
+          minWidth: 160
         },
         {
-          title: "门店名称",
-          align: "center",
-          key: "storeName",
-          minWidth: 160,
+          title: '门店名称',
+          align: 'center',
+          key: 'storeName',
+          minWidth: 160
         },
         {
-          title: "用户名称",
-          align: "center",
-          key: "nickName",
-          minWidth: 160,
+          title: '用户名称',
+          align: 'center',
+          key: 'nickName',
+          minWidth: 160
         },
         {
-          title: "手机号码",
-          align: "center",
-          key: "phone",
-          minWidth: 130,
+          title: '手机号码',
+          align: 'center',
+          key: 'phone',
+          minWidth: 130
         },
         {
-          title: "评价时间",
-          align: "center",
-          key: "createTime",
-          minWidth: 180,
+          title: '评价时间',
+          align: 'center',
+          key: 'createTime',
+          minWidth: 180
         },
         {
-          title: "骑手评价",
-          align: "center",
-          key: "deliveryComment",
+          title: '骑手评价',
+          align: 'center',
+          key: 'deliveryComment',
           minWidth: 100,
           render: (h, params, vm) => {
             const { row } = params;
-            if (row.deliveryComment === "GOOD") {
+            if (row.deliveryComment === 'GOOD') {
               return (
                 <div>
-                  <tag color="orange">
+                  <tag color='orange'>
                     {deliveryTypeConvert(row.deliveryComment)}
                   </tag>
                 </div>
               );
-            } else if (row.deliveryComment === "GENERAL") {
+            } else if (row.deliveryComment === 'GENERAL') {
               return (
                 <div>
-                  <tag color="cyan">
+                  <tag color='cyan'>
                     {deliveryTypeConvert(row.deliveryComment)}
                   </tag>
                 </div>
               );
-            } else if (row.deliveryComment === "NEGATIVE") {
+            } else if (row.deliveryComment === 'NEGATIVE') {
               return (
                 <div>
-                  <tag color="error">
+                  <tag color='error'>
                     {deliveryTypeConvert(row.deliveryComment)}
                   </tag>
                 </div>
               );
             }
-            return <div>{"N/A"}</div>;
-          },
+            return <div>{'N/A'}</div>;
+          }
         },
         {
-          title: "是否给小票",
-          align: "center",
-          key: "whetherGiveReceipt",
+          title: '是否给小票',
+          align: 'center',
+          key: 'whetherGiveReceipt',
           minWidth: 110,
           render: (h, params, vm) => {
             const { row } = params;
-            if (row.whetherGiveReceipt === "YES") {
-              return <div>{"是"}</div>;
+            if (row.whetherGiveReceipt === 'YES') {
+              return <div>{'是'}</div>;
             } else {
-              return <div>{"否"}</div>;
+              return <div>{'否'}</div>;
             }
-          },
+          }
         },
         {
-          title: "门店评价",
-          align: "center",
+          title: '门店评价',
+          align: 'center',
           minWidth: 100,
-          key: "commentScore",
+          key: 'commentScore',
           render: (h, params, vm) => {
             const { row } = params;
-            return <div>{row.commentScore + "星"}</div>;
-          },
+            return <div>{row.commentScore + '星'}</div>;
+          }
         },
         {
-          title: "评价内容",
-          align: "center",
+          title: '评价内容',
+          align: 'center',
           minWidth: 200,
-          key: "commentContent",
+          key: 'commentContent',
           tooltip: true,
           render: (h, params, vm) => {
             const { row } = params;
-            if (row.commentSource != "USER") {
-              return <div>{"系统评价"}</div>;
+            if (row.commentSource != 'USER') {
+              return <div>{'系统评价'}</div>;
             } else {
               return <div>{row.commentContent}</div>;
             }
-          },
+          }
         },
         {
-          title: "回复评价",
-          align: "center",
+          title: '回复评价',
+          align: 'center',
           minWidth: 200,
-          key: "answerContent",
-          tooltip: true,
+          key: 'answerContent',
+          tooltip: true
         },
         {
-          title: "操作",
-          align: "center",
+          title: '操作',
+          align: 'center',
           minWidth: 200,
-          fixed: "right",
-          key: "handle",
-          options: ["view", "setTop", "setSta", "edit"],
-        },
+          fixed: 'right',
+          key: 'handle',
+          options: ['view', 'setTop', 'setSta', 'edit']
+        }
       ],
-      createLoading: false,
-      modalViewLoading: false,
+      searchRowData: _.cloneDeep(roleRowData),
+      evaluateDetail: _.cloneDeep(evaluateDetail)
     };
   },
   mounted() {
@@ -825,16 +817,65 @@ export default {
       this.getTableData();
     },
     resetFields() {
-      this.$refs.modalEdit.resetFields();
+      this.$refs.editForm.resetFields();
+    },
+    getTableData() {
+      if (this.searchRowData.beginDate) {
+        this.searchRowData.beginDate = this.$moment(
+          this.searchRowData.beginDate
+        ).format('YYYY-MM-DD HH:mm:ss');
+      }
+      if (this.searchRowData.endDate) {
+        this.searchRowData.endDate = this.$moment(
+          this.searchRowData.endDate
+        ).format('YYYY-MM-DD HH:mm:ss');
+      }
+      getEvaluatePages(this.searchRowData)
+        .then((res) => {
+          this.tableData = res.rows;
+          this.total = res.total;
+        })
+        .finally(() => {
+          this.loading = false;
+          this.searchLoading = false;
+          this.clearSearchLoading = false;
+        });
+    },
+    handleView(params) {
+      // this.resetFields();
+      this.tempModalType = this.modalType.view;
+      this.evaluateList = [];
+      this.evaluateDetail = _.cloneDeep(params.row);
+      const arr = params.row.commentImages.split(',');
+      for (let i = 0; i < arr.length; i++) {
+        if (arr[i] != '') {
+          this.evaluateList.push(arr[i]);
+        }
+      }
+      this.modalView = true;
+    },
+    handleEdit(params) {
+      this.resetFields();
+      this.tempModalType = this.modalType.edit;
+      this.evaluateList = [];
+      this.evaluateDetail = _.cloneDeep(params.row);
+      const arr = params.row.commentImages.split(',');
+      for (let i = 0; i < arr.length; i++) {
+        if (arr[i] != '') {
+          this.evaluateList.push(arr[i]);
+        }
+      }
+      this.evaluateStatus = !!params.row.answerContent;
+      this.modalEdit = true;
     },
     handleSubmit() {
-      this.$refs.modalEdit.validate((valid) => {
+      this.$refs.editForm.validate((valid) => {
         if (valid) {
           const evaluateData = this.evaluateDetail;
-          evaluateData.istop = "NO";
+          evaluateData.istop = 'NO';
           this.replyEvaluate(evaluateData);
         } else {
-          this.$Message.error("请完善信息!");
+          this.$Message.error('请完善信息!');
         }
       });
     },
@@ -848,64 +889,6 @@ export default {
           this.modalEdit = false;
         });
     },
-    handleView(params) {
-      this.resetFields();
-      this.tempModalType = this.modalType.view;
-      this.evaluateDetail = _.cloneDeep(params.row);
-      this.evaluateList = [];
-      this.evaluateDetail = _.cloneDeep(params.row);
-
-      const arr = params.row.commentImages.split(",");
-      for (let i = 0; i < arr.length; i++) {
-        if (arr[i] != "") {
-          this.evaluateList.push(arr[i]);
-        }
-      }
-      this.modalView = true;
-    },
-    handleEdit(params) {
-      this.resetFields();
-      this.evaluateList = [];
-      this.evaluateDetail = _.cloneDeep(params.row);
-      const arr = params.row.commentImages.split(",");
-      for (let i = 0; i < arr.length; i++) {
-        if (arr[i] != "") {
-          this.evaluateList.push(arr[i]);
-        }
-      }
-      console.log("121232", this.evaluateList);
-      params.row.answerContent
-        ? (this.evaluateStatus = true)
-        : (this.evaluateStatus = false);
-
-      this.modalEdit = true;
-    },
-    getTableData() {
-      if (this.searchRowData.beginDate) {
-        this.searchRowData.beginDate = this.$moment(
-          this.searchRowData.beginDate
-        ).format("YYYY-MM-DD HH:mm:ss");
-      }
-      if (this.searchRowData.endDate) {
-        this.searchRowData.endDate = this.$moment(
-          this.searchRowData.endDate
-        ).format("YYYY-MM-DD HH:mm:ss");
-      }
-      getEvaluatePages(this.searchRowData)
-        .then((res) => {
-          this.tableData = res.rows;
-          this.total = res.total;
-          this.loading = false;
-          this.searchLoading = false;
-          this.clearSearchLoading = false;
-        })
-        .catch((error) => {
-          console.log(error);
-          this.loading = false;
-          this.searchLoading = false;
-          this.clearSearchLoading = false;
-        });
-    },
     beginTimeChange(value, date) {
       this.evaluateDetail.beginDate = value;
     },
@@ -914,12 +897,12 @@ export default {
     },
     handleSetTop(params) {
       const evaluateData = _.cloneDeep(params.row);
-      evaluateData.istop = params.row.istop == "YES" ? "NO" : "YES";
+      evaluateData.istop = params.row.istop === 'YES' ? 'NO' : 'YES';
       this.replyEvaluate(evaluateData);
     },
     handleSetSta(params) {
       const evaluateData = _.cloneDeep(params.row);
-      evaluateData.status = params.row.status === "VIEW" ? "HIDE" : "VIEW";
+      evaluateData.status = params.row.status === 'VIEW' ? 'HIDE' : 'VIEW';
       this.replyEvaluate(evaluateData);
     },
     handleUploadView(item) {
@@ -938,28 +921,24 @@ export default {
         this.searchRowData.rows = 10;
         this.searchRowData.page = pageSize;
         // 表格数据导出字段翻译
-        const _this = this;
         tableData.forEach((item) => {
-          item["deliveryComment"] = deliveryTypeConvert(
-            item["deliveryComment"]
+          item['deliveryComment'] = deliveryTypeConvert(
+            item['deliveryComment']
           ).label;
-          item["whetherGiveReceipt"] =
-            item["whetherGiveReceipt"] === "YES" ? "是" : "否";
-          item["commentScore"] = item["commentScore"] + "星";
+          item['whetherGiveReceipt'] =
+            item['whetherGiveReceipt'] === 'YES' ? '是' : '否';
+          item['commentScore'] = item['commentScore'] + '星';
         });
-        const date = this.$moment(new Date()).format("YYYYMMDDHHmmss");
+        const date = this.$moment(new Date()).format('YYYYMMDDHHmmss');
         this.$refs.tables.handleDownload({
           filename: `用户评价数据-${date}`,
-          data: tableData,
+          data: tableData
         });
       });
-    },
-  },
+    }
+  }
 };
 </script>
 
 <style lang="scss" scoped>
-.mr20 {
-  margin-right: 20px;
-}
 </style>

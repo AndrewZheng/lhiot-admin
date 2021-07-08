@@ -221,7 +221,7 @@ export const constantRouterMap = [
     component: Main,
     children: [
       {
-        path: 'wholesale-goods-relation-standard',
+        path: '/wholesale-goods-relation-standard',
         name: 'wholesale-goods-relation-standard',
         meta: {
           icon: 'md-menu',

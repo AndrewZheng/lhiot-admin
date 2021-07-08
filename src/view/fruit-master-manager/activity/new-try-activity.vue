@@ -20,16 +20,16 @@
             <Input v-model="searchRowData.name" placeholder="商品名称" class="search-input mr5" style="width: auto"></Input>
             <Input v-model="searchRowData.barcode" placeholder="商品条码" class="search-input mr5" style="width: auto"></Input>
             <Button v-waves :loading="searchLoading" class="search-btn mr5" type="primary" @click="handleSearch">
-              <Icon type="md-search"/>&nbsp;搜索
+              <Icon type="md-search" />&nbsp;搜索
             </Button>
             <Button v-waves :loading="clearSearchLoading" class="search-btn" type="info" @click="handleClear">
-              <Icon type="md-refresh"/>&nbsp;清除条件
+              <Icon type="md-refresh" />&nbsp;清除条件
             </Button>
           </Row>
         </div>
         <div slot="operations">
           <Button v-waves type="success" class="mr5" @click="addChildren">
-            <Icon type="md-add"/>
+            <Icon type="md-add" />
             关联商品
           </Button>
           <Poptip
@@ -40,7 +40,7 @@
             @on-ok="poptipOk"
           >
             <Button type="error" class="mr5">
-              <Icon type="md-trash"/>
+              <Icon type="md-trash" />
               删除
             </Button>
           </Poptip>
@@ -54,7 +54,8 @@
             show-sizer
             show-total
             @on-change="changePage"
-            @on-page-size-change="changePageSize"></Page>
+            @on-page-size-change="changePageSize"
+          ></Page>
         </Row>
       </div>
     </Card>
@@ -65,7 +66,7 @@
       :width="700"
     >
       <p slot="header">
-        <span>{{ tempModalType === modalType.create?'关联商品':'修改关联商品' }}</span>
+        <span>{{ isCreate?'关联商品':'修改关联商品' }}</span>
       </p>
       <div class="modal-content">
         <Form ref="modalEdit" :model="goodsDetail" :rules="ruleInline">
@@ -84,10 +85,11 @@
               >
                 <Option
                   v-for="(option, index) in optionsShelfSpecification"
-                  :value="option.id"
                   :key="index"
+                  :value="option.id"
                   class="pb5 pt5 pl15"
-                  @click.native="selectIndex(option)">
+                  @click.native="selectIndex(option)"
+                >
                   {{ option.specificationInfo }}
                 </Option>
               </Select>
@@ -95,7 +97,7 @@
             </FormItem>
             </Col>
             <Col span="12">
-            <FormItem label="商品价格:" >
+            <FormItem label="商品价格:">
               <i-col>{{ goodsDetail.price|fenToYuanDot2Filters }}</i-col>
             </FormItem>
             </Col>
@@ -114,12 +116,12 @@
             </Col>
             <Col span="12">
             <FormItem label="商品排序:" prop="sort">
-              <InputNumber :min="1" v-model="goodsDetail.sort" style="width: 150px"></InputNumber>
+              <InputNumber v-model="goodsDetail.sort" :min="1" style="width: 150px"></InputNumber>
             </FormItem>
             </Col>
           </Row>
           <Checkbox
-            v-if="tempModalType === modalType.create"
+            v-if="isCreate"
             v-model="goodsDetail.relationSection"
             :true-value="YNEnum.YES"
             :false-value="YNEnum.NO"
@@ -147,8 +149,6 @@ import {
   addActivityProduct,
   editActivityProduct } from '@/api/fruitermaster';
 import tableMixin from '@/mixins/tableMixin.js';
-import searchMixin from '@/mixins/searchMixin.js';
-import deleteMixin from '@/mixins/deleteMixin.js';
 import { fenToYuanDot2, fenToYuanDot2Number, yuanToFenNumber } from '@/libs/util';
 import { YNEnum } from '@/libs/enumerate';
 const fruitMasterDetail = {
@@ -185,7 +185,7 @@ export default {
   components: {
     Tables
   },
-  mixins: [tableMixin, searchMixin, deleteMixin],
+  mixins: [tableMixin],
   data() {
     return {
       YNEnum,
@@ -313,10 +313,10 @@ export default {
       }
       this.$refs[name].validate((valid) => {
         if (valid) {
-          if (this.tempModalType === this.modalType.create) {
+          if (this.isCreate) {
             // 添加状态
             this.createTableRow();
-          } else if (this.tempModalType === this.modalType.edit) {
+          } else if (this.isEdit) {
             // 编辑状态
             this.editTableRow();
           }

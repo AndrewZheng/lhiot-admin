@@ -213,7 +213,11 @@
             highlight-row
             search-place="top"
             @on-current-change="handleHdTemplateChange"
-          ></tables>
+          >
+          </tables>
+          <div class="ml15 mt10">
+            <i style="color: red">*</i> 超值购券只允许添加满减券与现金券
+          </div>
           <div style="margin: 10px; overflow: hidden">
             <Row
               v-if="tempModalType == 'addTemplate'"
@@ -324,7 +328,9 @@
                   }}
                 </FormItem>
               </i-col>
-              <template v-if="addRelationDetail.validDateType == 'UN_FIXED_DATE'">
+              <template
+                v-if="addRelationDetail.validDateType == 'UN_FIXED_DATE'"
+              >
                 <i-col span="7">
                   <FormItem label="发放券后:" prop="beginDay">
                     <InputNumber
@@ -403,7 +409,10 @@
                       v-for="(item, index) in couponScopeEnum"
                       :key="index"
                       :value="item.value"
-                      :disabled="tempModalType == 'addHdTemplate' && item.value === 'SMALL'"
+                      :disabled="
+                        tempModalType == 'addHdTemplate' &&
+                          item.value === 'SMALL'
+                      "
                       class="ptb2-5"
                       style="padding-left: 5px; width: 100px"
                     >
@@ -416,9 +425,7 @@
                   label="券使用范围:"
                   prop="couponScope"
                 >
-                  {{
-                    addRelationDetail.couponScope | couponScopeFilter
-                  }}
+                  {{ addRelationDetail.couponScope | couponScopeFilter }}
                 </FormItem>
               </i-col>
               <i-col span="8">
@@ -452,9 +459,7 @@
                   prop="useLimitType"
                   :label-width="140"
                 >
-                  {{
-                    addRelationDetail.useLimitType | couponUseLimitFilter
-                  }}
+                  {{ addRelationDetail.useLimitType | couponUseLimitFilter }}
                 </FormItem>
               </i-col>
             </Row>
@@ -466,9 +471,7 @@
                   label="最高优惠金额:"
                   prop="maxDiscountFee"
                 >
-                  {{
-                    addRelationDetail.maxDiscountFee | fenToYuanDot2Filters
-                  }}
+                  {{ addRelationDetail.maxDiscountFee | fenToYuanDot2Filters }}
                 </FormItem>
                 <FormItem
                   v-else
@@ -535,13 +538,9 @@
                 </FormItem>
               </i-col>
               <i-col v-show="showStoreList" span="12">
-                <FormItem
-                  :label-width="85"
-                  label="所属城市:"
-                  prop="cityCode"
-                >
+                <FormItem :label-width="85" label="所属城市:">
                   <Select
-                    v-model="addRelationDetail.cityCode"
+                    v-model="cityCode"
                     style="width: 220px"
                     @on-change="handleCitySwitch"
                   >
@@ -560,6 +559,21 @@
             </Row>
             <Row v-show="showStoreList">
               <i-col v-if="storeData.length>0" span="24">
+                <FormItem>
+                  <div class="bottom-line">
+                    <div style="margin-left: -54px; margin-right: 18px">
+                      地级市全部门店
+                    </div>
+                    <Checkbox
+                      :value="checkAllStore"
+                      @click.prevent.native="handleCheckAll(-1)"
+                    >
+                      全选/反选
+                    </Checkbox>
+                  </div>
+                </FormItem>
+              </i-col>
+              <i-col v-if="storeData.length > 0" span="24">
                 <FormItem>
                   <div class="bottom-line">
                     <div style="margin-left: -54px; margin-right: 18px">
@@ -588,11 +602,9 @@
                   </CheckboxGroup>
                 </FormItem>
               </i-col>
-              <i-col v-if="storeData1.length>0" span="24">
+              <i-col v-if="storeData1.length > 0" span="24">
                 <FormItem>
-                  <div
-                    class="bottom-line"
-                  >
+                  <div class="bottom-line">
                     <div style="margin-left: -54px; margin-right: 18px">
                       {{ storeNameList[1] }}
                     </div>
@@ -619,11 +631,9 @@
                   </CheckboxGroup>
                 </FormItem>
               </i-col>
-              <i-col v-if="storeData2.length>0" span="24">
+              <i-col v-if="storeData2.length > 0" span="24">
                 <FormItem>
-                  <div
-                    class="bottom-line"
-                  >
+                  <div class="bottom-line">
                     <div style="margin-left: -54px; margin-right: 18px">
                       {{ storeNameList[2] }}
                     </div>
@@ -650,11 +660,9 @@
                   </CheckboxGroup>
                 </FormItem>
               </i-col>
-              <i-col v-if="storeData3.length>0" span="24">
+              <i-col v-if="storeData3.length > 0" span="24">
                 <FormItem>
-                  <div
-                    class="bottom-line"
-                  >
+                  <div class="bottom-line">
                     <div style="margin-left: -54px; margin-right: 18px">
                       {{ storeNameList[3] }}
                     </div>
@@ -681,7 +689,7 @@
                   </CheckboxGroup>
                 </FormItem>
               </i-col>
-              <i-col v-if="storeData4.length>0" span="24">
+              <i-col v-if="storeData4.length > 0" span="24">
                 <FormItem>
                   <div class="bottom-line">
                     <div style="margin-left: -54px; margin-right: 18px">
@@ -710,11 +718,9 @@
                   </CheckboxGroup>
                 </FormItem>
               </i-col>
-              <i-col v-if="storeData5.length>0" span="24">
+              <i-col v-if="storeData5.length > 0" span="24">
                 <FormItem>
-                  <div
-                    class="bottom-line"
-                  >
+                  <div class="bottom-line">
                     <div style="margin-left: -54px; margin-right: 18px">
                       {{ storeNameList[5] }}
                     </div>
@@ -741,11 +747,9 @@
                   </CheckboxGroup>
                 </FormItem>
               </i-col>
-              <i-col v-if="storeData6.length>0" span="24">
+              <i-col v-if="storeData6.length > 0" span="24">
                 <FormItem>
-                  <div
-                    class="bottom-line"
-                  >
+                  <div class="bottom-line">
                     <div style="margin-left: -54px; margin-right: 18px">
                       {{ storeNameList[6] }}
                     </div>
@@ -772,15 +776,13 @@
                   </CheckboxGroup>
                 </FormItem>
               </i-col>
-            </Row>
-          </Form>*Tips：请先选择要关联的优惠券，然后输入关联配置信息，不可关联多个优惠券模板
+            </Row> </Form>*Tips：请先选择要关联的优惠券，然后输入关联配置信息，不可关联多个优惠券模板
         </Row>
       </div>
       <div slot="footer">
-        <Button @click="handleAddClose">
-          关闭
-        </Button>
+        <Button @click="handleAddClose"> 关闭 </Button>
         <Button
+          v-if="!buyCouponActStatus"
           :loading="modalViewLoading"
           type="primary"
           @click="handleTemplateAdd"
@@ -832,14 +834,10 @@
                 label="最高优惠金额:"
                 prop="maxDiscountFee"
               >
-                {{
-                  addRelationDetail.maxDiscountFee | fenToYuanDot2Filters
-                }}
+                {{ addRelationDetail.maxDiscountFee | fenToYuanDot2Filters }}
               </FormItem>
               <FormItem v-else label="最高优惠金额:" prop="maxDiscountFee">
-                {{
-                  "N/A"
-                }}
+                {{ "N/A" }}
               </FormItem>
             </i-col>
           </Row>
@@ -855,9 +853,7 @@
             </i-col>
             <i-col span="12">
               <FormItem label="优惠券类型:">
-                {{
-                  addRelationDetail.couponType | couponTypeFilter
-                }}
+                {{ addRelationDetail.couponType | couponTypeFilter }}
               </FormItem>
             </i-col>
           </Row>
@@ -868,37 +864,27 @@
                 label="折扣额度:"
                 prop="couponFee"
               >
-                {{
-                  addRelationDetail.couponFee | fenToDiscountFilters
-                }}
+                {{ addRelationDetail.couponFee | fenToDiscountFilters }}
               </FormItem>
               <FormItem v-else label="优惠金额:" prop="couponFee">
-                {{
-                  addRelationDetail.couponFee | fenToYuanDot2Filters
-                }}
+                {{ addRelationDetail.couponFee | fenToYuanDot2Filters }}
               </FormItem>
             </i-col>
             <i-col span="12">
               <FormItem label="最小购买金额:" prop="minBuyFee">
-                {{
-                  addRelationDetail.minBuyFee | fenToYuanDot2Filters
-                }}
+                {{ addRelationDetail.minBuyFee | fenToYuanDot2Filters }}
               </FormItem>
             </i-col>
           </Row>
           <Row>
             <i-col span="12">
               <FormItem label="优惠券状态:" prop="couponStatus">
-                {{
-                  addRelationDetail.couponStatus | couponStatusFilter
-                }}
+                {{ addRelationDetail.couponStatus | couponStatusFilter }}
               </FormItem>
             </i-col>
             <i-col span="12">
               <FormItem label="使用范围:" prop="couponScope">
-                {{
-                  addRelationDetail.couponScope | couponScopeFilter
-                }}
+                {{ addRelationDetail.couponScope | couponScopeFilter }}
               </FormItem>
             </i-col>
           </Row>
@@ -1062,13 +1048,9 @@
               </FormItem>
             </i-col>
             <i-col v-show="showStoreList" span="12">
-              <FormItem
-                :label-width="85"
-                label="所属城市:"
-                prop="cityCode"
-              >
+              <FormItem :label-width="85" label="所属城市:">
                 <Select
-                  v-model="addRelationDetail.cityCode"
+                  v-model="cityCode"
                   style="width: 220px"
                   @on-change="handleCitySwitch"
                 >
@@ -1087,6 +1069,21 @@
           </Row>
           <Row v-show="showStoreList">
             <i-col v-if="storeData.length>0" span="24">
+              <FormItem>
+                <div class="bottom-line">
+                  <div style="margin-left: -54px; margin-right: 18px">
+                    地级市全部门店
+                  </div>
+                  <Checkbox
+                    :value="checkAllStore"
+                    @click.prevent.native="handleCheckAll(-1)"
+                  >
+                    全选/反选
+                  </Checkbox>
+                </div>
+              </FormItem>
+            </i-col>
+            <i-col v-if="storeData.length > 0" span="24">
               <FormItem>
                 <div class="bottom-line">
                   <div style="margin-left: -54px; margin-right: 18px">
@@ -1115,7 +1112,7 @@
                 </CheckboxGroup>
               </FormItem>
             </i-col>
-            <i-col v-if="storeData1.length>0" span="24">
+            <i-col v-if="storeData1.length > 0" span="24">
               <FormItem>
                 <div class="bottom-line">
                   <div style="margin-left: -54px; margin-right: 18px">
@@ -1144,11 +1141,9 @@
                 </CheckboxGroup>
               </FormItem>
             </i-col>
-            <i-col v-if="storeData2.length>0" span="24">
+            <i-col v-if="storeData2.length > 0" span="24">
               <FormItem>
-                <div
-                  class="bottom-line"
-                >
+                <div class="bottom-line">
                   <div style="margin-left: -54px; margin-right: 18px">
                     {{ storeNameList[2] }}
                   </div>
@@ -1175,11 +1170,9 @@
                 </CheckboxGroup>
               </FormItem>
             </i-col>
-            <i-col v-if="storeData3.length>0" span="24">
+            <i-col v-if="storeData3.length > 0" span="24">
               <FormItem>
-                <div
-                  class="bottom-line"
-                >
+                <div class="bottom-line">
                   <div style="margin-left: -54px; margin-right: 18px">
                     {{ storeNameList[3] }}
                   </div>
@@ -1206,11 +1199,9 @@
                 </CheckboxGroup>
               </FormItem>
             </i-col>
-            <i-col v-if="storeData4.length>0" span="24">
+            <i-col v-if="storeData4.length > 0" span="24">
               <FormItem>
-                <div
-                  class="bottom-line"
-                >
+                <div class="bottom-line">
                   <div style="margin-left: -54px; margin-right: 18px">
                     {{ storeNameList[4] }}
                   </div>
@@ -1237,11 +1228,9 @@
                 </CheckboxGroup>
               </FormItem>
             </i-col>
-            <i-col v-if="storeData5.length>0" span="24">
+            <i-col v-if="storeData5.length > 0" span="24">
               <FormItem>
-                <div
-                  class="bottom-line"
-                >
+                <div class="bottom-line">
                   <div style="margin-left: -54px; margin-right: 18px">
                     {{ storeNameList[5] }}
                   </div>
@@ -1268,11 +1257,9 @@
                 </CheckboxGroup>
               </FormItem>
             </i-col>
-            <i-col v-if="storeData6.length>0" span="24">
+            <i-col v-if="storeData6.length > 0" span="24">
               <FormItem>
-                <div
-                  class="bottom-line"
-                >
+                <div class="bottom-line">
                   <div style="margin-left: -54px; margin-right: 18px">
                     {{ storeNameList[6] }}
                   </div>
@@ -1325,9 +1312,7 @@
         </Form>
       </div>
       <div slot="footer">
-        <Button @click="handleEditClose">
-          关闭
-        </Button>
+        <Button @click="handleEditClose"> 关闭 </Button>
         <Button
           :loading="modalViewLoading"
           type="primary"
@@ -1357,9 +1342,7 @@ import {
   getHdCouponActivitiesPages
 } from '@/api/mini-program';
 import uploadMixin from '@/mixins/uploadMixin';
-import deleteMixin from '@/mixins/deleteMixin.js';
 import tableMixin from '@/mixins/tableMixin.js';
-import searchMixin from '@/mixins/searchMixin.js';
 import relationStoreMixin from '@/mixins/relationStoreMixin.js';
 
 import {
@@ -1443,8 +1426,7 @@ const relationDetail = {
   stores: null,
   relationStoreType: 'ALL',
   beginDay: 0,
-  endDay: 0,
-  cityCode: '0744' // 仅用于城市展示
+  endDay: 0
 };
 
 const roleRowData = {
@@ -1647,14 +1629,14 @@ const dataColumns = [
     minWidth: 180,
     render: (h, params, vm) => {
       const { row } = params;
-      if (row.source == 'SMALL' && row.validDateType === 'FIXED_DATE') {
+      if (row.source === 'SMALL' && row.validDateType === 'FIXED_DATE') {
         return <div>{row.effectiveStartTime}</div>;
       } else if (
-        row.source == 'SMALL' &&
+        row.source === 'SMALL' &&
         row.validDateType === 'UN_FIXED_DATE'
       ) {
         return <div>{row.beginDay}</div>;
-      } else if (row.source == 'HD') {
+      } else if (row.source === 'HD') {
         return <div>{row.effectiveStartTime}</div>;
       } else {
         return <div>N/A</div>;
@@ -1668,18 +1650,20 @@ const dataColumns = [
     minWidth: 230,
     render: (h, params, vm) => {
       const { row } = params;
-      if (row.source == 'SMALL' && row.validDateType === 'FIXED_DATE') {
+      if (row.source === 'SMALL' && row.validDateType === 'FIXED_DATE') {
         if (!compareCouponData(row.effectiveEndTime)) {
-          return <div style='color:red'>{row.effectiveEndTime + ' 已过期'}</div>;
+          return (
+            <div style='color:red'>{row.effectiveEndTime + ' 已过期'}</div>
+          );
         } else {
           return <div>{row.effectiveEndTime}</div>;
         }
       } else if (
-        row.source == 'SMALL' &&
+        row.source === 'SMALL' &&
         row.validDateType === 'UN_FIXED_DATE'
       ) {
         return <div>{row.endDay}</div>;
-      } else if (row.source == 'HD') {
+      } else if (row.source === 'HD') {
         if (!compareCouponData(row.effectiveEndTime)) {
           return <div style='color:red'>{row.effectiveEndTime + '已过期'}</div>;
         } else {
@@ -1981,7 +1965,7 @@ export default {
     Tables,
     IViewUpload
   },
-  mixins: [deleteMixin, tableMixin, searchMixin, uploadMixin, relationStoreMixin],
+  mixins: [tableMixin, uploadMixin, relationStoreMixin],
   data() {
     return {
       defaultListMain: [],
@@ -1991,11 +1975,10 @@ export default {
       couponTemplateData: [],
       hdCouponTemplateData: [],
       templatePageOpts: [5, 10],
+      buyCouponActStatus: false,
       showValidDate: true,
       addTempDataLoading: false,
       tempTableLoading: false,
-      createLoading: false,
-      modalViewLoading: false,
       activityCouponType: '',
       PresellTotal: 0,
       couponTemplateTotal: 0,
@@ -2008,13 +1991,6 @@ export default {
       relationStoreTypeEnum,
       userScopeEnum,
       dataColumns: dataColumns,
-      templateColumns: _.cloneDeep(templateColumns),
-      hdTemplateColumns: _.cloneDeep(hdTemplateColumns),
-      searchRowData: _.cloneDeep(roleRowData),
-      searchTemplateRowData: _.cloneDeep(templateRowData),
-      searchHdTemplateRowData: _.cloneDeep(hdTemplateRowData),
-      couponDetail: _.cloneDeep(couponDetail),
-      addRelationDetail: _.cloneDeep(relationDetail),
       ruleInline: {
         effectiveStartTime: [{ required: false, message: '请选择生效时间' }],
         effectiveEndTime: [{ required: false, message: '请选择失效时间' }],
@@ -2031,7 +2007,14 @@ export default {
             }
           }
         ]
-      }
+      },
+      templateColumns: _.cloneDeep(templateColumns),
+      hdTemplateColumns: _.cloneDeep(hdTemplateColumns),
+      searchRowData: _.cloneDeep(roleRowData),
+      searchTemplateRowData: _.cloneDeep(templateRowData),
+      searchHdTemplateRowData: _.cloneDeep(hdTemplateRowData),
+      couponDetail: _.cloneDeep(couponDetail),
+      addRelationDetail: _.cloneDeep(relationDetail)
     };
   },
   computed: {
@@ -2046,7 +2029,6 @@ export default {
     }
   },
   mounted() {
-    this.searchRowData = _.cloneDeep(roleRowData);
     this.getTableData();
   },
   methods: {
@@ -2071,7 +2053,8 @@ export default {
           this.addRelationDetail.couponRules
         );
       }
-      if (this.addRelationDetail.stores !== null &&
+      if (
+        this.addRelationDetail.stores !== null &&
         this.addRelationDetail.stores !== ''
       ) {
         this.showStoreList = true;
@@ -2079,12 +2062,16 @@ export default {
         const storeIds = this.addRelationDetail.stores
           .substring(1, this.addRelationDetail.stores.length - 1)
           .split('][');
-        storeIds.forEach((element) => { this.storeIds.push(parseInt(element)); });
+        storeIds.forEach((element) => {
+          this.storeIds.push(parseInt(element));
+        });
         console.log('selected storeIds:', this.storeIds);
         const firstStoreId = this.storeIds[0];
         // 编辑时从返回的第一个storeId单独查询下cityCode来反选城市
-        const storeObj = this.allStoreList.find(item => item.storeId === firstStoreId);
-        this.addRelationDetail.cityCode = storeObj.cityCode;
+        const storeObj = this.allStoreList.find(
+          (item) => item.storeId === firstStoreId
+        );
+        this.cityCode = storeObj.cityCode;
         this.getStore(true);
       } else {
         this.showStoreList = false;
@@ -2203,6 +2190,14 @@ export default {
       if (this.activityCouponType === 'BUY_COUPON_ACTIVITY') {
         this.addRelationDetail.couponLimit = 9999999;
       }
+      if (
+        currentRow.couponType === 'DISCOUNT_COUPON' &&
+        this.activityCouponType === 'BUY_COUPON_ACTIVITY_ALL'
+      ) {
+        this.buyCouponActStatus = true;
+      } else {
+        this.buyCouponActStatus = false;
+      }
     },
     handleHdTemplateChange(currentRow, oldCurrentRow) {
       // 选中关联的优惠券模板冗余对应字段到配置对象中- 默认为最后选择的一条数据
@@ -2233,6 +2228,14 @@ export default {
       this.addRelationDetail.couponStatus = 'VALID'; // 海鼎券默认为有效状态
       this.addRelationDetail.effectiveStartTime = currentRow.beginDate; // 海鼎活动开始时间
       this.addRelationDetail.effectiveEndTime = currentRow.endDate; // 海鼎活动结束时间
+      if (
+        currentRow.couponType === 'DISCOUNT_COUPON' &&
+        this.activityCouponType === 'BUY_COUPON_ACTIVITY_ALL'
+      ) {
+        this.buyCouponActStatus = true;
+      } else {
+        this.buyCouponActStatus = false;
+      }
     },
     effectiveStartTimeChange(value, date) {
       this.addRelationDetail.effectiveStartTime = value;
@@ -2254,7 +2257,7 @@ export default {
       this.$refs.addForm.resetFields();
       this.addRelationDetail = _.cloneDeep(relationDetail);
       // 当展示的是添加系统优惠券
-      if (this.tempModalType == 'addTemplate') {
+      if (this.tempModalType === 'addTemplate') {
         this.addRelationDetail.couponScope = 'SMALL';
         this.addRelationDetail.useLimitType = 'SMALL_ALL';
       }
@@ -2286,13 +2289,12 @@ export default {
       this.addRelationList.push(this.addRelationDetail);
       createCouponTemplateRelation(this.addRelationList)
         .then((res) => {
-          this.modalViewLoading = false;
           this.$Message.success('创建成功!');
           this.modalAdd = false;
           this.getRelationTableData();
           this.addRelationList = [];
         })
-        .catch(() => {
+        .finally(() => {
           this.modalViewLoading = false;
         });
     },
@@ -2301,12 +2303,8 @@ export default {
         .then((res) => {
           this.hdCouponTemplateData = res.rows;
           this.couponHdTemplateTotal = res.total;
-          this.loading = false;
-          this.searchLoading = false;
-          this.clearSearchLoading = false;
         })
-        .catch((error) => {
-          console.log(error);
+        .finally(() => {
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
@@ -2332,7 +2330,7 @@ export default {
             );
           }
 
-          if (this.tempModalType === this.modalType.edit) {
+          if (this.isEdit) {
             // 编辑状态
             this.tempTableLoading = true;
             editCouponTemplateRelation(this.addRelationDetail)
@@ -2352,7 +2350,7 @@ export default {
       });
     },
     handleTemplateAdd() {
-      if (this.addRelationDetail.couponName == '') {
+      if (this.addRelationDetail.couponName === '') {
         this.$Message.error('请先关联一张优惠券模板!');
         return false;
       }
@@ -2393,7 +2391,7 @@ export default {
         .then((res) => {
           const totalPage = Math.ceil(this.total / this.searchRowData.pageSize);
           if (
-            this.tableData.length == this.tableDataSelected.length &&
+            this.tableData.length === this.tableDataSelected.length &&
             this.searchRowData.page === totalPage &&
             this.searchRowData.page !== 1
           ) {

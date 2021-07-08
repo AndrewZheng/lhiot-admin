@@ -15,7 +15,7 @@
         @on-delete="handleDelete"
         @on-view="handleView"
         @on-edit="handleEdit"
-        @on-sale="onOff"
+        @on-sale="handleSwitch"
         @on-select-all="onSelectionAll"
         @on-selection-change="onSelectionChange"
       >
@@ -353,7 +353,6 @@
 <script type="text/ecmascript-6">
 import Tables from '_c/tables';
 import IViewUpload from '_c/iview-upload';
-import _ from 'lodash';
 import {
   deleteRandomDiscount,
   getRandomDiscountPages,
@@ -361,10 +360,8 @@ import {
   createRandomDiscount
 } from '@/api/mini-program';
 import uploadMixin from '@/mixins/uploadMixin';
-import deleteMixin from '@/mixins/deleteMixin.js';
 import tableMixin from '@/mixins/tableMixin.js';
-import searchMixin from '@/mixins/searchMixin.js';
-import { couponStatusConvert, imageStatusConvert } from '@/libs/converStatus';
+import { imageStatusConvert } from '@/libs/converStatus';
 import { couponStatusEnum, imageStatusEnum } from '@/libs/enumerate';
 import {
   fenToYuanDot2,
@@ -400,7 +397,7 @@ export default {
     Tables,
     IViewUpload
   },
-  mixins: [uploadMixin, deleteMixin, tableMixin, searchMixin],
+  mixins: [uploadMixin, tableMixin],
   data() {
     return {
       ruleInline: {
@@ -531,7 +528,6 @@ export default {
     }
   },
   mounted() {
-    this.searchRowData = _.cloneDeep(roleRowData);
     this.getTableData();
   },
   created() {},
@@ -545,6 +541,36 @@ export default {
       // this.$refs.uploadMain.clearFileList();
       this.uploadListMain = [];
       this.randomDiscountDetail.shareImageUrl = null;
+    },
+    getTableData() {
+      getRandomDiscountPages(this.searchRowData)
+        .then(res => {
+          this.tableData = res.rows;
+          this.total = res.total;
+        })
+        .finally(() => {
+          this.loading = false;
+          this.searchLoading = false;
+          this.clearSearchLoading = false;
+        });
+    },
+    handleSwitch(params) {
+      this.randomDiscountDetail = this._.cloneDeep(params.row);
+      this.randomDiscountDetail.onOff = params.row.onOff === 'ON' ? 'OFF' : 'ON';
+      this.editRandomDiscount();
+    },
+    handleView(params) {
+      this.resetFields();
+      this.tempModalType = this.modalType.view;
+      this.randomDiscountDetail = _.cloneDeep(params.row);
+      this.modalView = true;
+    },
+    handleEdit(params) {
+      this.resetFields();
+      this.tempModalType = this.modalType.edit;
+      this.randomDiscountDetail = _.cloneDeep(params.row);
+      this.setDefaultUploadList(this.randomDiscountDetail);
+      this.modalEdit = true;
     },
     handleSubmit(name) {
       this.$refs[name].validate(valid => {
@@ -563,10 +589,10 @@ export default {
             this.$Message.error('最低立减金额不能大于最高立减金额');
             return;
           }
-          if (this.tempModalType === this.modalType.create) {
+          if (this.isCreate) {
             // 添加状态
             this.createRandomDiscount();
-          } else if (this.tempModalType === this.modalType.edit) {
+          } else if (this.isEdit) {
             // 编辑状态
             this.editRandomDiscount();
           }
@@ -579,14 +605,12 @@ export default {
       this.modalViewLoading = true;
       createRandomDiscount(this.randomDiscountDetail)
         .then(res => {
-          this.modalViewLoading = false;
           this.modalEdit = false;
           this.$Message.success('创建成功!');
           this.getTableData();
         })
-        .catch(() => {
+        .finally(() => {
           this.modalViewLoading = false;
-          this.modalEdit = false;
         });
     },
     editRandomDiscount() {
@@ -594,11 +618,9 @@ export default {
       editRandomDiscount(this.randomDiscountDetail)
         .then(res => {
           this.modalEdit = false;
-          this.modalViewLoading = false;
           this.getTableData();
         })
-        .catch(() => {
-          this.modalEdit = false;
+        .finally(() => {
           this.modalViewLoading = false;
         });
     },
@@ -610,21 +632,14 @@ export default {
       }
       this.modalEdit = true;
     },
-    // 删除
-    handleDelete(params) {
-      this.tableDataSelected = [];
-      this.tableDataSelected.push(params.row);
-      this.deleteTable(params.row.id);
-    },
     deleteTable(ids) {
-      this.loading = true;
       deleteRandomDiscount({
         ids
       })
         .then(res => {
           const totalPage = Math.ceil(this.total / this.searchRowData.pageSize);
           if (
-            this.tableData.length == this.tableDataSelected.length &&
+            this.tableData.length === this.tableDataSelected.length &&
             this.searchRowData.page === totalPage &&
             this.searchRowData.page !== 1
           ) {
@@ -632,50 +647,7 @@ export default {
           }
           this.tableDataSelected = [];
           this.getTableData();
-        })
-        .catch(err => {
-          console.log(err);
-          this.loading = false;
         });
-    },
-    handleView(params) {
-      this.resetFields();
-      this.tempModalType = this.modalType.view;
-      this.randomDiscountDetail = _.cloneDeep(params.row);
-      this.modalView = true;
-    },
-    handleEdit(params) {
-      this.resetFields();
-      this.tempModalType = this.modalType.edit;
-      this.randomDiscountDetail = _.cloneDeep(params.row);
-      this.setDefaultUploadList(this.randomDiscountDetail);
-      this.modalEdit = true;
-    },
-    getTableData() {
-      getRandomDiscountPages(this.searchRowData)
-        .then(res => {
-          this.tableData = res.rows;
-          this.total = res.total;
-          this.loading = false;
-          this.searchLoading = false;
-          this.clearSearchLoading = false;
-        })
-        .catch(error => {
-          console.log(error);
-          this.loading = false;
-          this.searchLoading = false;
-          this.clearSearchLoading = false;
-        });
-    },
-    onOff(params) {
-      this.randomDiscountDetail = this._.cloneDeep(params.row);
-      if (params.row.onOff === 'ON') {
-        this.randomDiscountDetail.onOff = 'OFF';
-      } else {
-        this.randomDiscountDetail.onOff = 'ON';
-      }
-      this.loading = true;
-      this.editRandomDiscount();
     },
     startTimeChange(value, date) {
       this.randomDiscountDetail.startTime = value;

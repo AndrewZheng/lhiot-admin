@@ -8,6 +8,7 @@ const mixin = {
   data() {
     return {
       showStoreName: '',
+      cityCode: '0744',
       cityList: [],
       storeNameList: [],
       allStoreList: [],
@@ -31,6 +32,7 @@ const mixin = {
       indeterminate5: false,
       indeterminate6: false,
       indeterminate7: false,
+      // checkAllStore: false,
       checkAll: false,
       checkAll1: false,
       checkAll2: false,
@@ -42,7 +44,36 @@ const mixin = {
     };
   },
   computed: {
-
+    // indeterminateAll: {
+    //   get() {
+    //     if (this.cityCode === '0744') {
+    //       return this.indeterminate || this.indeterminate1 || this.indeterminate2 || this.indeterminate3 ||
+    //       this.indeterminate4 || this.indeterminate5 || this.indeterminate6;
+    //     } else {
+    //       return this.indeterminate || this.indeterminate1 || this.indeterminate2;
+    //     }
+    //   },
+    //   set(newValue) {
+    //     return newValue;
+    //   }
+    // }
+    checkAllStore: {
+      get() {
+        if (this.cityCode === '0744') {
+          return this.checkAll && this.checkAll1 && this.checkAll2 && this.checkAll3 &&
+          this.checkAll4 && this.checkAll5 && this.checkAll6;
+        } else {
+          return this.checkAll && this.checkAll1 && this.checkAll2;
+        }
+      },
+      set(newValue) {
+        if (newValue) {
+          this.checkBoxRestTrue();
+        } else {
+          this.checkBoxRest();
+        }
+      }
+    }
   },
   methods: {
     getStorePages() {
@@ -63,7 +94,7 @@ const mixin = {
         })
     },
     getStore(isCheck) {
-      getAreaStorePages(this.addRelationDetail.cityCode)
+      getAreaStorePages(this.cityCode)
         .then((res) => {
           this.storeList = res.array;
           this.storeData = res.array[0] && res.array[0].storeList || [];
@@ -94,25 +125,37 @@ const mixin = {
         this.showStoreList = false;
       } else if (options.value === 'PART') {
         this.addRelationDetail.relationStoreType = 'PART';
-        // 新增时默认反选长沙市
-        if (this.isCreate) { this.addRelationDetail.cityCode = '0744'; }
+        // 默认反选长沙市
+        this.cityCode = '0744';
         this.storeCheckRest();
         this.getStore();
         this.showStoreList = true;
       }
     },
     handleCitySwitch() {
-      // 如果是修改 切换城市时继续保留反选数据
-      if (this.isEdit) {
-        this.getStore(true);
-      } else {
-        // 清空上次选择的值
-        // this.storeCheckRest();
-        // 切换城市，重新获取区域列表
-        this.getStore(true);
-      }
+      this.checkAllStore = false;
+      // 切换城市时继续保留反选数据
+      this.getStore(true);
     },
-    storeCheckRest() {
+    checkBoxRestTrue() {
+      this.indeterminate = false;
+      this.checkAll = true;
+      this.indeterminate1 = false;
+      this.checkAll1 = true;
+      this.indeterminate2 = false;
+      this.checkAll2 = true;
+      this.indeterminate3 = false;
+      this.checkAll3 = true;
+      this.indeterminate4 = false;
+      this.checkAll4 = true;
+      this.indeterminate5 = false;
+      this.checkAll5 = true;
+      this.indeterminate6 = false;
+      this.checkAll6 = true;
+      this.indeterminate7 = false;
+      this.checkAll7 = true;
+    },
+    checkBoxRest() {
       this.indeterminate = false;
       this.checkAll = false;
       this.indeterminate1 = false;
@@ -129,6 +172,9 @@ const mixin = {
       this.checkAll6 = false;
       this.indeterminate7 = false;
       this.checkAll7 = false;
+    },
+    storeCheckRest() {
+      this.checkBoxRest();
       this.storeIds = [];
       this.addRelationDetail.stores = '';
     },
@@ -305,6 +351,40 @@ const mixin = {
     },
     handleCheckAll(value) {
       const _this = this;
+      if (value === -1) {
+        const allIds = [];
+        const beforeIds = [];
+
+        this.checkAllStore = !this.checkAllStore;
+        // 当勾选全选
+        if (this.checkAllStore) {
+          if (this.storeIds != null) {
+            for (const val of this.storeIds) {
+              allIds.push(val);
+            }
+          }
+          this.storeListData.forEach((item) => {
+            item.forEach(x => {
+              allIds.push(x.storeId);
+            })
+          });
+          this.storeIds = allIds;
+          console.log(`allIds when checkall: `, allIds);
+          this.addRelationDetail.stores = '[' + allIds.join('][') + ']';
+        } else {
+          this.storeListData.forEach((item) => {
+            item.forEach(x => {
+              beforeIds.push(x.storeId);
+            })
+          });
+          const newArray = _this.storeIds.filter(function(item) {
+            return beforeIds.indexOf(item) == -1;
+          });
+          this.storeIds = newArray;
+          this.addRelationDetail.stores = '[' + newArray.join('][') + ']';
+        }
+      }
+
       if (value === 0) {
         const allIds = [];
         const beforeIds = [];
