@@ -318,6 +318,14 @@
               </i-col>
             </Row>
           </i-col>
+          <i-col span="12">
+            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+              <i-col span="8"> 销售数量: </i-col>
+              <i-col span="16">
+                {{ productStandardDetail.saleCount?productStandardDetail.saleCount:0 }}
+              </i-col>
+            </Row>
+          </i-col>
         </Row>
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="12">
@@ -1018,12 +1026,25 @@
                   </FormItem>
                 </i-col>
                 <i-col span="12">
-                  <FormItem label="数量/重量:" prop="standardQty">
-                    <InputNumber
-                      v-model="productStandardDetail.standardQty"
-                      :min="0"
-                    ></InputNumber>
-                  </FormItem>
+                  <Row>
+                    <i-col span="12">
+                      <FormItem label="数量/重量:" prop="standardQty">
+                        <InputNumber
+                          v-model="productStandardDetail.standardQty"
+                          :min="0"
+                        ></InputNumber>
+                      </FormItem>
+                    </i-col>
+                    <i-col span="12">
+                      <FormItem label="销售数量:" prop="saleCount">
+                        <InputNumber
+                          v-model="productStandardDetail.saleCount"
+                          style="width: 90px"
+                          :min="0"
+                        ></InputNumber>
+                      </FormItem>
+                    </i-col>
+                  </Row>
                 </i-col>
               </Row>
               <Row>
@@ -2485,6 +2506,15 @@ export default {
           align: 'center',
           minWidth: 80,
           key: 'productUnit'
+        },
+        {
+          title: '销量',
+          align: 'center',
+          minWidth: 100,
+          key: 'saleCount',
+          render(h, params) {
+            return <div>{ params.row.saleCount ? params.row.saleCount : 0 }</div>;
+          }
         },
         {
           title: '商品原价',
