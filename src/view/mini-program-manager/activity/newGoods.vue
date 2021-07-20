@@ -1618,6 +1618,7 @@ const templateRowData = {
 };
 
 const productRowData = {
+  productType: 'ORDINARY_PRODUCT',
   productStandardId: '',
   productId: '',
   barcode: '',
