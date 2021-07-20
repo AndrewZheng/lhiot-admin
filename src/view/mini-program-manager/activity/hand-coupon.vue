@@ -2512,6 +2512,7 @@ const relationDetail = {
 };
 
 const productRowData = {
+  productType: 'ORDINARY_PRODUCT',
   productStandardId: '',
   productId: '',
   barcode: '',
