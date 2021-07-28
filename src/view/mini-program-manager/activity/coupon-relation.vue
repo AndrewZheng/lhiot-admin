@@ -2128,9 +2128,9 @@ export default {
         });
     },
     getTemplateTableData() {
-      if (this.activityCouponType === 'BUY_COUPON_ACTIVITY') {
-        this.searchTemplateRowData.couponType = 'FULL_CUT_COUPON';
-      }
+      // if (this.activityCouponType === 'BUY_COUPON_ACTIVITY') {
+      //   this.searchTemplateRowData.couponType = 'FULL_CUT_COUPON';
+      // }
       getCouponTemplatePages(this.searchTemplateRowData)
         .then((res) => {
           this.couponTemplateData = res.rows;
