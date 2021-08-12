@@ -314,26 +314,31 @@ const btns = {
     }
   },
   relation: (h, params, vm) => {
-    return h('Button', {
-      props: {
-        type: 'success',
-        size: 'small'
-      },
-      style: {
-        marginRight: '5px'
-      },
-      on: {
-        click: () => {
-          vm.$emit('on-relation', params);
+    return h('Tooltip', {
+      props: { placement: 'top', transfer: true, content: '关联角色' }
+    }, [
+      h('Button', {
+        props: {
+          type: 'success',
+          size: 'small'
+        },
+        style: {
+          marginRight: '5px'
+        },
+        on: {
+          click: () => {
+            vm.$emit('on-relation', params);
+          }
         }
-      }
-    }, [h('Icon', {
-      props: {
-        type: 'md-unlock',
-        size: 16,
-        color: '#fff'
-      }
-    })]);
+      }, [h('Icon', {
+        props: {
+          type: 'md-unlock',
+          size: 16,
+          color: '#fff'
+        }
+      })
+      ])
+    ]);
   },
   exchange: (h, params, vm) => {
     return h('Tooltip', {
@@ -2397,6 +2402,34 @@ const btns = {
         h('Icon', {
           props: {
             type: 'md-analytics',
+            size: 16,
+            color: '#fff'
+          }
+        })
+      ])
+    ]);
+  },
+  passwordModify: (h, params, vm) => {
+    return h('Tooltip', {
+      props: { placement: 'top', transfer: true, content: '修改密码' }
+    }, [
+      h('Button', {
+        props: {
+          type: 'warning',
+          size: 'small'
+        },
+        style: {
+          marginRight: '5px'
+        },
+        on: {
+          click: () => {
+            vm.$emit('on-password-modify', params);
+          }
+        }
+      }, [
+        h('Icon', {
+          props: {
+            type: 'ios-lock',
             size: 16,
             color: '#fff'
           }

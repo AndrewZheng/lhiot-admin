@@ -15,6 +15,7 @@
         @on-view="handleView"
         @on-edit="handleEdit"
         @on-relation="handleRole"
+        @on-password-modify="handlePasswordModify"
       >
         <div slot="searchCondition">
           <Input
@@ -477,8 +478,8 @@ export default {
         {
           title: '操作',
           key: 'handle',
-          width: 180,
-          options: ['view', 'edit', 'relation', 'delete'],
+          width: 220,
+          options: ['view', 'edit', 'relation', 'delete', 'passwordModify'],
           button: [
             (h, params, vm) => {
               return h('Poptip', {
@@ -510,10 +511,11 @@ export default {
       modalAdd: false,
       loading: true,
       loadingBtn: true,
-      rowData: userRowData,
-      searchRowData: userRowData,
+      rowData: _.cloneDeep(userRowData),
+      searchRowData: _.cloneDeep(userRowData),
       modalRole: false,
       step: 'userAdd',
+      isModifyPsw: false, // 区分修改资料与修改密码
       isDisable: true,
       isCreated: false,
       // 图片上传数据
@@ -529,10 +531,10 @@ export default {
         account: [{ required: true, message: '账号不能为空', trigger: 'blur' },
           { max: 16, message: '账号长度不能超过16个字符', trigger: 'blur' }],
         password: [
-          { required: true, message: '密码不能为空', trigger: 'blur' }
+          { required: false, message: '密码不能为空', trigger: 'blur' }
         ],
         passwdCheck: [
-          { required: true, validator: validatePassCheck, trigger: 'blur' }
+          { required: false, validator: validatePassCheck, trigger: 'blur' }
         ],
         tel: [
           {
@@ -699,7 +701,11 @@ export default {
                 this.rowData.id = res.id;
               });
           } else {
-            // 发送axios请求
+            // 发送axios请求-修改资料，剔除掉密码和确认密码，修改密码单独按钮操作
+            if (!this.isModifyPsw) {
+              this.rowData.password = null;
+              this.rowData.passwdCheck = null;
+            }
             this.$http
               .request({
                 url: '/admin/' + this.rowData.id,
@@ -709,6 +715,7 @@ export default {
               .then((res) => {
                 this.loadingBtn = false;
                 this.modalEdit = false;
+                this.isModifyPsw = false;
                 this.$Message.info('更新成功');
                 // 清空rowData对象
                 this.resetRowData();
@@ -754,6 +761,15 @@ export default {
         }
       });
       this.modalRole = true;
+    },
+    handlePasswordModify(params) {
+      const { row } = params;
+      this.rowData = _.cloneDeep(row);
+      this.rowData.passwdCheck = row.password;
+      this.defaultListMain = [];
+      this.setDefaultUploadList(row);
+      this.modalEdit = true;
+      this.isModifyPsw = true;
     },
     handleSearch(params) {
       // 发送axios请求
@@ -821,10 +837,10 @@ export default {
       this.getTableData();
     },
     resetRowData() {
-      this.rowData = userRowData;
+      this.rowData = _.cloneDeep(userRowData);
     },
     resetSearchRowData() {
-      this.searchRowData = userRowData;
+      this.searchRowData = _.cloneDeep(userRowData);
     },
     getTableData() {
       getUserData({
