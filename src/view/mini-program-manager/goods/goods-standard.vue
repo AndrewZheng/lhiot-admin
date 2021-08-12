@@ -112,6 +112,22 @@
                 {{ item.label }}
               </Option>
             </Select>
+            <Select
+              v-model="searchRowData.receivingWay"
+              class="ml5"
+              placeholder="提货方式"
+              style="width: 90px"
+              clearable
+            >
+              <Option
+                v-for="item in receivingWayEnum"
+                :key="item.value"
+                :value="item.value"
+                class="ml15 mt10 mr15"
+              >
+                {{ item.label }}
+              </Option>
+            </Select>
             <InputNumber
               v-show="!showBack"
               v-model="searchMinPrice"
@@ -1172,6 +1188,30 @@
                     </Select>
                   </FormItem>
                 </i-col>
+                <i-col span="10" style="margin-left: 20px">
+                  <FormItem
+                    :label-width="100"
+                    label="提货方式:"
+                    prop="receivingWay"
+                  >
+                    <Select
+                      v-model="productStandardDetail.receivingWay"
+                      class="search-col"
+                      placeholder="提货方式"
+                      style="width: 90px"
+                      clearable
+                    >
+                      <Option
+                        v-for="item in receivingWayEnum"
+                        :key="`search-col-${item.value}`"
+                        :value="item.value"
+                        class="ptb2-5"
+                      >
+                        {{ item.label }}
+                      </Option>
+                    </Select>
+                  </FormItem>
+                </i-col>
                 <i-col
                   v-show="
                     productStandardDetail.productType === 'ORDINARY_PRODUCT'
@@ -1220,22 +1260,14 @@
               </Row>
               <Row>
                 <!-- <i-col span="12">
-              <FormItem label="SVIP价格:" prop="svipPrice">
-                <InputNumber
-                  :min="0"
-                  :value="svipPriceComputed"
-                  @on-change="svipPriceInputNumberOnchange"
-                ></InputNumber>
-              </FormItem>
+                  <FormItem label="SVIP价格:" prop="svipPrice">
+                    <InputNumber
+                      :min="0"
+                      :value="svipPriceComputed"
+                      @on-change="svipPriceInputNumberOnchange"
+                    ></InputNumber>
+                  </FormItem>
                 </i-col>-->
-                <i-col
-                  span="12"
-                  style="float: right; margin-bottom: 15px; margin-right: -30px"
-                >
-                  <Button v-waves type="warning" @click="handleHdSvipPrice">
-                    海鼎价格参考
-                  </Button>
-                </i-col>
               </Row>
               <Row>
                 <i-col span="12">
@@ -1296,17 +1328,7 @@
                     </IViewUpload>
                   </FormItem>
                 </i-col>
-                <i-col
-                  span="12"
-                  style="float: right; margin-bottom: 15px; margin-right: -30px"
-                >
-                  <Button v-waves type="info" @click="handleImageSort">
-                    规格描述排序
-                  </Button>
-                </i-col>
-              </Row>
-              <!-- 分享图片 -->
-              <Row>
+                <!-- 分享图片 -->
                 <i-col span="12">
                   <FormItem
                     label="上架商品分享图:建议尺寸;500x400(单位:px)"
@@ -1364,6 +1386,16 @@
                       </div>
                     </IViewUpload>
                   </FormItem>
+                </i-col>
+              </Row>
+              <Row>
+                <i-col span="12" offset="3">
+                  <Button v-waves type="info" class="ml10" @click="handleImageSort">
+                    规格描述排序
+                  </Button>
+                  <Button v-waves type="warning" class="ml10" @click="handleHdSvipPrice">
+                    海鼎价格参考
+                  </Button>
                 </i-col>
               </Row>
             </Form>
@@ -2147,10 +2179,11 @@ import {
   fenToYuanDot2Number,
   yuanToFenNumber
 } from '@/libs/util';
-import { expandTypeEnum, relationStoreTypeEnum } from '@/libs/enumerate';
+import { receivingWayEnum, expandTypeEnum, relationStoreTypeEnum } from '@/libs/enumerate';
 import {
   customPlanStatusConvert,
   productStatusConvert,
+  receivingWayConvert,
   expandTypeConvert
 } from '@/libs/converStatus';
 
@@ -2209,7 +2242,8 @@ const productStandardDetail = {
   dbId: null,
   svipPrice: null,
   shareImage: null,
-  isCanCoupon: 'YES'
+  isCanCoupon: 'YES',
+  receivingWay: 'ALL' // 默认不限 TO_THE_HOME-配送专享  TO_THE_STORE-自提专享
 };
 
 const roleRowData = {
@@ -2221,6 +2255,7 @@ const roleRowData = {
   shelvesStatus: null,
   isCanCoupon: '',
   whetherLockShelf: '',
+  receivingWay: null,
   minPrice: '',
   maxPrice: '',
   page: 1,
@@ -2344,6 +2379,7 @@ export default {
         { label: '不可用券', value: 'NO' }
       ],
       expandTypeEnum,
+      receivingWayEnum,
       relationStoreTypeEnum,
       ruleValidate: {
         limitNum: [
@@ -2709,6 +2745,34 @@ export default {
                   </tag>
                 </div>
               );
+            }
+          }
+        },
+        {
+          title: '提货方式',
+          minWidth: 100,
+          key: 'receivingWay',
+          align: 'center',
+          render: (h, params, vm) => {
+            const { row } = params;
+            if (row.receivingWay === 'ALL') {
+              return (
+                <div>
+                  {receivingWayConvert(row.receivingWay)}
+                </div>
+              );
+            } else if (row.receivingWay === 'TO_THE_HOME') {
+              return (
+                <div>
+                  {receivingWayConvert(row.receivingWay)}
+                </div>
+              );
+            } else if (row.receivingWay === 'TO_THE_STORE') {
+              return (
+                <div>{receivingWayConvert(row.receivingWay)}</div>
+              );
+            } else {
+              return <div>{'N/A'}</div>;
             }
           }
         },

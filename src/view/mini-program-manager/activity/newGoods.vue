@@ -848,6 +848,15 @@
                 >
                   <Icon type="md-add" />&nbsp;关联普通商品
                 </Button>
+                <Button
+                  v-waves
+                  v-clipboard:copy="standardIds"
+                  v-clipboard:success="clipboardSuccess"
+                  type="success"
+                  class="mr5"
+                >
+                  <Icon type="md-add" />&nbsp;快速复制
+                </Button>
               </Row>
             </div>
           </tables>
@@ -2974,6 +2983,11 @@ export default {
       }
     };
   },
+  computed: {
+    standardIds() {
+      return this.productStandardRelations.map((item) => item.productStandard.id);
+    }
+  },
   mounted() {
     this.getTableData();
     this.getStore();
@@ -3999,6 +4013,7 @@ export default {
       this.ActivityNewProductsRelation.activityId = this.activityId;
     },
     handleRelevanceAdd(value) {
+      console.log(`this.ActivityNewProductsRelation:`, this.ActivityNewProductsRelation);
       if (
         !this.ActivityNewProductsRelation.activityId &&
         !this.ActivityNewProductsRelation.relationIds
@@ -4031,6 +4046,14 @@ export default {
         .finally(() => {
           this.modalRelevanceLoading = false;
         });
+    },
+    clipboardSuccess() {
+      console.log(`copy standardIds: ${this.standardIds}`);
+      if (!this.standardIds) {
+        this.$Message.error('暂无数据可复制，请先关联商品！');
+        return;
+      }
+      this.$Message.info('复制成功！');
     }
   }
 };
