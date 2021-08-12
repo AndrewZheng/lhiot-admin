@@ -54,7 +54,7 @@
               </Button>
             </Row>
             <div class="ml15 mt10">
-              <i style="color:red">*</i> 默认展示当天的数据
+              <i style="color:red">*</i> 默认展示昨日的数据
             </div>
           </div>
         </tables>
@@ -258,7 +258,7 @@ export default {
     return {
       mark: false,
       topStatus: 'user',
-      button: '今日',
+      button: '昨日',
       inviteData: [],
       tableData2: [],
       totalPage: 0,
@@ -551,7 +551,7 @@ export default {
       }
       // 默认进来查询昨日的数据
       const yesterday = this.getDateByParam(-1);
-      if (this.button === '今日') {
+      if (this.button === '昨日') {
         this.searchRowData1.beginDate = yesterday;
         this.searchRowData1.endDate = yesterday;
       }

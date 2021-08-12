@@ -17,18 +17,24 @@ export const yesNoEnum = [{
 // TO_THE_STORE-门店自提,
 // TO_THE_HOME-送货上门
 export const receivingWay = {
+  ALL: 'ALL',
   TO_THE_STORE: 'TO_THE_STORE',
   TO_THE_HOME: 'TO_THE_HOME'
 };
 
-export const receivingWayEnum = [{
-  label: '门店自提',
-  value: receivingWay.TO_THE_STORE
-},
-{
-  label: '送货上门',
-  value: receivingWay.TO_THE_HOME
-}
+export const receivingWayEnum = [
+  {
+    label: '不限制',
+    value: receivingWay.ALL
+  },
+  {
+    label: '门店自提',
+    value: receivingWay.TO_THE_STORE
+  },
+  {
+    label: '送货上门',
+    value: receivingWay.TO_THE_HOME
+  }
 ];
 // 是否退款
 export const isAllRefund = {
