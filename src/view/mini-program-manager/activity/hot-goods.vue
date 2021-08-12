@@ -1132,6 +1132,13 @@
                   style="width: auto"
                   clearable
                 ></Input>
+                <Input
+                  v-model="searchProductRowData.id"
+                  placeholder="商品规格ID"
+                  class="search-input mr5"
+                  style="width: auto"
+                  clearable
+                ></Input>
                 <Button
                   :loading="searchLoading"
                   class="search-btn mr5"
@@ -1636,6 +1643,7 @@ const productRowData = {
   shelvesStatus: 'VALID',
   minPrice: '',
   maxPrice: '',
+  id: null,
   page: 1,
   rows: 10,
   expandType: 'IGNORE_TYPE'
