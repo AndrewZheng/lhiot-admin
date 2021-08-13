@@ -832,7 +832,7 @@
               >
                 <Icon type="md-add" />关联活动单品
               </Button>
-              <Button
+              <!-- <Button
                 v-waves
                 v-clipboard:copy="addRelationDetail.standardIds"
                 v-clipboard:success="clipboardSuccess"
@@ -840,7 +840,7 @@
                 class="mr5"
               >
                 <Icon type="md-add" />&nbsp;快速复制
-              </Button>
+              </Button> -->
             </Row>
             <Row
               v-if="hdCouponType === '新品上市活动券' || hdCouponType === '爆品集合活动券'"
@@ -1452,7 +1452,7 @@
             >
               <Icon type="md-add" />关联活动单品
             </Button>
-            <Button
+            <!-- <Button
               v-waves
               v-clipboard:copy="addRelationDetail.standardIds"
               v-clipboard:success="clipboardSuccess"
@@ -1460,7 +1460,7 @@
               class="mr5"
             >
               <Icon type="md-add" />&nbsp;快速复制
-            </Button>
+            </Button> -->
           </Row>
           <Row
             v-if="hdCouponType === '新品上市活动券' || hdCouponType === '爆品集合活动券'"
