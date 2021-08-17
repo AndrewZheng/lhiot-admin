@@ -2102,10 +2102,10 @@ export default {
         );
         return;
       }
-      if (this.currentTableRowSelected.apply != 'S_MALL') {
-        this.$Message.error('该功能只适用于拼团小程序');
-        return;
-      }
+      // if (this.currentTableRowSelected.apply != 'S_MALL') {
+      //   this.$Message.error('该功能只适用于拼团小程序');
+      //   return;
+      // }
       if (
         !this.currentTableRowSelected.storeId ||
         !this.currentTableRowSelected.newStoreId
