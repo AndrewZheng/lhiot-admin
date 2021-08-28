@@ -205,10 +205,10 @@ const btns = {
         },
         on: {
           'on-ok': () => {
-            vm.$emit('on-audit', { params, checkStatus: 'PASSED' });
+            vm.$emit('on-audit', { params, checkStatus: 'agree' });
           },
           'on-cancel': () => {
-            vm.$emit('on-audit', { params, checkStatus: 'REJECTED' });
+            vm.$emit('on-audit', { params, checkStatus: 'reject' });
           }
         }
       }, [

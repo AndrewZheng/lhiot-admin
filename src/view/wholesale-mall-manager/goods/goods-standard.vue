@@ -1882,7 +1882,7 @@ export default {
         isVip: [{ required: true, message: '请选择商品的类型' }],
         standardGoodsName: [{ required: true, message: '请输入上架商品名称' }],
         goodsImage: [{ required: true, message: '请上传上架商品主图' }],
-        rotationImage: [{ required: true, message: '请上传上架商品轮播图' }],
+        rotationImage: [{ required: false, message: '请上传上架商品轮播图' }],
         goodsImages: [{ required: true, message: '请上传上架商品详情图' }],
         unitCode: [{ required: true, message: '请选择商品单位' }],
         vaild: [{ required: true, message: '请选择商品状态' }],
