@@ -8,7 +8,7 @@
         :loading="loading"
         :search-area-column="24"
         :operate-area-column="5"
-        :need-permission="false"
+        :need-permission="true"
         editable
         searchable
         border
