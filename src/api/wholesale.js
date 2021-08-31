@@ -641,10 +641,19 @@ export const auditUser = (data) => {
     method: 'post'
   });
 };
+
 // 会员类型切换
 export const changeUser = (data) => {
   return $http.request({
     url: `/wholesale-small/user/change/user-type/${data.id}?userType=${data.userType}`,
+    method: 'put'
+  });
+};
+
+// 清空用户余额
+export const clearUserBalance = (userId) => {
+  return $http.request({
+    url: `/wholesale-small/user/clear-balance/${userId}`,
     method: 'put'
   });
 };

@@ -21,6 +21,7 @@
         @on-set-vip="handleSetVip"
         @on-userChange="handleExchange"
         @on-unlock="handleUnlock"
+        @on-clear-balance="handleClearBalance"
         @on-select-all="onSelectionAll"
         @on-selection-change="onSelectionChange"
       >
@@ -487,6 +488,7 @@ import {
   auditUser,
   changeUser,
   createUser,
+  clearUserBalance,
   getAllSalesman,
   storeAssign,
   unlockSalesman,
@@ -751,7 +753,7 @@ const columns = [
     key: 'handle',
     fixed: 'right',
     width: 240,
-    options: ['setVip', 'edit', 'saleAudit', 'onUser', 'userChange', 'unlock']
+    options: ['setVip', 'edit', 'saleAudit', 'onUser', 'userChange', 'unlock', 'clearBalance']
   }
 ];
 
@@ -1197,6 +1199,14 @@ export default {
         this.$Message.success('操作成功');
         this.getTableData();
       });
+    },
+    handleClearBalance(params) {
+      const { row } = params;
+      clearUserBalance(row.id)
+        .then((res) => {
+          this.$Message.success('用户余额已归0');
+          this.getTableData();
+        })
     },
     onChangeCity(value, selectedData) {
       let city = '';
