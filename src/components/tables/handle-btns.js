@@ -2436,6 +2436,46 @@ const btns = {
         })
       ])
     ]);
+  },
+  clearBalance: (h, params, vm) => {
+    const { row } = params;
+    return h('Poptip', {
+      props: {
+        confirm: true,
+        transfer: true,
+        title: '确定将此用户的余额清零?',
+        placement: params.index === 0 ? 'right' : 'top',
+        'ok-text': '通过',
+        'cancel-text': '拒绝'
+      },
+      style: {
+        marginRight: '5px'
+      },
+      on: {
+        'on-ok': () => {
+          vm.$emit('on-clear-balance', params);
+        }
+      }
+    }, [
+      h('Tooltip', {
+        props: { placement: 'top', transfer: true, content: '余额清零' }
+      }, [
+        h('Button', {
+          props: {
+            type: 'primary',
+            size: 'small'
+          }
+        }, [
+          h('Icon', {
+            props: {
+              type: 'md-sync',
+              size: 16,
+              color: '#fff'
+            }
+          })
+        ])
+      ])
+    ]);
   }
 };
 
