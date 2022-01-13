@@ -332,6 +332,15 @@ const miniMallRouter = [
       component: () => import('@/view/mini-program-manager/activity/newGoods.vue')
     },
     {
+      path: '/small-hot-goods',
+      name: 'small-hot-goods',
+      meta: {
+        icon: 'ios-nuclear',
+        title: '爆品集合活动管理'
+      },
+      component: () => import('@/view/mini-program-manager/activity/hot-goods.vue')
+    },
+    {
       path: '/small-activity-new-product',
       name: 'small-activity-new-product',
       meta: {
@@ -480,6 +489,15 @@ const miniMallRouter = [
       //   },
       //   component: () => import('@/view/mini-program-manager/activity/flashsale.vue')
       // },
+      {
+        path: '/small-live',
+        name: 'small-live',
+        meta: {
+          icon: 'logo-youtube',
+          title: '直播管理'
+        },
+        component: () => import('@/view/mini-program-manager/content/live.vue')
+      },
       {
         path: '/small-feedback',
         name: 'small-feedback',

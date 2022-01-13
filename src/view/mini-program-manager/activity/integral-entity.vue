@@ -850,13 +850,13 @@ const dataColumns = [
 ];
 
 const proStandardColumns = [
-  {
-    type: 'selection',
-    key: '',
-    minWidth: 60,
-    align: 'center',
-    fixed: 'left'
-  },
+  // {
+  //   type: 'selection',
+  //   key: '',
+  //   minWidth: 60,
+  //   align: 'center',
+  //   fixed: 'left'
+  // },
   {
     title: '规格ID',
     align: 'center',

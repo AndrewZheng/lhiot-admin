@@ -160,6 +160,20 @@
                       style="width: auto"
                       clearable
                     ></Input>
+                    <Select
+                      v-model="searchProductRowData.vaild"
+                      class="search-col"
+                      placeholder="商品状态"
+                      style="width: auto"
+                      clearable
+                    >
+                      <Option
+                        v-for="item in vaild"
+                        :key="item.value"
+                        :value="item.value"
+                        class="ml15 mt10 mr15"
+                      >{{ item.label }}</Option>
+                    </Select>
                     <Button
                       :loading="searchLoading"
                       class="search-btn mr5"
@@ -296,6 +310,7 @@ const productRowData = {
   goodsCode: null,
   goodsName: null,
   barCode: null,
+  vaild: 'yes',
   goodsType: '',
   page: 1,
   rows: 5
@@ -367,30 +382,31 @@ const relationColumns = [
     align: 'center',
     render: (h, params, vm) => {
       const { row } = params;
-      if (row.goodsType == 'NORMAL') {
+      if (row.goodsType === 'NORMAL') {
         return (
           <div>
             <tag color='cyan'>{pfExpandTypeConvert(row.goodsType).label}</tag>
           </div>
         );
-      } else if (row.goodsType == 'VIP') {
+      } else if (row.goodsType === 'VIP') {
         return (
           <div>
             <tag color='orange'>{pfExpandTypeConvert(row.goodsType).label}</tag>
           </div>
         );
-      } else if (row.goodsType == 'FLASHSALE') {
+      } else if (row.goodsType === 'FLASHSALE') {
+        return (
+          <div>
+            <tag color='blue'>{pfExpandTypeConvert(row.goodsType).label}</tag>
+          </div>
+        );
+      } else {
+        return (
+          <div>
+            <tag color='primary'>N/A</tag>
+          </div>
+        );
       }
-      return (
-        <div>
-          <tag color='blue'>{pfExpandTypeConvert(row.goodsType).label}</tag>
-        </div>
-      );
-      return (
-        <div>
-          <tag color='primary'>N/A</tag>
-        </div>
-      );
     }
   },
   {
@@ -502,30 +518,31 @@ const standardColumns = [
     align: 'center',
     render: (h, params, vm) => {
       const { row } = params;
-      if (row.goodsType == 'NORMAL') {
+      if (row.goodsType === 'NORMAL') {
         return (
           <div>
             <tag color='cyan'>{pfExpandTypeConvert(row.goodsType).label}</tag>
           </div>
         );
-      } else if (row.goodsType == 'VIP') {
+      } else if (row.goodsType === 'VIP') {
         return (
           <div>
             <tag color='orange'>{pfExpandTypeConvert(row.goodsType).label}</tag>
           </div>
         );
-      } else if (row.goodsType == 'FLASHSALE') {
+      } else if (row.goodsType === 'FLASHSALE') {
+        return (
+          <div>
+            <tag color='blue'>{pfExpandTypeConvert(row.goodsType).label}</tag>
+          </div>
+        );
+      } else {
+        return (
+          <div>
+            <tag color='primary'>N/A</tag>
+          </div>
+        );
       }
-      return (
-        <div>
-          <tag color='blue'>{pfExpandTypeConvert(row.goodsType).label}</tag>
-        </div>
-      );
-      return (
-        <div>
-          <tag color='primary'>N/A</tag>
-        </div>
-      );
     }
   },
   {
@@ -585,6 +602,16 @@ export default {
       currentParentName: '',
       currentTreeTitleCode: '',
       productTotal: 0,
+      vaild: [
+        {
+          label: '上架',
+          value: 'yes'
+        },
+        {
+          label: '下架',
+          value: 'no'
+        }
+      ],
       goodsSectionRelation: _.cloneDeep(goodsSectionRelation),
       currentCategory: _.cloneDeep(currentCategory),
       searchRowData: _.cloneDeep(roleRowData),

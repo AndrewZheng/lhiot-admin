@@ -243,6 +243,19 @@
             </Row>
           </i-col>
         </Row>
+        <Row
+          v-show="selectActivityType === 'BUY_COUPON_ACTIVITY_ALL'"
+          class-name="mb20"
+        >
+          <i-col span="24">
+            <Row>
+              <i-col span="6"> 当天限购次数: </i-col>
+              <i-col span="18">
+                {{ couponDetail.todayBuyCount }}
+              </i-col>
+            </Row>
+          </i-col>
+        </Row>
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
@@ -471,6 +484,23 @@
                     :value="buyAmountComputed"
                     style="padding-right: 5px; width: 115px"
                     @on-change="buyAmountOnchange"
+                  ></InputNumber>
+                </FormItem>
+              </i-col>
+            </Row>
+            <Row v-show="selectActivityType === 'BUY_COUPON_ACTIVITY_ALL'">
+              <i-col span="6">
+                <p
+                  v-if="!couponDetail.todayBuyCount"
+                  style="color: #ff3861; margin-left: 43px"
+                >
+                  * 请输入当天限购次数
+                </p>
+                <FormItem label="限购次数:" prop="todayBuyCount">
+                  <InputNumber
+                    v-model="couponDetail.todayBuyCount"
+                    :min="1"
+                    style="padding-right: 5px; width: 115px"
                   ></InputNumber>
                 </FormItem>
               </i-col>
@@ -808,7 +838,8 @@ const couponDetail = {
   activityType: '',
   buyFirstAmount: 0,
   buyAmount: 0,
-  consumeThreshold: 0 // 消费送券门槛
+  consumeThreshold: 0, // 消费送券门槛
+  todayBuyCount: 1
 };
 
 const relationDetail = {
@@ -1391,6 +1422,7 @@ export default {
       this.tempModalType = this.modalType.view;
       this.couponDetail = _.cloneDeep(params.row);
       this.couponDetail.consumeThreshold = params.row.extendedJsonStr ? JSON.parse(params.row.extendedJsonStr).consumeThreshold : 0;
+      this.couponDetail.todayBuyCount = params.row.extendedJsonStr ? JSON.parse(params.row.extendedJsonStr).todayBuyCount : 1;
       this.couponDetail.activityRuel = this.couponDetail.activityRuel.replace(/&/g, '\n');
       this.modalView = true;
     },
@@ -1403,6 +1435,7 @@ export default {
       this.couponDetail = _.cloneDeep(params.row);
       this.couponDetail.activityType = this.searchRowData.activityType;
       this.couponDetail.consumeThreshold = params.row.extendedJsonStr ? JSON.parse(params.row.extendedJsonStr).consumeThreshold : 0;
+      this.couponDetail.todayBuyCount = params.row.extendedJsonStr ? JSON.parse(params.row.extendedJsonStr).todayBuyCount : 1;
       this.couponDetail.activityRuel = this.couponDetail.activityRuel.replace(/&/g, '\n');
       this.setDefaultUploadList(params.row);
       this.modalEdit = true;
@@ -1439,6 +1472,12 @@ export default {
           // 如果是消费送类型活动，转JSON字符串
           if (this.couponDetail.activityType === 'CONSUME_COUPON_ACTIVITY') {
             const extendedData = { consumeThreshold: this.couponDetail.consumeThreshold };
+            this.couponDetail.extendedJsonStr = JSON.stringify(extendedData);
+          }
+
+          // 如果是超值购券（通用）类型活动，转JSON字符串
+          if (this.couponDetail.activityType === 'BUY_COUPON_ACTIVITY_ALL') {
+            const extendedData = { todayBuyCount: this.couponDetail.todayBuyCount };
             this.couponDetail.extendedJsonStr = JSON.stringify(extendedData);
           }
 

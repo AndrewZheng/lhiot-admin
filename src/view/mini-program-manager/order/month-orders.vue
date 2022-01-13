@@ -92,7 +92,7 @@
 import Tables from '_c/tables';
 import { monthOrderPages } from '@/api/mini-program';
 import tableMixin from '@/mixins/tableMixin.js';
-import { fenToYuanDot2, gitTime } from '@/libs/util';
+import { fenToYuanDot2 } from '@/libs/util';
 import {
   orderTypeConvert,
   thirdDeliverStatusConvert,
@@ -427,22 +427,20 @@ export default {
         },
         {
           title: '创建时间',
-          minWidth: 160,
+          minWidth: 180,
           align: 'center',
           key: 'createAt',
           render(h, params, vm) {
-            const createTime = gitTime(params.row.createAt);
-            return <div>{createTime}</div>;
+            return <div>{params.row.createAt}</div>;
           }
         },
         {
           title: '退款时间',
-          minWidth: 160,
+          minWidth: 180,
           align: 'center',
           key: 'refundAt',
           render(h, params, vm) {
-            const refundTime = gitTime(params.row.refundAt);
-            return <div>{refundTime}</div>;
+            return <div>{params.row.refundAt}</div>;
           }
         }
       ],
@@ -519,8 +517,8 @@ export default {
           item['receivingWay'] = receivingWayConvert(
             item['receivingWay']
           );
-          item['createAt'] = gitTime(item['createAt']);
-          item['refundAt'] = gitTime(item['refundAt']);
+          // item['createAt'] = item['createAt'];
+          // item['refundAt'] = item['refundAt'];
           item['status'] = miniOrderStatusConvert(item['status']).label;
         });
         const date = this.$moment(new Date()).format('YYYYMMDDHHmmss');

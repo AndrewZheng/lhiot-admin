@@ -205,10 +205,10 @@ const btns = {
         },
         on: {
           'on-ok': () => {
-            vm.$emit('on-audit', { params, checkStatus: 'PASSED' });
+            vm.$emit('on-audit', { params, checkStatus: 'agree' });
           },
           'on-cancel': () => {
-            vm.$emit('on-audit', { params, checkStatus: 'REJECTED' });
+            vm.$emit('on-audit', { params, checkStatus: 'reject' });
           }
         }
       }, [
@@ -314,26 +314,31 @@ const btns = {
     }
   },
   relation: (h, params, vm) => {
-    return h('Button', {
-      props: {
-        type: 'success',
-        size: 'small'
-      },
-      style: {
-        marginRight: '5px'
-      },
-      on: {
-        click: () => {
-          vm.$emit('on-relation', params);
+    return h('Tooltip', {
+      props: { placement: 'top', transfer: true, content: '关联角色' }
+    }, [
+      h('Button', {
+        props: {
+          type: 'success',
+          size: 'small'
+        },
+        style: {
+          marginRight: '5px'
+        },
+        on: {
+          click: () => {
+            vm.$emit('on-relation', params);
+          }
         }
-      }
-    }, [h('Icon', {
-      props: {
-        type: 'md-unlock',
-        size: 16,
-        color: '#fff'
-      }
-    })]);
+      }, [h('Icon', {
+        props: {
+          type: 'md-unlock',
+          size: 16,
+          color: '#fff'
+        }
+      })
+      ])
+    ]);
   },
   exchange: (h, params, vm) => {
     return h('Tooltip', {
@@ -931,40 +936,45 @@ const btns = {
   },
   // 手动退款
   onHand: (h, params, vm) => {
-    return h('Poptip', {
-      props: {
-        confirm: true,
-        transfer: true,
-        title: '确认要退款?'
-      },
-      style: {
-        marginRight: '5px'
-      },
-      on: {
-        'on-ok': () => {
-          vm.$emit('on-hand', params);
-        }
-      }
-    }, [
-      h('Tooltip', {
-        props: { placement: 'top', transfer: true, content: '手动退款' }
-      }, [
-        h('Button', {
-          props: {
-            type: 'error',
-            size: 'small'
+    const { row } = params;
+    if (row.orderType !== 'POINTS_LOTTERY') {
+      return h('Poptip', {
+        props: {
+          confirm: true,
+          transfer: true,
+          title: '确认要退款?'
+        },
+        style: {
+          marginRight: '5px'
+        },
+        on: {
+          'on-ok': () => {
+            vm.$emit('on-hand', params);
           }
+        }
+      }, [
+        h('Tooltip', {
+          props: { placement: 'top', transfer: true, content: '手动退款' }
         }, [
-          h('Icon', {
+          h('Button', {
             props: {
-              type: 'logo-usd',
-              size: 16,
-              color: '#fff'
+              type: 'error',
+              size: 'small'
             }
-          })
+          }, [
+            h('Icon', {
+              props: {
+                type: 'logo-usd',
+                size: 16,
+                color: '#fff'
+              }
+            })
+          ])
         ])
-      ])
-    ]);
+      ]);
+    } else {
+      return '';
+    }
   },
   sendHd: (h, params, vm) => {
     return h('Poptip', {
@@ -2396,6 +2406,74 @@ const btns = {
             color: '#fff'
           }
         })
+      ])
+    ]);
+  },
+  passwordModify: (h, params, vm) => {
+    return h('Tooltip', {
+      props: { placement: 'top', transfer: true, content: '修改密码' }
+    }, [
+      h('Button', {
+        props: {
+          type: 'warning',
+          size: 'small'
+        },
+        style: {
+          marginRight: '5px'
+        },
+        on: {
+          click: () => {
+            vm.$emit('on-password-modify', params);
+          }
+        }
+      }, [
+        h('Icon', {
+          props: {
+            type: 'ios-lock',
+            size: 16,
+            color: '#fff'
+          }
+        })
+      ])
+    ]);
+  },
+  clearBalance: (h, params, vm) => {
+    const { row } = params;
+    return h('Poptip', {
+      props: {
+        confirm: true,
+        transfer: true,
+        title: '确定将此用户的余额清零?',
+        placement: params.index === 0 ? 'right' : 'top',
+        'ok-text': '通过',
+        'cancel-text': '拒绝'
+      },
+      style: {
+        marginRight: '5px'
+      },
+      on: {
+        'on-ok': () => {
+          vm.$emit('on-clear-balance', params);
+        }
+      }
+    }, [
+      h('Tooltip', {
+        props: { placement: 'top', transfer: true, content: '余额清零' }
+      }, [
+        h('Button', {
+          props: {
+            type: 'primary',
+            size: 'small'
+          }
+        }, [
+          h('Icon', {
+            props: {
+              type: 'md-sync',
+              size: 16,
+              color: '#fff'
+            }
+          })
+        ])
       ])
     ]);
   }

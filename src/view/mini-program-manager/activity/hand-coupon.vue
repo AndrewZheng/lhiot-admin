@@ -103,7 +103,8 @@
           </Button>
           <Button
             v-if="
-              hdCouponType != '新品上市活动券' &&
+              hdCouponType !='爆品集合活动券' &&
+                hdCouponType != '新品上市活动券' &&
                 hdCouponType != '分享赚活动券' &&
                 hdCouponType != '新人注册首单立减券'
             "
@@ -817,22 +818,48 @@
                 </FormItem>
               </i-col>
             </Row>
-            <Divider v-if="hdCouponType === '新品上市活动券'">
+            <Divider v-if="hdCouponType === '新品上市活动券'|| hdCouponType === '爆品集合活动券'">
               关联活动单品
             </Divider>
-            <Button
-              v-if="hdCouponType === '新品上市活动券'"
-              v-waves
-              :loading="createLoading"
-              type="success"
-              class="mr5"
-              @click="addActivityGoods"
-            >
-              <Icon type="md-add" />关联活动单品
-            </Button>
-            <!-- ymsb -->
+            <Row>
+              <Button
+                v-if="hdCouponType === '新品上市活动券' || hdCouponType === '爆品集合活动券'"
+                v-waves
+                :loading="createLoading"
+                type="success"
+                class="mr5"
+                @click="addActivityGoods"
+              >
+                <Icon type="md-add" />关联活动单品
+              </Button>
+              <!-- <Button
+                v-waves
+                v-clipboard:copy="addRelationDetail.standardIds"
+                v-clipboard:success="clipboardSuccess"
+                type="success"
+                class="mr5"
+              >
+                <Icon type="md-add" />&nbsp;快速复制
+              </Button> -->
+            </Row>
             <Row
-              v-if="hdCouponType === '新品上市活动券'"
+              v-if="hdCouponType === '新品上市活动券' || hdCouponType === '爆品集合活动券'"
+              style="margin-top: 15px"
+            >
+              <i-col span="24">
+                <FormItem label="商品规格Ids录入:" :label-width="120">
+                  <Input
+                    v-model="addRelationDetail.standardIds"
+                    :autosize="{ minRows: 3, maxRows: 8 }"
+                    type="textarea"
+                    placeholder="当前关联的商品规格ID"
+                    @on-change="handleStandardChange"
+                  ></Input>
+                </FormItem>
+              </i-col>
+            </Row>
+            <Row
+              v-if="hdCouponType === '新品上市活动券' || hdCouponType === '爆品集合活动券'"
               style="margin-top: 15px"
             >
               <i-col span="28">
@@ -853,7 +880,7 @@
                 </FormItem>
               </i-col>
             </Row>
-            <Divider v-if="hdCouponType === '新品上市活动券'">
+            <Divider v-if="hdCouponType === '新品上市活动券' || hdCouponType === '爆品集合活动券'">
               关联门店
             </Divider>
             <Row>
@@ -1157,7 +1184,7 @@
             </Row>
           </Form>*Tips：请先选择要关联的优惠券，然后输入关联配置信息，不可关联多个优惠券模板！
           <span
-            v-if="hdCouponType === '新品上市活动券'"
+            v-if="hdCouponType === '新品上市活动券' || hdCouponType === '爆品集合活动券'"
             style="color: #ff3861"
           >关联活动商品可点击查看商品信息！</span>
         </Row>
@@ -1411,25 +1438,51 @@
               </FormItem>
             </i-col>
           </Row>
-          <Divider v-if="hdCouponType === '新品上市活动券'">
+          <Divider v-if="hdCouponType === '新品上市活动券' || hdCouponType === '爆品集合活动券'">
             关联活动单品
           </Divider>
-          <Button
-            v-if="hdCouponType === '新品上市活动券'"
-            v-waves
-            :loading="createLoading"
-            type="success"
-            class="mr5"
-            @click="addActivityGoods"
-          >
-            <Icon type="md-add" />关联活动单品
-          </Button>
-          <!-- ymsb -->
+          <Row>
+            <Button
+              v-if="hdCouponType === '新品上市活动券' || hdCouponType === '爆品集合活动券'"
+              v-waves
+              :loading="createLoading"
+              type="success"
+              class="mr5"
+              @click="addActivityGoods"
+            >
+              <Icon type="md-add" />关联活动单品
+            </Button>
+            <!-- <Button
+              v-waves
+              v-clipboard:copy="addRelationDetail.standardIds"
+              v-clipboard:success="clipboardSuccess"
+              type="success"
+              class="mr5"
+            >
+              <Icon type="md-add" />&nbsp;快速复制
+            </Button> -->
+          </Row>
           <Row
-            v-if="hdCouponType === '新品上市活动券'"
+            v-if="hdCouponType === '新品上市活动券' || hdCouponType === '爆品集合活动券'"
             style="margin-top: 15px"
           >
-            <i-col span="28">
+            <i-col span="24">
+              <FormItem label="商品规格Ids录入:" :label-width="120">
+                <Input
+                  v-model="addRelationDetail.standardIds"
+                  :autosize="{ minRows: 3, maxRows: 8 }"
+                  type="textarea"
+                  placeholder="当前关联的商品规格ID"
+                  @on-change="handleStandardChange"
+                ></Input>
+              </FormItem>
+            </i-col>
+          </Row>
+          <Row
+            v-if="hdCouponType === '新品上市活动券' || hdCouponType === '爆品集合活动券'"
+            style="margin-top: 15px"
+          >
+            <i-col span="24">
               <FormItem label="商品规格Ids列表:" :label-width="120">
                 <div
                   v-for="(item, index) in standardIdsArray"
@@ -1447,7 +1500,7 @@
               </FormItem>
             </i-col>
           </Row>
-          <Divider v-if="hdCouponType === '新品上市活动券'">
+          <Divider v-if="hdCouponType === '新品上市活动券'|| hdCouponType === '爆品集合活动券'">
             关联门店
           </Divider>
           <Row>
@@ -1751,7 +1804,7 @@
           </Row>
         </Form>*Tips：请先选择要关联的优惠券，然后输入关联配置信息，不可关联多个优惠券模板！
         <span
-          v-if="hdCouponType === '新品上市活动券'"
+          v-if="hdCouponType === '新品上市活动券' || hdCouponType === '爆品集合活动券'"
           style="color: #ff3861"
         >关联活动商品可点击查看商品信息！</span>
       </div>
@@ -2511,6 +2564,7 @@ const relationDetail = {
 };
 
 const productRowData = {
+  productType: 'ORDINARY_PRODUCT',
   productStandardId: '',
   productId: '',
   barcode: '',
@@ -3372,8 +3426,7 @@ export default {
     },
     handCouponType(value) {
       const item = this.activityClassify.find((x) => value === x.indexName);
-      this.hdCouponType =
-        item && item.indexValue ? item.indexValue : '手动发券';
+      this.hdCouponType = item && item.indexValue ? item.indexValue : '手动发券';
       this.searchRowData.page = 1;
       this.searchLoading = true;
       this.getTableData();
@@ -3859,6 +3912,21 @@ export default {
       this.standardIdList = [];
       this.modalProduct = false;
     },
+    handleStandardChange() {
+      // 当复制过来的规格ID数据发生修改后执行
+      if (this.addRelationDetail.standardIds) {
+        this.standardIdsArray = [];
+        const standardIdsData = this.addRelationDetail.standardIds.split(',');
+        standardIdsData.forEach((value) => {
+          const map = { label: 'label', value: 'value' };
+          map.value = value;
+          map.label = value;
+          this.standardIdsArray.push(map);
+        });
+      } else {
+        this.standardIdsArray = [];
+      }
+    },
     handleGoodsSubmit() {
       if (this.standardIdList.length > 0) {
         this.standardIdList[this.standardIdList.length - 1].forEach((value) => {
@@ -3895,13 +3963,19 @@ export default {
     },
     affirmOk() {
       this.standardIdsArray.splice(this.goodsIndex, 1);
-      this.addRelationDetail.standardIds = this.standardIdsArray
-        .map((item) => item.value)
-        .join(',');
+      this.addRelationDetail.standardIds = this.standardIdsArray.map((item) => item.value).join(',');
       this.deleteAffirm = false;
     },
     affirmCancel() {
       this.deleteAffirm = false;
+    },
+    clipboardSuccess() {
+      console.log(`copy standardIds: ${this.addRelationDetail.standardIds}`);
+      if (!this.addRelationDetail.standardIds) {
+        this.$Message.error('暂无数据可复制，请先关联活动单品！');
+        return;
+      }
+      this.$Message.info('复制成功！');
     }
   }
 };

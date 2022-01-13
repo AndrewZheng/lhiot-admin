@@ -2957,6 +2957,10 @@ export const deleteShareSetting = ({
   });
 };
 
+/* -------------------------
+ * 新品上市活动管理
+ * -------------------------
+ */
 // 查询新品上市活动列表 /minapp/activity-new-products/pages
 export const getNewProductsPages = (data) => {
   return $http.request({
@@ -3016,6 +3020,77 @@ export const createNewProductsRelevance = (data) => {
 };
 // 更新新品上市活动关联 /minapp/activity-new-products/update/relation/{id}
 export const updateNewProductsRelevance = (data) => {
+  return $http.request({
+    url: '/minapp/activity-new-products/update/relation/' + data.id,
+    data,
+    method: 'put'
+  });
+};
+
+/* -------------------------
+ * 爆品集合活动管理
+ * -------------------------
+ */
+// 查询爆品集合活动列表
+export const getHotProductsPages = (data) => {
+  return $http.request({
+    url: '/minapp/activity-new-products/pages',
+    data,
+    method: 'post',
+    headers: {
+      'page': data.page,
+      'rows': data.rows,
+      'sidx': data.sidx,
+      'sort': data.sort
+    }
+  });
+};
+// 添加爆品集合活动
+export const createHotProducts = (data) => {
+  return $http.request({
+    url: '/minapp/activity-new-products/create',
+    data,
+    method: 'post'
+  });
+};
+
+// 根据id 修改爆品集合活动
+export const updateHotProducts = (data) => {
+  return $http.request({
+    url: '/minapp/activity-new-products/update/' + data.id,
+    data,
+    method: 'put'
+  });
+};
+// 根据id 删除爆品集合活动
+export const deleteHotProducts = ({
+  ids
+}) => {
+  return $http.request({
+    url: '/minapp/activity-new-products/' + ids,
+    method: 'delete'
+  });
+};
+
+// 根据id查询爆品集合活动关联
+export const getHotProductsRelevance = (id) => {
+  return $http.request({
+    url: `/minapp/activity-new-products/${id}/relation`,
+    method: 'get'
+  });
+};
+
+// 添加爆品集合活动关联
+export const createHotProductsRelevance = (data) => {
+  return $http.request({
+    url: '/minapp/activity-new-products/create/relation',
+    data,
+    method: 'post'
+  });
+};
+
+// 更新爆品集合活动关联
+export const updateHotProductsRelevance = (data) => {
   return $http.request({
     url: '/minapp/activity-new-products/update/relation/' + data.id,
     data,
@@ -3343,5 +3418,60 @@ export const retryCoupon = (data) => {
   return $http.request({
     url: `/minapp/orders/buy-coupon/retry?orderId=${data}`,
     method: 'post'
+  });
+};
+
+/* -------------------------
+ * 动态表单-直播管理
+ * -------------------------
+ */
+// 分页查询
+export const getDynamicFormPages = (data) => {
+  return $http.request({
+    url: '/minapp/dynamic-form/pages',
+    data,
+    method: 'post',
+    headers: {
+      'page': data.page,
+      'rows': data.rows,
+      'sidx': data.sidx,
+      'sort': data.sort
+    }
+  });
+};
+
+// 查询
+export const getDynamicForm = (id) => {
+  return $http.request({
+    url: `/minapp/dynamic-form/${id}`,
+    method: 'get'
+  });
+};
+
+// 创建
+export const createDynamicForm = (data) => {
+  return $http.request({
+    url: `/minapp/dynamic-form/create`,
+    data,
+    method: 'post'
+  });
+};
+
+// 更新
+export const updateDynamicForm = (data) => {
+  return $http.request({
+    url: '/minapp/dynamic-form/update/' + data.id,
+    data,
+    method: 'put'
+  });
+};
+
+// 删除
+export const deleteDynamicForm = ({
+  ids
+}) => {
+  return $http.request({
+    url: '/minapp/dynamic-form/' + ids,
+    method: 'delete'
   });
 };
