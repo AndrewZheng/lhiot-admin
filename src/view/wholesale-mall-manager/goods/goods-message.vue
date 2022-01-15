@@ -810,11 +810,9 @@ export default {
       this.initMenuList();
     },
     handleCreate() {
-      if (this.tempModalType !== this.modalType.create) {
-        this.resetFields();
-        this.defaultGoodsCategoryData = [];
-        this.tempModalType = this.modalType.create;
-      }
+      this.resetFields();
+      this.defaultGoodsCategoryData = [];
+      this.tempModalType = this.modalType.create;
       this.modalEdit = true;
     },
     handleSetting(params) {

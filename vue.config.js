@@ -83,7 +83,7 @@ module.exports = {
     port: 80, // 端口号
     // host: 'localhost', // 本地，打包选这个
     disableHostCheck: true,
-    host: '192.168.2.18', // 本地ip，方便其他人通过ip访问 
+    host: '192.168.2.16', // 本地ip，方便其他人通过ip访问 
     https: false, // https:{type:Boolean}
     open: true, // 配置自动启动浏览器
     proxy: {
